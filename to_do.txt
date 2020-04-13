@@ -1,0 +1,43 @@
+CORONAVIRUS
+Add ratio of critical out of all
+Add barcharts for each country
+
+UTILBOX
+2. finish insert
+3. separate line_wrap
+4. improve and simply line wrapping, add checks
+5. run line wrapping
+
+define `nth<-`
+
+create a build for utilbox in zip
+
+extend insert so that it can insert multiple at once
+
+check the huge method
+
+run the wrapping code on the scripts
+
+maybe look into a better name for combine_value
+
+look at other functions that use if that could be implemented using methods
+
+rsignif etc
+
+seq_around
+
+switch to ... for UseMethod functions
+
+make error() quote the function name from which it was call
+
+cat0, catn, catnn (fill)
+
+finish seq2
+
+ifelsem: finish rep_list, simplifying and test
+
+pointers in R, can they be put inside a data.frame?
+
+Boglarka:
+will prepare contract once confidentiality agreement signed and references provided
+needs also address and copy of passport
