@@ -62,6 +62,7 @@
 #' @family plotting-related functions provided by utilbox
 #' @export
 palette_ub = function(n) {
+
   palette = c(
     '#df64df','#12c909','#dbcb35','#6c44a1','#4bbb5d',
     '#0357a7','#862d20','#ffa703','#2fe996','#754343',
@@ -83,8 +84,11 @@ palette_ub = function(n) {
     '#e0d040','#40e0d0','#d040e0','#a0e040','#e08040',
     '#7e9953','#d9a739','#bd0808','#0300ff','#e8ff00',
     '#e94900','#9f5f5f','#f4951b','#6d3300','#7b33b4')
+  
   if(missing(n)) n = length(palette)
+  
   h1(palette, n)
+  
 }
 
 #' Generate a vector of colors
