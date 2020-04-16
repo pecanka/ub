@@ -168,13 +168,16 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
                         quit_on_miss=FALSE, envir=parent.frame()) {
                         
   # Check for non-scaler file name
-  if(length(file)!=1) error("Supply a single file name when calling ",this_fun_name(),"().")
+  if(length(file)!=1) 
+    error("Supply a single file name.")
   
   # Announce loading and file name
-  if(announce) cat0("All objects from file '",file,"' will be loaded ...\n")
+  if(announce) 
+    catn("All objects from file '",file,"' will be loaded ...")
   
   # Check for missing file
-  if(!file.exists(file)) error("File '",file,"' does not exist!")
+  if(!file.exists(file)) 
+    error("File '",file,"' does not exist.")
   
   # Environment "local" means this function
   if(class(envir)=="character" && envir=="local") 
@@ -203,7 +206,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
       msg = paste0("The following expected objects were not loaded: '",paste(miss,collapse="' '"),"'")
       if(quit_on_miss) error(msg) else warn(msg)
     } else {
-      cat0("All expected objects were successfully loaded.\n")
+      catn("All expected objects were successfully loaded.")
     }
   }
 
@@ -218,16 +221,22 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
 #' to \code{loadAs} by default).
 #' @export
 loadAs = function(file, as, what, envir=parent.frame()) {
+  
   loaded = load(file, envir=environment())
+  
   if(missing(as)) as = loaded
   if(missing(what)) what = loaded
+  
   stopifnot(length(what)==length(as))
-  if(any(what %notin% loaded)) {
+  
+  if(any(what %notin% loaded))
     error("Object(s) '",what[which(what %notin% loaded)],"' were not found in file '",file,"'.")
-  }
+  
   for(i in 1:length(what)) assign(as[i], get(what[i]), envir=envir)
   for(x in setdiff(loaded, what)) assign(x, get(x), envir=envir)
-  return(invisible(cbind(what=what, as=c(as,setdiff(loaded, what)))))
+  
+  invisible(cbind(what=what, as=c(as,setdiff(loaded, what))))
+  
 }
 
 #' Lists objects

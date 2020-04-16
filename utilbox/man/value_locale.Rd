@@ -7,10 +7,26 @@
 \alias{last_nonzero}
 \alias{first_positive}
 \alias{last_positive}
-\alias{last_above}
 \alias{first_above}
-\alias{last_below}
+\alias{first_above_soft}
+\alias{last_above}
+\alias{last_above_soft}
 \alias{first_below}
+\alias{first_below_soft}
+\alias{last_below}
+\alias{last_below_soft}
+\alias{w_nth_nonzero}
+\alias{w_last_nonzero}
+\alias{w_first_positive}
+\alias{w_last_positive}
+\alias{w_first_above}
+\alias{w_first_above_soft}
+\alias{w_last_above}
+\alias{w_last_above_soft}
+\alias{w_first_below}
+\alias{w_first_below_soft}
+\alias{w_last_below}
+\alias{w_last_below_soft}
 \title{Locate value}
 \usage{
 first_nonzero(x)
@@ -23,33 +39,69 @@ first_positive(x)
 
 last_positive(x)
 
+first_above(x, y)
+
+first_above_soft(x, y)
+
 last_above(x, y, ...)
 
-first_above(x, y, ...)
+last_above_soft(x, y)
 
-last_below(x, y, ...)
+first_below(x, y)
 
-first_below(x, y, ...)
+first_below_soft(x, y)
+
+last_below(x, y)
+
+last_below_soft(x, y)
+
+w_nth_nonzero(x, n)
+
+w_last_nonzero(x)
+
+w_first_positive(x)
+
+w_last_positive(x)
+
+w_first_above(x, y)
+
+w_first_above_soft(x, y)
+
+w_last_above(x, y)
+
+w_last_above_soft(x, y)
+
+w_first_below(x, y)
+
+w_first_below_soft(x, y)
+
+w_last_below(x, y)
+
+w_last_below_soft(x, y)
 }
 \description{
-`first_nonzero` finds the position of the last non-zero element in `x`.
+`first_nonzero` finds the value of the last non-zero element in `x`.
 }
 \details{
-`nth_nonzero` finds the position of the n-th non-zero element in `x`.
+`nth_nonzero` finds the value of the n-th non-zero element in `x`.
 
-`last_nonzero` finds the position of the last non-zero element in `x`.
+`last_nonzero` finds the value of the last non-zero element in `x`.
 
-`first_positive` finds the position of the first positive element in `x`.
+`first_positive` finds the value of the first positive element in `x`.
 
-`last_positive` finds the position of the last positive element in `x`.
+`last_positive` finds the value of the last positive element in `x`.
 
-`last_above` finds the position of the last element in `x` with value larger than `y`.
+`first_above` (`first_above_soft`) finds the value of the first element 
+in `x` with value larger than (larger than or equal to) `y`.
 
-`first_above` finds the position of the first element in `x` with value larger than `y`.
+`last_above` (`last_above_soft`) finds the value of the last element 
+in `x` with value larger than (larger than or equal to) `y`.
 
-`last_below` finds the position of the last element in `x` with value below `y`.
+`first_below` (`first_below_soft`) finds the value of the first element 
+in `x` with value smaller than (smaller than or equal to) `y`.
 
-`first_below` finds the position of the first element in `x` with value below `y`.
+`last_below` (`last_below_soft`) finds the value of the last element 
+in `x` with value smaller than (smaller than or equal to) `y`.
 }
 \seealso{
 Other numeric functions provided by utilbox: 
@@ -76,6 +128,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{which_max}()}
 }
 \concept{numeric functions provided by utilbox}

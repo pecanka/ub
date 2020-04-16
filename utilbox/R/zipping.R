@@ -57,7 +57,8 @@ list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
 # Old name: zipupf
 zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, check_status=TRUE) {
 
-  if(missing(files)) error(this_fun_name(),": supply names of files to zip up.")
+  if(missing(files)) 
+    error("Supply names of files to zip up.")
   
   if(length(files)==0) return(-1)
   
@@ -131,7 +132,7 @@ zip_files = function(files, path=".", zipfile, extras="-m") {
 #'             or when \code{single_archive} is \code{TRUE}.
 #' @param extras Modifiers sent to the zip archiver. Defaults to '-m', 
 #'             which moves the files into the archive.
-#' @param do_patternize Determines whether the mask is treated as given or whether the
+#' @param patternize Determines whether the mask is treated as given or whether the
 #'             special characters in it are wrapped to be matched accurately.
 #' @param chunk Batch size for the archiver.
 #' @param announce Determines whether details are announced.
@@ -150,13 +151,13 @@ zip_files = function(files, path=".", zipfile, extras="-m") {
 #' @export
 # Old name: zipup
 zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendix=".zip", 
-  extras="-m", do_patternize=TRUE, chunk=Inf, announce=FALSE, single_archive=TRUE,
+  extras="-m", patternize=TRUE, chunk=Inf, announce=FALSE, single_archive=TRUE,
   retry=FALSE, nretries=5, browser_on_error=FALSE) {
 
   odir = getwd()
   on.exit(setwd(odir))
   
-  if(do_patternize) mask = patternize(mask)
+  if(patternize) mask = str_patternize(mask)
   files = list.files(path=path, pattern=mask)
   
   if(length(files)==0) return(list(ios=-1, zipfile=NULL))
@@ -165,14 +166,14 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
   ## file name on the single file found.
   if(missing(outfile) && single_archive) {
     if(length(files)>1) 
-      error(this_fun_name(),": archive name must be supplied when multiple files",
-            " match the mask and 'single_archive' is TRUE.")
+      error("The archive name must be supplied when multiple files",
+            " match the mask and single_archive is TRUE.")
     outfile = paste0(files, appendix)
   }
 
   ## Exclude the files that match mask_exclude
   if(!missing(mask_exclude)) {
-    if(do_patternize) mask_exclude = patternize(mask_exclude)
+    if(patternize) mask_exclude = str_patternize(mask_exclude)
     files = files[regexpr(mask_exclude, files)<0]
   }
   
@@ -297,9 +298,9 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
 #'        \code{mask_exclude} is \code{FALSE}) and only files meeting these conditions
 #'        are decompressed.
 #' @param mask_exclude Determines how the \code{mask} is applied.        
-#' @param do_patternize Determines whether the mask is treated exactly (when 
-#'        \code{do_patternize=TRUE}) or whether it is treated as a regular pattern 
-#'        (when \code{do_patternize=FALSE}).
+#' @param patternize Determines whether the mask is treated exactly (when 
+#'        \code{patternize=TRUE}) or whether it is treated as a regular pattern 
+#'        (when \code{patternize=FALSE}).
 #'
 #' @return List of file names of the decompressed files and the corresponding status 
 #'         codes returned by the archiver.
@@ -307,17 +308,18 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
 #' @family archiving utilities provided by utilbox
 #' @export
 # Old name: un_zip
-unzip_files = function(zipfiles, mask=".*", mask_exclude=FALSE, do_patternize=TRUE) {
-  lapply(zipfiles, unzip_files_single, mask, mask_exclude, do_patternize)
+unzip_files = function(zipfiles, mask=".*", mask_exclude=FALSE, patternize=TRUE) {
+  lapply(zipfiles, unzip_files_single, mask, mask_exclude, patternize)
 }
 
 #' @rdname zip_file
-unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, do_patternize=TRUE) {
+unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, patternize=TRUE) {
   
-  if(!file.exists(zipfile)) error(this_fun_name(),": File '",zipfile,"' does not exist.")
+  if(!file.exists(zipfile)) 
+    error("File '",zipfile,"' does not exist.")
   
   ## List the files matching mask
-  if(do_patternize) mask = patternize(mask)
+  if(patternize) mask = str_patternize(mask)
   files_in_zip = unlist(list_zip(zipfile, pattern=mask, exclude=mask_exclude))
 
   ## Nothing to unzip
@@ -327,7 +329,7 @@ unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, do_pattern
   unzipped_files = unzip(zipfile, files_in_zip)
   
   ## Check success
-  ok = all(sapply(patternize(files_in_zip), function(p) any(regexpr(p, unzipped_files)>0)))
+  ok = all(sapply(str_patternize(files_in_zip), function(p) any(regexpr(p, unzipped_files)>0)))
   
   return(list(ios=ok-1, files=unzipped_files))
   
@@ -443,19 +445,19 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
 read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, trace=0, ...) {
   
   if(missing(file) || length(file)!=1) 
-    error(this_fun_name(),': supply exactly one file name to read from the zip archive.')
+    error('Supply exactly one file name to read from the zip archive.')
   
   if(missing(zipfile) || length(zipfile)!=1) 
-    error(this_fun_name(),': supply exactly one file name of the zip archive.')
+    error('Supply exactly one file name of the zip archive.')
 
   if(missing(fun_read))
-    error(this_fun_name(),': supply a value for the argument fun_read (e.g. read_char or read_table)')
+    error('Supply a value for the argument fun_read (e.g. read_char or read_table)')
     
   if(!is.function(fun_read))
-    error(this_fun_name(),': the supplied value in fun_read must be a function.')
+    error('The object in fun_read must be a function.')
     
   if(missing(list_connections))
-    error(this_fun_name(),': supply a list of open connections for comparison.')
+    error('Supply a list of open connections for comparison.')
   
   # Open connection
   if(zip_type=="zip") {
@@ -470,11 +472,12 @@ read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_
   
   } else if(zip_type=="plain") {
     
-    warn(this_fun_name(),": Unknown compression format of file ",zipfile,". Attempting to read as plain text ...")
+    warn("Unknown compression format of file ",zipfile,". Attempting to read as plain text ...")
+    
     infile = file
     nam = paste0(zipfile,":",file)
     
-  } else error(this_fun_name(),": Unknown compression format of file ",zipfile,".")
+  } else error("Unknown compression format of file ",zipfile,".")
 
   if(identical(fun_read, read_char)) 
     attr(infile, 'size') = attr(file, 'size')

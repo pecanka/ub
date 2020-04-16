@@ -36,15 +36,12 @@ as_numeric = function(x) {
 #'
 #' @family numeric functions provided by utilbox
 #' @export
-make_numeric = function(x, convert=as.numeric, on_error) {
-  if(missing(on_error)) {
-    on_error = function(...) stop("Cannot convert x to class 'numeric'.")
-  }
+make_numeric = function(x, convert=as.numeric, on_error=stop) {
   if(is.numeric(x)) {
     x 
   } else if(is_number(x)) {
     as.numeric(x)
-  } else on_error(x)
+  } else on_error("Cannot convert x to class 'numeric'.")
 }
 
 #' Force type conversion

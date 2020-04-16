@@ -4,7 +4,7 @@
 \alias{\%modify\%}
 \title{List modify operator}
 \usage{
-k \%modify\% l
+left \%modify\% right
 }
 \description{
 Merges two list together while updating the elements of the
@@ -18,11 +18,11 @@ list(a=1, b=2) \%modify\% list(b=3, c=4)
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{\%append\%}()},
-\code{\link{\%c\%}()},
 \code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
+\code{\link{operator_append}},
+\code{\link{operator_c}},
 \code{\link{operator_match}},
 \code{\link{renaming_operators}}
 }

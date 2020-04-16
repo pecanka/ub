@@ -51,7 +51,8 @@ ilogit = stats::plogis
 #' @export
 qchisqw = function(p, weights, lower.tail=TRUE, epsw=1e-5, epsv=1e-12, df0=2) {
 
-  if(any(weights<0)) error("Negative weights!")
+  if(any(weights<0)) 
+    error("All values in 'weights' must be non-negative.")
   
   # Check the input
   np = length(p)
@@ -78,7 +79,10 @@ qchisqw = function(p, weights, lower.tail=TRUE, epsw=1e-5, epsv=1e-12, df0=2) {
       iter = iter + 1
       x = optim(q0, fun, method="Brent", lower=0, upper=5*q0)
     }
-    if(x$value>epsv) error("Non-convergent optimization (value ",x$value,")!")
+    
+    if(x$value>epsv) 
+      error("Non-convergent optimization (value ",x$value,").")
+      
     x$par
   }
   
@@ -144,7 +148,9 @@ uqnorm = function(..., lower.tail=FALSE) stats::qnorm(..., lower.tail=lower.tail
 pmnormrect = function(upper=c(Inf, Inf), lower=c(-Inf,-Inf), mean=rep(0, length(upper)), 
                       Sigma=diag(length(upper)), varcov) {
                       
-  if(!missing(varcov) && !missing(Sigma)) error("Supply either Sigma or varcov.")
+  if(!missing(varcov) && !missing(Sigma))   
+    error("Supply either Sigma or varcov.")
+  
   if(!missing(varcov)) Sigma = varcov
   
   llibrary(mnormt)

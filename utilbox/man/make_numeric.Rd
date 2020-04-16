@@ -4,7 +4,7 @@
 \alias{make_numeric}
 \title{Type conversion}
 \usage{
-make_numeric(x, convert = as.numeric, on_error)
+make_numeric(x, convert = as.numeric, on_error = stop)
 }
 \description{
 Changes the type of \code{x} to \code{numeric} whenever all
@@ -47,6 +47,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{value_locale}},
 \code{\link{which_max}()}
 }

@@ -41,11 +41,11 @@ a \%__\% b           # BEWARE: yields 'a_b' (the inputs are treated as symbolic!
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{\%append\%}()},
-\code{\link{\%c\%}()},
 \code{\link{\%modify\%}()},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
+\code{\link{operator_append}},
+\code{\link{operator_c}},
 \code{\link{operator_match}},
 \code{\link{renaming_operators}}
 }

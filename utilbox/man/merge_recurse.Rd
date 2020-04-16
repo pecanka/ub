@@ -15,8 +15,9 @@ in the call to \code{Recall()}.
 Other list utilities provided by utilbox: 
 \code{\link{list_clean}()},
 \code{\link{list_flatten}()},
+\code{\link{list_mirror}()},
 \code{\link{list_set_attr}()},
-\code{\link{modifyList2}()},
+\code{\link{list_update}()},
 \code{\link{nlist}()}
 }
 \concept{list utilities provided by utilbox}

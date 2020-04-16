@@ -60,7 +60,7 @@ start_clock = function(print=TRUE, envir=parent.frame(), lead="", what="") {
 
 #' @name clock
 #' @export
-read_clock = function(envir=utilbox_namespace()) {
+read_clock = function(envir=utilbox_environment()) {
 
   #d2 = Sys.time()
   d2 = clock(FALSE)
@@ -82,7 +82,7 @@ read_clock = function(envir=utilbox_namespace()) {
 #' @name clock
 #' @export
 stop_clock = function(d1=NULL, d12=NULL, start_print=FALSE, end_print=TRUE, 
-  runtime_print=TRUE, envir=utilbox_namespace(), lead="", what="") {
+  runtime_print=TRUE, envir=utilbox_environment(), lead="", what="") {
   
   # Read the current clock and recall start
   #d2 = Sys.time()

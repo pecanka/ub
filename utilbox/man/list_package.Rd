@@ -7,11 +7,11 @@
 \alias{package_table}
 \title{List objects in a package}
 \usage{
-list_package_exported(pckg, character.only = FALSE)
+list_package_exported(pckg, pattern, character.only = FALSE, mode)
 
-list_package_all(pckg, character.only = FALSE, all.names = TRUE)
+list_package_all(pckg, pattern, character.only = FALSE, all.names = TRUE, mode)
 
-package_table(objs, pckg)
+package_table(objs, pckg, pattern, mode)
 }
 \description{
 Lists all/exported objects in a package.

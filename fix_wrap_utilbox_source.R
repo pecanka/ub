@@ -20,7 +20,7 @@ ofiles = sapply(ofiles, function(o) o$output_file)
 catn('Files altered.')
 
 catn('Checking for any unintended changes to the actual code ...')
-check_ok = sapply(seq_along(files), function(i) check_same_code(files[i], ofiles[i]))
+check_ok = sapply(seq_along(files), function(i) compare_code(files[i], ofiles[i]))
 catn('Finished.')
 
 if(all(check_ok)) {

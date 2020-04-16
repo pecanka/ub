@@ -6,6 +6,7 @@
 \alias{\%||||\%}
 \alias{\%|||||\%}
 \alias{\%NA\%}
+\alias{\%ERR\%}
 \title{Default value for NULL and zero-length objects}
 \usage{
 x \%|||\% y
@@ -15,6 +16,8 @@ x \%||||\% y
 x \%|||||\% y
 
 x \%NA\% y
+
+x \%ERR\% y
 }
 \description{
 `\%|||\%` is intented to be equivalent "\code{\%||\%}" operator in the 
@@ -27,6 +30,10 @@ package \code{rlang}, but named differently as not to clash with it.
 
 `\%NA\%` is an operator version of `ifelse(is.na(x), y, x), which
 allows input of various types (vectors, lists, closures, etc.).
+
+`\%ERR\%` works analogously except that it checks for class `try-error`.
+If its first argument is of class `try-error` it returns its second
+argument (`y`). Otherwise it returns the first (`x`).
 }
 \examples{
 1 \%|||\% 2
@@ -38,11 +45,11 @@ numeric(0) \%||||\% 2
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{\%append\%}()},
-\code{\link{\%c\%}()},
 \code{\link{\%modify\%}()},
 \code{\link{concatenate}},
 \code{\link{not_in}},
+\code{\link{operator_append}},
+\code{\link{operator_c}},
 \code{\link{operator_match}},
 \code{\link{renaming_operators}}
 }

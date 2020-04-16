@@ -12,7 +12,7 @@
 \alias{rep_list.matrix}
 \title{Repeat elements in a list}
 \usage{
-rep_list(x, ...)
+rep_list(...)
 
 \method{rep_list}{list}(x, n, length.out, bind = append_recurse, flatten = FALSE)
 

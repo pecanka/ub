@@ -4,11 +4,24 @@
 \alias{append_body}
 \title{Append the body of a function}
 \usage{
-append_body(fun, calls, at_top = FALSE)
+append_body(fun, calls, where = c("first", "last", "at"), at = NULL)
 }
 \description{
 Takes an existing function (`fun`) and changes its body
-by appending to it the calls supplied in `calls`.
+by appending to it the calls supplied in `calls`. The calls
+can either be of class `calls` or class `character` (converted
+to `call` via `as.character`). The way the new cody is
+appended is governed by `where`, which allows these options:
+}
+\details{
+\"first\": the code in `calls` is placed before the existing code.
+
+\"last\": the code in `calls` is placed after the existing code.
+
+\"at\": `calls` must be of length 1 and be of class character and
+its content is parsed and evaluated. It can reference the selected 
+old line (which one that is is determined by the value in `at`) as 
+`.oldline.` (see the example below).
 }
 \examples{
 f = function() { x = pi }
@@ -18,9 +31,21 @@ print(f())                           # returns pi^2 (i.e. 9.869604)
 f = append_body(f, c(quote(x <- x^2), quote(x-1)))
 print(f())                           # returns pi^2 - 1 (i.e. 8.869604)
 
-# modify an existing function
+# Modify an existing function:
 call = str2lang("cat(\"And the symmetric set difference is...\n\")")
-f = append_body(setdiffsym, call, at_top=TRUE)
+f = append_body(setdiffsym, call, where='first')
+f(1:5, 3:10)
+
+# Above the line is placed at the top so that it does not affect
+# the return value from the function. A more complex editing is
+# is possible. We can append the last call in the function
+# to turn it into an assignment and thus assign the calculated
+# value into a variable. We can then save add the printing line 
+# without affecting the returned value of the function. The line 
+# in the original code that is altered is determined thru 'at'.
+call = "substitute(y -> x, list(y=.oldline.))"
+f = append_body(setdiffsym, call, where='at', at=1)
+f = append_body(f, c("cat(\"And the symmetric set difference is...\n\")", "x"), where='last')
 f(1:5, 3:10)
 
 }
@@ -29,6 +54,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{get_package_namespace}()},
 \code{\link{hijack}()},
 \code{\link{this_fun_name}()}
 }

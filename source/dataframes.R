@@ -15,8 +15,10 @@
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 split_rows = function(x, f=seq_len(nrow(x)), drop=FALSE, ...) {
+
   lapply(base::split(x = seq_len(nrow(x)), f = f, drop = drop, ...), 
          function(indices) x[indices, , drop = FALSE])
+         
 }
 
 #' Reverse the order of rows/colums
@@ -30,16 +32,22 @@ split_rows = function(x, f=seq_len(nrow(x)), drop=FALSE, ...) {
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 rev_rows = function(x) {
+
   stopifnot(is.matrix(x) || is.data.frame(x) || is.array(x) || length(dim(x))==2)
+  
   x[nrow(x):1,,drop=FALSE]
+  
 }
 
 #' @rdname rev_rows
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 rev_cols = function(x) {
+
   stopifnot(is.matrix(x) || is.data.frame(x) || is.array(x) || length(dim(x))==2)
+  
   x[,ncol(x):1,drop=FALSE]
+  
 }
 
 #' Check for identical columns
@@ -55,26 +63,44 @@ rev_cols = function(x) {
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 identical_cols = function(x, w) {
+
   stopifnot(length(dim(x))==2)
+
   if(missing(w)) w = 1:NCOL(x)
+
   if(length(w)<=1) return(TRUE)
+
   all(sapply(w[-1], function(v) identical(x[,w[1],drop=TRUE], x[,v,drop=TRUE])))
+  
 }
 
 #' Safe column addition
 #'
 #' Adds a column(s) into the data frame \code{x} if the column(s) 
-#' is/are not present.
+#' is/are not present. The way it is written is intended to
+#' work both for standard `data.frame` and other `data.frame` 
+#' derived classes (such as `dplyr::tibble`) provided the derived
+#' class has the method `[<-` defined.
 #'
 #' @examples
-#' add_col(tibble(x=1:2), y=2)
+#' # works for data.frames and tibbles
+#' x = data.frame(id=1:2)
+#' add_col(x, name=c('John','Jeff'), age=c(20,40))
+#' add_col(as_tibble(x), name=c('John','Jeff'), age=c(20,40))
 #'
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 add_col = function(.data, ...) {
-  if(!is.data.frame(.data)) error("object '.data' must be a data frame")
-  ll = list(...)
-  do.call('mutate', append(nlist(.data), ll[which(names(ll) %notin% names(.data))]))
+  
+  if(!is.data.frame(.data)) 
+    error("object '.data' must be a data frame")
+  
+  args = dots_to_nlist()
+  
+  new_cols = args[which(names(args) %notin% names(.data))]
+  
+  `[<-`(.data, names(new_cols), value=new_cols)
+  
 }
 
 #' Repeat data frame

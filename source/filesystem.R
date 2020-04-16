@@ -107,9 +107,9 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
   
   type = type %|||% c('exact','partial','free')
 
-  p = list(exact='^'%.%patternize(p)%.%'$', 
-           partial='^'%.%patternize(p), 
-           free=patternize(p))
+  p = list(exact='^'%.%str_patternize(p)%.%'$', 
+           partial='^'%.%str_patternize(p), 
+           free=str_patternize(p))
 
   lf = hijack(list.files, path=path, full.names=full.names)
   
@@ -443,7 +443,7 @@ check_file_locked = function(file) {
     call = "wmic process get commandline"
     x = try(system(call, intern=TRUE, show.output.on.console=FALSE))
     if(class(x)=="try-error") return(-1)
-    as.numeric(any(regexpr(patternize(file), x)>0))
+    as.numeric(any(regexpr(str_patternize(file), x)>0))
   } else return(-1)
 }
 

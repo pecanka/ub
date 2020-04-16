@@ -7,14 +7,14 @@ combine_pvalues = function(P, lam, method=c("jelle","jakub","fisher","stouffer")
   if(is.vector(P)) P = matrix(P, nrow=1, ncol=length(P))
 
   if(summarize) {
-    cat0("Smallest raw p-value: ",min(P),"\n")
+    catn("Smallest raw p-value: ",min(P))
     w = which.min(apply(log10(P), 1, mean))
-    cat0("Row with the smallest average p-values (on log scale): ",w,"\n")
+    catn("Row with the smallest average p-values (on log scale): ",w)
     print(P[w,])
     c1 = do_pval_comb(P[w,], method="fisher")
-    cat0("Fisher combination of these p-values: ",c1,"\n")
+    catn("Fisher combination of these p-values: ",c1)
     c2 = do_pval_comb(P[w,], method="jelle")
-    cat0("Jelle combination of these p-values: ",c2,"\n")
+    catn("Jelle combination of these p-values: ",c2)
   }
   
   do_pval_comb(P, lam, method, ...)
@@ -114,10 +114,10 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
 
   # Check for unknown combination method
   if(all(method!=c("fisher","stouffer","jakub","jelle")))
-    error("Unknown combination method '",method,"'!")
+    error("Unknown combination method '",method,"'.")
   
   # Replace non-sensical p-values with NA
-  if(trace>0) cat0("Checking for NA values ...\n")
+  if(trace>0) catn("Checking for NA values ...")
   P[P<0. | P>1.] = NA
 
   # Make sure P is a matrix
@@ -171,7 +171,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     X0 = apply(mat_lam*chi2, 1, sum, na.rm=na.rm)
     
     if(trace>0) 
-      cat0("Combining p-values (",nrow(chi2)," sets) via Box's method (with weighing, ",method,"'s code) ...\n")
+      catn("Combining p-values (",nrow(chi2)," sets) via Box's method (with weighing, ",method,"'s code) ...")
      
     # Use Jelle's general implementation (slow)
     if(tolower(method)=="jelle") {
@@ -186,7 +186,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
       mdif = apply(mat_lam, 1, min_dif)
       #print(summary(mdif))
       if(any(mdif <= mindif)) {
-        if(trace>0) cat0("Randomizing weights ...\n")
+        if(trace>0) catn("Randomizing weights ...")
         if(same_lam) {
           rlam = randomize(lam, mindif=mindif)
           mat_lam = matrix(lam, nrow=np, ncol=nres, byrow=TRUE)      
@@ -208,8 +208,9 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
 
       # Check for zeros (which there really should not be at this point)
       mdif = apply(mat_lam, 1, min_dif)
+      
       if(any(mdif==0))
-        error("Some weights are equal, which is not allowed with Jakub's code.", Q=!interactive())
+        error("Some weights are equal.")
       
       Q = X0 / mat_lam
       PQ = pchisq(Q, df=2, lower.tail=FALSE)
@@ -234,9 +235,9 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     } # if(method=="jakub")
 
     if(any(is.na(PP) & !is.na(X0)))
-      error("Non-NA input p-values were combined into NA p-values!", Q=!interactive())
+      error("Non-NA input p-values were combined into NA p-values.")
     if(any(!is.na(PP)) && min(PP, na.rm=TRUE)<0)
-      error("Some p-values are negative!", Q=!interactive())
+      error("Some p-values are negative.")
       
   }
 
@@ -244,7 +245,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
   if(any(PP<0.0, na.rm=TRUE)) {
     wn = which(PP<0.0)
     if(!exists(".pAsymptotic", mode="function"))
-      error("Missing function .pAsymptotic()! Look for Jelle's script that",
+      error("Missing function .pAsymptotic(). Look for Jelle's script that",
             " defines the function.")
     PP[wn] = sapply(seq_along(wn), function(i) 
                .pAsymptotic(X0[wn[i]], lams=rep(mat_lam[i,], t=2), accuracy=1e-100))
@@ -263,27 +264,27 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
   }
 
   # Announce the smallest combined p-value
-  if(trace>0) cat0("Smallest combined p-value: ",min(PP, na.rm=TRUE),"\n")
+  if(trace>0) catn("Smallest combined p-value: ",min(PP, na.rm=TRUE))
   
   # Compare the output of Jakub's and Jelle's codes for small p-values
   eps = 1e-6
   if(FALSE && any(PP<eps, na.rm=TRUE)) {
-    cat0("Checking results for small p-values (",sum(PP<eps)," p-values below ",eps,") ...\n")
+    catn("Checking results for small p-values (",sum(PP<eps)," p-values below ",eps,") ...")
     ws = which(PP<eps)
     PP2 = sapply(X0[ws], .pAsymptotic, lams=rep(lam, t=2), accuracy=1e-100)
-    cat0("Smallest p-value found after re-check: ",min(PP2),"\n")
+    catn("Smallest p-value found after re-check: ",min(PP2),"\n")
     md = max(abs(PP[ws]-PP2))
-    cat0("Maximum difference between Jakub's and Jelle's code: ",md,"\n")
+    catn("Maximum difference between Jakub's and Jelle's code: ",md)
     mrd = max(abs((PP[ws]-PP2)/unzero(PP[ws]+PP2)*2-1))
-    cat0("Maximum relative difference between Jakub's and Jelle's code: ",mrd,"\n")
+    catn("Maximum relative difference between Jakub's and Jelle's code: ",mrd)
     PP[ws] = PP2
   }
 
   # If there are still negative or NA p-values, stop
   if(any(PP<0.0, na.rm=TRUE))
-    error("Some p-values are negative!", Q=!interactive())
+    error("Some p-values are negative.")
   if(any(is.na(PP) & !is.na(X0)))
-    error("Non-NA input p-values were combined into NA p-values!", Q=!interactive())
+    error("Non-NA input p-values were combined into NA p-values.")
 
   return(PP)
 

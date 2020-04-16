@@ -33,6 +33,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{value_locale}},
 \code{\link{which_max}()}
 }

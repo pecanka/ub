@@ -132,21 +132,21 @@ substitute_at = function(x, sub_list, at='@', workhorse=subm) {
 
 #' Patternize a string
 #'
-#' \code{patternize} wraps special characters in string name (possibly a vector) by 
+#' `str_patternize` wraps special characters in string name (possibly a vector) by 
 #' brackets so that it can be matched within regular expression matching (the case of 
 #' "\\" has to be treated differently). Useful for instance when working with file names.
 #'
-#' \code{unpatternize} does the reverse of \code{patternize()}.
+#' `str_unpatternize` does the reverse of \code{patternize()}.
 #'
-#' @name patternize
 #' @examples
 #' regexpr('notes.txt', 'notes_txt')>0                # TRUE
-#' regexpr(patternize('notes.txt'), 'notes_txt')>0    # FALSE
-#' regexpr(patternize('notes.txt'), 'notes.txt')>0    # TRUE
+#' regexpr(str_patternize('notes.txt'), 'notes_txt')>0    # FALSE
+#' regexpr(str_patternize('notes.txt'), 'notes.txt')>0    # TRUE
 #'
+#' @name patternize
 #' @family string-manipulation functions provided by utilbox
 #' @export
-patternize = function(name, special=c("+",".","(",")","$","?","\\")) {
+str_patternize = function(name, special=c("+",".","(",")","$","?","\\")) {
   for(i in seq_along(name))
     for(s in special) 
       name[i] = gsub(paste0("[",s,"]"), 
@@ -155,11 +155,47 @@ patternize = function(name, special=c("+",".","(",")","$","?","\\")) {
   return(name)
 }
 
-#' @name patternize
-#'
-#' @family string-manipulation functions provided by utilbox
+#' @rdname patternize
 #' @export
-unpatternize = function(pattern) {
+patternize = str_patternize
+
+#' @rdname patternize
+#' @export
+str_unpatternize = function(pattern) {
   gsub("[][]","",pattern)
+}
+
+#' @rdname patternize
+#' @export
+unpatternize = str_unpatternize
+
+#' Escape special characters
+#'
+#' Escapes special characters in a string. It replaces `\\n` with a `\\\\n`, etc.
+#'
+#' @examples
+#' str_escape('\n')
+#'
+#' @export
+str_escape = function(x, specials=NULL, specials0 = c('\\n'='\\\\n')) {
+
+  s = c(specials, specials0)
+  for(i in seq_along(s)) {
+    x = gsub(names(s)[i], s[i], x)
+  }
+  x
+
+}
+
+#' @rdname str_escape
+#' @export
+str_unescape = function(x,  specials=NULL, specials0 = c('\\n'='\\\\n')) {
+
+  s = c(specials, specials0)
+  for(i in seq_along(s)) {
+    x = gsub(s[i], names(s)[i], x)
+  }
+  x
+
 }
 

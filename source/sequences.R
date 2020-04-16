@@ -116,6 +116,7 @@ insert.list = function(x, what, at, after, count=1, replace_old=!FALSE,
   
   if(missing(at) && missing(after))
     error("Supply either 'at' or 'after'.")
+    
   if(!missing(at) && !missing(after))
     error("Supply only either 'at' or 'after'.")
     
@@ -130,7 +131,7 @@ insert.list = function(x, what, at, after, count=1, replace_old=!FALSE,
     error("Value in 'at' are out of range.")
     
   if(length(what)!=length(at))
-    error("'what' and 'at' must match.")
+    error("The lengths of 'what' and 'at' must match.")
     
   if(!is.list(what))
     error("'what' must be a list.")
@@ -285,15 +286,22 @@ midpoints = function(x) {
 seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   
   stopifnot(!missing(a))
+  
   if(length(a)>1) {
+  
     b = max(a)
     a = min(a)
     if(missing(len) && is_integer(a) && is_integer(b)) len = b-a+1
+    
   } else stopifnot(!missing(b))
   
   if(a > b) {
-    if(len>1) error("With 'len>1' the value in 'b' cannot be smaller than value in 'a'!")
+    
+    if(len>1) 
+      error("With 'len' above 1 the value in 'b' cannot be smaller than value in 'a'!")
+      
     return(a)
+    
   }
 
   # Use ordinary seq if both middle points
@@ -304,16 +312,24 @@ seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   # Add only one middle point
   } else if(missing(m2) || abs(m1-m2)/abs(b-a)<1e-6) {
 
-    if(a>m1) error("Make m1 >= a.")
-    if(m1>b) error("Make m1 <= b.")
+    if(a>m1) 
+      error("Make m1 >= a.")
+    
+    if(m1>b) 
+      error("Make m1 <= b.")
+      
     if(m1==a || m1==b) {
+    
       x = seq(a,b,l=len)
+    
     } else {
+    
       rat = (m1 - a) / (b - a)
       l1 = max(2,ceiling(len * rat))
       start_seq = seq(a,m1,l=l1)
       end_seq = seq(m1,b,by=start_seq[2]-start_seq[1])
       x = c(start_seq, end_seq[-1])
+      
     }
   
   # Add both middle points

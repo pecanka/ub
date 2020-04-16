@@ -17,7 +17,7 @@ unzip_files_single(
   zipfile,
   mask = ".*",
   mask_exclude = FALSE,
-  do_patternize = TRUE
+  patternize = TRUE
 )
 }
 \arguments{

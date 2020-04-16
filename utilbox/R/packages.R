@@ -1,3 +1,25 @@
+#' Get the namespace of a package
+#'
+#' Returns the namespace of the package with name in `pckg`.
+#'
+#' @examples
+#' get_package_namespace('base')
+#'
+#' @family coding-related functions provided by utilbox
+#' @export
+get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE) {
+
+  if(!character.only) pckg = as.character(substitute(pckg))
+  
+  ns = try(as.environment("package:"%.%pckg), silent=TRUE)
+  
+  if(is_error(ns) && stop_on_error)
+    error("Namespace for package '",pckg,"' not found.")
+    
+  ns
+  
+}
+
 #' Library operations
 #'
 #' \code{llibrary} loads specified libraries. On input, \code{pckgs} must either 
@@ -159,43 +181,56 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' @name list_package
 #' @family package-related functions provided by utilbox
 #' @export
-list_package_exported = function(pckg, character.only=FALSE) {
+list_package_exported = function(pckg, pattern, character.only=FALSE, mode) {
 
   if(!character.only) pckg = as.character(substitute(pckg))
   objs = getNamespaceExports(pckg)
-  package_table(objs, pckg)
+  
+  package_table(objs, pckg, pattern, mode)
   
 }
 
 #' @rdname list_package
 #' @export
-list_package_all = function(pckg, character.only=FALSE, all.names=TRUE) {
+list_package_all = function(pckg, pattern, character.only=FALSE, all.names=TRUE, mode) {
 
   if(!character.only) pckg = as.character(substitute(pckg))
   objs = ls(envir=getNamespace(pckg), all.names=all.names)
-  package_table(objs, pckg)
+  
+  package_table(objs, pckg, pattern, mode)
   
 }
 
 #' @rdname list_package
 #' @export
-package_table = function(objs, pckg) {
+package_table = function(objs, pckg, pattern, mode) {
 
   stopifnot(is.character(pckg))
-
+  
   is_exported = objs %in% getNamespaceExports(pckg) 
   clas1 = apply_pckg(objs, pckg, function(x, nam) h1(class(x)))
   classes = apply_pckg(objs, pckg, function(x, nam) collapse0(class(x),','))
-  namespace = apply_pckg(objs, pckg, function(x, nam) t1(fun_code_to_text(x)))
-  self_reference = apply_pckg(objs, pckg, function(x, nam) any(patternize(nam)%.%'[(, ]' %m% fun_code_to_text(x)))
+  namespace = apply_pckg(objs, pckg, function(x, nam) t1(fun_code_to_text2(x)))
+  #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%.%str_patternize(nam)%.%'[(, ]') %m% fun_code_to_text(x)))
   
-  `rownames<-`(data.frame(object_name=objs, 
-                          exported=ifelse(is_exported, 'YES', 'no'), 
-                          object_primary_class=clas1, 
-                          object_all_classes=classes, 
-                          definition_namespace=namespace,
-                          self_reference), NULL)
+  tbl = data.frame(name=objs, 
+                   exported=ifelse(is_exported, 'YES', 'no'), 
+                   primary_class=clas1, 
+                   all_classes=classes, 
+                   original_namespace=namespace, 
+                   row.names=NULL, stringsAsFactors=FALSE)
   
+  if(!missing(pattern)) {
+    tbl = tbl[`%m%`(pattern, tbl$name),]
+  }
+  
+  if(!missing(mode)) {
+    mode_fits = apply_pckg(tbl$name, pckg, function(x, nam) mode(x) == mode, value_error=FALSE)
+    tbl = tbl[mode_fits,]
+  }
+  
+  tbl
+
 }
 
 #' Apply function to an object in a package
@@ -210,8 +245,10 @@ package_table = function(objs, pckg) {
 #'
 #' @family package-related functions provided by utilbox
 #' @export
-apply_pckg = function(objs, pckg, f, ..., workhorse=sapply) {
-  workhorse(objs, function(n) do.call(f, list(get(n, envir=getNamespace(pckg)), n, ...)))
+apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, envir=getNamespace(pckg), value_error=NA) {
+  workhorse(objs, function(n) {
+    try(do.call(f, list(get(n, envir=envir), n, ...)), silent=TRUE) %ERR% value_error
+  })
 }
 
 #' Add path to the package path

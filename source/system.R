@@ -95,7 +95,7 @@ append_system_PATH = function(path) {
   
   if(missing(path)) return(PATH)
   
-  if(regexpr(patternize(path), PATH)>0) {
+  if(regexpr(str_patternize(path), PATH)>0) {
     
     catn("Path '",path,"' already present in the system PATH.")
     
@@ -103,7 +103,7 @@ append_system_PATH = function(path) {
     
     Sys.setenv('PATH'=paste0(PATH,";",path))
     
-    if(regexpr(patternize(path), PATH)>0) {
+    if(regexpr(str_patternize(path), PATH)>0) {
       catn("Path '",path,"' appended to the system PATH.")
     }
     

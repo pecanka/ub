@@ -2,32 +2,55 @@
 % Please edit documentation in R/classes.R
 \name{class_huge}
 \alias{class_huge}
-\alias{as_huge}
-\alias{add_class_huge}
+\alias{is.huge}
+\alias{as.huge}
+\alias{as.huge.list}
+\alias{as.huge.default}
+\alias{[.huge}
+\alias{[[.huge}
 \alias{print.huge}
-\alias{as_huge.list}
-\alias{as_huge.default}
+\alias{print.huge.character}
+\alias{print.huge.default}
+\alias{truncate_huge}
+\alias{truncate_huge.default}
 \title{Convert objects to class `huge`}
 \usage{
-as_huge(x)
+is.huge(x)
 
-add_class_huge(x)
+as.huge(...)
 
-\method{print}{huge}(x, n = 10, show_note = TRUE)
+\method{as.huge}{list}(x)
 
-\method{as_huge}{list}(x)
+\method{as.huge}{default}(x)
 
-\method{as_huge}{default}(x)
+\method{[}{huge}(x, i)
+
+\method{[[}{huge}(x, i)
+
+print.huge(...)
+
+\method{print}{huge.character}(x, n, len, show_note = TRUE)
+
+\method{print}{huge.default}(x, n, len, show_note = TRUE)
+
+truncate_huge(...)
+
+\method{truncate_huge}{default}(x, n)
 }
 \description{
-Add `huge` as the first class of an object. Class `huge`
-is intended to be used for objects with many elements which, 
+Class `huge` is intended to be used for objects with many elements which, 
 if all printed, would clutter the screen. With class `huge` 
 set, only a limited number of elements are actually printed.
 (extracted by [base::head]).
 }
+\details{
+`is_huge` checks whether class \"`huge`\" is among the classes
+of the object in `x`.
+
+`as.huge` adds class \"`huge`\" as the first class of `x`.
+}
 \examples{
-as_huge(list(1:100))
+as.huge(list(1:100))
 
 }
 \seealso{

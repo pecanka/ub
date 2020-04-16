@@ -5,7 +5,7 @@
 \alias{nth}
 \alias{nthm}
 \alias{nthr}
-\alias{nthrm}
+\alias{nthmr}
 \title{Get every n-th element of an object}
 \usage{
 nth(x, n)
@@ -14,7 +14,7 @@ nthm(x, n)
 
 nthr(x, n)
 
-nthrm(x, n)
+nthmr(x, n)
 }
 \description{
 `nth` extracts the n-th element (single value) of an object 
@@ -24,10 +24,15 @@ extraction.
 \details{
 `nthm` allows for multivariate input in `n`. It relies on 
 `\`[\`` for the extraction.
+
+`nthr` and `nthmr are the analogue of `nth` and `nthm` which 
+determine index the position in reversed order.
 }
 \examples{
-nth(1:10, 2)
-nthm(1:10, 2:3)
+nth(1:10, 2)       # second
+nthm(1:10, 2:3)    # second and third
+nthr(1:10, 2)      # second from the end
+nthmr(1:10, 2:3)   # second and third from the end
 
 }
 \seealso{

@@ -7,8 +7,8 @@
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
-cumpaste0 = function(x, .sep = "") {
-  Reduce(function(x1, x2) paste(x1, x2, sep = .sep), x, accumulate = TRUE)
+cumpaste0 = function(x, .sep="") {
+  Reduce(function(x1, x2) paste(x1, x2, sep=.sep), x, accumulate = TRUE)
 }
 
 #' Collapse a string vector
@@ -22,20 +22,32 @@ cumpaste0 = function(x, .sep = "") {
 #' @name collapse
 #' @family string-manipulation functions provided by utilbox
 #' @export
-collapse0 = function(x, sep = "") {
-  paste(x, collapse=sep)
+collapse0 = function(x, ..., sep="") {
+  if(is.null(sep)) {
+    x
+  } else {
+    paste(x, ..., collapse=sep)
+  }
 }
 
 #' @rdname collapse
 #' @export
-collapse0n = function(x, sep = "\n") {
-  paste(x, collapse=sep)
+str_collapse = collapse0
+
+#' @rdname collapse
+#' @export
+collapse0n = function(x, ..., sep="\n") {
+  paste(x, ..., collapse=sep)
 }
 
 #' @rdname collapse
 #' @export
-collapse0nq = function(x, sep = "'\n'") {
-  paste(x, collapse=sep)
+collapsen = collapse0n
+
+#' @rdname collapse
+#' @export
+collapse0nq = function(x, ..., sep="'\n'") {
+  paste(x, ..., collapse=sep)
 }
 
 #' Capitalization
@@ -256,26 +268,59 @@ strrev = function(x) {
 
 #' Find the first or last occurrence of a substring
 #'
-#' Find the first/last occurrence of a substring (given as regular pattern) 
-#' in a string
-#' 
-#' @examples
-#' strpos('hello world.', 'o', first=TRUE)
-#' strpos('hello world.', 'o', last=TRUE)
-#' strpos('hello world.', '[el]', first=TRUE)
-#' strpos('hello world.', '[el]', last=TRUE)
-#' strpos('hello world.', '.')
-#' strpos('hello world.', '.', patternize=TRUE)
+#' `str_pos` finds the first (when `first=TRUE`) and/or the last 
+#' (`last=TRUE`) occurrence of a substring (given as regular pattern) 
+#' in a string.
+#" 
+#' `str_first_occurence` returns the position of the first
+#' occurrence of `what` inside `x`, or the value in `miss`
+#' (-1 by default) if none find. It is functionally similar 
+#' to `str_pos(..., first=TRUE)` except that it escapes (via 
+#' [str_escape]) the substring in `what` first, allows a custom
+#' missingness indicator (`miss`) and is slightly faster.
 #'
+#' `str_last_occurence` is analogous to `str_first_occurence`
+#' except that it returns the position of the last occurrence
+#' of `what`
+#'
+#' @examples
+#' str_pos('hello world.', 'o', first=TRUE)
+#' str_pos('hello world.', 'o', last=TRUE)
+#' str_pos('hello world.', '[el]', first=TRUE)
+#' str_pos('hello world.', '[el]', last=TRUE)
+#' str_pos('hello world.', '.')
+#' str_pos('hello world.', '.', patternize=TRUE)
+#'
+#' str_first_occurence('hello world!', 'e')
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
-strpos = function(string, substring, first=TRUE, last=FALSE, patternize=FALSE, fixed=TRUE) {
+str_pos = function(string, what, first=TRUE, last=FALSE, patternize=FALSE, escape=FALSE, fixed=TRUE) {
+
   if(missing(first)) first = !last
   if(missing(last)) last = !first
-  if(patternize) substring = patternize(substring)
-  all_pos = gregexpr(substring, string, fixed=fixed)
+
+  if(patternize) what = str_patternize(what)
+  if(escape) what = str_escape(what)
+  
+  all_pos = gregexpr(what, string, fixed=fixed)
+  
   sapply(all_pos, function(p) if(first) head(p,1) else tail(p,1))
+  
+}
+
+#' @rdname str_pos
+#' @export
+str_first_occurence = function(x, what, miss=-1) {
+  p = c(unlist(regexpr('('%.%str_escape(what)%.%')', x)))
+  ifelse(p < 0, miss, p)
+}
+
+#' @rdname str_pos
+#' @export
+str_last_occurence = function(x, what, miss=-1) {
+  p = c(t1(unlist(gregexpr('('%.%str_escape(what)%.%')', x))))
+  ifelse(p < 0, miss, p)
 }
 
 #' Get ASCII code
@@ -290,9 +335,9 @@ ascii = function(x) {
 
 #' Format string
 #'
-#' `str_pad` pads to input to a given width (`width`). 
-#' It formats the contents of `x` to a minimum width (character count) 
-#' or other specified format (via `format`). The minimum length is 
+#' `str_pad` pads to input to a given width (`width`).  It formats 
+#' the contents of `x` to a minimum width (character count) or other 
+#' specified format (via `format`). The minimum length is 
 #' easiest controlled via `min_width`. Non-character values are 
 #' converted to character using `base::as.character`.
 #'
@@ -300,16 +345,30 @@ ascii = function(x) {
 #'
 #' `num_pad` pads a real/double with leading zeros.
 #'
-#' Note: Check out the function in options()$str$formatNum to see how R formats numbers.
+#' `spaces` produces an empty string of length `n`.
+#'
+#' Note: Check out the function in `options()$str$formatNum` to see 
+#' how R formats numbers.
 #'
 #' @name padding
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_pad = function(x, min_width, format) {
+str_pad = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) {
+
+  side = match.arg(side)
+
   if(!is.character(x)) x = as.character(x)
-  if(missing(min_width)) min_width = max(ndigits(x))
-  if(missing(format)) format = '%0'%.%min_width%.%'d'
-  sprintf(format, x)
+  if(missing(min_width)) min_width = max(nchar(x))
+  min_width = min_width + nextra
+
+  if(side=='left') {
+    #if(missing(format)) format = '%0'%.%min_width%.%'s'
+    #sprintf(format, x)
+    paste0(spaces(min_width - nchar(x), padding), x)
+  } else {
+    paste0(x, spaces(min_width - nchar(x), padding))
+  }
+
 }
 
 #' @rdname padding
@@ -341,38 +400,120 @@ num_pad = function(x, min_nint, min_ndig=6, fmt='f', format) {
   sprintf(format, x)
 }
 
+#' @rdname padding
+#' @export
+spaces = function(n, char=' ') {
+  #sapply(n, function(n1) collapse0(rep(char,pmax(0,n1))))
+  strrep(char, pmax(0,n))
+}
+
+#' Wrap text
+#'
+#' Places newline symbols (`\\n`) along a string to make its
+#' print via `cat` not exceed a given width (`max_width`).
+#'
+#' @examples
+#' catn(str_wrap(letters, max_width=10)
+#'
+#' @export
+str_wrap = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
+  sapply(x, str_wrap1, max_width, eol, break_only_at_space)
+}
+
+#' @name str_wrap
+#' @export
+str_wrap1 = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE, max_nlines=Inf) {
+  n = nchar(x)
+  browser()
+  wb = if(break_only_at_space) {
+    find_last_space()  # not yet implemented
+  } else {
+    min(max_width, str_first_occurence(x, eol, Inf))
+  }
+  if(wb >= n || wb==n-1 && str_last(x)==eol) {
+    x
+  } else {
+    substr(x, 1, wb) %.% eol %.% Recall(substr(x, wb+1, n), max_width, eol)
+  }
+}
+
 #' Names for a list of combinations of vectors
 #'
-#' Produces names for a list of combinations of vectors. Takes vectors with 
+#' Produces a concatenation of all possible combinations of elements in 
+#' in the supplied vectors.  for a list of combinations of vectors. Takes vectors with 
 #' parameter values and a vector of names and pastes them together in a 
 #' cartesian product way. Can be used to names the elements of a list
 #' which contains the results of a run of analysis for each combination 
 #' on a grid (cartesian product) of parameter combinations.
 #'
 #' @examples
-#' a = 1:3; b = 10:11; combine_names(a, b, names=c('a','b'))
+#' cities = c("Prague","London")
+#' parts = c("InnerCity","Suburbs")
+#' number = 1:5
+#'
+#' # combine two and three
+#' str_paste_grid(cities, parts)
+#' str_paste_grid(cities, parts, number)
+#'
+#' # specify the names directly
+#' str_paste_grid(cities, parts, number, vars=c('City','Part','#'))
+#'
+#' # leave some names out
+#' str_paste_grid(cities, parts, number, vars=c('City','Part'))
+#'
+#' # leave all names out
+#' str_paste_grid(cities, parts, number, vars=NULL)
+#'
+#' # alter the separator
+#' str_paste_grid(cities, parts, number, vars=NULL, sep2=":")
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
-combine_names = function(..., vars, sep1='=', sep2='_') {
+str_paste_grid = function(..., vars, sep1='=', sep2='_') {
   
-  dots = match.call(expand.dots = FALSE)$`...`
-  values = list(...)
-  names(values) = dots
+  values = dots_to_nlist()
   
   if(missing(vars)) {
-    last = values[[length(values)]]
-    if(length(last)==length(values)-1) {
-      vars = last 
-      values[length(values)] = NULL
-    } else {
-      vars = names(values)
-    }
+    vars = names(values)
+  } 
+  
+  if(is_between(length(vars), 1, length(values)-1)) {
+    vars = c(vars, rep("", length(values)))
   }
   
-  stopifnot(length(values)==length(vars))
+  v = if(is_empty(vars)) {
+    values
+  } else {
+    lapply(seq_along(values), function(i) {
+      if(str_is_empty(vars[i])) values[[i]] else paste(vars[i],values[[i]], sep=sep1)
+    })
+  }
   
-  v = lapply(seq_along(values), function(i) paste(vars[i],values[[i]], sep=sep1))
   do.call(paste, append(rev(do.call("expand.grid", rev(v))), list(sep=sep2)))
   
 }
+
+#' Shorten a string
+#'
+#' `str_abbreviate` takes a string and whenever it is long, it cuts
+#' out the middle section and replaces it with information about
+#' how many characters were cut out.
+#'
+#' @examples
+#' let = collapse0(letters)
+#' LET = collapse0(LETTERS)
+#' str_abbreviate(collapse0(c(let, LET, let, LET)))
+#'
+#' @export
+str_abbreviate = function(x, n1=12, n2) {
+
+  if(missing(n2)) n2 = n1
+  part1 = substr(x, 1, n1)
+  part2 = substr(x, pmax(nchar(x)-n2+1, n1+1), nchar(x))
+  ncut = nchar(x) - nchar(part1) - nchar(part2)
+  x = part1 %.% msg_character_shortened(ncut) %.% part2
+  
+  structure(x, ncut=ncut, class=c('abbrevstr', class(x)))
+
+}
+

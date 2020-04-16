@@ -5,7 +5,7 @@
 \title{\code{unzip_files} decompresses from \code{zipfile} all files that match the pattern 
 in \code{mask}, or those that do not match it if \code{mask_exclude} is \code{FALSE}.}
 \usage{
-unzip_files(zipfiles, mask = ".*", mask_exclude = FALSE, do_patternize = TRUE)
+unzip_files(zipfiles, mask = ".*", mask_exclude = FALSE, patternize = TRUE)
 }
 \arguments{
 \item{zipfiles}{List of files to decompress. Actual file names, not regular patterns.}
@@ -17,9 +17,9 @@ are decompressed.}
 
 \item{mask_exclude}{Determines how the \code{mask} is applied.}
 
-\item{do_patternize}{Determines whether the mask is treated exactly (when 
-\code{do_patternize=TRUE}) or whether it is treated as a regular pattern 
-(when \code{do_patternize=FALSE}).}
+\item{patternize}{Determines whether the mask is treated exactly (when 
+\code{patternize=TRUE}) or whether it is treated as a regular pattern 
+(when \code{patternize=FALSE}).}
 }
 \value{
 List of file names of the decompressed files and the corresponding status 

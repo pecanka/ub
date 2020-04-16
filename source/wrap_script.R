@@ -1,94 +1,9 @@
-#' Compare R scripts
-#'
-#' Takes two R scripts and performs a comparison. First, the
-#' actual codes are compared as character strings. If they fail
-#' this sameness check, the two scripts are sourced into separate
-#' environments, which are then compared. In this comparison, the
-#' names of all objects are compared (check 1), then the classes 
-#' of all objects (check 2), then functions are checked for identical 
-#' arguments and bodies (check 3), and finally non-function objects 
-#' are compared in terms of values (check 4).
-#' 
-#' @returns A logical indicating whether the two codes were found to
-#'          to be identical together with the number of the first failed
-#'          check (attribute \code{check_failed}, where value 0 indicates
-#'          'no failure') and the names of the objects that were found 
-#'          to be different (attribute \code{objects}).. 
-#'
-#' @export
-check_same_code = function(file1, file2, verbose=TRUE) {
-
-  if(verbose) {
-    cat0("Comparing files '",file1,"' and '",file2,"' ... ")
-    on.exit(catn(if(are_same) 'PASS' else 'DIFFERENCES FOUND!'))
-  }
-  
-  # read the file sources
-  C1 = readLines(file1)
-  C2 = readLines(file2)
-  
-  # remove all commented lines
-  C1 = C1[!('^\\s*#' %m% C1)]
-  C2 = C2[!('^\\s*#' %m% C2)]
-  
-  # check for identical code
-  if(identical(C1, C2)) {
-    return(are_same <- structure(TRUE, check_failed = 0))
-  }
-  
-  # if not, execute the code and compare the environments
-  writeLines(C1, f1 <- '.~C1.R.tmp')
-  writeLines(C2, f2 <- '.~C2.R.tmp')
-  sys.source(f1, envir=e1 <- new.env())
-  sys.source(f2, envir=e2 <- new.env())
-  file.remove(f1, f2)
-
-  # if the object names do not match, return severe difference
-  list1 = ls(envir=e1, all=TRUE, sorted=TRUE)
-  list2 = ls(envir=e2, all=TRUE, sorted=TRUE)
-  if(!identical(list1, list2)) {
-    objects = setdiffsym(list1, list2, labels=c(file1, file2))
-    return(are_same <- structure(FALSE, check_failed=1, objects=objects))
-  }
-  
-  # compare classes of objects
-  class1 = sapply(list1, function(obj) class(get(obj, envir=e1)))
-  class2 = sapply(list2, function(obj) class(get(obj, envir=e2)))
-  if(!identical(class1, class2)) {
-    objects = list(list1[class1!=class2], list2[class1!=class2])
-    names(objects) = c(file1, file2)
-    return(structure(FALSE, check_failed=2, objects=objects))
-  }
-  
-  # compare all functions by code
-  is_fun = sapply(class1, function(cls) identical(cls, 'function'))
-  funs_equal = sapply(list1[is_fun], function(obj)
-    compare_functions(obj, obj, by_name=TRUE, envir1=e1, envir2=e2))
-    
-  # compare all non-functions by value
-  rest_equal = sapply(list1[!is_fun], function(obj) 
-    identical(get(obj, envir=e1), get(obj, envir=e2)))
-  
-  # final verdict
-  if(all(funs_equal) && all(rest_equal)) {
-    are_same <- structure(TRUE, check_failed=0)
-  } else {
-    objects1 = c(list1[is_fun][!funs_equal], list1[!is_fun][!rest_equal]) 
-    objects2 = c(list2[is_fun][!funs_equal], list2[!is_fun][!rest_equal])
-    objects = structure(list(objects1, objects2), names=c(file1, file2))
-    are_same <- structure(FALSE, check_failed=3, objects=objects)
-  }
-  
-  are_same
-    
-}
-
 #' Wrap R code explanations
 #'
 #' Takes an R script and \"wraps\" (i.e. add line breaks to limits width) 
-#' the help explanations of what the functions do so that the lines do not exceed \code{max_length} 
+#' the help explanations of what the functions do so that the lines do not exceed \code{max_width} 
 #' too much. It places a new line right after the end of each word
-#' whose presence made the line length on which it is exceed \code{max_length}.
+#' whose presence made the line length on which it is exceed \code{max_width}.
 #'
 #' @examples
 #' # Example with code supplied directly:
@@ -99,7 +14,7 @@ check_same_code = function(file1, file2, verbose=TRUE) {
 #' script_wrap_text(code=snippet1 %.% snippet2 %.% snippet3 %.% snippet4)
 #'
 #' @export
-script_wrap_text = function(file, code, max_length=70, eol="\n#' ", punctuation='.!?', 
+script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='.!?', 
   split_code=TRUE, split='\\n', verbose=TRUE) {
   
   # --------------------- #
@@ -117,7 +32,7 @@ script_wrap_text = function(file, code, max_length=70, eol="\n#' ", punctuation=
     
   replace_code_tag = function(x, extra=":", as_link=TRUE)
     gsub('[\\]code[{]([a-zA-Z0-9_.()'%.%extra%.%']+)+[}]',
-         ifelse(as_link,'[','`')%.%'\\1'%.%ifelse(as_link,']','`'),x)
+         ifelse(as_link,'[`','`')%.%'\\1'%.%ifelse(as_link,'`]','`'),x)
   
   # --------------------- #
   
@@ -160,11 +75,11 @@ script_wrap_text = function(file, code, max_length=70, eol="\n#' ", punctuation=
   hb_code = lapply(hb_lines, function(n) code[n])  
   
   # find the first non-empty line in each block (i.e. the title line)
-  hbt_begs_rel = lapply(hb_code, function(b) first_nonzero(!is_empty_line(b)))
+  hbt_begs_rel = lapply(hb_code, function(b) w_first_nonzero(!is_empty_line(b)))
   hbt_begs = lapply(seq(nblocks), function(i) hbt_begs_rel[[i]] + hb_begs[i] - 1)
   
   # find the second non-empty line in each block (i.e. the first description line)
-  hbd_begs_rel = lapply(hb_code, function(b) nth_nonzero(!is_empty_line(b),2))
+  hbd_begs_rel = lapply(hb_code, function(b) w_nth_nonzero(!is_empty_line(b),2))
   hbd_begs = lapply(seq(nblocks), function(i) hbd_begs_rel[[i]] + hb_begs[i] - 1)
 
   # find the positions of the examples and family "specials" (@examples, @family)
@@ -258,14 +173,14 @@ script_wrap_text = function(file, code, max_length=70, eol="\n#' ", punctuation=
   ##Code[focus2] = str_add_punct(Code[focus2], punct=punctuation)
   
   # focus only on the lines that exceed the character limit
-  long = focus[nchar(Code[focus])>max_length]
+  long = focus[nchar(Code[focus])>max_width]
 
   # split the line into multiple in case there are "\n" on it
   Code_long1 = lapply(Code[long], function(Cj) unlist(str_split(Cj, split)))
   #print(Code_long1); browser()
   
   # wrap the lines
-  Code_long = lapply(Code_long1, function(Cjs) unlist(lapply(Cjs,  wrap_help_line, max_length, eol)))
+  Code_long = lapply(Code_long1, function(Cjs) unlist(lapply(Cjs,  wrap_help_line, max_width, eol)))
   
   # insert the altered lines instead of the old ones
   Code = unlist(insert(Code, Code_long, long, replace=TRUE))
@@ -292,7 +207,7 @@ script_wrap_text = function(file, code, max_length=70, eol="\n#' ", punctuation=
 #'
 #' function that performs the actual wrapping
 #' @export
-wrap_help_line = function(text, max_length=70, eol="\n#' ") {
+wrap_help_line = function(text, max_width=70, eol="\n#' ") {
 
   Nj = nchar(text)
   
@@ -301,12 +216,12 @@ wrap_help_line = function(text, max_length=70, eol="\n#' ") {
   
   w_last_all = attempt = 0
   max_attempts = Nj
-  while(Nj>max_length && any(w_space>0) && attempt<=max_attempts) {
+  while(Nj>max_width && any(w_space>0) && attempt<=max_attempts) {
   
     attempt = attempt + 1
     
     # find the last space currently
-    w_last_now = w_space[last_below(w_space, max_length)]
+    w_last_now = w_space[w_last_below(w_space, max_width)]
     
     # remember the sum of all last space positions
     w_last_all = w_last_all + w_last_now

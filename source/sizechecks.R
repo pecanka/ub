@@ -12,7 +12,7 @@
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
-is_empty = function(x) {
+is_empty = function(...) {
   UseMethod("is_empty")
 }
 

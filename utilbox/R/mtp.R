@@ -15,7 +15,9 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
   
   if(do_cond) {
     
-    if(missing(lam)) error("Missing argument 'lam'.")
+    if(missing(lam)) 
+      error("Missing argument 'lam'.")
+      
     wk = p < lam
     pp = p[wk] / ifelse(scale_up, lam, 1)
     meth = sub("^c","",method)
@@ -49,7 +51,7 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
   
     if(any(wk)) rej[wk] = p.adjust(pp, method=meth) < alpha
   
-  } else error("Unknown method '",method,"' in test_pval.")
+  } else error("Unknown method '",method,"'.")
   
   rej
 
@@ -189,7 +191,7 @@ hartung.test = function(p, alpha=0.05, kappa=0.2, what="ns") {
  
   non_signif = punitroots::Hartung(p, kappa=kappa)$p.value >= alpha
   
-  switch(what, "ns"=non_signif, error("Unknown value in what."))
+  switch(what, "ns"=non_signif, error("Unknown value in 'what'."))
   
 }
 
@@ -270,9 +272,15 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
   stopifnot(n>0, m>0)
   
   if(!any(names(getLoadedDLLs())=="mtc")) {
-    if(trace>0) cat("Loading library file '",dll_lib,"' ...\n")
-    if(!file.exists(dll_lib)) error("Library file '",dll_lib,"' does not exist!")
+  
+    if(trace>0) 
+      catn("Loading library file '",dll_lib,"' ...")
+    
+    if(!file.exists(dll_lib)) 
+      error("Library file '",dll_lib,"' does not exist!")
+      
     loaded = dyn.load(dll_lib)
+    
   }
   
   # Make sure the variables have the right size and type
@@ -325,7 +333,8 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
   method = match.arg(method, c(methods, cmethods))
   do_cond = method %in% cmethods
   
-  if(do_cond && missing(lam)) error("Missing argument 'lam'.")
+  if(do_cond && missing(lam)) 
+    error("Missing argument 'lam'.")
   
   if(is.vector(p)) p = matrix(p, ncol=1)
   n = nrow(p)
@@ -404,7 +413,8 @@ mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5
   method = match.arg(method, cmethods)
   do_cond = method %in% cmethods
   
-  if(do_cond && missing(lam)) error("Missing argument 'lam'.")
+  if(do_cond && missing(lam)) 
+    error("Missing argument 'lam'.")
   
   X = mtctestFast(p, alpha=alpha, method=if(do_cond) sub("^c","",method) else method, 
                   n1=max(n1, 0), lam=ifelse(do_cond, lam, 2), what=what)
@@ -427,11 +437,13 @@ mtp_errors_slow = function(p, methods, n1=0, k, alpha=0.05, lamSFG=0.5, lam, sca
   L = list()
   for(method in methods) {
   
-    if(trace>0) cat0("evaluating rejections for method '",method,"' (column-wise on p) ... ")
+    if(trace>0) 
+      cat0("evaluating rejections for method '",method,"' (column-wise on p) ... ")
     
     rej = apply(p, 2, test_pval, alpha=alpha, method=method, lam=lam, scale_up=scale_up, lamSFG=lamSFG)  
     
-    if(trace>0) cat0("evaluating fwer, fdr, power ... ")
+    if(trace>0) 
+      cat0("evaluating fwer, fdr, power ... ")
     
     fwer = fdr = power = NULL
     

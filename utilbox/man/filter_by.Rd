@@ -9,13 +9,13 @@
 \alias{filter_by_call}
 \title{Filter an object based}
 \usage{
-filter_by_value(x, pattern, fixed = FALSE)
+filter_by_value(...)
 
-\method{filter_by_value}{default}(x, pattern, fixed = FALSE)
+\method{filter_by_value}{default}(x, pattern, fixed = FALSE, exclude = FALSE)
 
-filter_by_name(x, pattern, fixed = FALSE)
+filter_by_name(x, pattern, fixed = FALSE, exclude = FALSE)
 
-filter_by_bool(x, keep)
+filter_by_bool(x, keep, exclude = FALSE)
 
 filter_by_call(...)
 }

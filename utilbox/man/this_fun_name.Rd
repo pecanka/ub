@@ -4,13 +4,15 @@
 \alias{this_fun_name}
 \title{Get function name}
 \usage{
-this_fun_name()
+this_fun_name(e = sys.parent())
 }
 \description{
 Returns the name of the parent function, i.e. that from whose body it is invoked.
+If invoked from `.GlobalEnv`, returns an empty string ("").
 }
 \examples{
-lll = function() print(this_fun_name()); lll() # should return 'lll'
+example_function = function() print(this_fun_name())
+example_function()     # should return 'example_function'
 
 }
 \seealso{
@@ -19,6 +21,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{get_package_namespace}()},
 \code{\link{hijack}()}
 }
 \concept{coding-related functions provided by utilbox}

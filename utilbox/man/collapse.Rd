@@ -3,15 +3,21 @@
 \name{collapse}
 \alias{collapse}
 \alias{collapse0}
+\alias{str_collapse}
 \alias{collapse0n}
+\alias{collapsen}
 \alias{collapse0nq}
 \title{Collapse a string vector}
 \usage{
-collapse0(x, sep = "")
+collapse0(x, ..., sep = "")
 
-collapse0n(x, sep = "\\n")
+str_collapse(x, ..., sep = "")
 
-collapse0nq(x, sep = "'\\n'")
+collapse0n(x, ..., sep = "\\n")
+
+collapsen(x, ..., sep = "\\n")
+
+collapse0nq(x, ..., sep = "'\\n'")
 }
 \description{
 Takes a vector and collapses it into a single string. Equivalent to
@@ -24,7 +30,6 @@ collapse0(c(0,1,1,1,0,1,0,0))
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{combine_names}()},
 \code{\link{cumpaste0}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
@@ -33,11 +38,12 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
 \code{\link{str_last}()},
+\code{\link{str_paste_grid}()},
+\code{\link{str_pos}()},
 \code{\link{str_replace}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strpos}()},
 \code{\link{strrev}()},
 \code{\link{sub_at}()},
 \code{\link{subm}()},

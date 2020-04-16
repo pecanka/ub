@@ -4,56 +4,79 @@
 \alias{operator_match}
 \alias{\%match\%}
 \alias{\%m\%}
+\alias{\%mic\%}
 \alias{\%notmatch\%}
 \alias{\%nm\%}
+\alias{\%nmic\%}
 \alias{\%matches\%}
+\alias{\%mes\%}
 \alias{\%notmatches\%}
+\alias{\%nmes\%}
 \title{Regular expression match operator}
 \usage{
 pattern \%match\% x
 
 pattern \%m\% x
 
-... \%notmatch\% NA
+pattern \%mic\% x
 
-... \%nm\% NA
+pattern \%notmatch\% x
+
+pattern \%nm\% x
+
+pattern \%nmic\% x
 
 x \%matches\% pattern
 
-... \%notmatches\% NA
+x \%mes\% pattern
+
+x \%notmatches\% pattern
+
+x \%nmes\% pattern
 }
 \description{
-\code{\%match\%} is an operator version of \code{base::regexpr}. Uses 
-the left-hand side argument as the \code{pattern} and the right-hand 
+`\%match\%` (alias `\%m\%`) is an operator version of [`base::regexpr`]. 
+It uses the left-hand side argument as the \code{pattern} and the right-hand 
 side argument as the \code{text} arguments of a call to \code{regexpr}. 
 The call to \code{regexpr} is vectorized, which means that the operator 
 also takes vector arguments (on either side).
 }
 \details{
+`\%mic\%` is a version of `\%m\%` which ignores case by default.
+
 \code{\%matches\%} does the same except with the roles of the two 
 arguments reversed.
 
-`\%notmatch%` and `\%notmatches%` are the negations of the two operators and
-`\%m\%` and `\%nm%\` are aliases for `\%match\%` and `\%notmatch\%`.
+`\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias `\%nmes\%`) 
+are the negations of the two operators. 
+
+`\%nmic\%` is the case-insensitive version of `\%notmatch%` and `\%nm\%`.
 }
 \examples{
 # in one direction:
-"ay" \%match\% "daylight"
-"ai" \%match\% "daylight"
+"ay" \%m\% "daylight"
+"ai" \%m\% "daylight"
+"ay" \%nm\% "daylight"
+"ai" \%nm\% "daylight"
+
 # and in the opposite direction:
 "daylight" \%matches\% "ay"
 "daylight" \%matches\% "ai"
+
+# case insensitive version:
+"DAYlight" \%mic\% "ay"
+"DAYlight" \%mic\% "ai"
 
 }
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{\%append\%}()},
-\code{\link{\%c\%}()},
 \code{\link{\%modify\%}()},
 \code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
+\code{\link{operator_append}},
+\code{\link{operator_c}},
 \code{\link{renaming_operators}}
 }
 \concept{operators provided by utilbox}

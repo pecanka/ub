@@ -110,6 +110,7 @@ h1.table = h1.data.frame
 #' @family sequence-related functions provided by utilbox
 #' @export
 t1 = function(x, ...) {
+  if(is_empty(x)) return(x)
   UseMethod('t1')
 }
 

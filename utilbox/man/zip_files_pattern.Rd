@@ -11,7 +11,7 @@ zip_files_pattern(
   path = ".",
   appendix = ".zip",
   extras = "-m",
-  do_patternize = TRUE,
+  patternize = TRUE,
   chunk = Inf,
   announce = FALSE,
   single_archive = TRUE,
@@ -37,7 +37,7 @@ or when \code{single_archive} is \code{TRUE}.}
 \item{extras}{Modifiers sent to the zip archiver. Defaults to '-m', 
 which moves the files into the archive.}
 
-\item{do_patternize}{Determines whether the mask is treated as given or whether the
+\item{patternize}{Determines whether the mask is treated as given or whether the
 special characters in it are wrapped to be matched accurately.}
 
 \item{chunk}{Batch size for the archiver.}

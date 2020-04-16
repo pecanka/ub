@@ -17,6 +17,7 @@ on my system (the author).
 }
 \seealso{
 Other utilbox-internal functions provided by utilbox: 
+\code{\link{utilbox_environment}()},
 \code{\link{utilbox_namespace}()}
 }
 \concept{utilbox-internal functions provided by utilbox}

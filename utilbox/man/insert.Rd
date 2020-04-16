@@ -2,13 +2,54 @@
 % Please edit documentation in R/sequences.R
 \name{insert}
 \alias{insert}
+\alias{insert.list}
+\alias{insert.default}
+\alias{insert_recurse.list}
+\alias{insert1}
+\alias{insert1.list}
 \title{Insert element into sequence}
 \usage{
-insert(x, what, after, count = 1, make_room = TRUE, drop_limit = Inf)
+insert(...)
+
+\method{insert}{list}(
+  x,
+  what,
+  at,
+  after,
+  count = 1,
+  replace_old = !FALSE,
+  allow_overwriting = FALSE,
+  indicate_new_old = TRUE
+)
+
+\method{insert}{default}(x, ...)
+
+insert_recurse.list(x, what, at, count = 1, replace = FALSE)
+
+insert1(...)
+
+\method{insert1}{list}(x, what, at, count = 1, replace = FALSE)
 }
 \description{
 Insert an element in \code{what} inside \code{x} at the position 
-\code{after+1}.
+\code{after+1}. The replacement is processed backwards, which means
+that new additions can be rewritten when `make_room=FALSE` and
+the parameters
+}
+\examples{
+x = as.list(1:10); w = list(99, 999); v = c(2, 7)
+insert(x, w, v, count=2)                                     # making room, no dropping of rows
+insert(x, w, v, count=2, make_room=FALSE, drop_limit=0)      # no dropping can be forced also via 'drop_limit'
+insert(x, w, v, count=2, make_room=FALSE, drop_limit=1)      # only one row is dropped
+
+x = as.list(1:10); what = list(99, 999, 9999); at = c(2, 3, 7)
+x = as.list(do.call(paste0, rep_list(list(LETTERS[1:15]),10)))
+what = list('1','2','3'); at = c(2, 3, 7)
+insert(x, what, at, count=1)
+insert(x, what, at, count=3)
+insert(x, what, at, count=3, make_room=FALSE)                    # the placements do not get shifted, thus overwriting
+what[2] = list(list(a=1:10, b=sin))
+
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 

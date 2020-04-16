@@ -17,7 +17,6 @@ toupperfirst('hello')
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
-\code{\link{combine_names}()},
 \code{\link{cumpaste0}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
@@ -26,11 +25,12 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
 \code{\link{str_last}()},
+\code{\link{str_paste_grid}()},
+\code{\link{str_pos}()},
 \code{\link{str_replace}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strpos}()},
 \code{\link{strrev}()},
 \code{\link{sub_at}()},
 \code{\link{subm}()}

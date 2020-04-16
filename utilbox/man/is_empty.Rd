@@ -4,7 +4,7 @@
 \alias{is_empty}
 \title{Zero-length check}
 \usage{
-is_empty(x)
+is_empty(...)
 }
 \description{
 1is_empty` checks whether the supplied object has zero

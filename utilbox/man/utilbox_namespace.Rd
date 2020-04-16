@@ -2,19 +2,18 @@
 % Please edit documentation in R/utilbox.R
 \name{utilbox_namespace}
 \alias{utilbox_namespace}
-\title{Get the utilbox namespace/environment}
+\title{Get the namespace of the utilbox package}
 \usage{
-utilbox_namespace(envir = .GlobalEnv)
+utilbox_namespace()
 }
 \description{
-Creates the working namespace called `.utilbox`, which is used by some of the
-functions of the `utilbox` package (e.g. \code{cat0}) to store private variables.
-}
-\details{
-This was used before `utilbox` was an installable package (now basically unnecessary).
+Returns the environment which is the namespace of the utilbox package.
+If it failed for some reason, it returns creates and/or returns 
+the hidden environment located in `.GlobalEnv`.
 }
 \seealso{
 Other utilbox-internal functions provided by utilbox: 
-\code{\link{source_utilbox}()}
+\code{\link{source_utilbox}()},
+\code{\link{utilbox_environment}()}
 }
 \concept{utilbox-internal functions provided by utilbox}

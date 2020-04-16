@@ -87,54 +87,84 @@
   
 #' Regular expression match operator
 #'
-#' \code{\%match\%} is an operator version of \code{base::regexpr}. Uses 
-#' the left-hand side argument as the \code{pattern} and the right-hand 
+#' `\%match\%` (alias `\%m\%`) is an operator version of [`base::regexpr`]. 
+#' It uses the left-hand side argument as the \code{pattern} and the right-hand 
 #' side argument as the \code{text} arguments of a call to \code{regexpr}. 
 #' The call to \code{regexpr} is vectorized, which means that the operator 
 #' also takes vector arguments (on either side).
 #'
+#' `\%mic\%` is a version of `\%m\%` which ignores case by default.
+#'
 #' \code{\%matches\%} does the same except with the roles of the two 
 #' arguments reversed.
 #'
-#' `\%notmatch%` and `\%notmatches%` are the negations of the two operators and
-#' `\%m\%` and `\%nm%\` are aliases for `\%match\%` and `\%notmatch\%`.
+#' `\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias `\%nmes\%`) 
+#' are the negations of the two operators. 
+#'
+#' `\%nmic\%` is the case-insensitive version of `\%notmatch%` and `\%nm\%`.
 #'
 #' @examples
 #' # in one direction:
-#' "ay" %match% "daylight"
-#' "ai" %match% "daylight"
+#' "ay" %m% "daylight"
+#' "ai" %m% "daylight"
+#' "ay" %nm% "daylight"
+#' "ai" %nm% "daylight"
+#'
 #' # and in the opposite direction:
 #' "daylight" %matches% "ay"
 #' "daylight" %matches% "ai"
 #'
+#' # case insensitive version:
+#' "DAYlight" %mic% "ay"
+#' "DAYlight" %mic% "ai"
+#'
 #' @name operator_match
 #' @family operators provided by utilbox
 #' @export
-`%match%` = function(pattern, x, fixed=FALSE) {
-  unname(unlist(vregexpr(pattern, x, fixed=fixed) > 0))
+`%match%` = function(pattern, x, exclude=FALSE, fixed=FALSE, ignore.case=FALSE) {
+  is_match = unname(unlist(vregexpr(pattern, x, fixed=fixed, ignore.case=ignore.case) > 0))
+  if(exclude) !is_match else is_match
 }
 
 #' @rdname operator_match
 #' @export
 `%m%` = `%match%`
 
+#' @rdname operator_match
+#' @export
+`%mic%` = hijack(`%match%`, ignore.case=TRUE)
+
 #' @rdname operator_match 
 #' @export
-`%notmatch%` = Negate(`%match%`)
+`%notmatch%` = hijack(`%match%`, exclude=TRUE)
+#`%notmatch%` = Negate(`%match%`)
 
 #' @rdname operator_match
 #' @export
 `%nm%` = `%notmatch%`
 
-#' @rdname operator_match 
+#' @rdname operator_match
 #' @export
-`%matches%` = function(x, pattern, fixed=FALSE) {
-  unname(unlist(vregexpr(pattern, x, fixed=fixed) > 0))
-}
+`%nmic%` = hijack(`%notmatch%`, ignore.case=TRUE)
 
 #' @rdname operator_match 
 #' @export
-`%notmatches%` = Negate(`%matches%`)
+`%matches%` = function(x, pattern, exclude=FALSE, fixed=FALSE, ignore.case=FALSE) {
+  `%match%`(pattern, x, exclude=exclude, fixed=fixed, ignore.case=ignore.case)
+}
+
+#' @rdname operator_match
+#' @export
+`%mes%` = `%matches%`
+
+#' @rdname operator_match 
+#' @export
+`%notmatches%` = hijack(`%matches%`, exclude=TRUE)
+#`%notmatches%` = Negate(`%matches%`)
+
+#' @rdname operator_match
+#' @export
+`%nmes%` = `%notmatches%`
 
 #' Default value for NULL and zero-length objects
 #'
@@ -147,6 +177,10 @@
 #'
 #' `\%NA\%` is an operator version of `ifelse(is.na(x), y, x), which
 #' allows input of various types (vectors, lists, closures, etc.).
+#'
+#' `\%ERR\%` works analogously except that it checks for class `try-error`.
+#' If its first argument is of class `try-error` it returns its second
+#' argument (`y`). Otherwise it returns the first (`x`).
 #'
 #' @name operator_NULL
 #' @examples
@@ -177,6 +211,12 @@
 #' @export
 `%NA%` = function (x, y) {
   if(class(x)=='function') x else ifelse(is.na(x), y, x)
+}
+
+#' @rdname operator_NULL
+#' @export
+`%ERR%` = function (x, y) {
+  if(is_error(x)) y else x
 }
 
 #' Renaming operators
@@ -211,7 +251,9 @@
 
 #' Append operator
 #'
-#' Append one object to another via [base::append].
+#' Append one object to another via [base::append]. `\%append\%`
+#' appends the right-hand argument to the left-hand side, while
+#' `\%appendR\%` appends in the reverse order.
 #'
 #' @returns A list.
 #'
@@ -219,13 +261,26 @@
 #' list(a=1, b=2) %append% list(c=3)    # adds an element to the list on the LHS
 #' c(1,2) %append% list(c=3)            # turns the LHS into a list, then appends
 #'
+#' @name operator_append
 #' @family operators provided by utilbox
 #' @export
-`%append%` = function(k, l) {
-  if(!is_empty(k) && !is.list(k)) k = list(k)
-  if(!is_empty(k) && !is.list(l)) l = list(l)
-  append(k, l)
+`%append%` = function(left, right) {
+  if(!is_empty(left)  && !is.list(left))  left  = list(left)
+  if(!is_empty(right) && !is.list(right)) right = list(right)
+  append(left, right)
 }
+
+#' @rdname operator_append
+#' @export
+`%appendR%` = `body<-`(function(right, left) { }, value = body(`%append%`))
+
+#' @rdname operator_append
+#' @export
+`%ap%` = `%append%`
+
+#' @rdname operator_append
+#' @export
+`%apR%` = `%appendR%`
 
 #' Append operator
 #'
@@ -234,9 +289,16 @@
 #' @examples
 #' 1:10 %c% 11:15
 #'
+#' @name operator_c
 #' @family operators provided by utilbox
 #' @export
 `%c%` = function(x, y) {
+  c(x, y)
+}
+
+#' @rdname operator_c
+#' @export
+`%cR%` = function(y, x) {
   c(x, y)
 }
 
@@ -251,9 +313,9 @@
 #'
 #' @family operators provided by utilbox
 #' @export
-`%modify%` = function(k, l) {
-  if(!is_empty(k) && !is.list(k)) k = list(k)
-  if(!is_empty(k) && !is.list(l)) l = list(l)
-  modifyList(k, l)
+`%modify%` = function(left, right) {
+  if(!is_empty(left)  && !is.list(left))  left  = list(left)
+  if(!is_empty(right) && !is.list(right)) right = list(right)
+  modifyList(left, right)
 }
 

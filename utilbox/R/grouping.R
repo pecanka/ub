@@ -31,7 +31,7 @@ groups_of_unique = function(x, format=as.numeric) {
 #' @family sequence-related functions provided by utilbox
 #' @export
 split_into_groups = function(x, n) {
-  tapply(x, (seq_along(x) - 1) %/% n + 1, `[`, simplify=FALSE)
+  tapply(x, (seq_along(x) - 1) %/% min(1,ceiling(n)) + 1, `[`, simplify=FALSE)
 }
 
 #' Virtually bag the elements of \code{x}

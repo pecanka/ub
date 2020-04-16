@@ -1,23 +1,5 @@
 #while(any(search()=="package:utilbox")) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/make+install_utilbox.R"); require(utilbox)
 
-## Function that returns the path to the script file from which it is called
-find_script_dir = function() {
-  if("ofile" %in% names(sys.frame(1))) {
-    dirname(sys.frame(1)$ofile)
-  } else {
-    "." 
-  }
-}
-
-## Check if packages are installed and if not, install them (on Windows, make sure Rtools is installed)
-avail_pckg = installed.packages()[,"Package"]
-if(! "devtools" %in% avail_pckg) { cat("Installing 'devtools' ...\n"); install.packages("devtools") }
-if(! "roxygen2" %in% avail_pckg) { cat("Installing 'roxygen2' ...\n"); install.packages("roxygen2") }
-  
-## Load required packages
-library(devtools)   # if missing, install from CRAN via install.packages("devtools")
-library(roxygen2)   # if missing, install from CRAN via install.packages("roxygen2")
-
 ####################################################################################
 
 ## Set the 'utilbox' package name, its directory and the location of source files ##
@@ -28,16 +10,37 @@ do_quick_install = FALSE
 
 ####################################################################################
 
+## Function that returns the path to the script file from which it is called
+find_script_dir = function() {
+  if("ofile" %in% names(sys.frame(1))) {
+    dirname(sys.frame(1)$ofile)
+  } else {
+    "."
+  }
+}
+
+## Load required packages. First check if the packages are installed 
+## and if not, install them (on Windows, make sure Rtools is installed)
+avail_pckg = installed.packages()[,"Package"]
+for(p in c('devtools','roxygen2')) {
+  if(! p %in% avail_pckg) {
+    cat("Installing '",p,"' ...\n"); install.packages(p)
+  }
+  library(p, character.only=TRUE)
+}
+
 path = find_script_dir() 	# e.g. 'd:/Dropbox/Projects/R/utilbox/'
 
 cat("Working path:",path,"\n")
 
-if(path=='.') 
+if(path=='.')
   stop("Something is probably wrong with the identification of the path. I better stop here.")
 
 setwd(path)
 
-if(do_quick_install) cat("\nRUNNING A QUICK INSTALLATION...\n\n"); flush.console()
+if(do_quick_install) {
+  cat("\nRUNNING A QUICK INSTALLATION...\n\n"); flush.console()
+}
 
 #file.remove(package$dir)
 
@@ -45,7 +48,7 @@ if(do_quick_install) cat("\nRUNNING A QUICK INSTALLATION...\n\n"); flush.console
 cat("Creating basic directory structure for the package...\n")
 if(!dir.exists(package$dir)) create(package$dir)
 
-## Delete all existing files in the package 
+## Delete all existing files in the package
 cat("Deleting any old files that might be present...\n")
 files = list.files(package$dir, full.names=TRUE, recursive=TRUE)
 files = files[!file.info(files)$isdir]
@@ -62,7 +65,7 @@ for(f in files) {
 
 cat("Placing the description file into the package directory...\n")
 file.copy('DESCRIPTION', package$dir)
-  
+
 ## Create documentation
 if(do_update_documentation) {
   cat("Creating documentation...\n")
@@ -75,13 +78,17 @@ if(do_update_documentation) {
 
 cat("Package created.\n")
 
+## Build the package
+cat("Building the package...\n")
+build(package$name, path='build')
+
 ## Install the package
 cat("Installing the package...\n")
 install(package$name, quick=do_quick_install)
 
 cat("Adding the package's source path variable to .GlobalEnv and to .Rprofile so that it is set at R startup ...\n")
 package_complete_path = file.path(path, package$filedir)
-startup_code = paste0("assign('.utilbox_source_path', '", package_complete_path, "', envir=.GlobalEnv)")
+startup_code = paste0("assign('.",package$name,"_source_path', '", package_complete_path, "', envir=.GlobalEnv)")
 assign('.utilbox_source_path', package_complete_path, envir=.GlobalEnv)
 R_del_code_startup(substr(startup_code, 1, 30))
 R_add_code_startup(startup_code)

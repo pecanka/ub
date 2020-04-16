@@ -24,11 +24,11 @@ elements of the second argument, and \code{FALSE} otherwise.
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{\%append\%}()},
-\code{\link{\%c\%}()},
 \code{\link{\%modify\%}()},
 \code{\link{concatenate}},
 \code{\link{operator_NULL}},
+\code{\link{operator_append}},
+\code{\link{operator_c}},
 \code{\link{operator_match}},
 \code{\link{renaming_operators}}
 }

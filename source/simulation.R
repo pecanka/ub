@@ -69,19 +69,25 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
   if(random) {
     Sigma = rvariance(N)
   } else {
-    if(N%%nb!=0) error("Number of blocks 'nb' must divide 'N'.")
+  
+    if(N%%nb!=0) 
+      error("Number of blocks 'nb' must divide 'N'.")
+      
     n = N%/%nb
     Sigma = matrix(rho, nrow=n, ncol=n)
+    
     if(type=="band") {
       llibrary(Matrix)
       Sigma = band(Sigma, -abs(bandsize), abs(bandsize))
     }
+    
     Sigma = 0.5*(Sigma+t(Sigma))
     diag(Sigma) = 1.
     if(nb>1) Sigma = drep(Sigma, nb)
+    
   }
 
-  return(Sigma)
+  Sigma
   
 }
 
@@ -132,9 +138,12 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
     error("Missing argument 'M'.")
     
   if(missing(N)) {
+    
     if(missing(Sigma) || !is.matrix(Sigma)) 
       error("Either 'N' or 'Sigma' (matrix) must be supplied.")
+      
     N = nrow(Sigma)
+    
   }
   
   if(trace>0) cat("Simulating ",M*N," p-values ... ")
@@ -148,10 +157,12 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
     
     if(length(Sigma)==1) Sigma = diag2(rep(1, N), Sigma)
     
-    if(n0+n1!=nrow(Sigma)) error("Conflict between n0, n1 and Sigma.")    
-    
-    if(length(mu0)!=1 && length(mu0)!=n0) error("Supply consistent mu0 and n0.")
-    if(length(mu1)!=1 && length(mu1)!=n1) error("Supply consistent mu1 and n1.")
+    if(n0+n1!=nrow(Sigma)) 
+      error("There's a conflict between n0, n1 and Sigma.")    
+    if(length(mu0)!=1 && length(mu0)!=n0) 
+      error("Supply consistent mu0 and n0.")
+    if(length(mu1)!=1 && length(mu1)!=n1) 
+      error("Supply consistent mu1 and n1.")
 
     mu = sqrt(n) * c(rep(mu1, n1/length(mu1)), rep(mu0, n0/length(mu0)))
     
@@ -177,7 +188,8 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
       
     } else error("Unknown model '",model,"'.")
     
-    if(!is_posdef(Sigma)) error("Sigma must be positive-definite.")
+    if(!is_posdef(Sigma)) 
+      error("Sigma must be positive-definite.")
     
     N = nrow(Sigma)
     

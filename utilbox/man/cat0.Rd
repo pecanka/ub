@@ -4,7 +4,7 @@
 \alias{cat0}
 \alias{catn}
 \alias{catnn}
-\title{Print}
+\title{Print text}
 \usage{
 cat0(
   ...,
@@ -15,7 +15,8 @@ cat0(
   append = FALSE,
   flush = TRUE,
   flush_cycle = 1,
-  envir = utilbox_namespace()
+  envir = utilbox_environment(),
+  fill_using_options = FALSE
 )
 
 catn(
@@ -39,11 +40,19 @@ catnn(
 )
 }
 \description{
+Prints text to console or file via [base::cat]. Allows for optional
+}
+\details{
 `cat0` is basically an alias for [base::cat] that automatically 
 flushes the console buffer (when `flush=TRUE`). This only affects 
 buffered output enabled R sessions (e.g. Rgui on Windows)
-}
-\details{
-`catn` is an alias for `cat0` which adds a single end-of-line symbol 
-by default.
+
+`catn` is an alias for `cat0` which in the default setting adds 
+a single end-of-line symbol (specified in `eol`, which `\\n` by
+default) at the end of the strings.
+
+`catnn` extends `catn` to also use `eol` as the default value for 
+`sep`.
+
+All of these allow a smart way of flushing the console.
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/classes.R
 \name{classes}
 \alias{classes}
-\alias{append_class}
+\alias{add_class}
 \alias{drop_class}
 \title{Add class to the object's classes}
 \usage{
-append_class(x, what)
+add_class(x, class)
 
-drop_class(x, what)
+drop_class(x, class)
 }
 \description{
-`append_class` adds the class specified in `what` as the 
+`add_class` adds the class specified in `what` as the 
 first among the classes of the object `x`.
 }
 \details{
@@ -19,7 +19,7 @@ first among the classes of the object `x`.
 the given object.
 }
 \examples{
-append_class(list(1:20), 'huge')
+add_class(list(1:20), 'huge')
 
 }
 \seealso{

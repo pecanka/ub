@@ -33,12 +33,20 @@
 #' @family names-related functions provided by utilbox
 #' @export
 coalesce_names = function(x, y) {
-  `names<-`(x, ifelse(is_names_empty(x), names(y), names(x)))
+  if(is_empty(x)) {
+    x
+  } else {
+    `names<-`(x, ifelse(is_names_empty(x), names(y), names(x)))
+  }
 }
 
 #' @export
 unempty_names = function(x, names) {
-  `names<-`(x, ifelse(is_names_empty(x), names, names(x)))
+  if(is_empty(x)) {
+    x
+  } else {
+    `names<-`(x, ifelse(is_names_empty(x), names, names(x)))
+  }
 }
 
 #' @export

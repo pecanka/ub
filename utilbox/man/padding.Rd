@@ -5,18 +5,21 @@
 \alias{str_pad}
 \alias{int_pad}
 \alias{num_pad}
+\alias{spaces}
 \title{Format string}
 \usage{
-str_pad(x, min_width, format)
+str_pad(x, min_width, side = c("left", "right"), padding = " ")
 
 int_pad(x, min_width, format, fmt = "d")
 
 num_pad(x, min_nint, min_ndig = 6, fmt = "f", format)
+
+spaces(n, char = " ")
 }
 \description{
-`str_pad` pads to input to a given width (`width`). 
-It formats the contents of `x` to a minimum width (character count) 
-or other specified format (via `format`). The minimum length is 
+`str_pad` pads to input to a given width (`width`).  It formats 
+the contents of `x` to a minimum width (character count) or other 
+specified format (via `format`). The minimum length is 
 easiest controlled via `min_width`. Non-character values are 
 converted to character using `base::as.character`.
 }
@@ -25,13 +28,15 @@ converted to character using `base::as.character`.
 
 `num_pad` pads a real/double with leading zeros.
 
-Note: Check out the function in options()$str$formatNum to see how R formats numbers.
+`spaces` produces an empty string of length `n`.
+
+Note: Check out the function in `options()$str$formatNum` to see 
+how R formats numbers.
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
-\code{\link{combine_names}()},
 \code{\link{cumpaste0}()},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -39,11 +44,12 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
 \code{\link{str_last}()},
+\code{\link{str_paste_grid}()},
+\code{\link{str_pos}()},
 \code{\link{str_replace}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strpos}()},
 \code{\link{strrev}()},
 \code{\link{sub_at}()},
 \code{\link{subm}()},

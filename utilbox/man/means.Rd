@@ -2,34 +2,34 @@
 % Please edit documentation in R/means.R
 \name{means}
 \alias{means}
+\alias{mean_na}
 \alias{amean}
-\alias{amean2}
 \alias{hmean}
 \alias{gmean}
 \alias{gmeanw}
 \alias{lmean}
 \title{Various means}
 \usage{
-amean(x, na.rm = FALSE)
+mean_na(..., na.rm = TRUE)
 
-amean2(..., na.rm = TRUE)
+amean(x, na.rm = TRUE)
 
-hmean(...)
+hmean(..., na.rm = TRUE)
 
-gmean(x, na.rm = FALSE)
+gmean(x, na.rm = TRUE)
 
-gmeanw(x, w, ...)
+gmeanw(x, w, na.rm = TRUE, ...)
 
-lmean(x, w, ...)
+lmean(x, w, na.rm = TRUE, ...)
 }
 \description{
-`amean` gives the arithmetic mean of `x`. It has the same 
-functionality as \code{base::mean} except with 
-different output when input has zero length.
+Various mean functions. Arithmetic, geometric, weighted geometric,
+harmonic and logistic means are implemented. Compares to [base::mean]
+these functions have remove `NA`s by default and return zero-length
+responses on zero-length input or input with no non-`NA` values.
 }
 \details{
-`amean2` is an alias for [base::mean] with a different
-default for `na.rm` (unlike `base::mean`, it removes them by default).
+`amean` gives the arithmetic mean of `x`. 
 
 `gmean` and `gmeanw` calculate the geometric mean of `x`, while the latter
 permits weighing.
@@ -38,6 +38,8 @@ permits weighing.
 combination of all its input arguments.
 
 `lmean` calculates the (weighted) logistic mean.
+
+`mean_na` is an alias for [base::mean] with `na.rm=TRUE`.
 }
 \examples{
 x = c(1,NA); mean(x); mean2(x)

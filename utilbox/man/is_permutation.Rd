@@ -24,7 +24,6 @@ Other check-performing functions provided by utilbox:
 \code{\link{is_odd}()},
 \code{\link{is_round}()},
 \code{\link{is_scientific}()},
-\code{\link{is_unique}()},
-\code{\link{last_nonzero}()}
+\code{\link{is_unique}()}
 }
 \concept{check-performing functions provided by utilbox}

@@ -11,7 +11,7 @@ clock(announce = TRUE, with_date = TRUE, lead = "", digs = 3, eol = "\\n")
 
 start_clock(print = TRUE, envir = parent.frame(), lead = "", what = "")
 
-read_clock(envir = utilbox_namespace())
+read_clock(envir = utilbox_environment())
 
 stop_clock(
   d1 = NULL,
@@ -19,7 +19,7 @@ stop_clock(
   start_print = FALSE,
   end_print = TRUE,
   runtime_print = TRUE,
-  envir = utilbox_namespace(),
+  envir = utilbox_environment(),
   lead = "",
   what = ""
 )

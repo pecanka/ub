@@ -83,6 +83,10 @@ url_exists = function(url, ok_status=200) {
 
 #' @export
 url_exists1 = function(url) {
-  if('^https:' %m% url) error("Only plain/unencrypted (http) URLs allowed.")
+  
+  if('^https:' %m% url) 
+    error("Only plain/unencrypted (http) URLs allowed.")
+  
   RCurl::url.exists(url, useragent="curl/7.39.0 Rcurl/1.95.4.5")
+  
 }

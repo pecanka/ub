@@ -12,9 +12,10 @@ An alias for `as.list(unlist(x))`.
 \seealso{
 Other list utilities provided by utilbox: 
 \code{\link{list_clean}()},
+\code{\link{list_mirror}()},
 \code{\link{list_set_attr}()},
+\code{\link{list_update}()},
 \code{\link{merge_recurse}()},
-\code{\link{modifyList2}()},
 \code{\link{nlist}()}
 }
 \concept{list utilities provided by utilbox}

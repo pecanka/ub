@@ -32,11 +32,14 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
   
   if(!dir.exists(dir)) {
     if(create) {
-      if(ask) wait("Directory '",dir,"' does not exist and it will be created ...")
+      if(ask) {
+        wait("Directory '",dir,"' does not exist and it will be created ...")
+      }
       dir.create(dir)
     } else {
-      error("Cannot change working directory to '",dir,"' since it does not exist.",
-            " Set create to TRUE for the missing directories to be created.")
+      error("Cannot change working directory to '",dir,"' since it",
+            " does not exist. Use 'create=TRUE' for missing directories",
+            " to be created.")
     }
   }
   
@@ -64,6 +67,7 @@ is_sourced = function(level=1, exact_level = TRUE) {
 #'
 #' When sourcing files, it might be of interest to know how many times the \code{source}
 #' function has been called. This function returns that number.
+#'
 #' @name is_sourced
 #' @export
 source_depth = function() {
@@ -72,7 +76,7 @@ source_depth = function() {
                                 "echo", "prompt.echo", "spaced"),
                    "sys.source" = c("i", "exprs", "oop", "file", "envir", 
                                     "chdir", "keep.source", "toplevel.env"))
-                                    
+ 
   is_source = function(i) all(check_for$"source" %in% names(sys.frame(i)))
   
   is_sys_source = function(i) all(check_for$"sys.source" %in% names(sys.frame(i)))
@@ -83,3 +87,40 @@ source_depth = function() {
   
 }
 
+#' Source multiple files
+#'
+#' Sources all specified files (`files`) relative to 
+#' the given path (`path`).
+#'
+#' @export
+source_files = function(files, path='.', announce=TRUE) {
+
+  ff = file_path(path, files, normalize=TRUE)
+  msgs = "Sourcing file '" %.% ff %.% "' ... "
+  
+  for(i in seq_along(ff)) {
+    if(announce) cat0(msgs[i])
+    source(ff[i])
+    if(announce) catn(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
+  }
+  
+}
+
+#' Source all files matching a pattern
+#'
+#' Sources all files that match the supplied pattern (`pattern`)
+#' relative to the supplied path (`path`) or the current working
+#' directory.
+#'
+#' @export
+source_pattern = function(pattern, path='.') {
+
+  files = list.files(path, pattern)
+  
+  if(is_empty(files))
+    error("No files matched the pattern '",pattern,
+          "' relative to path '",path,"'.")
+  
+  source_files(files, path)
+  
+}

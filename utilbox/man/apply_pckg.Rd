@@ -4,7 +4,15 @@
 \alias{apply_pckg}
 \title{Apply function to an object in a package}
 \usage{
-apply_pckg(objs, pckg, f, ..., workhorse = sapply)
+apply_pckg(
+  objs,
+  pckg,
+  f,
+  ...,
+  workhorse = sapply,
+  envir = getNamespace(pckg),
+  value_error = NA
+)
 }
 \description{
 Applies function \code{f} to the object(s) whose names are in 

@@ -46,6 +46,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{append_body}()},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{get_package_namespace}()},
 \code{\link{hijack}()},
 \code{\link{this_fun_name}()}
 }

@@ -8,6 +8,24 @@ list_flatten = function(x) {
   as.list(unlist(x))
 }
 
+#' Mirror list structure
+#'
+#' Mirrors the structure of the list `x`. In other words,
+#' it returns a list with the same numbers of elements
+#' at each list-depth. For now only mirroring up to depth
+#' 1 is implemented.
+#'
+#' @family list utilities provided by utilbox
+#' @export
+list_mirror = function(x, value, depth=1) {
+  stopifnot(depth>=1, is.list(x))
+  if(depth==1) {
+    lapply(x, function(x1) rep(value, length(x1)))
+  } else {
+    error("Mirroring with 'depth=",depth,"' not yet implemented.")
+  }
+}
+
 #' Recursive merge
 #'
 #' This does a recursive merge of lists. The code is taken from the package 
@@ -65,7 +83,7 @@ list_clean = function(L, null.rm=TRUE) {
 #' rep_list(list(a=1, mean), 2)
 #'
 #' @export
-rep_list = function(x, ...) {
+rep_list = function(...) {
   UseMethod("rep_list")
 }
 
@@ -115,18 +133,22 @@ rep_list.data.frame = rep_list.list
 
 #' @rdname rep_list
 #' @export
-rep_list.matrix = append_body(rep_list.list, expression(x = list(x)), at_top=TRUE)
+rep_list.matrix = append_body(rep_list.list, expression(x = list(x)), where='first')
 
 #' Modify list
 #'
-#' A version of 'modifyList' from utils which drops zero-length elements in 'val'
+#' A version of 'modifyList' from `utils` which drops zero-length elements in 'val'
 #' before updating 'x' (optionally can behave the same as modifyList)
 #'
 #' @family list utilities provided by utilbox
 #' @export
-modifyList2 = function(x, val, ..., drop_null_val=TRUE) {
+list_update = function(x, val, ..., drop_null_val=TRUE) {
   utils::modifyList(x, if(drop_null_val) Filter(length, val) else val)
 }
+
+#' @rdname list_update
+#' @export
+modifyList2 = list_update
 
 #' Named list
 #'
@@ -188,9 +210,14 @@ nlist2 = function (...) {
 #' @family list utilities provided by utilbox
 #' @export
 list_set_attr = function(x, attrib_name, attrib) {
+  
+  if(missing(attrib_name)) 
+    error("Supply attribute name via 'attrib_name'.")
+  if(missing(attrib)) 
+    error("Supply attributes via 'attrib'.")
+  
   stopifnot(any(length(attrib)==c(1,length(x))))
   stopifnot(is.list(x))
-  if(missing(attrib_name)) error(this_fun_name(),': supply attribute name.')
   
   if(length(attrib)==1) attrib = rep(attrib, length(x))
   

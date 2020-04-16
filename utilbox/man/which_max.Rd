@@ -71,6 +71,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{value_locale}}
 
 Other numeric functions provided by utilbox: 
@@ -97,6 +98,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{value_locale}}
 }
 \concept{numeric functions provided by utilbox}

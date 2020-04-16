@@ -5,9 +5,23 @@
 \alias{int2k}
 \title{Convert base}
 \usage{
-to_base_k(x, k = 3)
+to_base_k(
+  x,
+  k = 3,
+  recode = TRUE,
+  codes = c(0:9, letters, LETTERS),
+  sep = NULL,
+  collapse = NULL
+)
 
-int2k(x, k = 3)
+int2k(
+  x,
+  k = 3,
+  recode = TRUE,
+  codes = c(0:9, letters, LETTERS),
+  sep = NULL,
+  collapse = NULL
+)
 }
 \description{
 `to_base_k` converts its length-1 argument (assumed to be 
@@ -40,6 +54,7 @@ Other numeric functions provided by utilbox:
 \code{\link{unspace}()},
 \code{\link{unzero}()},
 \code{\link{upper_tri}()},
+\code{\link{value_locale_position}},
 \code{\link{value_locale}},
 \code{\link{which_max}()}
 }
