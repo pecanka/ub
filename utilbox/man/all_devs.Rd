@@ -15,15 +15,13 @@
 }
 \description{
 List or close all graphical devices.
-}
-\details{
-\code{.all_devs} returns a list of all open graphical devices 
-with an announcement of the number of open devices. The announcement 
-can be disabled.
 
-\code{.all_devs_off} and \code{.ado} close all open graphical
-devices either with announcement (\code{.ado}) or silently 
-(\code{.all_devs_off}).
+\code{.all_devs} returns a list of all open graphical devices with an
+announcement of the number of open devices. The announcement can be
+disabled.
+
+\code{.all_devs_off} and \code{.ado} close all open graphical devices either
+with announcement (\code{.ado}) or silently (\code{.all_devs_off}).
 }
 \examples{
 .all_devs(silent=FALSE)

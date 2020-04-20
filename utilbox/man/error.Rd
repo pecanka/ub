@@ -7,12 +7,10 @@
 error(..., call. = TRUE, domain = NULL)
 }
 \description{
-A more elaborate version of `base::stop()`. It can do beeping 
-and if inside an interactive session it does not halt the 
-execution but enters a browsing mode. It also returns a reliable
-exit status value (i.e. 1) in non-interactive mode.
-}
-\details{
-Currently disabled, since it's functionality is currently not
-needed.
+A more elaborate version of \code{base::stop()}. It can do beeping and
+if inside an interactive session it does not halt the execution but
+enters a browsing mode. It also returns a reliable exit status value
+(i.e. 1) in non-interactive mode.
+
+Currently disabled, simply calls \code{\link[base:stop]{base::stop()}}.
 }

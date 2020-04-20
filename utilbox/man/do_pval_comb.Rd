@@ -16,6 +16,6 @@ do_pval_comb(
 )
 }
 \description{
-Performs combination of p-values using Fisher method or Box method (the
-latter via Jelle's code in .pAsymptotic or Jakub's code below
+Performs combination of p-values using Fisher method or Box method
+(the latter via Jelle's code in .pAsymptotic or Jakub's code below
 }

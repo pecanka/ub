@@ -10,21 +10,20 @@ set_pkglib(libpath)
 \item{libpath}{path to be added}
 }
 \value{
-A character vector with each command of the input function as an element.
+A character vector with each command of the input function
+as an element.
 }
 \description{
-Adds a supplied path to the list of paths for searching packages
+Adds a supplied path to the list of paths for searching packages.
 }
 \details{
-Adds a supplied path to the list of paths for searching packages. This is useful
-for instance when the default path is in a location which is write-protected and
-packages need to be installed into an alternative location.
+Adds a supplied path to the list of paths for searching
+packages. This is useful for instance when the default path is in a
+location which is write-protected and packages need to be installed
+into an alternative location.
 }
 \seealso{
 Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
 \code{\link{apply_pckg}()},
 \code{\link{list_package}},
 \code{\link{llibrary}()}

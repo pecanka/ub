@@ -2,10 +2,26 @@
 % Please edit documentation in R/objects.R
 \name{get_unit}
 \alias{get_unit}
+\alias{de_unit}
+\alias{convert_unit}
 \title{Functions for memory unit conversion}
 \usage{
-get_unit(x)
+get_unit(n)
+
+de_unit(unit)
+
+convert_unit(x, unit, append_unit = TRUE, ndigit = 3)
 }
 \description{
-Determines the appropriate unit of memory for the size of 'x'
+\code{get_unit()} determines the appropriate unit of memory for the
+size of the object \code{x}.
+
+\code{de_unit()} returns the size of the unit in 'unit'.
+
+\code{convert_unit()} converts from unitary units (e.g. number of
+bytes) to an appropriate other unit.
+}
+\examples{
+get_unit(rep(1,1e7))
+
 }

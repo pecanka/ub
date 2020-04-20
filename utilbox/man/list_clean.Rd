@@ -4,10 +4,11 @@
 \alias{list_clean}
 \title{Removes zero-length elements from a list}
 \usage{
-list_clean(L, null.rm = TRUE)
+list_clean(x, null.rm = TRUE, clean_by = length)
 }
 \description{
-Removes zero-length elements from a list
+Takes a list and removes all of its zero-length elements.
+Optionally, the filtering function can be changed via \code{clean_by}.
 }
 \examples{
 list_clean(list(1:10, NULL, 'a'))

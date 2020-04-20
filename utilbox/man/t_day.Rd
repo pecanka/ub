@@ -9,12 +9,13 @@ t_day(format = "\%Y-\%m-\%d", set_return_class = base::as.character)
 \arguments{
 \item{format}{Format of the output.}
 
-\item{set_return_class}{A function that determines the class of the 
-returned date. Uses \code{base::as.character} by default but for full
-dates, while \code{base::as.Date} can be also useful.}
+\item{set_return_class}{A function that determines the class of
+the returned date. Uses \code{base::as.character} by default but for
+full dates, while \code{base::as.Date} can be also useful.}
 }
 \description{
-Returns today's date (in the current time zone) in the specified format.
+Returns today's date (in the current time zone) in the specified
+format.
 }
 \examples{
 t_day()     # current day

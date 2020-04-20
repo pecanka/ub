@@ -7,12 +7,12 @@
 rep_df(x, n, fun_bind = rbind)
 }
 \description{
-Repeat the input (\code{x}) a total of \code{n} times and bind
-the result together using \code{bind}. Primarily intended for
-data frames (hence the name) and matrices, but can be used for 
-objects of another type (e.g. lists) as long as the (default 
-or user-supplied) binding function \code{bind} is applicable 
-to that type.
+\code{rep_df()} repeats the input (\code{x}) a total of \code{n}
+times and bind the result together using the function specified in
+\code{bind}. Primarily intended for data frames (hence the name) and
+matrices, but can be used for objects of another type (e.g. lists) as
+long as the (default or user-supplied) binding function \code{bind} is
+applicable to that type.
 }
 \examples{
 rep_df(tibble(x=1:2), 3)

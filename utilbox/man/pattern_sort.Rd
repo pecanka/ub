@@ -14,12 +14,12 @@ pattern_sort(
 )
 }
 \description{
-Sorts input according to the order given in pattern(s) (given in 
-\code{pattern}) by matching the names of the input (i.e. \code{x}) 
-against the pattern(s).
+\code{pattern_sort()} sorts the input according to the order given in
+pattern(s) (given in \code{pattern}) by matching the names of the input
+(i.e. \code{x}) against the pattern(s).
 }
 \seealso{
 Other sorting utilities provided by utilbox: 
-\code{\link{sort_pval_matrix}()}
+\code{\link{sort_matrix}()}
 }
 \concept{sorting utilities provided by utilbox}

@@ -21,27 +21,32 @@ unzip_files_single(
 )
 }
 \arguments{
-\item{files}{List of files to compress. Exact file names, not regular patterns.}
+\item{files}{List of files to compress. Exact file names, not
+regular patterns.}
 
-\item{extras}{Modifiers sent to the zip archiver. Defaults to '-m', 
-which moves the files into the archive.}
+\item{extras}{Modifiers sent to the zip archiver. Defaults to
+'-m', which moves the files into the archive.}
 
-\item{appendix}{File name extension added to the name of each file by the archiver.}
+\item{appendix}{File name extension added to the name of each file
+by the archiver.}
 
-\item{add_timestamp}{Sets whether a unique time stamp is also added.}
+\item{add_timestamp}{Sets whether a unique time stamp is also
+added.}
 
-\item{check_status}{Determines whether a check for zero status code is performed.}
+\item{check_status}{Determines whether a check for zero status
+code is performed.}
 }
 \value{
-List of file names of the created archive and the corresponding status 
-        codes returned by the archiver.
+List of file names of the created archive and the
+corresponding status codes returned by the archiver.
 }
 \description{
-A collection of functions useful for creating zip archives and unzipping them.
+A collection of functions useful for creating zip archives and
+unzipping them.
 }
 \details{
-\code{zip_file} compresses files each into its own archive. Optionally adding time 
-stamps to the output files.
+\code{zip_file} compresses files each into its own archive. Optionally
+adding time stamps to the output files.
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

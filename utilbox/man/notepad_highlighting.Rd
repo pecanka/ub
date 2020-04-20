@@ -13,6 +13,6 @@ notepad_highlighting(
 )
 }
 \description{
-Modifies the notepad language keyword groups in order
-for the utilbox objects to be highlighted by Notepad++.
+Modifies the notepad language keyword groups in order for the
+utilbox objects to be highlighted by Notepad++.
 }

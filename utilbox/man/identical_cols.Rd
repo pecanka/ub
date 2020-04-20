@@ -7,16 +7,25 @@
 identical_cols(x, w)
 }
 \arguments{
-\item{x}{A two-dimensional object to be checked.}
+\item{x}{A two-dimensional object to be checked. @description}
 
-\item{w}{(Optional) A vector giving a subset of columns to be considered.}
+\item{w}{(Optional) A vector giving a subset of columns to be
+considered.}
 }
 \value{
-Logical indicating whether all of the selected columns are identical.
+Logical indicating whether all of the selected columns
+are identical.
 }
 \description{
-Takes a matrix, data frame or any two-dimensional object (array) and checks
-whether all (or a subset of) its columns are identical
+\code{identical_cols()} takes a matrix, data frame or any
+two-dimensional object (array) and checks whether all (or a subset
+of, when \code{w} given) its columns are identical in terms of content,
+not necessarily in terms of equality of column names.
+}
+\examples{
+identical_cols(data.frame(x=1:10, y=letters[1:10]))
+identical_cols(data.frame(x=1:10, y=1:10))
+
 }
 \seealso{
 Other matrix/data-frame functions provided by utilbox: 

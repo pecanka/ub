@@ -1,17 +1,21 @@
+#' @title
 #' Down-weighing
 #'
-#' Down-weighs the values in \code{x} if they are below the pivot (\code{from}) 
-#' at the rate of determined by \code{speed}. More specifically, the value of 
-#' \code{speed} is used as the standard deviation of the normal density which 
-#' is used to bring the values in \code{x} to zero as they deviate from the pivot.
+#' @description
+#' Down-weighs the values in `x` if they are below the pivot (`from`) 
+#' at the rate of determined by `speed`. More specifically, the value of 
+#' `speed` is used as the standard deviation of the normal density which 
+#' is used to bring the values in `x` to zero as they deviate from the 
+#' pivot.
 #'
-#' The argument \code{side} determines whether the down-weighing is applied only 
-#' to the values below the pivot (\code{side='left'}), above the pivot 
-#' (\code{side='right'}), or to both sides of the pivot (\code{side='both'}).
+#' The argument `side` determines whether the down-weighing is 
+#' applied only to the values below the pivot (\code{side='left'}), 
+#' above the pivot (\code{side='right'}), or to both sides of the pivot 
+#' (\code{side='both'}).
 #'
-#' The argument \code{speed} expects values between '0' (no down-weighing) and
-#' '1' (maximum down-weighing). Values outside this range are set to one of the
-#' two boundaries.
+#' The argument `speed` expects values between '0' (no down-weighing) 
+#' and '1' (maximum down-weighing). Values outside this range are set to 
+#' one of the two boundaries.
 #'
 #' @examples
 #' downweight(1:10, 5)

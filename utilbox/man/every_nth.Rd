@@ -18,28 +18,21 @@ every_nth(1:10, 2, 2)
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

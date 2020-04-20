@@ -10,18 +10,16 @@ nlist(...)
 nlist2(...)
 }
 \description{
-`nlist` creates a named list. The code `list(a = a, b = b)` 
-becomes `nlist(a,b)` and `list(a = a, b = 2)` becomes 
-`nlist(a, b = 2)`, etc.
-}
-\details{
-`nlist2` is a shorter original code which relies on existing
-code (`dots_to_nlist`). It should result in the exact
-same behavior as `nlist`.
+\code{nlist()} creates a named list. The code \code{list(a = a, b = b)}
+becomes \code{nlist(a,b)} and \code{list(a = a, b = 2)} becomes \code{nlist(a, b =  2)}, etc.
 
-Credit: The code for `nlist` was lifted from the package 
-`loo` to avoid having to install that package just for this 
-one function. The code has been slightly modified.
+\code{nlist2()} is a shorter original code which relies on existing
+code (\code{dots_to_nlist}). It should result in the exact same behavior
+as \code{nlist()}.
+
+Credit: The code for \code{nlist()} was lifted from the package \code{loo}
+to avoid having to install that package just for this one function.
+The code has been slightly modified.
 }
 \examples{
 # uses the variable names to assign names

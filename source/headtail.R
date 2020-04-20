@@ -1,16 +1,20 @@
+#' @title
 #' First and last elements
 #'
-#' Get the first or last \code{n} elements of an object. 
+#' @description
+#' Get the first or last `n` elements of an object.
 
-#' The two function are similar to, and relying on, 
-#' \code{utils::head} with two main differences. 
-#' First, a different default number of elements (\code{n=1}).
-#' Second, if the requested number of elements (\code{n}) is larger 
-#' than the length of the input (\code{x}), the elements of 
-#' \code{x} are recycled, though only for \code{n} positive. For
-#' non-positive \code{n}, and for classes different from those for
-#' which the methods are defined, the functions behave exactly like their 
-#' \code{utils} counterparts.
+#' @title
+#' The two function are similar to, and relying on,
+#' @description
+#' \code{utils::head()} and \code{utils::tail()} with two main 
+#' differences. First, `h1()` and `t1()` have different default number 
+#' of elements (\code{n=1}). Second, if the requested number of elements 
+#' (`n`) is larger than the length of the input (`x`), the elements of 
+#' `x` are recycled, though only for `n` positive. For non-positive `n`, 
+#' and for classes different from those for which the methods are 
+#' defined, the functions behave exactly like their counterparts from 
+#' `utils`.
 #'
 #' @examples
 #' # head
@@ -107,7 +111,6 @@ h1.table = h1.data.frame
 
 
 #' @rdname h1
-#' @family sequence-related functions provided by utilbox
 #' @export
 t1 = function(x, ...) {
   if(is_empty(x)) return(x)

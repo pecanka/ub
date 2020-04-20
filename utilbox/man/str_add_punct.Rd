@@ -7,7 +7,7 @@
 str_add_punct(x, p = ".", punct = ".!?", trim = TRUE, split_punct = TRUE)
 }
 \description{
-Adds a punctuation (\code{p}) to the ends of all elements in a 
+Adds a punctuation (\code{p}) to the ends of all elements in a
 character vector that do not end in one of the punctuation marks
 (\code{punct}).
 }
@@ -20,6 +20,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_diff}()},
@@ -28,13 +29,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

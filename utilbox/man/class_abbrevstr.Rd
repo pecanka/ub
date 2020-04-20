@@ -3,10 +3,11 @@
 \name{class_abbrevstr}
 \alias{class_abbrevstr}
 \alias{print.abbrevstr}
-\title{Methods for class \"`abbrevstr`\"}
+\title{Methods for class \"\code{abbrevstr}\"}
 \usage{
 \method{print}{abbrevstr}(x)
 }
 \description{
-Methods for class \"`abbrevstr`\"
+Printing method for class \"\code{abbrevstr}\", which extends
+\code{\link[base:print]{base::print}}.
 }

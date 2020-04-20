@@ -1,7 +1,9 @@
+#' @title
 #' Reads file
 #'
-#' Reads a text from a file as a single string. By default, reads
-#' the entire file.
+#' @description
+#' Reads a text from a file as a single string. By default, reads the 
+#' entire file.
 #'
 #' @family file-reading functions provided by utilbox
 #' @export

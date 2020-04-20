@@ -10,8 +10,13 @@ list_update(x, val, ..., drop_null_val = TRUE)
 modifyList2(x, val, ..., drop_null_val = TRUE)
 }
 \description{
-A version of 'modifyList' from `utils` which drops zero-length elements in 'val'
-before updating 'x' (optionally can behave the same as modifyList)
+A version of \code{\link[utils:modifyList]{utils::modifyList()}} which drops zero-length
+elements in \code{val} before updating \code{x}. Optionally, it can behave the
+exact same way as modifyList (when \code{drop_null_val=FALSE}).
+}
+\examples{
+list_update(list(a=1, b=2), list(a=100, c=200))
+
 }
 \seealso{
 Other list utilities provided by utilbox: 

@@ -23,5 +23,6 @@ simulate_pval(
 )
 }
 \description{
-A function that simulates p-values (from the normal model only so far)
+\code{simulate_pval()} simulates p-values (from the normal model only
+so far).
 }

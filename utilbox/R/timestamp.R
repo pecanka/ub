@@ -1,7 +1,9 @@
+#' @title
 #' Time stamp
 #'
-#' Generates a "unique" stamp based on the current system time and 
-#' the R process system ID.
+#' @description
+#' `timest()` generates a "unique" stamp based on the current system 
+#' time and the R process system ID.
 #'
 #' @examples
 #' timest()

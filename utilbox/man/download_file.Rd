@@ -7,9 +7,9 @@
 download_file(url, destfile = separate_paths(url)$files, ...)
 }
 \description{
-A wrapper for \code{download.file()} that handles missing files
-without stopping on error. It uses the input URL to define
-the destination file.
+A wrapper for \code{download.file()} that handles missing files without
+stopping on error. It uses the input URL to define the destination
+file.
 }
 \examples{
 download_file('http://www.karlin.mff.cuni.cz/~kpms/index.php')

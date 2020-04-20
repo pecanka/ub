@@ -2,22 +2,29 @@
 % Please edit documentation in R/as_factor.R
 \name{as_factor}
 \alias{as_factor}
-\title{Convert to factor}
+\alias{unname_factor}
+\title{Convert to factor and back}
 \usage{
 as_factor(x, ordered = FALSE)
+
+unname_factor(x)
 }
 \description{
-Convert a vector to factor with levels determined by order of
-appearance, without sorting of levels (which \code{as.factor} 
-does).
+\code{as_factor()} converts a vector to class \code{factor} with levels
+determined by order of appearance and \strong{without} sorting of
+levels (unlike \code{base::as.factor}).
+
+\code{unname_factor()} removes the type factor produced by
+\code{as_factor()}.
 }
 \examples{
 as_factor(c('Germany','Italy','Czechia'))
 
+unfactor(as_factor(c('Germany','Italy','Czechia')))
+
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -25,21 +32,15 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

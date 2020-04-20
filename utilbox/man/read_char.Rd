@@ -7,7 +7,7 @@
 read_char(file, encoding)
 }
 \description{
-Reads a text from a file as a single string. By default, reads
-the entire file.
+Reads a text from a file as a single string. By default, reads the
+entire file.
 }
 \concept{file-reading functions provided by utilbox}

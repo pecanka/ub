@@ -2,32 +2,33 @@
 % Please edit documentation in R/zipping.R
 \name{unzip_files}
 \alias{unzip_files}
-\title{\code{unzip_files} decompresses from \code{zipfile} all files that match the pattern 
-in \code{mask}, or those that do not match it if \code{mask_exclude} is \code{FALSE}.}
+\title{\code{unzip_files} decompresses from \code{zipfile} all files that match the
+pattern}
 \usage{
 unzip_files(zipfiles, mask = ".*", mask_exclude = FALSE, patternize = TRUE)
 }
 \arguments{
-\item{zipfiles}{List of files to decompress. Actual file names, not regular patterns.}
+\item{zipfiles}{List of files to decompress. Actual file names,
+not regular patterns.}
 
-\item{mask}{Regular pattern applied to the files inside the archives and only the
-files that match this pattern (or do not match this pattern when 
-\code{mask_exclude} is \code{FALSE}) and only files meeting these conditions
-are decompressed.}
+\item{mask}{Regular pattern applied to the files inside the
+archives and only the files that match this pattern (or do not match
+this pattern when \code{mask_exclude} is \code{FALSE}) and only files meeting
+these conditions are decompressed.}
 
 \item{mask_exclude}{Determines how the \code{mask} is applied.}
 
-\item{patternize}{Determines whether the mask is treated exactly (when 
-\code{patternize=TRUE}) or whether it is treated as a regular pattern 
-(when \code{patternize=FALSE}).}
+\item{patternize}{Determines whether the mask is treated exactly
+(when \code{patternize=TRUE}) or whether it is treated as a regular
+pattern (when \code{patternize=FALSE}).}
 }
 \value{
-List of file names of the decompressed files and the corresponding status 
-        codes returned by the archiver.
+List of file names of the decompressed files and the
+corresponding status codes returned by the archiver.
 }
 \description{
-\code{unzip_files} decompresses from \code{zipfile} all files that match the pattern 
-in \code{mask}, or those that do not match it if \code{mask_exclude} is \code{FALSE}.
+in \code{mask}, or those that do not match it if \code{mask_exclude} is
+\code{FALSE}.
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

@@ -1,10 +1,14 @@
+#' @title
 #' Remove all objects
 #'
-#' Shorthand for removal of all objects (including hidden ones whose names start
-#' with a dot) from the environment in \code{envir} (\code{.GlobalEnv} by 
-#' default). This function is basically an alias for \code{rm(list=ls(envir=envir))}. 
+#' @description
+#' `.rma()` is a shorthand for removal of all objects (including 
+#' hidden ones whose names start with a dot) from the environment in 
+#' `envir` (`.GlobalEnv` by default). This function is basically an 
+#' alias for \code{rm(list=ls(envir=envir))}.
 #'
-#' Optionally, names of objects that should be excluded from removal can be supplied via \code{keep}.
+#' Optionally, names of objects that should be excluded from removal 
+#' can be supplied via `keep`.
 #'
 #' @family object listing, object loading and removing functions provided by utilbox
 #' @export
@@ -12,16 +16,14 @@
   rm(list=setdiff(ls(envir=envir, all.names=all.names), keep), envir=envir)
 }
 
-get_dots = function(envir=parent.frame()) {
-  match.call(expand.dots = FALSE)$`...`
-}
-
+#' @title
 #' Delete objects
 #'
-#' Deletes all supplied objects in the environment specified in \code{envir}. Unlike the 
-#' basic \code{base::rm} function, the current function checks if the supplied 
-#' objects exist in order to avoid errors. Objects can be supplied as character 
-#' strings or as symbols.
+#' @description
+#' `rme()` deletes all supplied objects in the environment specified 
+#' in `envir`. Unlike the basic \code{base::rm} function, the current 
+#' function checks if the supplied objects exist in order to avoid 
+#' errors. Objects can be supplied as character strings or as symbols.
 #'
 #' @examples
 #' random_object = '1'
@@ -29,28 +31,25 @@ get_dots = function(envir=parent.frame()) {
 #' rme(random_object)      # nothing to delete, but no error/warning
 #'
 #' @export
-rme = function(..., envir=parent.frame()) {
-  dots = match.call(expand.dots = FALSE)$`...`
+.rme = function(..., envir=parent.frame()) {
+  dots = dots_to_nlist()
   suppressWarnings(do.call(rm, append(dots, list(envir=envir))))
   #suppressWarnings(rm(..., envir=envir))
 }
 
-#rme = function(..., envir=parent.frame()) {
-#  dots = match.call(expand.dots = FALSE)$`...`
-#  objs = as.character(dots)
-#  invisible(sapply(objs, .rme, envir=envir))
+#.rme = function(y, envir=parent.frame(), treat_as_symbol=FALSE) {
+#  nam = if(treat_as_symbol) as.character(substitute(y)) else y
+#  if(exists(nam, envir=envir)) rm(list=nam, envir=envir)
+#  #if(length(ls(envir=envir, pattern=paste0("^",y,"$")))>0) rm(list=y, envir=envir)
 #}
 
-.rme = function(y, envir=parent.frame(), treat_as_symbol=FALSE) {
-  nam = if(treat_as_symbol) as.character(substitute(y)) else y
-  if(exists(nam, envir=envir)) rm(list=nam, envir=envir)
-  #if(length(ls(envir=envir, pattern=paste0("^",y,"$")))>0) rm(list=y, envir=envir)
-}
-
+#' @title
 #' Same object check
 #'
-#' Checks whether all arguments correspond to the same object in memory. Arguments
-#' can be given quoted or unquoted and the unquoted with the same result.
+#' @description
+#' `is_same_object()` checks whether all of the supplied arguments 
+#' correspond to the same object in memory. Arguments can be given as 
+#' variables or by name (as character).
 #'
 #' @examples
 #' a = 1; b = a; c = 2
@@ -66,70 +65,63 @@ is_same_object = function(..., envir = parent.frame()) {
   nunique(mems) == 1
 }
 
+#' @title
 #' Functions for memory unit conversion
 #'
-#' Determines the appropriate unit of memory for the size of 'x'
+#' @description
+#' `get_unit()` determines the appropriate unit of memory for the 
+#' size of the object `x`.
+#'
+#' `de_unit()` returns the size of the unit in 'unit'.
+#'
+#' `convert_unit()` converts from unitary units (e.g. number of 
+#' bytes) to an appropriate other unit.
+#'
+#' @examples
+#' get_unit(rep(1,1e7))
+#'
 #' @export
-get_unit = function(x) {
-  w = pmax(1, pmin(trunc(log10(x)/3)+1,5))
-  unit = sapply(w, function(y) if(is.na(y) || is.nan(y)) NA else switch(y, "B", "kB", "MB", "GB", "TB"))
-  return(unit)
+get_unit = function(n) {
+  w = pmax(1, pmin(trunc(log10(n)/3)+1, 5))
+  ifelse(is.na(w), w, switch(w, "B", "kB", "MB", "GB", "TB"))
+  #sapply(w, function(y) ifelse(is.na(y), y, switch(y, "B", "kB", "MB", "GB", "TB")))
 }
 
-#' Returns the size of the unit in 'unit'
+#' @rdname get_unit
 #' @export
-de_unit = function(unit)
-  return(if(is.na(unit) || is.nan(unit)) NA else switch(unit, "B"=1, "kB"=1e3, "MB"=1e6, "GB"=1e9, "TB"=1e12))
+de_unit = function(unit) {
+  ifelse(is.na(unit), NA, switch(unit,"B"=1,"kB"=1e3,"MB"=1e6,"GB"=1e9,"TB"=1e12))
+  #return(if(is.na(unit) || is.nan(unit)) NA else switch(unit, "B"=1, "kB"=1e3, "MB"=1e6, "GB"=1e9, "TB"=1e12))
+}
 
-#' Unit conversion
-#'
-#' Converts which is assumed to be in unitary units (i.e. bytes) to an appropriate 
-#' other unit
+#' @rdname get_unit
 #' @export
 convert_unit = function(x, unit, append_unit=TRUE, ndigit=3) {
+
   if(missing(unit)) unit = get_unit(x)
+
   s = rsignif(x / sapply(unit, de_unit), ndigit)
-  if(append_unit) s = paste0(as.character(s), unit)
-  return(s)
-}
-
-# improved list of objects
-.ls.objects = function(pos=1, pattern, envir=parent.frame(), order.by, decreasing=FALSE, 
-  head=FALSE, n=5, all.names=TRUE) {
   
-  napply = function(names, fn) sapply(names, function(x) fn(try(get(x, envir=envir))))
-  
-  names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
-  
-  obj.class = napply(names, function(y) as.character(class(y))[1])
-  obj.mode = napply(names, mode)
-  obj.type = ifelse(is.na(obj.class), obj.mode, obj.class)
-  #obj.size = napply(names, function(y) object.size(get(y, envir=envir)))
-  obj.size = napply(names, function(y) object.size(y))
-  #obj.size = obj_size(list=names, with_unit=TRUE)
-  #obj.dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
-  obj.dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
-  vec = is.na(obj.dim)[, 1] & (obj.type != "function")
-  obj.dim[vec, 1] = napply(names, length)[vec]
-  out = data.frame(obj.type, obj.size, obj.dim)
-  names(out) = c("Type", "Size in bytes", "Rows", "Columns")
-  
-  if(!missing(order.by))
-    out = out[order(out[[order.by]], decreasing=decreasing),]
-  
-  if(head) out = head(out, n)
-  
-  return(out)
+  if(append_unit) as.character(s) %.% unit else s
 
 }
 
+#' @title
 #' List all objects and their sizes
+#'
+#' @description
+#' `lsos()` lists objects in the given environment and returns their 
+#' names and sizes.
+#'
+#' `obj_size()` returns the sizes of supplied objects (in memory unit 
+#' given in 'unit').
+#'
 #' @export
 lsos = function(..., envir=parent.frame(), n=10) {
   .ls.objects(..., envir=envir, order.by="Size in bytes", decreasing=TRUE, head=TRUE, n=n)
 }
 
-## Returns the sizes of supplied objects (in memory unit given in 'unit')
+#' @rdname lsos
 #' @export
 obj_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=parent.frame(), ndigit=2) {
   dots = match.call(expand.dots = FALSE)$`...`
@@ -160,9 +152,58 @@ obj_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=paren
   return(s)
 }
 
-## A more verbose version of load which can announce which objects have been loaded,
-## the user can also specify which objects are expected and quit if they are not
-## found inside the file
+.ls.objects = function(pos=1, pattern, envir=parent.frame(), order.by, decreasing=FALSE, 
+  head=FALSE, n=5, all.names=TRUE) {
+  
+  napply = function(names, fn) sapply(names, function(x) fn(try(get(x, envir=envir))))
+  
+  names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
+  
+  obj.class = napply(names, function(y) as.character(class(y))[1])
+  obj.mode = napply(names, mode)
+  obj.type = ifelse(is.na(obj.class), obj.mode, obj.class)
+  #obj.size = napply(names, function(y) object.size(get(y, envir=envir)))
+  obj.size = napply(names, function(y) object.size(y))
+  #obj.size = obj_size(list=names, with_unit=TRUE)
+  #obj.dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
+  obj.dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
+  vec = is.na(obj.dim)[, 1] & (obj.type != "function")
+  obj.dim[vec, 1] = napply(names, length)[vec]
+  out = data.frame(obj.type, obj.size, obj.dim)
+  names(out) = c("Type", "Size in bytes", "Rows", "Columns")
+  
+  if(!missing(order.by))
+    out = out[order(out[[order.by]], decreasing=decreasing),]
+  
+  if(head) out = head(out, n)
+  
+  return(out)
+
+}
+
+#' @title
+#' List and load objects from a file
+#'
+#' @description
+#' `load_objects()` is a more verbose version of `base::load()`. 
+#' `load_objects()` can announce which objects have been loaded, the 
+#' user can also specify which objects are expected and an error is 
+#' thrown if any of these expected objects are not found inside the file.
+#'
+#' `loadAs()` allows to loads objects from a file and assigns their 
+#' contents into variables listed in `as` inside the environment in 
+#' `envir` (the parent frame of the call to `loadAs()` by default).
+#'
+#' `list_all_objects()` lists all objects inside given files or 
+#' inside files that match pattern in `pattern` relative to the path in 
+#' `dir`.
+#'
+#' `find_object()` searches for an object with name in `object_name` 
+#' inside files in `files` relative to the path supplied in `dir`. If a 
+#' pattern is given (via `pattern`) instead of a list of file names, 
+#' then all files that match the pattern are searched through looking 
+#' for the object in `object_name`.
+#'
 #' @export
 load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=NULL, 
                         quit_on_miss=FALSE, envir=parent.frame()) {
@@ -214,11 +255,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
 
 } # load_objects
 
-#' Load objects from file
-#'
-#' Loads objects from a file and assigns the contents into variables listed in
-#' \code{as} inside the environment in \code{envir} (the parent frame of the call
-#' to \code{loadAs} by default).
+#' @rdname load_objects
 #' @export
 loadAs = function(file, as, what, envir=parent.frame()) {
   
@@ -239,10 +276,7 @@ loadAs = function(file, as, what, envir=parent.frame()) {
   
 }
 
-#' Lists objects
-#' 
-#' Lists all objects inside given files or inside files that match pattern in 
-#' \code{pattern} relative to the path in \code{dir}
+#' @rdname load_objects 
 #' @export
 get_all_objects = function(files=NULL, dir=".", pattern="^.*[.]RData$") {
 
@@ -262,12 +296,7 @@ get_all_objects = function(files=NULL, dir=".", pattern="^.*[.]RData$") {
 
 } 
 
-#' Find objects in files
-#'
-#' Find an object with name in \code{object_name} inside files in \code{files} 
-#' relative to the path supplied in \code{dir}. If a pattern is given (via 
-#' \code{pattern}) instead of a list of file names, then all files that match 
-#' the pattern are searched through looking for the object in \code{object_name}.
+#' @rdname load_objects
 #' @export
 find_object = function(object_name, files=NULL, dir=".", pattern="^.*[.]RData$", 
                        stop_on_found=TRUE, announce=TRUE) {

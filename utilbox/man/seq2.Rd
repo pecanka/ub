@@ -7,10 +7,13 @@
 seq2(...)
 }
 \description{
-Produces a sequence in a manner very similar to [base::seq]
-except for when the inputs would default to a decreasing
-sequence (e.g. `seq(0)`, `seq(1,0)`) for which it returns
+\code{seq2()} produces a sequence in a manner very similar to
+\code{\link[base:seq]{base::seq}} except for when the inputs would default to a
+decreasing sequence (e.g. \code{seq(0)}, \code{seq(1,0)}) for which it returns
 a zero-length numeric vector.
+
+seq(1,3,l=NULL); seq2(1,3,l=NULL)            # same beharior
+(error)
 }
 \examples{
 seq2(10)           # same as seq(10)
@@ -31,15 +34,10 @@ to = 4; seq2(1,to,1); seq(1,to,1)            # same beharior
 
 to = 0; seq2(1,to,l=5); seq(1,to,l=5)        # different beharior
 to = 4; seq2(1,to,2); seq(1,to,2)            # same beharior
-seq2(1,3,by=0.1,l=10); seq(1,3,by=0.1,l=10)  # same beharior (error)
-seq(1,3,l=5); seq2(1,3,l=5)                  # same beharior
-seq(1,3,l=NULL); seq2(1,3,l=NULL)            # same beharior (error)
-
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -47,20 +45,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

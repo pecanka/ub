@@ -7,5 +7,13 @@
 logit(p)
 }
 \description{
-Logit, probit, inverse logit functions
+\code{logit()} gives the logit function, which is also the quantile
+function of the logistic distribution. More exactly, it is the
+function \emph{f(p)=log(p/(1-p))}.
+
+\code{probit()} is the probit function, which is also the quantile
+function of the standard normal distribution.
+
+\code{ilogit()} is the inverse logit function, i.e. the distribution
+function of the logistic distribution.
 }

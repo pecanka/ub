@@ -7,9 +7,9 @@
 left \%modify\% right
 }
 \description{
-Merges two list together while updating the elements of the
-first list with the elements of the second list for the
-elements found in both lists.
+Merges two list together while updating the elements of the first
+list with the elements of the second list for the elements found in
+both lists.
 }
 \examples{
 list(a=1, b=2) \%modify\% list(b=3, c=4)

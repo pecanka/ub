@@ -5,59 +5,66 @@
 \alias{full_join_recurse}
 \alias{left_join_recurse}
 \alias{right_join_recurse}
-\alias{inner_join_recurse}
+\alias{anti_join_recurse}
 \alias{semi_join_recurse}
+\alias{inner_join_recurse}
 \title{Recursive joins}
 \usage{
 join_recurse(list, ..., join)
 
-full_join_recurse(list, ..., join = "full_join")
+full_join_recurse(list, ...join = "full_join")
 
-left_join_recurse(list, ..., join = "left_join")
+left_join_recurse(list, ...join = "left_join")
 
-right_join_recurse(list, ..., join = "right_join")
+right_join_recurse(list, ...join = "right_join")
 
-inner_join_recurse(list, ..., join = "inner_join")
+anti_join_recurse(list, ...join = "anti_join")
 
-semi_join_recurse(list, ..., join = "semi_join")
+semi_join_recurse(list, ...join = "semi_join")
+
+inner_join_recurse(list, ...join = "inner_join")
 }
 \arguments{
 \item{list}{A list of tibbles to be recursively joined.}
 
 \item{...}{Arguments passed on to the join function.}
 
-\item{join}{The name of the join function to call (e.g. \code{full_join}
-from package \code{dplyr})}
+\item{join}{The name of the join function to call (e.g.
+\code{full_join} from package \code{dplyr})}
 }
 \value{
 The result of joining the elements of \code{list} recursively.
 }
 \description{
-`join_recurse` Performs a join of multiple tibbles supplied in a list. 
-In order to function properly it requires a join function to be supplied.
-and exist. This can be for instance those found in the package 
-\code{dplyr} (\code{left_join}, \code{full_join}, etc.).
+\code{join_recurse()} performs a join of multiple data frames (or
+tibbles) supplied in a list. In order to function properly it
+requires a join function to be supplied. and exist. This can be for
+instance those found in the package \code{dplyr} (\code{left_join},
+\code{full_join}, etc.).
 }
 \section{Recursive joins}{
 
 
-`full_join_recurse` is alias for `join_recurse` with `join` set
-to `full_join`. 
+\code{full_join_recurse} is alias for \code{join_recurse} with
+\code{join=full_join}.
 
-`left_join_recurse` is alias for `join_recurse` with `join` set
-to `left_join`. 
+\code{left_join_recurse} is alias for \code{join_recurse} with
+\code{join=left_join}.
 
-`right_join_recurse` is alias for `join_recurse` with `join` set
-to `right_join`. 
+\code{right_join_recurse} is alias for \code{join_recurse} with
+\code{join=right_join}.
 
-`inner_join_recurse` is alias for `join_recurse` with `join` set
-to `inner_join`. 
+\code{anti_join_recurse} is alias for \code{join_recurse} with
+\code{join=anti_join}.
 
-`semi_join_recurse` is alias for `join_recurse` with `join` set
-to `semi_join`. 
+\code{semi_join_recurse} is alias for \code{join_recurse} with
+\code{join=semi_join}.
 
-Naturally, all of these will fail if the function supplied in `join` 
-does exists in the search path.
+\code{inner_join_recurse} is alias for \code{join_recurse} with
+\code{join=inner_join}.
+
+Naturally, all of these will fail if the function supplied in
+\code{join} does exists in the search path.
 }
 
 \examples{

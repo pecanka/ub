@@ -1,7 +1,38 @@
-#' Replace all zero-valued elements
+#' @title
+#' Replace values
 #'
-#' Replace zeros in \code{x} with the content of \code{value}.
+#' @description
+#' `unzero()` replace all zeros in `x` with the content of `value`.
 #'
+#' `unspace()` replaces  all space characters (or characters matching 
+#' the pattern supplied in `space`) with dashes (or the value supplied 
+#' in `s`).
+#'
+#' `de_na()` replaces all `NA` elements in its first argument (`x`) 
+#' with the corresponding values in its second argument (`y`). Same 
+#' effect as \code{dplyr::coalesce}, except when `use_all_y` is `TRUE`, 
+#' when the `NA` elements in `x`, say there are \\emph{n} of them, are 
+#' replaced with the first \emph{n} elements of `y` (with possible 
+#' recycling of `y`).
+#'
+#' `bound_between()` between bounds the values in `x` by `lower` from 
+#' below and `upper` from above. In other words, all elements in `x` 
+#' that exceed `lower` or `upper` are replaced with the bounds.
+#'
+#' @examples
+#' unzero(c(0,0,10,10,0))
+#' unzero(c(0,0,10,10,0), NA)
+#'
+#' unspace('this is a beautiful world.')
+#' unspace('this is a beautiful world.', '_')
+#' de_na(c(1,2,NA,4,5,NA), 0)
+#' de_na(c(1,2,NA,4,5,NA), 1:6)
+#' de_na(c(1,2,NA,4,5,NA), Inf)
+#'
+#' bound_between(-10:10, 0, 5)
+#' bound_between(-4:5, rep(c(-1,-2),5), rep(
+#'
+#' @name replace_value
 #' @family numeric functions provided by utilbox
 #' @export
 unzero = function(x, value=1, zero=0.) {
@@ -9,31 +40,13 @@ unzero = function(x, value=1, zero=0.) {
   x
 }
 
-#' Replace all zero-valued elements
-#'
-#' Replace zeros in \code{x} with the content of \code{value}.
-#'
-#' @family numeric functions provided by utilbox
+#' @rdname replace_value
 #' @export
 unspace = function(x, s='-', space='\\s+', workhorse=gsub) {
   workhorse(space, s, x)
 }
 
-#' Remove NA values
-#'
-#' Replaces all \code{NA} elements in its first argument (\code{x})
-#' with the corresponding values in its second argument (\code{y}).
-#' Same effect as \code{dplyr::coalesce}, except when \code{use_all_y}
-#' is \code{TRUE}, when the \code{NA} elements in \code{x}, say there
-#' are \\emph{n} of them, are replaced with the first \emph{n} elements
-#' of \code{y} (with possible recycling of \code{y}).
-#'
-#' @examples
-#' de_na(c(1,2,NA,4,5,NA), 0)
-#' de_na(c(1,2,NA,4,5,NA), 1:6)
-#' de_na(c(1,2,NA,4,5,NA), Inf)
-#'
-#' @family sequence-modifying functions provided by utilbox
+#' @rdname replace_value
 #' @export
 de_na = function(x, y, use_all_y=FALSE) {
   if(use_all_y) {
@@ -44,14 +57,7 @@ de_na = function(x, y, use_all_y=FALSE) {
   }
 }
 
-#' Bound values
-#'
-#' Lower- and upper-bounds the elements in `x` with `lower` and `upper`
-#'
-#' @examples
-#' bound_between(-10:10, 0, 5)
-#' bound_between(-4:5, rep(c(-1,-2),5), rep(
-#'
+#' @rdname replace_value
 #' @export
 bound_between = function(x, lower, upper, na.rm=FALSE) {
   y = if(missing(upper)) x else pmin(x, upper, na.rm=na.rm)

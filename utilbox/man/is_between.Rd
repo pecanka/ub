@@ -2,14 +2,21 @@
 % Please edit documentation in R/seqchecks.R
 \name{is_between}
 \alias{is_between}
-\title{Between with a single interval}
+\alias{or_between}
+\title{Between check}
 \usage{
 is_between(x, a, b, sharp_left = FALSE, sharp_right = FALSE)
+
+or_between(x, intervals, sharp_left = FALSE, sharp_right = FALSE)
 }
 \description{
-A shortcut for `x>=a & x<=b` (for `sharp_left=TRUE` and `sharp_right=TRUE`).
-Other combinations of `TRUE/FALSE for `sharp_left,sharp_right` lead to 
-non-sharp comparisons.
+\code{is_between()} is a shortcut for \code{x>=a & x<=b} (for
+\code{sharp_left=TRUE} and \code{sharp_right=TRUE}). Other combinations of
+\verb{TRUE/FALSE for }sharp_left,sharp_right` lead to non-sharp
+comparisons.
+
+\code{or_between()} performs is a between check with many intervals.
+Checks whether \code{x} is in at least one of the supplied intervals.
 }
 \examples{
 between(1:2, 1, 2))                # both
@@ -17,32 +24,27 @@ between(1:2, 1, 2, TRUE))          # second only
 between(1:2, 1, 2, FALSE, TRUE)    # first only
 between(1:2, 1, 2, TRUE, TRUE)     # none
 
+or_between(runif(3), list(c(0,0.1), c(0.9,1)))
+
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},
 \code{\link{insert}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

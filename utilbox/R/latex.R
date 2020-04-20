@@ -1,10 +1,14 @@
+#' @title
 #' Fix LaTeX Bibliography
 #'
-#' Puts authors' names into 'Lastname1, Firstname1 and Lastname2, Firstname2'
-#' format in a bibtex bibliography file in 'infile', abbreviates the first 
-#' names with/without a dot and outputs the new bibliography into outfile
-#' Assumes that records are wrapped by '{' and '}' and not '"'. 
-#' (Consider removing this limitation)
+#' @description
+#' `fix_bibliography()` puts author names into the 'Lastname1, 
+#' Firstname1 and Lastname2, Firstname2' format in a bibtex bibliography 
+#' file `infile`. It also abbreviates the first names with/without a dot 
+#' and outputs the new bibliography into outfile Assumes that records 
+#' are wrapped by '{' and '}' and not '"'. This limitation might be 
+#' removed in the future.
+#'
 #' @export
 fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
   special_words="^[Vv]an$|^[Dd]e$|^[Dd]er$|^[Dd]os$") {
@@ -17,7 +21,7 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
   cat("Processing bibliography ...\n")
   for(k in seq_along(x)) {
 
-    if(regexpr("author.=", x[k])<0) next
+    if(!grepl("author.=", x[k])) next
   
     ## Extract the names only
     # Find the record opening opening 
@@ -39,7 +43,7 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
     n = unlist(strsplit(s2, " [Aa]nd "))
     
     # Check if author name contains "LaTeX protected strings"
-    if(regexpr("[{}]",s2)>0) {
+    if(grepl("[{}]",s2)) {
       cat("Check if manual edit for author '",s2,"' required (line ",k,").\n")
       next
     }
@@ -48,7 +52,7 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
     for(i in seq_along(n)) {
       
       # If in "last name comma first names" format, transform it
-      if(regexpr("[,]",n[i])>0) {
+      if(grepl("[,]",n[i])) {
         a = unlist(strsplit(n[i], "[,]"))
         n[i] = paste(str_trim(tail(a,-1)), str_trim(head(a,1)))
       }
@@ -56,32 +60,43 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
       # Abbreviate first names
       a = unlist(strsplit(n[i], "[ .]"))
       a = a[nchar(a)>0]
-      for(j in seq2(1,(length(a)-1),1))
-        a[j] = if(regexpr(special_words,a[j])<=0) paste0(substr(a[j],1,1),dot) else paste0(" ",a[j])
+      for(j in seq2(1,(length(a)-1),1)) {
+        a[j] = if(!grepl(special_words,a[j])) {
+          substr(a[j],1,1) %.% dot 
+        } else {
+          " " %.% a[j]
+        }
+      }
       
       # Paste the names back together
       if(lastname_first) {
+      
         a = str_trim(a)
         split = length(a) - 1
         while(split>0) {
-          if(regexpr(special_words,a[split])<0) break
+          if(!grepl(special_words,a[split])) break
           split = split - 1
         }
-        n[i] = if(split==0) paste(a, collapse=" ") else 
-          paste0(paste(tail(a,-split), collapse=" "), ", ", paste(head(a, split), collapse=" "))
+        
+        n[i] = if(split==0) {
+          collapse1(a) 
+        } else {
+          collapse1(tail(a,-split)) %.% ", " %.% collapse1(head(a, split))
+        }
+        
       } else {
-        n[i] = paste(paste(head(a, -1), collapse=""), tail(a,1))
+        n[i] = collapse0(head(a, -1)) %.% tail(a,1)
       }
     }
     
     # Paste the author line back together
-    x[k] = paste0(s1,"{",paste(n, collapse=" and "),"},")
+    x[k] = s1 %.% "{" %.% paste(n, collapse=" and ") %.% "},"
     
   }
 
   # Update the bibliography and save it to a file
-  cat("Saving bibliography to file '",outfile,"' ...\n", sep="")
-  cat(paste(x, collapse="\n"), file=outfile)
+  catn("Saving bibliography to file '",outfile,"' ...")
+  catn(collapse0n(x), file=outfile)
   
 }
 

@@ -1,21 +1,49 @@
+#' @title
+#' Return the output of a print call as string
+#'
+#' @description
+#' Returns the output of a print call as string. Useful for saving 
+#' the output of a print call into a variable. Simply an alias for 
+#' [`utils::capture.output`].
+#'
+#' @export
+print2var = function(fun, file=NULL) {
+  capture.output(print(fun))
+}
+  
+#' @title
 #' Print text
 #'
-#' Prints text to console or file via [base::cat]. Allows for optional
+#' @description
+#' `cat0()` prints text to console or file via [`base::cat()`]. It is 
+#' basically an alias for [`base::cat()`] that automatically flushes the 
+#' console buffer (when `flush=TRUE`). This only affects buffered output 
+#' enabled R sessions (e.g. Rgui on Windows)
 #'
-#' `cat0` is basically an alias for [base::cat] that automatically 
-#' flushes the console buffer (when `flush=TRUE`). This only affects 
-#' buffered output enabled R sessions (e.g. Rgui on Windows)
-#'
-#' `catn` is an alias for `cat0` which in the default setting adds 
-#' a single end-of-line symbol (specified in `eol`, which `\\n` by
+#' `catn()` is an alias for `cat0()` which in the default setting 
+#' adds a single end-of-line symbol (specified in `eol`, which `\\n` by 
 #' default) at the end of the strings.
 #'
-#' `catnn` extends `catn` to also use `eol` as the default value for 
-#' `sep`.
+#' `catnn()` extends `catn` to also use `eol` as the default value 
+#' for `sep`.
 #'
 #' All of these allow a smart way of flushing the console.
 #'
-#' @name cat0
+#' `msg()` prints a message and either stops execution or waits 
+#' depending on arguments.
+#'
+#' `warn()` is an alias for `msg()` which appends the string 
+#' \"WARNING\" to the printed message.
+#'
+#' `note()` prints a note and a request to wait (optional).
+#'
+#' `.fc()` is an alias for [`utils::flush.console()`].
+#'
+#' `flush_console()` is a more flexible way of flushing the console. 
+#' It allows to flush only on every n-th print, where n is set by the 
+#' value in `flush_cycle`.
+#'
+#' @family printing function provided by utilbox
 #' @export
 cat0 = function(..., file="", sep="", fill=FALSE, labels=NULL, append=FALSE, 
   flush=TRUE, flush_cycle=1, envir=utilbox_environment(), fill_using_options=FALSE) {
@@ -51,16 +79,11 @@ catn = function(..., file="", sep="", fill=FALSE, labels=NULL, append=FALSE, eol
 
 #' @rdname cat0
 #' @export
-catnn = hijack(catn, sep='\n', fill=TRUE)
+catnn = function(..., sep='\n', fill=TRUE) {
+  catn(..., sep=sep, fill=fill)
+}
 
-#' Flush buffer 
-#'
-#' Alias for \code{flush.console()}
-#'
-#' @export
-.fc = utils::flush.console
-
-#' Prints a warning and either stops execution or waits depending on arguments
+#' @rdname cat0
 #' @export
 msg = function(t, ..., lead="", sep="", quit=FALSE, wait=FALSE, skip1=0, skip2=0, flush=TRUE) {
   cat0(rep("\n", skip1), lead, flush=FALSE)
@@ -70,22 +93,23 @@ msg = function(t, ..., lead="", sep="", quit=FALSE, wait=FALSE, skip1=0, skip2=0
   if(wait) wait() 
 }
 
-#' Print a warning and either stop execution or wait depending on arguments
+#' @rdname cat0
 #' @export
 warn = function(..., skip1=1, skip2=1) {
   msg(..., lead="WARNING: ", skip1=skip1, skip2=skip2)
 }
 
-#' Print a note and optionally wait
+#' @rdname cat0
 #' @export
 note = function(...) {
   msg(..., lead="NOTE: ")
 }
 
-#' Flush the console
-#'
-#' Flushes the console in a smart way.
-#'
+#' @rdname cat0
+#' @export
+.fc = utils::flush.console
+
+#' @rdname cat0
 #' @export
 flush_console = function(flush=TRUE, flush_cycle=1, envir=utilbox_environment()) {
 

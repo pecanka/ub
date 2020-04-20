@@ -11,12 +11,11 @@ force_as_integer(x, ignore_sign = TRUE, na_val)
 force_as_real(x, ignore_sign = TRUE, dec = ".", dec_fixed = TRUE, na_val)
 }
 \description{
-Convert to type integer (\code{force_as_integer}) or double 
-(\code{force_as_real)} by stripping all non-number substrings 
-in each element of \code{x}.
-}
-\details{
-This is a very radically forced conversion, which can be useful 
+Convert to type integer (\code{force_as_integer()}) or double
+(\code{force_as_real()}) by stripping all non-number substrings in each
+element of \code{x}.
+
+This is a very radically forced conversion, which can be useful
 when strange artefacts polluted the data, but caution is advised.
 }
 \examples{
@@ -33,57 +32,35 @@ force_as_real(c('1','x'))
 }
 \seealso{
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
 \code{\link{Invert}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{extract_by_value}},
+\code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
 \code{\link{make_numeric}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
 \code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}},
 \code{\link{which_max}()}
 
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
 \code{\link{Invert}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{extract_by_value}},
+\code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
 \code{\link{make_numeric}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
 \code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}},
 \code{\link{which_max}()}
 }
 \concept{numeric functions provided by utilbox}

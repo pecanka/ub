@@ -1,14 +1,22 @@
-#' Between with a single interval
+#' @title
+#' Between check
 #'
-#' A shortcut for `x>=a & x<=b` (for `sharp_left=TRUE` and `sharp_right=TRUE`).
-#' Other combinations of `TRUE/FALSE for `sharp_left,sharp_right` lead to 
-#' non-sharp comparisons.
+#' @description
+#' `is_between()` is a shortcut for `x>=a & x<=b` (for 
+#' `sharp_left=TRUE` and `sharp_right=TRUE`). Other combinations of 
+#' `TRUE/FALSE for `sharp_left,sharp_right` lead to non-sharp 
+#' comparisons.
+#'
+#' `or_between()` performs is a between check with many intervals. 
+#' Checks whether `x` is in at least one of the supplied intervals.
 #'
 #' @examples
 #' between(1:2, 1, 2))                # both
 #' between(1:2, 1, 2, TRUE))          # second only
 #' between(1:2, 1, 2, FALSE, TRUE)    # first only
 #' between(1:2, 1, 2, TRUE, TRUE)     # none
+#'
+#' or_between(runif(3), list(c(0,0.1), c(0.9,1)))
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
@@ -21,15 +29,7 @@ is_between = function(x, a, b, sharp_left=FALSE, sharp_right=FALSE) {
   
 }
 
-#' Between with many intervals
-#'
-#' Checks whether \code{x} is in at least one of the supplied 
-#' intervals.
-#'
-#' @examples
-#' or_between(runif(3), list(c(0,0.1), c(0.9,1)))
-#'
-#' @family sequence-related functions provided by utilbox
+#' @rdname is_between
 #' @export
 or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
   
@@ -41,13 +41,13 @@ or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
   
 }
 
+#' @title
 #' Starts and ends of run
 #'
-#' Indicators of the beginnings (\code{is_start_of_run}) and ends 
-#' (\code{is_end_of_run}) of "runs", where "runs" are subsequences
-#' with unchanging values.
-#'
-#' @name is_run
+#' @description
+#' Indicators of the beginnings (`is_start_of_run`) and ends 
+#' (`is_end_of_run`) of "runs", where "runs" are subsequences with 
+#' unchanging values.
 #'
 #' @examples
 #' x=1:10
@@ -58,6 +58,8 @@ or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
 #' is_end_of_run(x)           # 1 4 6 are TRUE
 #' is_start_of_run(x)         # 1 2 5 7 are TRUE
 #'
+#' @name is_run
+#'
 #' @family sequence-related functions provided by utilbox
 #' @export
 is_start_of_run = function(x, is_first_start=TRUE) {
@@ -65,8 +67,6 @@ is_start_of_run = function(x, is_first_start=TRUE) {
 }
 
 #' @rdname is_run
-#'
-#' @family sequence-related functions provided by utilbox
 #' @export
 is_end_of_run = function(x, is_last_end=TRUE) {
   c(diff(x)!=0, is_last_end)

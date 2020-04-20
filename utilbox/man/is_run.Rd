@@ -11,9 +11,9 @@ is_start_of_run(x, is_first_start = TRUE)
 is_end_of_run(x, is_last_end = TRUE)
 }
 \description{
-Indicators of the beginnings (\code{is_start_of_run}) and ends 
-(\code{is_end_of_run}) of "runs", where "runs" are subsequences
-with unchanging values.
+Indicators of the beginnings (\code{is_start_of_run}) and ends
+(\code{is_end_of_run}) of "runs", where "runs" are subsequences with
+unchanging values.
 }
 \examples{
 x=1:10
@@ -28,7 +28,6 @@ is_start_of_run(x)         # 1 2 5 7 are TRUE
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -36,46 +35,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
-\code{\link{what_bag}()}
-
-Other sequence-related functions provided by utilbox: 
-\code{\link{as_factor}()},
-\code{\link{dim_check}},
-\code{\link{every_nth}()},
-\code{\link{filter_by_position}},
-\code{\link{filter_by}},
-\code{\link{groups_of_unique}()},
-\code{\link{h1}()},
-\code{\link{insert}()},
-\code{\link{is_between}()},
-\code{\link{is_empty}()},
-\code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
-\code{\link{rep2}()},
-\code{\link{replace2}()},
-\code{\link{replace3}()},
-\code{\link{seq2}()},
-\code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
-\code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

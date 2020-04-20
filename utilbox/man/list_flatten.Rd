@@ -7,7 +7,7 @@
 list_flatten(x)
 }
 \description{
-An alias for `as.list(unlist(x))`.
+An alias for \code{as.list(unlist(...))}.
 }
 \seealso{
 Other list utilities provided by utilbox: 

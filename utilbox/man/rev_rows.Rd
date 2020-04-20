@@ -13,17 +13,17 @@ rev_cols(x)
 Object of the same class as the input.
 }
 \description{
-Reverses the order of rows (\code{rev_rows}) or columns (\code{rev_cols})
-of a matrix, a data frame or a 2-dimensional array.
+\code{rev_rows()} reverses the order of rows of a matrix,
+a data frame or a 2-dimensional array.
+
+\code{rev_cols()} reverses the order of columns.
+}
+\examples{
+rev_rows(data.frame(x=1:10, y=letters[1:10]))
+rev_cols(data.frame(x=1:10, y=letters[1:10]))
+
 }
 \seealso{
-Other matrix/data-frame functions provided by utilbox: 
-\code{\link{add_col}()},
-\code{\link{identical_cols}()},
-\code{\link{join_recurse}()},
-\code{\link{rep_df}()},
-\code{\link{split_rows}()}
-
 Other matrix/data-frame functions provided by utilbox: 
 \code{\link{add_col}()},
 \code{\link{identical_cols}()},

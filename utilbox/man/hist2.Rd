@@ -7,8 +7,8 @@
 hist2(..., nbreaks)
 }
 \description{
-A wrapper for \code{base::hist}, which allows to specify the number of bins by
-through \code{nbreaks}.
+A wrapper for \code{base::hist}, which allows to specify the
+number of bins by through \code{nbreaks}.
 }
 \seealso{
 Other plotting-related functions provided by utilbox: 

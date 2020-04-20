@@ -11,12 +11,11 @@ add_class(x, class)
 drop_class(x, class)
 }
 \description{
-`add_class` adds the class specified in `what` as the 
-first among the classes of the object `x`.
-}
-\details{
-`drop_class` removes the specified class from the classes of 
-the given object.
+\code{add_class()} adds the class specified in \code{what} as the first
+among the classes of the object \code{x}.
+
+\code{drop_class()} removes the specified class from the classes of the
+given object.
 }
 \examples{
 add_class(list(1:20), 'huge')

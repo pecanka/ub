@@ -11,8 +11,8 @@ random_filename(
 )
 }
 \description{
-Generates a random file name of length \code{nchar} by drawing from the set
-defined via \code{chars}.
+\code{random_filename()} generates a random file name of length \code{nchar}
+by drawing from the set defined via \code{chars}.
 }
 \seealso{
 Other file system function provided by utilbox: 

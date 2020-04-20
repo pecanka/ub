@@ -4,20 +4,23 @@
 \alias{source_utilbox}
 \title{Source utilbox code files}
 \usage{
-source_utilbox(..., path)
+source_utilbox(
+  ...,
+  path,
+  normalize = FALSE,
+  envir = .GlobalEnv,
+  report_new = TRUE
+)
 }
 \description{
-Sources the specified files relative to the path in `path`.
-If `files` is not specified, it sources all files in the
-path.
-}
-\details{
-By default, this sources files from the utilbox location
-on my system (the author).
+Sources the specified files relative to the path in \code{path}. If
+\code{files} is not specified, it sources all files in the path.
+
+By default, this sources files from the utilbox location on my
+system (the author).
 }
 \seealso{
 Other utilbox-internal functions provided by utilbox: 
-\code{\link{utilbox_environment}()},
-\code{\link{utilbox_namespace}()}
+\code{\link{utilbox_internals}}
 }
 \concept{utilbox-internal functions provided by utilbox}

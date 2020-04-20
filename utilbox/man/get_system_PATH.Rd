@@ -2,12 +2,15 @@
 % Please edit documentation in R/system.R
 \name{get_system_PATH}
 \alias{get_system_PATH}
-\title{Get the system search paths}
+\title{System search paths}
 \usage{
 get_system_PATH(path)
 }
 \description{
-Returns the system search paths.
+\code{get_system_PATH()} reads and returns the system search paths.
+
+\code{append_system_PATH()} adds the supplied path among the system
+search paths.
 }
 \examples{
 get_system_PATH()
@@ -15,14 +18,14 @@ get_system_PATH()
 }
 \seealso{
 Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
+\code{\link{R_defaults}},
 \code{\link{R_gui_adjust}()},
 \code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
 \code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
 \code{\link{environment_variables}},
 \code{\link{is_win}()},
+\code{\link{pause}},
+\code{\link{stopping_control}},
 \code{\link{timest}()}
 }
 \concept{system-related functions provided by utilbox}

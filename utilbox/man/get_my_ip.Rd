@@ -7,8 +7,9 @@
 get_my_ip(server = "https://api.ipify.org", trace = 1)
 }
 \description{
-Gets ones public IP address using the ipify.com API. The default server can be changed.
-}
-\details{
-The function probably needs a rewrite for when the call to the server fails for some reason.
+Gets ones public IP address using the ipify.com API. The default
+server can be changed.
+
+The function probably needs a rewrite for when the call to the
+server fails for some reason.
 }

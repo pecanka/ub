@@ -1,11 +1,15 @@
 # This is just a short selection of simple web utilities. 
 # For more a sophisticated list of tools look at other packages such as httr and RCurl.
 
+#' @title
 #' Public IP address
 #'
-#' Gets ones public IP address using the ipify.com API. The default server can be changed.
+#' @description
+#' Gets ones public IP address using the ipify.com API. The default 
+#' server can be changed.
 #'
-#' The function probably needs a rewrite for when the call to the server fails for some reason.
+#' The function probably needs a rewrite for when the call to the 
+#' server fails for some reason.
 #'
 #' @export
 get_my_ip = function(server = "https://api.ipify.org", trace=1) {
@@ -16,11 +20,13 @@ get_my_ip = function(server = "https://api.ipify.org", trace=1) {
   invisible(ip)
 }
 
+#' @title
 #' Download file
 #'
-#' A wrapper for \code{download.file()} that handles missing files
-#' without stopping on error. It uses the input URL to define
-#' the destination file.
+#' @description
+#' A wrapper for `download.file()` that handles missing files without 
+#' stopping on error. It uses the input URL to define the destination 
+#' file.
 #'
 #' @examples
 #' download_file('http://www.karlin.mff.cuni.cz/~kpms/index.php')
@@ -30,6 +36,7 @@ download_file = function(url, destfile=separate_paths(url)$files, ...) {
   invisible(destfile)
 }
 
+#' @title
 #' Check the existence of a file on the web
 #'
 #'
@@ -41,25 +48,21 @@ web_file_exists = function(url, ...) {
   ## code not created yet ##
 }
 
+#' @title
 #' List file on an FTP server
 #'
+#' @description
 #' Gets a nice looking list of files present on an FTP server.
 #'
-#' The structure returned is dependent on the FTP site as there are
-#' various formats for directory listings dependent upon the server
-#' and the OS. you will need to play with this.
-#' have a look at the FTP with your browser first and adjust accordingly.
-#' some formats only return 4 columns.
+#' The structure returned is dependent on the FTP site as there are 
+#' various formats for directory listings dependent upon the server and 
+#' the OS. you will need to play with this. have a look at the FTP with 
+#' your browser first and adjust accordingly. some formats only return 4 
+#' columns.
 #'
-#' column 1: literal string first position mean file
-#' column 2: number 1
-#' column 3: owner
-#' column 4: group
-#' column 5: file size
-#' column 6: month
-#' column 7: day
-#' column 8: time (year)
-#' column 9: file name
+#' column 1: literal string first position mean file column 2: number 
+#' 1 column 3: owner column 4: group column 5: file size column 6: month 
+#' column 7: day column 8: time (year) column 9: file name
 #'
 #' @export
 get_ftp_file_list = function(ftp) {

@@ -1,8 +1,12 @@
+#' @title
 #' Process symbolic call
 #
-#' Takes either a function, which it leave alone, or a symbolic 
-#' call (starting with `~`), which it turns into a function. 
-#' Inspired by `tidyverse`-style function supply. 
+#' @title
+#' `process_symbolic_call()` takes either a function, which it leave 
+#' alone, or a symbolic
+#' @description
+#' call (starting with `~`), which it turns into a function. Inspired 
+#' by `tidyverse`-style function supply.
 #'
 #' @export
 process_symbolic_call = function(call, narg) {
@@ -27,19 +31,16 @@ process_symbolic_call = function(call, narg) {
      
 }
 
-#' Get names for a symbolic call
-#'
-#' Returns the names of arguments that are needed by a symbolic call.
-#'
-#' @export
+#' @title
+#' `symbolic_call_names()` returns the names of arguments that are 
+#' needed by a symbolic call.
 symbolic_call_names = function(n) {
   head('.' %.% shift(base::letters, 3), n, stop_on_greedy=TRUE)
 }
 
-#' Empty-body functions
-#'
-#' These functions are useful when processing [tidyverse]-style functions.
-#'
+#' @title
+#' These functions are useful when processing [`tidyverse`]-style 
+#' functions.
 void = function() {}
 
 void_x = function(.x) {}

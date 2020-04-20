@@ -20,73 +20,28 @@ is_rstudio()
 }
 \description{
 \code{is_win} returns \code{TRUE} when the current system is Windows.
-}
-\details{
+
 \code{is_linux} returns \code{TRUE} when the current system is Linux/Unix.
 
 \code{is_term} returns \code{TRUE} when the current session runs inside a
 terminal (as opposed to inside an interactive GUI).
 
-\code{is_rgui} returns \code{TRUE} when the current session runs inside
-an interactive GUI (as opposed to inside a terminal).
+\code{is_rgui} returns \code{TRUE} when the current session runs inside an
+interactive GUI (as opposed to inside a terminal).
 
 \code{is_rstudio} returns \code{TRUE} when the current session runs inside
 RStudio.
 }
 \seealso{
 Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
+\code{\link{R_defaults}},
 \code{\link{R_gui_adjust}()},
 \code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
 \code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
 \code{\link{environment_variables}},
 \code{\link{get_system_PATH}()},
-\code{\link{timest}()}
-
-Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
-\code{\link{R_gui_adjust}()},
-\code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
-\code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
-\code{\link{environment_variables}},
-\code{\link{get_system_PATH}()},
-\code{\link{timest}()}
-
-Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
-\code{\link{R_gui_adjust}()},
-\code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
-\code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
-\code{\link{environment_variables}},
-\code{\link{get_system_PATH}()},
-\code{\link{timest}()}
-
-Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
-\code{\link{R_gui_adjust}()},
-\code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
-\code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
-\code{\link{environment_variables}},
-\code{\link{get_system_PATH}()},
-\code{\link{timest}()}
-
-Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
-\code{\link{R_gui_adjust}()},
-\code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
-\code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
-\code{\link{environment_variables}},
-\code{\link{get_system_PATH}()},
+\code{\link{pause}},
+\code{\link{stopping_control}},
 \code{\link{timest}()}
 }
 \concept{system-related functions provided by utilbox}

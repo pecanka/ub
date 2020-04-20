@@ -7,6 +7,6 @@
 tablenat(x)
 }
 \description{
-A quicker version of \code{base::table}. Assumes natural number values and every value outside 
-1,2,... is counted as 0.
+A quicker version of \code{base::table}. Assumes natural number
+values and every value outside 1,2,... is counted as 0.
 }

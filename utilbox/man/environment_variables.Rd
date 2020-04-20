@@ -11,24 +11,22 @@ get_envir_var(name)
 set_envir_var(name)
 }
 \description{
-Just wrappers for the built-in R functions so that it
+\code{set_envir_var} sets a system environment variable,
+\code{get_envir_var} reads a value of a system environment variable.
+
+These are simply wrappers for the built-in R functions so that it
 is easier to find them.
-}
-\details{
-`set_envir_var` sets a system environment variable,
-`get_envir_var` reads a value of a system
-environment variable.
 }
 \seealso{
 Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
+\code{\link{R_defaults}},
 \code{\link{R_gui_adjust}()},
 \code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
 \code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
 \code{\link{get_system_PATH}()},
 \code{\link{is_win}()},
+\code{\link{pause}},
+\code{\link{stopping_control}},
 \code{\link{timest}()}
 }
 \concept{system-related functions provided by utilbox}

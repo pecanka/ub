@@ -7,9 +7,9 @@
 palette_ub(n)
 }
 \description{
-Returns a specified number of colors a from a color palette.
-If the requested number of colors is larger than the size
-of the palette the colors are recycled.
+Returns a specified number of colors a from a color palette. If
+the requested number of colors is larger than the size of the palette
+the colors are recycled.
 }
 \examples{
 palette_ub()

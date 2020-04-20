@@ -21,47 +21,51 @@ zip_files_pattern(
 )
 }
 \arguments{
-\item{mask}{Regular pattern to match the files found in \code{path} against (for
-inclusion).}
+\item{mask}{Regular pattern to match the files found in \code{path}
+against (for inclusion).}
 
-\item{mask_exclude}{Regular pattern to match the files found in \code{path} 
-against (for exclusion).}
+\item{mask_exclude}{Regular pattern to match the files found in
+\code{path} against (for exclusion).}
 
 \item{outfile}{name of the output zip archive. Can be omitted.}
 
 \item{path}{Path to the files to be archived.}
 
-\item{appendix}{File extension of the output archive. Relevant when \code{outfile} omitted
-or when \code{single_archive} is \code{TRUE}.}
+\item{appendix}{File extension of the output archive. Relevant
+when \code{outfile} omitted or when \code{single_archive} is \code{TRUE}.}
 
-\item{extras}{Modifiers sent to the zip archiver. Defaults to '-m', 
-which moves the files into the archive.}
+\item{extras}{Modifiers sent to the zip archiver. Defaults to
+'-m', which moves the files into the archive.}
 
-\item{patternize}{Determines whether the mask is treated as given or whether the
-special characters in it are wrapped to be matched accurately.}
+\item{patternize}{Determines whether the mask is treated as given
+or whether the special characters in it are wrapped to be matched
+accurately.}
 
 \item{chunk}{Batch size for the archiver.}
 
 \item{announce}{Determines whether details are announced.}
 
-\item{single_archive}{Determines whether a single archive is produced (\code{TRUE}) 
-or whether each file is placed into its own archive (\code{FALSE}). In the
-latter case the archive name is based on the file name and \code{appendix}.}
+\item{single_archive}{Determines whether a single archive is
+produced (\code{TRUE}) or whether each file is placed into its own archive
+(\code{FALSE}). In the latter case the archive name is based on the file
+name and \code{appendix}.}
 
-\item{retry}{Determines whether repeated attempts are made to when the archiver 
-returns a non-zero status code.}
+\item{retry}{Determines whether repeated attempts are made to when
+the archiver returns a non-zero status code.}
 
 \item{nretries}{How many repeated attempts are made.}
 
-\item{browser_on_error}{Launch the \code{browser} upon non-zero status (for debugging).}
+\item{browser_on_error}{Launch the \code{browser} upon non-zero status
+(for debugging).}
 }
 \value{
-List of file names of the created archive and the corresponding status 
-        codes returned by the archiver.
+List of file names of the created archive and the
+corresponding status codes returned by the archiver.
 }
 \description{
-\code{zip_files_pattern} compresses files matching the pattern in \code{mask}
-(and not matching the pattern in \code{mask_exclude}) each into its own archive.
+\code{zip_files_pattern} compresses files matching the pattern in
+\code{mask} (and not matching the pattern in \code{mask_exclude}) each into its
+own archive.
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

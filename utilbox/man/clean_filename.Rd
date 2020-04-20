@@ -7,8 +7,9 @@
 clean_filename(x, chr = "-", keep_last_dot = TRUE)
 }
 \description{
-Replaces dots in file names with the value in \code{chr}. Useful for changing file
-names of plots that are to be included in a latex file where the dots cause trouble
+\code{clean_filename()} replaces dots in file names with the value in
+\code{chr}. Useful for instance for changing file names of plots that are
+to be included in a latex file where the dots cause trouble.
 }
 \seealso{
 Other file system function provided by utilbox: 

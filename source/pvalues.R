@@ -1,6 +1,9 @@
+#' @title
 #' P-value combination
 #'
-#' Combines p-values using one of the available methods 
+#' @description
+#' Combines p-values using one of the available methods.
+#'
 #' @export
 combine_pvalues = function(P, lam, method=c("jelle","jakub","fisher","stouffer"), summarize=FALSE, ...) {
 
@@ -21,18 +24,22 @@ combine_pvalues = function(P, lam, method=c("jelle","jakub","fisher","stouffer")
   
 }
 
+#' @title
 #' P-value combination using Fisher method
 #'
-#' Combines p-values using the Fisher combination methods 
+#' @description
+#' Combines p-values using the Fisher combination methods.
 #'
 #' @export
 combine_fisher = function(p, silent=TRUE) {
   do_pval_comb(p, method="fisher", trace=1*!silent)
 }
 
+#' @title
 #' P-value combination using Fisher method
 #'
-#' Combines p-values using the Stouffer's combination methods 
+#' @description
+#' Combines p-values using the Stouffer's combination methods
 #' @export
 combine_stouffer = function(p, silent=TRUE) {
   do_pval_comb(p, method="stouffer", trace=1*!silent)
@@ -104,10 +111,12 @@ combine_stouffer = function(p, silent=TRUE) {
   return(upper)
 }
 
+#' @title
 #' Combine p-values
 #'
-#' Performs combination of p-values using Fisher method or Box method (the
-#' latter via Jelle's code in .pAsymptotic or Jakub's code below
+#' @description
+#' Performs combination of p-values using Fisher method or Box method 
+#' (the latter via Jelle's code in .pAsymptotic or Jakub's code below
 #' @export
 do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2, 
   Debug=FALSE, na.rm=TRUE, trace=1) {

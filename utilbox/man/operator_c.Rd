@@ -11,7 +11,7 @@ x \%c\% y
 y \%cR\% x
 }
 \description{
-Append one object to another via [base::c].
+Append one object to another via \code{\link[base:c]{base::c}}.
 }
 \examples{
 1:10 \%c\% 11:15

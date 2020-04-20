@@ -14,12 +14,12 @@ llibrary(
   quietly = TRUE,
   character.only = FALSE,
   fail = warn,
-  detach = FALSE,
+  detach_first = FALSE,
   default_src = "CRAN",
   url_CRAN = "https://cloud.r-project.org/"
 )
 
-llib(..., detach = FALSE)
+llib(..., detach_first = FALSE)
 
 unload_library(pckgs = NULL, character.only = FALSE)
 
@@ -30,23 +30,21 @@ list_loaded_packages()
 package_is_installed(pckgs, character.only = FALSE)
 }
 \description{
-\code{llibrary} loads specified libraries. On input, \code{pckgs} must either 
-be a character vector of package names or a list with each of its elements 
-having the structure of \code{list(name=..., src=...)} where name is the package 
-name and src is the package source (repository or local) from which the package 
-is to be loaded.
-}
-\details{
-\code{llib} is an alias for \code{llibrary} which allows unquoted input.
+\code{llibrary()} loads specified libraries. On input, \code{pckgs} must
+either be a character vector of package names or a list with each of
+its elements having the structure of \code{list(name=..., src=...)}
+where name is the package name and src is the package source
+(repository or local) from which the package is to be loaded.
 
-\code{unload_library} unloads/detaches a loaded library.
+\code{llib()} is an alias for \code{llibrary()} which allows unquoted input.
 
+\code{unload_library()} unloads/detaches a loaded library.
 
-\code{list_installed_packages} lists all installed packages.
+\code{list_installed_packages()} lists all installed packages.
 
-\code{list_loaded_packages}) list all loaded packages.
+\code{list_loaded_packages()}) list all loaded packages.
 
-(\code{package_is_installed}) checks if a package is installed.
+\code{package_is_installed()} checks if a package is installed.
 }
 \examples{
 list_installed_packages()
@@ -56,49 +54,6 @@ package_is_installed('utilbox')
 }
 \seealso{
 Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
-\code{\link{apply_pckg}()},
-\code{\link{list_package}},
-\code{\link{set_pkglib}()}
-
-Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
-\code{\link{apply_pckg}()},
-\code{\link{list_package}},
-\code{\link{set_pkglib}()}
-
-Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
-\code{\link{apply_pckg}()},
-\code{\link{list_package}},
-\code{\link{set_pkglib}()}
-
-Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
-\code{\link{apply_pckg}()},
-\code{\link{list_package}},
-\code{\link{set_pkglib}()}
-
-Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
-\code{\link{apply_pckg}()},
-\code{\link{list_package}},
-\code{\link{set_pkglib}()}
-
-Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
 \code{\link{apply_pckg}()},
 \code{\link{list_package}},
 \code{\link{set_pkglib}()}

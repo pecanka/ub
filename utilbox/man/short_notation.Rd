@@ -7,5 +7,16 @@
 short_notation(x, exact_cutoff = 999, ndig = 1, word_units = FALSE)
 }
 \description{
-Convert a number to an abbreviated notation
+\code{short_notation()} (alias \code{N2T()}) and \code{short_notation_exp()}
+(alias \code{N2Texp()}) convert a number (possibly supplied as character)
+and shortens it representation. Small numbers are left intact, large
+numbers are rounded and abbreviated (see the examples).
+}
+\examples{
+short_notation(c(1,33,678))
+short_notation(c(1000:1010))
+short_notation(c(10^c(3,6,9,12)))
+
+short_notation_exp(c(10^c(3,6,9,12)))
+
 }

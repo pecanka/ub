@@ -7,8 +7,9 @@
 is_same_object(..., envir = parent.frame())
 }
 \description{
-Checks whether all arguments correspond to the same object in memory. Arguments
-can be given quoted or unquoted and the unquoted with the same result.
+\code{is_same_object()} checks whether all of the supplied arguments
+correspond to the same object in memory. Arguments can be given as
+variables or by name (as character).
 }
 \examples{
 a = 1; b = a; c = 2

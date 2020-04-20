@@ -13,7 +13,7 @@
 \alias{print.huge.default}
 \alias{truncate_huge}
 \alias{truncate_huge.default}
-\title{Convert objects to class `huge`}
+\title{Convert objects to class \code{huge}}
 \usage{
 is.huge(x)
 
@@ -38,16 +38,15 @@ truncate_huge(...)
 \method{truncate_huge}{default}(x, n)
 }
 \description{
-Class `huge` is intended to be used for objects with many elements which, 
-if all printed, would clutter the screen. With class `huge` 
+Class \code{huge} is intended to be used for objects with many elements
+which, if all printed, would clutter the screen. With class \code{huge}
 set, only a limited number of elements are actually printed.
-(extracted by [base::head]).
-}
-\details{
-`is_huge` checks whether class \"`huge`\" is among the classes
-of the object in `x`.
+(extracted via \code{\link[base:head]{base::head()}}).
 
-`as.huge` adds class \"`huge`\" as the first class of `x`.
+\code{is_huge()} checks whether class \code{huge} is among the classes of
+the object in \code{x}.
+
+\code{as.huge()} adds class \code{huge} as the first class of \code{x}.
 }
 \examples{
 as.huge(list(1:100))

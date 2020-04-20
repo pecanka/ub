@@ -2,6 +2,7 @@
 % Please edit documentation in R/strings.R
 \name{str_insert}
 \alias{str_insert}
+\alias{str_replace}
 \title{Insert substring into a string (additive)}
 \usage{
 str_insert(
@@ -12,20 +13,27 @@ str_insert(
   str2_shift = 0,
   workhorse = substring
 )
+
+str_replace(x, substring, pos, insert_white = FALSE, str2_shift = 0)
 }
 \description{
-Inserts a substring into a string at a given position.
-If the position in \code{pos} is larger than the character
-count of the string, the substring either simply attached
-to the end of the string (when \code{insert_white=FALSE},
-default behavior) or the appropriate number of trailing 
-white spaces are inserted before the substring is
-attached.
+\code{str_insert()} inserts a substring into a string at a given
+position. If the position in \code{pos} is larger than the character count
+of the string, the substring either simply attached to the end of the
+string (when \code{insert_white=FALSE}, default behavior) or the
+appropriate number of trailing white spaces are inserted before the
+substring is attached.
+
+\code{str_replace()} does replacive insertions.
 }
 \examples{
 str_insert('My name is John Doe', ' not', 10)
 str_insert(c('First name: ','Last name: ') , c('John','Doe'), 11)
 str_insert(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
+
+str_replace('My name is John Doe', ' Jack', 11)
+str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20)
+str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
 
 }
 \seealso{
@@ -33,6 +41,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -41,13 +50,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

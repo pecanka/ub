@@ -8,10 +8,10 @@ split_into_groups(x, n)
 }
 \value{
 List with the i-th element containing the elements that
-         were assigned into the i-th group (\"bag\")
+were assigned into the i-th group (\"bag\")
 }
 \description{
-Split the elements of an object into groups (referred to as 
+Split the elements of an object into groups (referred to as
 \"bags\") of given size.
 }
 \examples{
@@ -21,7 +21,6 @@ split_into_bags(1:22, 7)
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -29,20 +28,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
-\code{\link{unname_factor}()},
+\code{\link{sizechecks}},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

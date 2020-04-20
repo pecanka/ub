@@ -22,8 +22,9 @@ read_table_zip(
 )
 }
 \description{
-Reads a table from within a zip file (equivalent to read.table except the
-input file is expected to be a zip archive)
+\code{read_table_zip()} reads a table from within a zip file
+(equivalent to read.table except the input file is expected to be a
+zip archive)
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

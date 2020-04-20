@@ -4,7 +4,7 @@
 \alias{sub_at}
 \alias{gsub_at}
 \alias{substitute_at}
-\title{Substitution of \"@\" substrings}
+\title{Substitution of \"@\"-substrings}
 \usage{
 gsub_at(x, ..., at = "@")
 
@@ -13,35 +13,33 @@ sub_at(x, ..., at = "@")
 substitute_at(x, sub_list, at = "@", workhorse = subm)
 }
 \description{
-`sub_at` and `gsub_at` perform the replacement of \"@-substrings\"
-inside a string `x`. \"@-substrings\" are strings that start with
-the character '@' (or the value supplied in `at`, more generally).
-The replacement of these substrings is governed by what follows the
-'@'. The string is then replaced (together with the '@') with the 
-values in the supplied arguments. The matching of the \"@-substrings\" 
-with the arguments can be controlled in three ways:
-1. based on the name attributes of the argument when supplied as 
-named vectors or named lists (e.g. 
-`gsub_at(x, c(name='John', city='Prague'))`.
+\code{sub_at()} and \code{gsub_at()} perform the replacement of
+\"@-substrings\" inside a string \code{x}. \"@-substrings\" are strings
+that start with the character '@' (or the value supplied in \code{at},
+more generally). The replacement of these substrings is governed by
+what follows the '@'. The string is then replaced (together with the
+'@') with the values in the supplied arguments. The matching of the
+\"@-substrings\" with the arguments can be controlled in three ways:
+
+named vectors or named lists (e.g. \code{gsub_at(x, c(name='John',  city='Prague'))}.
+\enumerate{
+\item as the actual arguments when supplied as named arguments (e.g.
+\code{gsub_at(x, name='John', city='Prague')}).
+\item from the symbols supplied in the function call (e.g.
+\verb{name='John'; city='Prague'; gsub_at(x, name, city)}).
 }
-\details{
-2. as the actual arguments when supplied as named arguments (e.g. 
-`gsub_at(x, name='John', city='Prague')`).
 
-3. from the symbols supplied in the function call 
-(e.g. `name='John'; city='Prague'; gsub_at(x, name, city)`).
-
-In principal, these methods can be combined (see examples below). 
-Furthermore, one can leverage a combination of naming arguments 
-and supplying named vectors/lists, where the names of the arguments
-and the names in the named vectors/lists are concatenated. Keep in
-mind that whenever the argument is a named vector/list, the names
-are concatenated with an added dot ('.'), while for unnamed vectors/lists
+In principal, these methods can be combined (see examples below).
+Furthermore, one can leverage a combination of naming arguments and
+supplying named vectors/lists, where the names of the arguments and
+the names in the named vectors/lists are concatenated. Keep in mind
+that whenever the argument is a named vector/list, the names are
+concatenated with an added dot ('.'), while for unnamed vectors/lists
 the concatenation happens without adding the dot.
 
-`substitute_at` is the general function which takes named vectors/lists 
-only and allows the specification of the workhorse function 
-(e.g. `sub`, `gsub`).
+\code{substitute_at()} is the general function which takes named
+vectors/lists only and allows the specification of the workhorse
+function (e.g. \code{sub}, \code{gsub}).
 }
 \examples{
 x = '@name lived in @city1 and @city2. @city2 became @whose home.'
@@ -70,6 +68,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -79,12 +78,10 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

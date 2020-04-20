@@ -7,8 +7,8 @@
 rep2(x, each, ...)
 }
 \description{
-An upgraded version of \code{rep}. Allows for different number 
-of occurrences for each value supplied in the first argument.
+An upgraded version of \code{rep}. Allows for different number of
+occurrences for each value supplied in the first argument.
 }
 \examples{
 rep2(c('a','b'), e=3:4)
@@ -17,7 +17,6 @@ rep2(c('a','b'), e=3:4)
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -25,20 +24,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

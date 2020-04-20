@@ -7,7 +7,8 @@
 append_recurse(lists, ...)
 }
 \description{
-Appends multiple objects together by recursively calling [base::append].
+Appends multiple objects together by recursively calling
+\code{\link[base:append]{base::append}}.
 }
 \examples{
 append_recurse(as.list(1:3), as.list(4:7), as.list(10:15))

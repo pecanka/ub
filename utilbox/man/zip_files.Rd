@@ -7,21 +7,23 @@
 zip_files(files, path = ".", zipfile, extras = "-m")
 }
 \arguments{
-\item{files}{List of files to compress. Exact file names, not regular patterns.}
+\item{files}{List of files to compress. Exact file names, not
+regular patterns.}
 
 \item{path}{Path to the files.}
 
 \item{zipfile}{Name of the zip archive to create.}
 
-\item{extras}{Modifiers sent to the zip archiver. Defaults to '-m', 
-which moves the files into the archive.}
+\item{extras}{Modifiers sent to the zip archiver. Defaults to
+'-m', which moves the files into the archive.}
 }
 \value{
-List of file names of the created archive and the corresponding status 
-        codes returned by the archiver.
+List of file names of the created archive and the
+corresponding status codes returned by the archiver.
 }
 \description{
-\code{zip_files} compresses files into a single archive supplied via \code{zipfile}.
+\code{zip_files} compresses files into a single archive supplied via
+\code{zipfile}.
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

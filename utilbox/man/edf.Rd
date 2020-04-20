@@ -7,8 +7,10 @@
 edf(x)
 }
 \description{
-Empirical probability frequency (density)
+\code{edf()} gives the empirical probability frequency (i.e. the
+density).
 }
 \examples{
 ecf(sample(1:3, 100, repl=TRUE))
+
 }

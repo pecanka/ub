@@ -10,14 +10,13 @@ str_split(x, split, ..., unlist_for_scalar = FALSE)
 str2vector(x, split = "", ..., unlist_for_scalar = TRUE)
 }
 \description{
-Splits a string vector `x` by character string `split`. 
-`str_split` is basically the same as [base::strsplit]
-except that for zero-length strings it does not return 
-a zero-length element in the returned list. `str2vector`
-is an alias with the default value for split set to '' 
-(an empty string) so that it ends up producing a vector
-of individual characters. It also unlists the returned
-value for scalar `x`.
+Splits a string vector \code{x} by character string \code{split}.
+\code{str_split} is basically the same as \code{\link[base:strsplit]{base::strsplit}} except that
+for zero-length strings it does not return a zero-length element in
+the returned list. \code{str2vector} is an alias with the default value
+for split set to '' (an empty string) so that it ends up producing a
+vector of individual characters. It also unlists the returned value
+for scalar \code{x}.
 
 Splits string into a vector of individual characters.
 }
@@ -30,6 +29,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -39,18 +39,17 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -60,12 +59,10 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

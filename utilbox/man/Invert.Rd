@@ -2,39 +2,36 @@
 % Please edit documentation in R/invert.R
 \name{Invert}
 \alias{Invert}
-\title{Find pseudoinverse, square root, and sqrt-inverse matrices}
+\alias{Invert1}
+\title{Find (pseudo)inverse, square root, and sqrt-inverse matrices}
 \usage{
 Invert(M, inv = FALSE, sq = FALSE, sqinv = FALSE, eps = 1e-12, drop = FALSE)
+
+Invert1(x)
 }
 \description{
-Find pseudoinverse, square root, and sqrt-inverse matrices
+\code{Invert1()} does element-wise inversion (as in \"one over\") of
+all non-zero elements \code{x}, while the zero-valued elements are kept
+unchanged.
+
+\code{Invert()} finds an inverse (or pseudoinverse), square root,
+and/or sqrt-inverse matrices of \code{M}.
 }
 \seealso{
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
+\code{\link{extract_by_value}},
 \code{\link{force_as_}},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
 \code{\link{make_numeric}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
 \code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}},
 \code{\link{which_max}()}
 }
 \concept{numeric functions provided by utilbox}

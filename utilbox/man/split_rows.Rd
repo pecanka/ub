@@ -11,18 +11,21 @@ split_rows(x, f = seq_len(nrow(x)), drop = FALSE, ...)
 
 \item{f}{A vector giving the grouping of rows}
 
-\item{drop}{A logical indicating if levels that do not occur should be dropped 
-(if \code{f} is a factor or a list). See \code{base::split} for details.}
+\item{drop}{A logical indicating if levels that do not occur
+should be dropped (if \code{f} is a factor or a list). See
+\code{base::split} for details.}
 
-\item{...}{Further potential arguments passed on to \code{split::base}.}
+\item{...}{Further potential arguments passed on to
+\code{split::base}.}
 }
 \value{
 A list of separated rows.
 }
 \description{
-Takes a matrix, data frame or any two-dimensional object (array) and splits
-its rows according to the grouping supplied in \code{f}. Uses \code{base::split} 
-as the workhorse, see \code{?base::split} for more details.
+Takes a matrix, data frame or any two-dimensional object (array)
+and splits its rows according to the grouping supplied in \code{f}. Uses
+\code{base::split} as the workhorse, see \code{?base::split} for more
+details.
 }
 \seealso{
 Other matrix/data-frame functions provided by utilbox: 

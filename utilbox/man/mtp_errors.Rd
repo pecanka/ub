@@ -41,6 +41,7 @@ mtp_errors_slow(
 )
 }
 \description{
-Determine the type-I (FWER, FDR) and type-II (power) errors of 
-selected multiple testing procedures
+\code{mtp_errors()}, \code{mtp_errors_fast()}, `mtp_errors_slow() determine
+the type-I (FWER, FDR) and type-II (power) errors of selected
+multiple testing procedures.
 }

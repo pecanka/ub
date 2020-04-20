@@ -7,24 +7,24 @@
 list_zip(zipfiles, pattern = ".*", exclude = FALSE)
 }
 \arguments{
-\item{pattern}{Regular expression pattern(s) against which the discovered
-file names are matched}
+\item{pattern}{Regular expression pattern(s) against which the
+discovered file names are matched}
 
-\item{exclude}{If \code{TRUE}, the pattern is used to exclude the discovered
-files, otherwise files that match \code{pattern} are kept. 
+\item{exclude}{If \code{TRUE}, the pattern is used to exclude the
+discovered files, otherwise files that match \code{pattern} are kept.
 Defaults to \code{FALSE}}
 
 \item{zip}{Name of the zip archive(s) to read files from}
 }
 \value{
-A character vector or list depending on whether the input in 
-\code{zipfiles} was of type \code{list}.
+A character vector or list depending on whether the input
+in \code{zipfiles} was of type \code{list}.
 }
 \description{
-Lists files within a zip archive that match the supplied regular expression
-pattern or patterns. Keeps only files that match at least one of the patterns
-in \code{pattern} or those that do not match any of the patterns when 
-\code{exclude} is \code{TRUE}.
+Lists files within a zip archive that match the supplied regular
+expression pattern or patterns. Keeps only files that match at least
+one of the patterns in \code{pattern} or those that do not match any of
+the patterns when \code{exclude} is \code{TRUE}.
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

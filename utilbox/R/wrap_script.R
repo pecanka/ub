@@ -1,43 +1,28 @@
+#' @title
 #' Wrap R code explanations
 #'
-#' Takes an R script and \"wraps\" (i.e. add line breaks to limits width) 
-#' the help explanations of what the functions do so that the lines do not exceed \code{max_width} 
-#' too much. It places a new line right after the end of each word
-#' whose presence made the line length on which it is exceed \code{max_width}.
+#' @description
+#' Takes an R script and \"wraps\" (i.e. add line breaks to limits 
+#' width) the help explanations of what the functions do so that the 
+#' lines do not exceed `max_width` too much. It places a new line right 
+#' after the end of each word whose presence made the line length on 
+#' which it is exceed `max_width`.
 #'
 #' @examples
+#'
 #' # Example with code supplied directly:
 #' snippet1 = "#' Simple printing function\n#'\n#' " 
 #' snippet2 = paste0(rep('Printing function.', t=30), collapse=' ')
 #' snippet3 = "\n#'\n#' @example\n#' f('Hello world!')\n#'\n#' @export\n"
 #' snippet4 = "f = function(x) {\n  print(x)\n}"
-#' script_wrap_text(code=snippet1 %.% snippet2 %.% snippet3 %.% snippet4)
+#' script_help_fix(code=snippet1 %.% snippet2 %.% snippet3 %.% snippet4)
 #'
 #' @export
-script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='.!?', 
+script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.!?', 
   split_code=TRUE, split='\\n', verbose=TRUE) {
   
-  # --------------------- #
-  # function to strip out the strings that indicate help lines
-  strip_start = function(x) 
-    gsub("#'[ ]*","",x)
-    
-  # function to indicate and "empty" (at most "#'" on it) line
-  is_empty_line = function(x) 
-    str_is_empty(strip_start(x), TRUE)
-
-  # function to indicate and "empty" (at most "#'" on it) line
-  is_title_line = function(x) 
-    "#'\\s*@title" %m% x
-    
-  replace_code_tag = function(x, extra=":", as_link=TRUE)
-    gsub('[\\]code[{]([a-zA-Z0-9_.()'%.%extra%.%']+)+[}]',
-         ifelse(as_link,'[`','`')%.%'\\1'%.%ifelse(as_link,'`]','`'),x)
-  
-  # --------------------- #
-  
   if(equals(missing(file), missing(code))) {
-    error("Supply either file name (via file) or source code (via code).")
+    error("Supply either file name (via 'file') or source code (via 'code').")
   }
   
   # read the file
@@ -51,13 +36,48 @@ script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='
   # fix typos (where #" is in the place of #')
   code = gsub("^#\"","#'",code)
   
+  # remove existing line breaks from the help lines
+  Code = script_help_unwrap(code)
+  
+  # separate the code that has the "help lines of focus" on it
+  focus = Code$focus
+  RDs = Code$RDs
+  Code = Code$Code
+  
+  # clean and wrap the help lines
+  Code[focus] = script_help_clean_and_wrap(Code[focus], RDs[focus], max_width, eol, punctuation)
+
+    # insert the altered lines instead of the old ones
+  #Code = insert(Code, Help, Code$focus, replace_old=TRUE)
+  #code[focus] = Help
+
+  # save the results to file
+  if(!missing(file)) {
+    writeLines(Code, file2 <- file%.%'.wrapped') 
+    if(verbose) catn("Output saved to file '",file2,"'.")
+  } else {
+    file = file2 = NULL
+  }  
+
+  invisible(as.huge(nlist(Code, input_file=file, output_file=file2)))
+  
+}
+
+#' @rdname script_help_fix
+#' @export
+script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'", 
+  pattern_specials="#'[ ]*[@](example|family|export|rdname)", 
+  pattern_rdname="@name|@rdname") {
+  
   # identify help explanation lines
-  is_help = regexpr("^#'.*$",code)>0
-  is_help_empty = (regexpr("^\\s*$",code)>0) & de_na(shift(is_help, 1, rotate=FALSE), FALSE)
+  is_help = grepl(pattern_help_line, code)
+  is_help_empty = grepl("^[#]?\\s*$",code) & 
+    de_na(shift(is_help, 1, rotate=FALSE), FALSE) & 
+    de_na(shift(is_help, -1, rotate=FALSE), FALSE)
   if(any(is_help_empty)) is_help = is_help | is_help_empty
   
   # replace the empty lines within help with lines signifying help
-  code[is_help_empty] = "#'"
+  code[is_help_empty] = help_string
   
   # find the starts and ends of help blocks
   hb_begs = which(is_start_of_run(is_help) & is_help)
@@ -75,20 +95,35 @@ script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='
   hb_code = lapply(hb_lines, function(n) code[n])  
   
   # find the first non-empty line in each block (i.e. the title line)
-  hbt_begs_rel = lapply(hb_code, function(b) w_first_nonzero(!is_empty_line(b)))
-  hbt_begs = lapply(seq(nblocks), function(i) hbt_begs_rel[[i]] + hb_begs[i] - 1)
+  hbT_begs_rel = lapply(hb_code, function(b) w_first_nonzero(!is_empty_line(b)))
+  hbT_begs = lapply(seq(nblocks), function(i) hbT_begs_rel[[i]] + hb_begs[i] - 1)
+  #rm(hbT_begs_rel)
   
   # find the second non-empty line in each block (i.e. the first description line)
-  hbd_begs_rel = lapply(hb_code, function(b) w_nth_nonzero(!is_empty_line(b),2))
-  hbd_begs = lapply(seq(nblocks), function(i) hbd_begs_rel[[i]] + hb_begs[i] - 1)
+  hbD_begs_rel = lapply(hb_code, function(b) 
+    if(any("@description" %mic% b)) NULL else w_nth_nonzero(!is_empty_line(b),2))
+  hbD_begs = lapply(seq(nblocks), function(i) hbD_begs_rel[[i]] + hb_begs[i] - 1)
+  #rm(hbD_begs_rel)
 
+  # figure out what the name of the current help block is (either via @name, 
+  # @rdname or at looking at the name of the function that follows it)
+  hb_rdnames = sapply(hb_code, function(b) {
+      is_rdname = grep(pattern_rdname, b)
+      ifelse(!any(is_rdname), length(b)+1, is_rdname[1])
+    })
+    
+  hb_rdnames = extract_rdname(code[hb_begs - 1 + hb_rdnames])
+  stopifnot(length(hb_rdnames)==length(hb_code))
+  #hb_rdnames = rep(hb_rdnames, t=sapply(hb_code, length))
+  
   # find the positions of the examples and family "specials" (@examples, @family)
-  h_specials = sapply(hb_code, function(b) {
-      is_specials = which(regexpr("#'[ ]*[@](example|family)", b)>0)
-      if(!any(is_specials)) length(b)+1 else is_specials[1]})
+  hb_specials = sapply(hb_code, function(b) {
+      is_special = grep(pattern_specials, b)
+      ifelse(!any(is_special), length(b)+1, is_special[1])
+  })
   
   # alter the block ends to ignore the lines below "specials"
-  hb_ends = hb_begs - 1 + h_specials - 1
+  hb_ends = hb_begs - 1 + hb_specials - 1
   
   # store the ranges of lines to modify in a list (input for or_between)
   ht_modify = split_rows(cbind(hb_begs, hb_ends))
@@ -96,8 +131,9 @@ script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='
   # loop through the lines and merge those that correspond to a single
   # description in the blocks (j counts the lines in C, k counts the 
   # lines in the current description
-  C = rep("", length(code))
+  C = C_rdnames = rep("", length(code))
   is_code = NULL
+  last_time_made_bottom = -1
   j = 0
   for(i in 1:length(code)) {
     
@@ -106,148 +142,142 @@ script_wrap_text = function(file, code, max_width=70, eol="\n#' ", punctuation='
     
     # current line is not a description => save it unaltered
     if(!or_between(i, ht_modify)) {
-    
-      k = b = 0
+      #k = b = 0
       C[j] = code[i]
       is_code = c(is_code, j)
-      
-    } else {
-    
-      ## if there are no non-empty lines in the current block, just ignore it
-      #if(remove_empty_help_blocks && is_empty(hbt_begs[[ib]])) {
-      #  j = j-1
-      #  next
-      #}
-
-      is_t_beg = i == (hbt_begs[[ib]] %||||% -1)
-      is_d_beg = i == (hbd_begs[[ib]] %||||% -1)
-      is_p_beg = '@param' %m% tolower(code[i])
-      
-      if(is_t_beg && '@title' %nm% tolower(code[i])) 
-        C[j] = "#' @title\n"
-      if(is_d_beg && '@description' %nm% tolower(code[i])) {
-        C[j] = "#' @description\n"
-        #j = j+1
-      }
-
-      # current line is the first line in the block or it is
-      # an empty line (only "#'" on it) => save it unaltered
-      if(i %in% hb_begs || is_empty_line(code[i]) || is_t_beg || is_p_beg) {
-
-        if(!is_p_beg) k = 0
-        C[j] = C[j] %.% code[i]
-      
-      # current line is a continuation of a description started
-      # on the previous line => append it to the previous line
-      } else {
-      
-        k = k+1
-        if(!is_d_beg) j = j-1
-        C[j] = str_trim_space(C[j] %.% ifelse(is_d_beg, "#'", "")) %..% strip_start(code[i])
-        #C[j] = C[j] %.% ifelse(is_d_beg, code[i], strip_start(code[i]))
-        #focus2 = c(focus2, j)
-        
-      }
+      next
     }
-    #print(i); print(code[i]); print(C[j]); if(i>=11) browser()
+    
+    is_t_beg = i == (hbT_begs[[ib]] %||||% -1)
+    is_d_beg = i == (hbD_begs[[ib]] %||||% -1)
+    is_p_beg = '@param' %m% tolower(code[i])
+    is_s_beg = '@section' %m% tolower(code[i])
+    is_i_beg = '(\\item|\\enum|[!][[])' %m% tolower(code[i])
+    is_b_beg = "#'[ ]*[}]" %m% tolower(code[i])
+    is_empt = is_empty_line(code[i])
+    is_empt_p = i>1 && is_empty_line(code[i-1])
+    
+    #if(i>=27) {print(code[i]); print(is_d_beg); browser()}
+    
+    if(is_t_beg && '@title' %nm% tolower(code[i])) 
+      C[j] = "#' @title\n"
+    if(is_d_beg && '@description' %nm% tolower(code[i]))
+      C[j] = "#' @description\n"
+    
+    is_beg = is_t_beg || is_p_beg || is_s_beg || is_i_beg || is_b_beg
+    
+    # current line is the first line in the block or it is
+    # an empty line (only "#'" on it) => save it unaltered
+    if(i %in% hb_begs || is_empt || is_beg) {
+      #if(!is_p_beg) k = 0
+      C[j] = C[j] %.% code[i]
+      C_rdnames[j] = hb_rdnames[ib]
+      next
+    }
+    
+    # current line is a continuation of a description started
+    # on the previous line => append it to the previous line
+    is_d_beg = is_d_beg || is_empt_p
+    #k = k+1
+    if(!is_d_beg) j = j-1
+    C[j] = str_trim_space(C[j] %.% ifelse(is_d_beg, "#'", "")) %..% strip_start(code[i])
+    # save the current rdname    
+    C_rdnames[j] = hb_rdnames[ib]
+    
+    last_time_made_bottom = i
     
   } # for(...)
   
-  # get rid of trailing spaces
-  Code = str_trim_space(h1(C, j), 'right')
+  Code = h1(C, j)
+  RDs = h1(C_rdnames, j)
   
   ## get rid of duplicate indicators of which lines were merged
   focus = setdiff(seq_along(Code), is_code)
   
-  # replace the long-winded \code{...} with `...`. first do the
+  nlist(Code, focus, RDs)
+  
+}
+
+#' @rdname script_help_fix
+#' @export
+script_help_clean_and_wrap = function(Help, RDs, max_width=70, eol="\n#' ", punctuation='.!?', 
+  split_code=TRUE, split='\\n') {
+
+  # get rid of trailing spaces
+  Help = str_trim_space(Help, 'right')
+
+  # replace the long-winded \code{...} with `...`
+  #Help = replace_code_tag(Help, RDs, '')
+  
+  # . first do the
   # references that are local, then separately do the ones that
   # are external and turn them into links via the use of square
   # brackets, that is '[...]'
-  Code[focus] = replace_code_tag(Code[focus], '', FALSE)
-  Code[focus] = replace_code_tag(Code[focus])
+  #Help = replace_code_tag(Help, RDs, extra=':', TRUE)
   
   # get rid of multiple consecutive spaces
-  Code[focus] = str_scrub_space(Code[focus], pattern='[ ]+')
+  Help = str_scrub_space(Help, pattern="([^#]')[ ]+", s="\\1 ")
 
   ## and add full stops but only in the descriptions
-  ##Code[focus2] = str_add_punct(Code[focus2], punct=punctuation)
+  ##Help[focus2] = str_add_punct(Help[focus2], punct=punctuation)
   
   # focus only on the lines that exceed the character limit
-  long = focus[nchar(Code[focus])>max_width]
+  long = nchar(Help) > max_width
 
-  # split the line into multiple in case there are "\n" on it
-  Code_long1 = lapply(Code[long], function(Cj) unlist(str_split(Cj, split)))
-  #print(Code_long1); browser()
-  
   # wrap the lines
-  Code_long = lapply(Code_long1, function(Cjs) unlist(lapply(Cjs,  wrap_help_line, max_width, eol)))
+  Help[long] = str_wrap(Help[long], max_width, eol, break_only_at_space=TRUE)
   
-  # insert the altered lines instead of the old ones
-  Code = unlist(insert(Code, Code_long, long, replace=TRUE))
+  Help
   
-  # split the wrapped code into separate lines
-  Code = unlist(str_split(Code, split))
+}
+
+# function to strip out the strings that indicate help lines
+strip_start = function(x) {
+  gsub("#'[ ]*","",x)
+}
+
+# function to indicate and "empty" (at most "#'" on it) line
+is_empty_line = function(x) {
+  str_is_empty(strip_start(x), TRUE)
+}
+
+# function to indicate and "empty" (at most "#'" on it) line
+is_title_line = function(x) {
+  "#'\\s*@title" %m% x
+}
+  
+extract_rdname = function(x) {
+  sub('[ ].*$','',sub("#'[ ]*@[r]?[d]?(name)[ ]", '', x))
+}
+  
+# function to replace \code{...} with `...`
+replace_code_tag = function(x, rds, extra="", add_brackets=FALSE, as_link=TRUE) {
+  
+  for(e in extra) {
+    
+    pattern = '[\\]code[{]([a-zA-Z0-9_.()'%.%e%.%']+)+[}]' 
+
+    aslnk = as_link && grepl('[:]',e)
+    
+    # replace code with 
+    repl = ifelse(aslnk,'[`','`') %.% '\\1' %.% ifelse(add_brackets,'()','') %.% 
+           ifelse(aslnk,'`]','`')
+    x = gsub(pattern, repl, x)
+    
+    # put all links in "code" font
+    x = gsub('[[]([^`].+[^`])[]]', '[`\\1`]', x)
+    
+    # place brackets inside the ticks
+    x = gsub('[`]([]]?)[(][)]', '()`\\1', x)
+    
+    # remove potential double brackets
+    x = gsub('[(][)][(][)]','()',x)
+    
+  }
   
   #browser()
   
-  # save the results to file
-  if(!missing(file)) {
-    writeLines(Code, file2 <- file%.%'.wrapped') 
-    if(verbose) catn("Output saved to file '",file2,"'.")
-  } else {
-    file = file2 = NULL
-  }  
-
-  invisible(as_huge(nlist(Code, input_file=file, output_file=file2)))
-  
-}
-
-#' Wrap line of help
-#'
-#'
-#' function that performs the actual wrapping
-#' @export
-wrap_help_line = function(text, max_width=70, eol="\n#' ") {
-
-  Nj = nchar(text)
-  
-  # identify the positions of spaces for possible insertions of 'eol'
-  w_space = unlist(unname(gregexpr('\\s+',text)))
-  
-  w_last_all = attempt = 0
-  max_attempts = Nj
-  while(Nj>max_width && any(w_space>0) && attempt<=max_attempts) {
-  
-    attempt = attempt + 1
-    
-    # find the last space currently
-    w_last_now = w_space[w_last_below(w_space, max_width)]
-    
-    # remember the sum of all last space positions
-    w_last_all = w_last_all + w_last_now
-    
-    # replace the last space with 'eol'
-    text = str_replace(text, eol, w_last_all, str2_shift=nchar(eol)-1)
-    
-    # remove the space that was just altered and shift the 
-    # positions of the spaces and the string length match
-    # the positions and the lengths relative to the substring
-    # after the insertion of 'eol'
-    w_space = setdiff(w_space, w_last_now) - w_last_now + nchar(eol)-1
-    Nj = Nj - w_last_now + nchar(eol)-1
-    
-  }
-
-  if(attempt>max_attempts) {
-    catn("PROBLEM: Maximum number of attempts to split the current line has been exceeded.")
-    if(interactive()) {
-      catn("Check the line ",i," (call 'Code[j]' (original) and 'c' (altered) to see the current line)")
-      browser()
-    }
-  }
-  
-  return(text)
+  x
 
 }
 
-    

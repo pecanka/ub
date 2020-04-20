@@ -7,5 +7,5 @@
 combine_fisher(p, silent = TRUE)
 }
 \description{
-Combines p-values using the Fisher combination methods
+Combines p-values using the Fisher combination methods.
 }

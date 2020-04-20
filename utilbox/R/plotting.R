@@ -1,15 +1,16 @@
+#' @title
 #' List/close graphical devices
 #'
-#' List or close all graphical devices. 
+#' @description
+#' List or close all graphical devices.
 #'
-#' \code{.all_devs} returns a list of all open graphical devices 
-#' with an announcement of the number of open devices. The announcement 
-#' can be disabled.
+#' `.all_devs` returns a list of all open graphical devices with an 
+#' announcement of the number of open devices. The announcement can be 
+#' disabled.
 #'
-#' \code{.all_devs_off} and \code{.ado} close all open graphical
-#' devices either with announcement (\code{.ado}) or silently 
-#' (\code{.all_devs_off}).
-#' 
+#' `.all_devs_off` and `.ado` close all open graphical devices either 
+#' with announcement (`.ado`) or silently (`.all_devs_off`).
+#'
 #' @examples
 #' .all_devs(silent=FALSE)
 #'
@@ -49,11 +50,13 @@
   .all_devs_off(silent=FALSE)
 }
 
+#' @title
 #' Color palette
 #'
-#' Returns a specified number of colors a from a color palette.
-#' If the requested number of colors is larger than the size
-#' of the palette the colors are recycled.
+#' @description
+#' Returns a specified number of colors a from a color palette. If 
+#' the requested number of colors is larger than the size of the palette 
+#' the colors are recycled.
 #'
 #' @examples
 #' palette_ub()
@@ -62,6 +65,7 @@
 #' @family plotting-related functions provided by utilbox
 #' @export
 palette_ub = function(n) {
+
   palette = c(
     '#df64df','#12c909','#dbcb35','#6c44a1','#4bbb5d',
     '#0357a7','#862d20','#ffa703','#2fe996','#754343',
@@ -74,7 +78,8 @@ palette_ub = function(n) {
     '#1fe2f3','#1b3f90','#65200c','#a61c00','#cc4125',
     '#dd7e6b','#86b8af','#58cbad','#f4cccc','#974e13',
     '#38761d','#e06666','#cc0000','#20124d','#492eee',
-    '#290050','#c41dc6','#4d50dd','#f13636','#a4c2f4',    '#98d9f9','#911e1e','#2f71a3','#dca1f9','#0e562d',
+    '#290050','#c41dc6','#4d50dd','#f13636','#a4c2f4',
+    '#98d9f9','#911e1e','#2f71a3','#dca1f9','#0e562d',
     '#3ef406','#7fd700','#0512f4','#4f9cf4','#04a918',
     '#dc143c','#6a5acd','#ff3f33','#af4500','#ffc1cc',
     '#d3a57f','#b4641f','#e27d17','#0e9915','#98ac59',
@@ -82,14 +87,19 @@ palette_ub = function(n) {
     '#e0d040','#40e0d0','#d040e0','#a0e040','#e08040',
     '#7e9953','#d9a739','#bd0808','#0300ff','#e8ff00',
     '#e94900','#9f5f5f','#f4951b','#6d3300','#7b33b4')
+  
   if(missing(n)) n = length(palette)
+  
   h1(palette, n)
+  
 }
 
+#' @title
 #' Generate a vector of colors
 #'
+#' @description
 #' Generate a vector of colors based on the values in the supplied 
-#' vector \code{x}.
+#' vector `x`.
 #'
 #' @examples
 #' x = c('a','b','a','c'); as_color(x)
@@ -100,11 +110,13 @@ as_color = function(x, palette=palette_ub) {
   palette(nunique(x))[groups_of_unique(x)]
 }
 
+#' @title
 #' A color palette
 #'
-#' Returns a list of \code{n} interesting and contrasting colors (at 
-#' least as far as neighbours go). Up to 100 unique colors. For 
-#' \code{n} above 100 the colors are recycled in a loop.
+#' @description
+#' Returns a list of `n` interesting and contrasting colors (at least 
+#' as far as neighbours go). Up to 100 unique colors. For `n` above 100 
+#' the colors are recycled in a loop.
 #'
 #' @examples
 #' Colors(1)                         # gives 1 (the first) color
@@ -141,10 +153,12 @@ Colors = function(n=20, skip=0, randomize=FALSE, reverse=FALSE) {
   p
 }
 
+#' @title
 #' Illustrate the utilbox color palette
 #'
-#' Produces a plot which shows the colors returned by \code{palette_ub},
-#' via a call to \code{Colors}.
+#' @description
+#' Produces a plot which shows the colors returned by `palette_ub`, 
+#' via a call to `Colors`.
 #'
 #' @examples
 #' show_Colors(30)
@@ -164,10 +178,12 @@ show_Colors = function(n, col, cex=3, pch=16, pos1=2, pos2=4, adj1=-.25, adj2=0.
   text(col, x=x+adj2, y=y, cex=0.8, pos=pos2)
 }
 
+#' @title
 #' Histogram
 #'
-#' A wrapper for \code{base::hist}, which allows to specify the number of bins by
-#' through \code{nbreaks}.
+#' @description
+#' A wrapper for \code{base::hist}, which allows to specify the 
+#' number of bins by through `nbreaks`.
 #'
 #' @family plotting-related functions provided by utilbox
 #' @export
@@ -184,6 +200,7 @@ hist2 = function(..., nbreaks) {
   }
 }
 
+#' @title
 #' Add tight axis labels to a plot
 #'
 #' @family plotting-related functions provided by utilbox
@@ -217,6 +234,7 @@ add_tight_axes = function(xlab=NULL, ylab=NULL, linex=1.4, liney=1.47, padjx=-0.
   return(invisible(NULL))
 }
 
+#' @title
 #' Add a box above a plot
 #'
 #' @family plotting-related functions provided by utilbox
@@ -230,11 +248,11 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
     return(invisible(NULL))
   }
   
-  if(length(hfr)==1) hfr = rep(hfr, nboxes)
-  if(length(hsp)==1) hsp = rep(hsp, nboxes)
-  if(length(bg)==1) bg = rep(bg, nboxes)
-  if(length(col)==1) col = rep(col, nboxes)
-  if(length(cex)==1) cex = rep(cex, nboxes)
+  if(length(hfr)==1)    hfr = rep(hfr, nboxes)
+  if(length(hsp)==1)    hsp = rep(hsp, nboxes)
+  if(length(bg)==1)     bg = rep(bg, nboxes)
+  if(length(col)==1)    col = rep(col, nboxes)
+  if(length(cex)==1)    cex = rep(cex, nboxes)
   if(length(offset)==1) offset = rep(offset, nboxes)
   
   # Calculate position of the box
@@ -249,8 +267,12 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
   
     yb = yt + hsp[i]*hght
     yt = yb + hfr[i]*hght
-    if(regexpr("x", logscale)>0) xy[1:2] = 10^xy[1:2]
-    if(regexpr("y", logscale)>0) {
+    
+    if(grepl("x", logscale)) {
+      xy[1:2] = 10^xy[1:2]
+    }
+    
+    if(grepl("y", logscale)) {
       yb = 10^yb
       yt = 10^yt
     }

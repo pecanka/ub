@@ -7,7 +7,7 @@
 as_color(x, palette = palette_ub)
 }
 \description{
-Generate a vector of colors based on the values in the supplied 
+Generate a vector of colors based on the values in the supplied
 vector \code{x}.
 }
 \examples{

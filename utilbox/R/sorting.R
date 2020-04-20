@@ -1,18 +1,22 @@
-#' Sort a matrix of p-values (or any matrix, really)
+#' @title
+#' Sort matrix
 #'
-#' Sorts the columns of a given matrix. If \code{n1} is supplied and positive,
-#' the rows \code{1:n1} and \code{(n1+1):nrow(p)} are sorted separately.
+#' @description
+#' `sort_matrix()` sorts the columns of a given matrix. If `n1` is 
+#' supplied and positive, the rows \code{1:n1} and \code{(n1+1):nrow(p)} 
+#' are sorted separately.
 #'
 #' @param p Matrix of p-values to be sorted on a per-column basis.
-#' @param n1 The number of top rows that are to be sorted separately
-#'        from the rest of the rows.
-#' @param decreasing Enable decreasing order sorting. Defaults to \code{FALSE}.
+#' @param n1 The number of top rows that are to be sorted separately 
+#' from the rest of the rows.
+#' @param decreasing Enable decreasing order sorting. Defaults to 
+#' `FALSE`.
 #'
-#' @return An object of the same type as \code{p} with sorted columns.
+#' @return An object of the same type as `p` with sorted columns.
 #'
 #' @family sorting utilities provided by utilbox
 #' @export
-sort_pval_matrix = function(p, n1=0, decreasing=FALSE) {
+sort_matrix = function(p, n1=0, decreasing=FALSE) {
 
   if(n1<=0) return(apply(p, 2, sort, decreasing=decreasing))
 
@@ -22,11 +26,13 @@ sort_pval_matrix = function(p, n1=0, decreasing=FALSE) {
 
 }
 
+#' @title
 #' Pattern sort
 #'
-#' Sorts input according to the order given in pattern(s) (given in 
-#' \code{pattern}) by matching the names of the input (i.e. \code{x}) 
-#' against the pattern(s).
+#' @description
+#' `pattern_sort()` sorts the input according to the order given in 
+#' pattern(s) (given in `pattern`) by matching the names of the input 
+#' (i.e. `x`) against the pattern(s).
 #'
 #' @family sorting utilities provided by utilbox
 #' @export
@@ -38,9 +44,7 @@ pattern_sort = function(x, pattern, decreasing=FALSE, sort_on_names=TRUE, exclud
   nam = if(sort_on_names) names(x) else x
   
   ## Find which names that match each pattern
-  ordp = lapply(pattern, function(pat) 
-                           which(do.call(if(exclude) `<` else `>`, 
-                                 list(regexpr(pat, nam), 0))))
+  ordp = lapply(pattern, grep, nam, invert=exclude)
   
   ## Make them unique while preserving the division according to which 
   ## pattern the elements match first
@@ -60,13 +64,16 @@ pattern_sort = function(x, pattern, decreasing=FALSE, sort_on_names=TRUE, exclud
   
 }
 
+#' @title
 #' Name sort
 #'
-#' Sorts the input according to its names attribute.
+#' @description
+#' `name_sort()` sorts the input according to its names attribute.
 #'
-#' @param x named object to be sorted. If names are missing, no sorting is done.
-#' @param get_order Determines whether the ordering of names or the ordered object
-#'        is returned.
+#' @param x named object to be sorted. If names are missing, no 
+#' sorting is done.
+#' @param get_order Determines whether the ordering of names or the 
+#' ordered object is returned.
 #'
 #' @export
 name_sort = function(x, get_order=FALSE) {
@@ -74,15 +81,17 @@ name_sort = function(x, get_order=FALSE) {
   if(get_order) order(names(x)) else x[order(names(x))]
 }
 
+#' @title
 #' Reorder an object
 #'
-#' Reorders the object in \code{x} according to the order given in \code{order}.
+#' @description
+#' Reorders the object in `x` according to the order given in `order`.
 #'
 #' @param x An object to be sorted.
-#' @param order The new order of the elements of \code{x}.
+#' @param order The new order of the elements of `x`.
 #'
-#' @return A reordering of \code{x} according to \code{order}.
-#' 
+#' @return A reordering of `x` according to `order`.
+#'
 #' @export
 reord = function(x, order) { 
   y = reorder(x, order)

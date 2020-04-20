@@ -4,6 +4,7 @@
 \alias{collapse}
 \alias{collapse0}
 \alias{str_collapse}
+\alias{collapse1}
 \alias{collapse0n}
 \alias{collapsen}
 \alias{collapse0nq}
@@ -13,6 +14,8 @@ collapse0(x, ..., sep = "")
 
 str_collapse(x, ..., sep = "")
 
+collapse1(x, ..., sep = " ")
+
 collapse0n(x, ..., sep = "\\n")
 
 collapsen(x, ..., sep = "\\n")
@@ -20,8 +23,10 @@ collapsen(x, ..., sep = "\\n")
 collapse0nq(x, ..., sep = "'\\n'")
 }
 \description{
-Takes a vector and collapses it into a single string. Equivalent to
-[base::paste] with `collapse=''`.
+\code{collapse0} takes a vector and collapses it into a single string.
+Equivalent to \code{\link[base:paste]{base::paste}} with \code{collapse=''}. The functions
+\code{collapse1}, \code{collapse0n}, \code{collapse0nq} are aliases for \code{collapse0}
+with different default values for \code{sep}.
 }
 \examples{
 collapse0(c(0,1,1,1,0,1,0,0))
@@ -31,6 +36,7 @@ collapse0(c(0,1,1,1,0,1,0,0))
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -40,13 +46,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

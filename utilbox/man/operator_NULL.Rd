@@ -20,20 +20,19 @@ x \%NA\% y
 x \%ERR\% y
 }
 \description{
-`\%|||\%` is intented to be equivalent "\code{\%||\%}" operator in the 
-package \code{rlang}, but named differently as not to clash with it.
-}
-\details{
-`\%||||\%` extends this behavior to all zero-length objects.
+\verb{\\\%|||\\\%} is intented to be equivalent "\code{\%||\%}" operator in
+the package \code{rlang}, but named differently as not to clash with it.
 
-`\%|||||\%` extends this behavior further to include empty strings.
+\verb{\\\%||||\\\%} extends this behavior to all zero-length objects.
 
-`\%NA\%` is an operator version of `ifelse(is.na(x), y, x), which
+\verb{\\\%|||||\\\%} extends this behavior further to include empty strings.
+
+\verb{\\\%NA\\\%} is an operator version of `ifelse(is.na(x), y, x), which
 allows input of various types (vectors, lists, closures, etc.).
 
-`\%ERR\%` works analogously except that it checks for class `try-error`.
-If its first argument is of class `try-error` it returns its second
-argument (`y`). Otherwise it returns the first (`x`).
+\verb{\\\%ERR\\\%} works analogously except that it checks for class
+\code{try-error}. If its first argument is of class \code{try-error} it returns
+its second argument (\code{y}). Otherwise it returns the first (\code{x}).
 }
 \examples{
 1 \%|||\% 2

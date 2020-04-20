@@ -7,9 +7,10 @@
 list_set_attr(x, attrib_name, attrib)
 }
 \description{
-Take a list (\code{x}), attribute name (\code{attrib_name}) and a list of 
-attributes (\code{attrib}) and sets the attribute named code{attrib_name}
-of each element of \code{x} to the corresponding value in code{attrib}.
+\code{list_set_attr} takes a list (\code{x}), attribute name (\code{attrib_name})
+and a list of attributes (\code{attrib}) and sets the attribute named
+\code{attrib_name} of each element of \code{x} to the corresponding value in
+code{attrib}.
 }
 \examples{
 set_list_attr(list('a','b'), 'size', c(10,20))

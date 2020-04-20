@@ -7,7 +7,7 @@
 file_can_open_check(filename)
 }
 \description{
-Checks whether a file can be opened.
+\code{file_can_open_check()} checks whether a file can be opened.
 }
 \seealso{
 Other file system function provided by utilbox: 

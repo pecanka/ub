@@ -15,12 +15,13 @@ file_sort(
 file_sort_time(files, by = "mtime", decreasing = TRUE)
 }
 \description{
-`file_sort` sorts files (specified in `files`) by their attributes such as time 
-or size. The attribute for sorting is specified via `by`. The logical `decreasing`
-switches between descending and ascending order.
-}
-\details{
-`file_sort_time` is direct way to sort according to attribute "mtime".
+\code{file_sort()} sorts files (specified in \code{files}) by their
+attributes such as time or size. The attribute for sorting is
+specified via \code{by}. The logical \code{decreasing} switches between
+descending and ascending order.
+
+\code{file_sort_time()} is a shortcut to sorting according to attribute
+"mtime".
 }
 \seealso{
 Other file system function provided by utilbox: 

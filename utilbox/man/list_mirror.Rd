@@ -7,10 +7,9 @@
 list_mirror(x, value, depth = 1)
 }
 \description{
-Mirrors the structure of the list `x`. In other words,
-it returns a list with the same numbers of elements
-at each list-depth. For now only mirroring up to depth
-1 is implemented.
+Mirrors the structure of the list \code{x}. In other words, it returns
+a list with the same numbers of elements at each list-depth. For now
+only mirroring up to depth 1 is implemented.
 }
 \seealso{
 Other list utilities provided by utilbox: 

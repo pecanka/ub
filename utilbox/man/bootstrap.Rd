@@ -7,8 +7,13 @@
 bootstrap(x, T, B = 100, ..., portion = 1e+08)
 }
 \description{
-Returns a vector of B bootstrap values of real-valued statistic T, where T 
-should be an R-function which returns a scalar. Arguments of T can be supplied
-via the ellipsis '...'. If length of x and B are small enough, do it all at once
-Otherwise, do it for each iteration separately.
+Returns a vector of B bootstrap values of real-valued statistic
+\code{T}, where \code{T} should be an R-function which returns a scalar.
+Arguments of \code{T} can be supplied via the ellipsis (\code{...}). If length
+of \code{x} and \code{B} are small enough, do it all at once Otherwise, do it
+for each iteration separately.
+}
+\examples{
+sd(bootstrap(rnorm(100), mean, B=1000))    # compare with 1/sqrt(100)
+
 }

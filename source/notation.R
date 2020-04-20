@@ -1,4 +1,19 @@
+#' @title
 #' Convert a number to an abbreviated notation
+#'
+#' @description
+#' `short_notation()` (alias `N2T()`) and `short_notation_exp()` 
+#' (alias `N2Texp()`) convert a number (possibly supplied as character) 
+#' and shortens it representation. Small numbers are left intact, large 
+#' numbers are rounded and abbreviated (see the examples).
+#'
+#' @examples
+#' short_notation(c(1,33,678))
+#' short_notation(c(1000:1010))
+#' short_notation(c(10^c(3,6,9,12)))
+#' 
+#' short_notation_exp(c(10^c(3,6,9,12)))
+#'
 #' @export
 short_notation = function(x, exact_cutoff=999, ndig=1, word_units=FALSE) {
   
@@ -23,7 +38,8 @@ short_notation = function(x, exact_cutoff=999, ndig=1, word_units=FALSE) {
   return(xx)
 }
 
-#' Convert a number to an abbreviated notation using 
+#' @title
+#' Convert a number to an abbreviated notation using
 #' @export
 short_notation_exp = function(x, base=10, ndig=2, as_expr=FALSE) {
   x = sapply(x, function(x1) { 
@@ -41,6 +57,6 @@ N2T = short_notation
 N2Texp = short_notation_exp
 
 #' @export
-shorten_sequence = function(x, sep="-", collapse="-", f=length) 
+shorten_sequence = function(x, sep="-", collapse="-", f=length) {
   paste(c(paste(range(x),collapse=collapse),head(f(x),1)),collapse=sep)
-
+}

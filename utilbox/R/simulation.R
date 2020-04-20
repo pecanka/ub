@@ -1,29 +1,16 @@
-#' Check if 'x' is a diagonal matrix 
-#' @export
-is_diag = function(x) {
-  is.matrix(x) && nrow(x)==ncol(x) && 
-    (length(x)==1 || max(abs(x[upper.tri(x)]))<.Machine$double.eps)
-}
-
-#' Check if M is a positive-definite matrix
-#' @export
-is_posdef = function(M) {
-
-  stopifnot(is.numeric(M))
-  if(length(M)==1 && M>0) return(TRUE)
-  stopifnot(is.matrix(M), nrow(M)==ncol(M))
-  
-  llibrary(mnormt)
-  x = try(mnormt::rmnorm(1, mean=rep(0,nrow(M)), varcov=M), silent=TRUE)
-  if(class(x)!="try-error") TRUE else structure(FALSE, msg=as.character(attr(x, "condition")))
-  
-}
-
+#' @title
 #' Draw a positive-definite matrix
 #'
-#' Generates a "random" (more like arbitrary) positive-definite matrix with 
-#' user-specified positive eigenvalues. If eigenvalues are not specified, 
-#' they are generated from a uniform distribution on (1,10)
+#' @description
+#' `rposdefmat()` generates a \"random\" (more like arbitrary) 
+#' positive-definite matrix with user-specified positive eigenvalues. If 
+#' eigenvalues are not specified, they are generated from a uniform 
+#' distribution on (1,10)
+#'
+#' `rvariance()` draws a \"random\" variance matrix with `sigma2` on 
+#' the diagonal.
+#'
+#' @name simulate_matrix
 #' @export
 rposdefmat = function(n, ev=runif(n,1,10), all.positive=FALSE) {
 
@@ -41,7 +28,8 @@ rposdefmat = function(n, ev=runif(n,1,10), all.positive=FALSE) {
   
 }
 
-#' Draw a random variance matrix with sigma2 on the diagonal
+#' @title
+#' @name simulate_matrix
 #' @export
 rvariance = function(n, sigma2=rep(1,n), ev=runif(n,1,200)) {
   if(n==1) {
@@ -54,47 +42,14 @@ rvariance = function(n, sigma2=rep(1,n), ev=runif(n,1,200)) {
   }
 }
 
-#' Produce a variance matrix
+#' @title
+#' Draw random sample of p-values under the normal distribution
 #'
-#' Produces a variance matrix with \code{rho} on the diagonal according to the 
-#' specified type which can be either "random" (see \code{rvariance}) or has 
-#' the structure according to \code{type}.
-#' @export
-def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsize=0) {
-
-  type = match.arg(type)
-  
-  if(N==1) return(diag(1))
-  
-  if(random) {
-    Sigma = rvariance(N)
-  } else {
-  
-    if(N%%nb!=0) 
-      error("Number of blocks 'nb' must divide 'N'.")
-      
-    n = N%/%nb
-    Sigma = matrix(rho, nrow=n, ncol=n)
-    
-    if(type=="band") {
-      llibrary(Matrix)
-      Sigma = band(Sigma, -abs(bandsize), abs(bandsize))
-    }
-    
-    Sigma = 0.5*(Sigma+t(Sigma))
-    diag(Sigma) = 1.
-    if(nb>1) Sigma = drep(Sigma, nb)
-    
-  }
-
-  Sigma
-  
-}
-
-#' Draw a normal distribution p-value
+#' @description
+#' `rnormpval()` draws a random sample of size `M` of p-values 
+#' relative to the normal distribution with parameters `m` (mean) and 
+#' `s` (standard deviation).
 #'
-#' Draws a random sample of p-values relative to the normal distribution with 
-#' parameters \code{m} (mean) and \code{s} (standard deviation).
 #' @export
 rnormpval = function(M, mu, Sigma=def_Sigma(rho, N=length(mu)), rho=0, two.sided=FALSE, trace=1, what=c("p","X","pX")) {
 
@@ -110,26 +65,64 @@ rnormpval = function(M, mu, Sigma=def_Sigma(rho, N=length(mu)), rho=0, two.sided
   
   } else {
  
-    llibrary(mnormt)
+    check_namespace('mnormt')
     X = try(mnormt::rmnorm(M, mean=mu, varcov=Sigma))
-    if(class(X)=="try-error") return(list(p=NA))
+    
+    if(is_error(X)) return(rep_list(list(p=NA), M))
+    
     if(M==1) X = matrix(X, nrow=1)
     
   }
   
-  if(what=="p" || what=="pX")
+  if(what=="p" || what=="pX") {
     #p = if(two.sided) 2*pnorm(abs(X), lower.tail=FALSE) else pnorm(X, lower.tail=FALSE)
     p = normpval(X, two.sided)
+  }
   
-  return(switch(what, "X"=X, "p"=p, list(X=X, p=p)))
+  switch(what, "X"=X, "p"=p, list(X=X, p=p))
       
 }
 
-rnormm = function(..., what="X") rnormpval(..., what=what)
+#rnormm = function(..., what="X") rnormpval(..., what=what)
 
+#' @title
+#' Sample from a distribution
+#'
+#' @description
+#' `samplepdf()` samples `n` variables from an arbitrary density 
+#' function specified in `pdf`.
+#'
+#' @export
+samplepdf = function(n, pdf, ..., spdf.lower = -Inf, spdf.upper = Inf) {
+
+  endsign = function(f, sign = 1) {
+      b = sign
+      while (sign * f(b) < 0) b = 10 * b
+      return(b)
+  }
+
+  vpdf = function(v) sapply(v, pdf, ...)  # vectorize
+  cdf = function(x) integrate(vpdf, spdf.lower, x)$value
+  invcdf = function(u) {
+      subcdf = function(t) cdf(t) - u
+      if (spdf.lower == -Inf) 
+          spdf.lower = endsign(subcdf, -1)
+      if (spdf.upper == Inf) 
+          spdf.upper = endsign(subcdf)
+      return(uniroot(subcdf, c(spdf.lower, spdf.upper))$root)
+  }
+  
+  sapply(runif(n), invcdf)
+
+}
+
+#' @title
 #' Simulate p-values
 #'
-#' A function that simulates p-values (from the normal model only so far)
+#' @description
+#' `simulate_pval()` simulates p-values (from the normal model only 
+#' so far).
+#'
 #' @export
 simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05, type="bySigma", 
   model=c("norm", "unif"), two.sided=FALSE, evaluate_signif=FALSE, lambda, trace=1) {

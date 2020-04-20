@@ -1,7 +1,9 @@
+#' @title
 #' Directory of the current script
 #'
-#' \code{script_dir} returns the directory of the script file from 
-#' which it is called (via \code{source}).
+#' @description
+#' `script_dir` returns the directory of the script file from which 
+#' it is called (via `source`).
 #'
 #' @export
 script_dir = function() {
@@ -12,13 +14,15 @@ script_dir = function() {
   }
 }
 
+#' @title
 #' Set working directory
 #'
-#' A version of \code{setwd} which attempts to create the given path when it 
-#' does not exist. Unlike \code{setwd}, which throws an error when no path is 
-#' supplied, \code{setwd2} with missing path argument sets the working directory 
-#' to the output of \code{script_dir}. Additionally, it also takes the argument 
-#' \code{dir2} whose value is appended to the path being set.
+#' @description
+#' A version of `setwd` which attempts to create the given path when 
+#' it does not exist. Unlike `setwd`, which throws an error when no path 
+#' is supplied, `setwd2` with missing path argument sets the working 
+#' directory to the output of `script_dir`. Additionally, it also takes 
+#' the argument `dir2` whose value is appended to the path being set.
 #'
 #' @export
 setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
@@ -47,28 +51,39 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
   
 }
 
+#' @title
 #' Sourcing check
 #'
-#' Check whether the script from which it is called is being sourced (via either
-#' \code{source()} or \code{sys.source()}) "at" (when \code{exact_level=TRUE}) or 
-#' "above" (when \code{exact_level=FALSE}) level \code{level}. In other words, when
-#' this function is called from a script that is being sourced from the global environment
-#' then \code{is_sourced(1)} returns \code{TRUE}, when it is called from a script that
-#' is being sourced by another script from the global environment
-#' then \code{is_sourced(2)} returns \code{TRUE}, etc.
-#' @return
-#' A logical indicator of whether the sourcing level is equal or above \code{level}.
+#' @description
+#' `is_sourced()` checks whether the script from which it is called 
+#' is being sourced (via either `source()` or `sys.source()`) "at" (when 
+#' \code{exact_level=TRUE}) or "above" (when \code{exact_level=FALSE}) 
+#' level `level`. In other words, when this function is called from a 
+#' script that is being sourced from the global environment then 
+#' `is_sourced(1)` returns `TRUE`, when it is called from a script that 
+#' is being sourced by another script from the global environment then 
+#' `is_sourced(2)` returns `TRUE`, etc. Returns a logical indicator of 
+#' whether the sourcing level is equal or above `level`.
+#'
+#' `source_depth()` determined the depth of sourcing. In other words, 
+#' for nested calls to source script this functions determines how many 
+#' times the `source` function has currently been called at the point of 
+#' invokation of `source_depth()`.
+#'
+#' `source_files()` sources all specified files (`files`) relative to 
+#' the given path (`path`).
+#'
+#' `source_pattern()` sources all files that match the supplied 
+#' pattern (`pattern`) relative to the supplied path (`path`) or the 
+#' current working directory.
+#'
+#' @name sourcing
 #' @export
 is_sourced = function(level=1, exact_level = TRUE) {
   if(exact_level) source_level() == level else source_level() >= level
 }
 
-#' Determine the depth of sourcing
-#'
-#' When sourcing files, it might be of interest to know how many times the \code{source}
-#' function has been called. This function returns that number.
-#'
-#' @name is_sourced
+#' @rdname sourcing
 #' @export
 source_depth = function() {
 
@@ -87,33 +102,39 @@ source_depth = function() {
   
 }
 
-#' Source multiple files
-#'
-#' Sources all specified files (`files`) relative to 
-#' the given path (`path`).
-#'
+#' @rdname sourcing
 #' @export
-source_files = function(files, path='.', announce=TRUE) {
+source_files = function(files, path='.', announce=TRUE, normalize=FALSE, 
+  envir=.GlobalEnv, report_new=TRUE) {
 
-  ff = file_path(path, files, normalize=TRUE)
+  ff = file_path(path, files, normalize=normalize)
   msgs = "Sourcing file '" %.% ff %.% "' ... "
   
+  new = list()
   for(i in seq_along(ff)) {
+  
     if(announce) cat0(msgs[i])
-    source(ff[i])
+    
+    sys.source(ff[i], envir=env <- new.env())
+    
+    if(report_new) {
+      new[[i]] = ls(envir=env, all.names=TRUE)
+    }
+    
+    transfer_objects(env, envir)
+    
     if(announce) catn(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
+    
   }
+  
+  invisible(if(report_new) `names<-`(new, ff) else ff)
   
 }
 
-#' Source all files matching a pattern
-#'
-#' Sources all files that match the supplied pattern (`pattern`)
-#' relative to the supplied path (`path`) or the current working
-#' directory.
-#'
+#' @rdname sourcing
 #' @export
-source_pattern = function(pattern, path='.') {
+source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE, 
+  envir=.GlobalEnv, report_new=TRUE) {
 
   files = list.files(path, pattern)
   
@@ -121,6 +142,33 @@ source_pattern = function(pattern, path='.') {
     error("No files matched the pattern '",pattern,
           "' relative to path '",path,"'.")
   
-  source_files(files, path)
+  files = source_files(files, path, announce=announce, normalize=normalize, 
+                       envir=envir, report_new=report_new)
   
+  return(invisible(files))
+  
+}
+
+#' @title
+#' Get the list of objects created by sourcing a file
+#'
+#' @description
+#' Find out what objects would be created if a file was sourced (via 
+#' [`base::sys.source`]) and return the list.
+#'
+#' @examples
+#' tmp = '.~temp.R'
+#' catn('test_function = function() NULL', file=tmp_file)
+#' list_created_by_sourcing(tmp)
+#' unlink(tmp)
+#'
+#' @export
+list_created_by_sourcing = function(file, ..., all.names=TRUE) {
+
+  env = new.env()
+  sys.source(file, ..., envir=env)
+  objs = ls(all.names=all.names, envir=env)
+  
+  object_table(objs, env)
+
 }

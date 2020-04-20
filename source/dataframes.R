@@ -1,14 +1,19 @@
+#' @title
 #' Split a matrix or data frame
 #'
-#' Takes a matrix, data frame or any two-dimensional object (array) and splits
-#' its rows according to the grouping supplied in \code{f}. Uses \code{base::split} 
-#' as the workhorse, see \code{?base::split} for more details.
-#
+#' @description
+#' Takes a matrix, data frame or any two-dimensional object (array) 
+#' and splits its rows according to the grouping supplied in `f`. Uses 
+#' \code{base::split} as the workhorse, see \code{?base::split} for more 
+#' details.
+#'
 #' @param x A two-dimensional object to be split.
 #' @param f A vector giving the grouping of rows
-#' @param drop A logical indicating if levels that do not occur should be dropped 
-#'        (if \code{f} is a factor or a list). See \code{base::split} for details.
-#' @param ... Further potential arguments passed on to \code{split::base}.
+#' @param drop A logical indicating if levels that do not occur 
+#' should be dropped (if `f` is a factor or a list). See 
+#' \code{base::split} for details.
+#' @param ... Further potential arguments passed on to 
+#' \code{split::base}.
 #'
 #' @returns A list of separated rows.
 #'
@@ -21,14 +26,19 @@ split_rows = function(x, f=seq_len(nrow(x)), drop=FALSE, ...) {
          
 }
 
-#' Reverse the order of rows/colums
+#' @title Reverse the order of rows/colums
 #'
-#' Reverses the order of rows (\code{rev_rows}) or columns (\code{rev_cols})
-#' of a matrix, a data frame or a 2-dimensional array.
-#
+#' @description `rev_rows()` reverses the order of rows of a matrix, 
+#' a data frame or a 2-dimensional array.
+#'
+#' `rev_cols()` reverses the order of columns.
+#'
 #' @returns Object of the same class as the input.
 #'
-#' @name rev_rows
+#' @examples
+#' rev_rows(data.frame(x=1:10, y=letters[1:10]))
+#' rev_cols(data.frame(x=1:10, y=letters[1:10]))
+#'
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
 rev_rows = function(x) {
@@ -40,7 +50,6 @@ rev_rows = function(x) {
 }
 
 #' @rdname rev_rows
-#' @family matrix/data-frame functions provided by utilbox
 #' @export
 rev_cols = function(x) {
 
@@ -50,15 +59,24 @@ rev_cols = function(x) {
   
 }
 
-#' Check for identical columns
+#' @title Check for identical columns
 #'
-#' Takes a matrix, data frame or any two-dimensional object (array) and checks
-#' whether all (or a subset of) its columns are identical
-#
-#' @param x A two-dimensional object to be checked.
-#' @param w (Optional) A vector giving a subset of columns to be considered.
+#' @description `identical_cols()` takes a matrix, data frame or any 
+#' two-dimensional object (array) and checks whether all (or a subset 
+#' of, when `w` given) its columns are identical in terms of content, 
+#' not necessarily in terms of equality of column names.
 #'
-#' @returns Logical indicating whether all of the selected columns are identical.
+#' @title
+#' @param x A two-dimensional object to be checked. @description
+#' @param w (Optional) A vector giving a subset of columns to be 
+#' considered.
+#'
+#' @returns Logical indicating whether all of the selected columns 
+#' are identical.
+#'
+#' @examples
+#' identical_cols(data.frame(x=1:10, y=letters[1:10]))
+#' identical_cols(data.frame(x=1:10, y=1:10))
 #'
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
@@ -74,19 +92,19 @@ identical_cols = function(x, w) {
   
 }
 
-#' Safe column addition
+#' @title Safe column addition
 #'
-#' Adds a column(s) into the data frame \code{x} if the column(s) 
-#' is/are not present. The way it is written is intended to
-#' work both for standard `data.frame` and other `data.frame` 
-#' derived classes (such as `dplyr::tibble`) provided the derived
-#' class has the method `[<-` defined.
+#' @description `add_col()` adds a column(s) into the data frame `x` 
+#' if the column(s) is/are not present. The way it is written is 
+#' intended to work both for standard `data.frame` and other 
+#' `data.frame` derived classes (such as [`dplyr::tibble()`]) provided 
+#' the derived class has the method `[<-` defined.
 #'
 #' @examples
 #' # works for data.frames and tibbles
 #' x = data.frame(id=1:2)
 #' add_col(x, name=c('John','Jeff'), age=c(20,40))
-#' add_col(as_tibble(x), name=c('John','Jeff'), age=c(20,40))
+#' #add_col(as_tibble(x), name=c('John','Jeff'), age=c(20,40))
 #'
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
@@ -103,14 +121,14 @@ add_col = function(.data, ...) {
   
 }
 
-#' Repeat data frame
+#' @title Repeat data frame
 #'
-#' Repeat the input (\code{x}) a total of \code{n} times and bind
-#' the result together using \code{bind}. Primarily intended for
-#' data frames (hence the name) and matrices, but can be used for 
-#' objects of another type (e.g. lists) as long as the (default 
-#' or user-supplied) binding function \code{bind} is applicable 
-#' to that type.
+#' @description `rep_df()` repeats the input (`x`) a total of `n` 
+#' times and bind the result together using the function specified in 
+#' `bind`. Primarily intended for data frames (hence the name) and 
+#' matrices, but can be used for objects of another type (e.g. lists) as 
+#' long as the (default or user-supplied) binding function `bind` is 
+#' applicable to that type.
 #'
 #' @examples
 #' rep_df(tibble(x=1:2), 3)

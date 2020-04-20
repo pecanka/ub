@@ -76,16 +76,16 @@ t1(x, ...)
 \method{t1}{table}(x, n = 1, ..., stop_on_greedy = FALSE)
 }
 \description{
-Get the first or last \code{n} elements of an object. 
-The two function are similar to, and relying on, 
-\code{utils::head} with two main differences. 
-First, a different default number of elements (\code{n=1}).
-Second, if the requested number of elements (\code{n}) is larger 
-than the length of the input (\code{x}), the elements of 
-\code{x} are recycled, though only for \code{n} positive. For
-non-positive \code{n}, and for classes different from those for
-which the methods are defined, the functions behave exactly like their 
-\code{utils} counterparts.
+Get the first or last \code{n} elements of an object.
+
+\code{utils::head()} and \code{utils::tail()} with two main
+differences. First, \code{h1()} and \code{t1()} have different default number
+of elements (\code{n=1}). Second, if the requested number of elements
+(\code{n}) is larger than the length of the input (\code{x}), the elements of
+\code{x} are recycled, though only for \code{n} positive. For non-positive \code{n},
+and for classes different from those for which the methods are
+defined, the functions behave exactly like their counterparts from
+\code{utils}.
 }
 \examples{
 # head
@@ -103,54 +103,21 @@ t1(data.frame(id=1:3, name=c('John','Jane','Paul')))
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
-\code{\link{what_bag}()}
-
-Other sequence-related functions provided by utilbox: 
-\code{\link{as_factor}()},
-\code{\link{dim_check}},
-\code{\link{every_nth}()},
-\code{\link{filter_by_position}},
-\code{\link{filter_by}},
-\code{\link{groups_of_unique}()},
-\code{\link{insert}()},
-\code{\link{is_between}()},
-\code{\link{is_empty}()},
-\code{\link{is_run}},
-\code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
-\code{\link{rep2}()},
-\code{\link{replace2}()},
-\code{\link{replace3}()},
-\code{\link{seq2}()},
-\code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
-\code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

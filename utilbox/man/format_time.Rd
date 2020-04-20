@@ -4,8 +4,22 @@
 \alias{format_time}
 \title{Format time}
 \usage{
-format_time(tim, prec = 3, drop_hour = FALSE)
+format_time(tim, drop_hour = TRUE, drop_minute = TRUE, prec = 3)
 }
 \description{
-Take time in seconds and format it to natural language
+\code{format_time()} takes time in seconds and format it to natural
+language. Useful for printing runtime. The hour information can be
+optionally dropped for times under one hour (via \code{drop_hour=TRUE}).
+Analogously for minutes via \code{drop_minute=TRUE}. The day information
+is dropped automatically when it is not relevant (i.e. non-zero).
+}
+\examples{
+# short runtimes
+format_time(23.23454)
+format_time(23.23454, drop_hour=TRUE)
+# longer
+format_time(9225.2342)
+# days long
+format_time(12329225.2342)
+
 }

@@ -7,12 +7,12 @@
 make_numeric(x, convert = as.numeric, on_error = stop)
 }
 \description{
-Changes the type of \code{x} to \code{numeric} whenever all
-elements can be converted (using \code{as.numeric}. Otherwise,
-calls the function supplied in \code{on_error}. This allows
-a direct control of what happens on the conversion via supplying
-the error function. Basically, a more flexible (but by default 
-a more stringent) version of \code{base::as.numeric}.
+Changes the type of \code{x} to \code{numeric} whenever all elements can be
+converted (using \code{base::as.numeric}. Otherwise, calls the
+function supplied in \code{on_error}. This allows a direct control of what
+happens on the conversion via supplying the error function.
+Basically, a more flexible (but by default a more stringent) version
+of \code{base::as.numeric()}.
 }
 \examples{
 make_numeric(c("1","2"))       # conversion works
@@ -25,30 +25,19 @@ make_numeric(c('1','a'), on_error=err)
 }
 \seealso{
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
 \code{\link{Invert}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
+\code{\link{extract_by_value}},
 \code{\link{force_as_}},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
 \code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}},
 \code{\link{which_max}()}
 }
 \concept{numeric functions provided by utilbox}

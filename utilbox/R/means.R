@@ -1,21 +1,24 @@
+#' @title
 #' Various means
 #'
-#' Various mean functions. Arithmetic, geometric, weighted geometric,
-#' harmonic and logistic means are implemented. Compares to [base::mean]
-#' these functions have remove `NA`s by default and return zero-length
-#' responses on zero-length input or input with no non-`NA` values.
+#' @description
+#' Various mean functions. Arithmetic, geometric, weighted geometric, 
+#' harmonic and logistic means are implemented. Compares to 
+#' [`base::mean`] these functions have remove `NA`s by default and 
+#' return zero-length responses on zero-length input or input with no 
+#' non-`NA` values.
 #'
-#' `amean` gives the arithmetic mean of `x`. 
+#' `amean()` gives the arithmetic mean of `x`.
 #'
-#' `gmean` and `gmeanw` calculate the geometric mean of `x`, while the latter
-#' permits weighing.
+#' `gmean()` and `gmeanw` calculate the geometric mean of `x`, while 
+#' the latter permits weighing.
 #'
-#' `hmean` calculates the harmonic mean (single value) of a single vector created as a
-#' combination of all its input arguments.
+#' `hmean()` calculates the harmonic mean (single value) of a single 
+#' vector created as a combination of all its input arguments.
 #'
-#' `lmean` calculates the (weighted) logistic mean.
+#' `lmean()` calculates the (weighted) logistic mean.
 #'
-#' `mean_na` is an alias for [base::mean] with `na.rm=TRUE`.
+#' `mean_na()` is an alias for [`base::mean`] with `na.rm=TRUE`.
 #'
 #' @examples
 #' x = c(1,NA); mean(x); mean2(x)

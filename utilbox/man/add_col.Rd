@@ -7,17 +7,17 @@
 add_col(.data, ...)
 }
 \description{
-Adds a column(s) into the data frame \code{x} if the column(s) 
-is/are not present. The way it is written is intended to
-work both for standard `data.frame` and other `data.frame` 
-derived classes (such as `dplyr::tibble`) provided the derived
-class has the method `[<-` defined.
+\code{add_col()} adds a column(s) into the data frame \code{x}
+if the column(s) is/are not present. The way it is written is
+intended to work both for standard \code{data.frame} and other
+\code{data.frame} derived classes (such as \code{\link[dplyr:tibble]{dplyr::tibble()}}) provided
+the derived class has the method \verb{[<-} defined.
 }
 \examples{
 # works for data.frames and tibbles
 x = data.frame(id=1:2)
 add_col(x, name=c('John','Jeff'), age=c(20,40))
-add_col(as_tibble(x), name=c('John','Jeff'), age=c(20,40))
+#add_col(as_tibble(x), name=c('John','Jeff'), age=c(20,40))
 
 }
 \seealso{

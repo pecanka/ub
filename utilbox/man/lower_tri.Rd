@@ -2,39 +2,32 @@
 % Please edit documentation in R/matrices.R
 \name{lower_tri}
 \alias{lower_tri}
-\title{Upper-triangular}
+\alias{upper_tri}
+\title{Upper- and lower-triangular}
 \usage{
 lower_tri(x, diag = TRUE)
+
+upper_tri(x, diag = TRUE)
 }
 \description{
-Returns the elements on the upper-triangular as a vector
+\code{lower_tri()} and \code{upper_tri()} return the elements on the upper-
+and lower-triangular as a vectors.
 }
 \seealso{
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
 \code{\link{Invert}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
+\code{\link{extract_by_value}},
 \code{\link{force_as_}},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{locate_position_of_value}},
 \code{\link{make_numeric}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
 \code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}},
 \code{\link{which_max}()}
 }
 \concept{numeric functions provided by utilbox}

@@ -7,26 +7,54 @@
 \alias{stop_clock}
 \title{Clock control functions}
 \usage{
-clock(announce = TRUE, with_date = TRUE, lead = "", digs = 3, eol = "\\n")
+clock(announce = TRUE, lead = "", digs = 3)
 
-start_clock(print = TRUE, envir = parent.frame(), lead = "", what = "")
-
-read_clock(envir = utilbox_environment())
-
-stop_clock(
-  d1 = NULL,
-  d12 = NULL,
-  start_print = FALSE,
-  end_print = TRUE,
-  runtime_print = TRUE,
+start_clock(
+  announce = TRUE,
   envir = utilbox_environment(),
   lead = "",
-  what = ""
+  what = "",
+  out = ""
+)
+
+read_clock(announce = TRUE, envir = utilbox_environment())
+
+stop_clock(
+  announce = TRUE,
+  envir = utilbox_environment(),
+  lead = "",
+  what = "",
+  out = ""
 )
 }
 \description{
-\code{clock()} gets the current system time and optionally prints it on screen
-\code{start_clock()} starts the runtime clock
-\code{stop_clock()} stops the runtime clock
-\code{read_clock()} retrieves the runtime clock
+Approximate timing of code execution. Useful to announce at what
+times different steps in a (long) running script were started and
+finished. The times are only approximate because when \code{announce=TRUE}
+there is some time spent on the actual printing of the information
+and this time (~0.1s) is not subtracted from the runtimes.
+
+\code{start_clock()} starts the runtime clock.
+
+\code{read_clock()} retrieves the runtime clock.
+
+\code{stop_clock()} stops the runtime clock.
+
+\code{clock()} gets the current system time.
+}
+\examples{
+clock()
+
+# start the clock
+start_clock()
+# do something that takes time
+sleep(1.1)
+# check how long it took
+read_clock()
+# do something else
+sleep(1.5)
+# another check how long it took and final stopping
+read_clock()
+stop_clock()
+
 }

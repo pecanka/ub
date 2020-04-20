@@ -17,18 +17,18 @@
 ... \%__\% sep
 }
 \description{
-Concatenation operators, which are aliases for `base::paste`.
-}
-\details{
+Concatenation operators, which are aliases for \code{base::paste}.
+
 \code{\%.\%} is an operator versions of \code{base::paste0}.
 
 \code{\%..\%} is an operator versions of \code{base::paste}.
 
 \code{\%_\%} is an operator versions of \code{base::paste} with
-`sep='_'`.
+\code{sep='_'}.
 
 \code{\%__\%} is an operator versions of \code{base::paste} with
-`sep='_'` and which takes symbols as arguments (see the examples below).
+\code{sep='_'} and which takes symbols as arguments (see the examples
+below).
 }
 \examples{
 a = 'multi'; b = 'tasking'

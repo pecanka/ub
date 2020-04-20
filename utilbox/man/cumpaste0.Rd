@@ -17,6 +17,7 @@ cumpaste0(c(0,1,1,1,0,1,0,0))
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -26,13 +27,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

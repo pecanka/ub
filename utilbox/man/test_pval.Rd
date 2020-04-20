@@ -2,6 +2,14 @@
 % Please edit documentation in R/mtp.R
 \name{test_pval}
 \alias{test_pval}
+\alias{test_pval_bonf}
+\alias{test_pval_holm}
+\alias{test_pval_hoch}
+\alias{test_pval_beho}
+\alias{test_pval_beye}
+\alias{test_pval_sfg}
+\alias{test_pval_hmean}
+\alias{test_pval_hartung}
 \title{Perform multiple testing procedure}
 \usage{
 test_pval(
@@ -12,11 +20,75 @@ test_pval(
   lam,
   scale_up = TRUE
 )
+
+test_pval_bonf(p, alpha = 0.05, lam = 2, scale_up = TRUE, what = "nr")
+
+test_pval_holm(p, alpha = 0.05, what = "nr")
+
+test_pval_hoch(p, alpha = 0.05, what = "nr")
+
+test_pval_beho(p, alpha = 0.05, what = "nr")
+
+test_pval_beye(p, alpha = 0.05, what = "nr")
+
+test_pval_sfg(
+  p,
+  alpha = 0.05,
+  lamSFG = 0.5,
+  lam = 2,
+  scale_up = TRUE,
+  what = "nr"
+)
+
+test_pval_hmean(p, alpha = 0.05, what = "ns")
+
+test_pval_hartung(p, alpha = 0.05, kappa = 0.2, what = "ns")
 }
 \value{
-A vector of rejections.
+A vector of rejections (non-significance) statuses.
 }
 \description{
-Given a vector of p-values on input, performs a selected multiple testing
-procedure.
+Given a vector of p-values on input, performs a selected multiple
+testing procedure.
+}
+\section{Classical tests}{
+
+
+\code{test_pval_bonf()} performs the Bonferroni corrections on a set of
+p-values and returns the non-significance status of each p-value.
+
+\code{test_pval_holm()} performs the Holm test, \code{test_pval_hoch()}
+performs the Hochberg test, \code{test_pval_beho()} performs the
+Benjamini-Hochberg test, \code{test_pval_beye()} performs the
+Benjamini-Yekutieli test, \code{test_pval_sfg()} performs the
+Storey-Fincher-Goncharuk test.
+}
+
+\section{Harmonic mean p-value test}{
+
+
+\code{test_pval_hmean()} simply calls \code{\link[harmonicmeanp:p.hmp]{harmonicmeanp::p.hmp()}}, which
+implements the global test based on the harmonic mean p-value, which
+is a combination p-value that is insensitive to dependence among the
+combined p-values.
+}
+
+\section{Hartung test for dependent p-values}{
+
+
+\code{test_pval_hartung()} performs the Hartung test, which is suitable
+for dependent p-values. It call the function \code{Hartung} from the
+library \code{punitroots}, which can be found at r-forge (see examples
+below for installation).
+}
+
+\examples{
+# classical bonferroni test
+test_pval_bonf(runif(10))
+
+# Hartung's test
+install.packages("urca")
+install.packages("CADFtest")
+install.packages("punitroots", repos="http://r-forge.r-project.org")
+
 }

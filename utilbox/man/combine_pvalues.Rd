@@ -13,5 +13,5 @@ combine_pvalues(
 )
 }
 \description{
-Combines p-values using one of the available methods
+Combines p-values using one of the available methods.
 }

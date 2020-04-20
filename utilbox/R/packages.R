@@ -1,10 +1,20 @@
+#' @title
 #' Get the namespace of a package
 #'
-#' Returns the namespace of the package with name in `pckg`.
+#' @description
+#' `get_package_namespace()` returns the namespace of the package 
+#' with name in `pckg`.
+#'
+#' `check_namespace()` checks whether the package `pckg` is installed 
+#' and available and throws an error if not.
 #'
 #' @examples
 #' get_package_namespace('base')
 #'
+#' check_namespace('base')          # no error
+#' check_namespace('XYZABC12323')   # error
+#'
+#' @name namespaces
 #' @family coding-related functions provided by utilbox
 #' @export
 get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE) {
@@ -20,24 +30,36 @@ get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE
   
 }
 
+#' @rdname namespaces
+#' @export
+check_namespace = function(pckg, envir=parent.frame()) {
+  
+  fun_name = eval(parse(text='this_fun_name()'), envir=envir)
+  
+  if(!requireNamespace(pckg)) 
+    stop("Package '",pckg,"' needs to be installed to use function '",fun_name,"'.")
+    
+}
+
+#' @title
 #' Library operations
 #'
-#' \code{llibrary} loads specified libraries. On input, \code{pckgs} must either 
-#' be a character vector of package names or a list with each of its elements 
-#' having the structure of \code{list(name=..., src=...)} where name is the package 
-#' name and src is the package source (repository or local) from which the package 
-#' is to be loaded. 
+#' @description
+#' `llibrary()` loads specified libraries. On input, `pckgs` must 
+#' either be a character vector of package names or a list with each of 
+#' its elements having the structure of \code{list(name=..., src=...)} 
+#' where name is the package name and src is the package source 
+#' (repository or local) from which the package is to be loaded.
 #'
-#' \code{llib} is an alias for \code{llibrary} which allows unquoted input.
-#' 
-#' \code{unload_library} unloads/detaches a loaded library.
+#' `llib()` is an alias for `llibrary()` which allows unquoted input.
 #'
+#' `unload_library()` unloads/detaches a loaded library.
 #'
-#' \code{list_installed_packages} lists all installed packages.
+#' `list_installed_packages()` lists all installed packages.
 #'
-#' \code{list_loaded_packages}) list all loaded packages.
+#' `list_loaded_packages()`) list all loaded packages.
 #'
-#' (\code{package_is_installed}) checks if a package is installed.
+#' `package_is_installed()` checks if a package is installed.
 #'
 #' @examples
 #' list_installed_packages()
@@ -49,7 +71,7 @@ get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE
 #' @family package-related functions provided by utilbox
 #' @export
 llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn, 
-  detach=FALSE, default_src="CRAN", url_CRAN="https://cloud.r-project.org/") {
+  detach_first=FALSE, default_src="CRAN", url_CRAN="https://cloud.r-project.org/") {
 
   ## If symbol names expected, make them into strings
   if(!character.only) pckgs = as.character(substitute(pckgs))
@@ -70,7 +92,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
   
     # Check if package already loaded
     if(any(lib$name==loaded_packages)) {
-      if(!detach) next
+      if(!detach_first) next
       catn("Detaching package ",lib$name," ...")
       detach('package:'%.%lib$name, character.only=TRUE)
     }
@@ -92,7 +114,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
       }
 
       # Try to install it
-      if(lib$src=="CRAN" || regexpr("^http[s]?://.*",lib$src)>0) {
+      if(lib$src=="CRAN" || grepl("^http[s]?://.*", lib$src)) {
         type = ifelse(is.null(lib$type), getOption("pkgType"), lib$type)
         install.packages(lib$name, type=type, repos=url_CRAN)
       } else {
@@ -117,26 +139,24 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
 } # llibrary
 
 #' @rdname llibrary
-#' @family package-related functions provided by utilbox
 #' @export
-llib = function(..., detach=FALSE) {
-  dots = match.call(expand.dots = FALSE)$`...`
-  pckgs = as.character(dots)
-  llibrary(pckgs, character.only=TRUE, detach=detach)
+llib = function(..., detach_first=FALSE) {
+  pckgs = as.character(dots_to_nlist())
+  llibrary(pckgs, character.only=TRUE, detach_first=detach_first)
 }
 
 #' @rdname llibrary
-#' @family package-related functions provided by utilbox
 #' @export
 unload_library = function(pckgs=NULL, character.only=FALSE) {
   if(!character.only) pckgs = as.character(substitute(pckgs))
-  for(pckg in pckgs) detach(paste0("package:",pckg), character.only=TRUE, unload=TRUE)
+  for(pckg in pckgs) {
+    detach(paste0("package:",pckg), character.only=TRUE, unload=TRUE)
+  }
   return(invisible(TRUE))
   
 }
 
 #' @rdname llibrary
-#' @family package-related functions provided by utilbox
 #' @export
 list_installed_packages = function() {
   x = try(installed.packages()[,"Package"])
@@ -144,30 +164,33 @@ list_installed_packages = function() {
 }
   
 #' @rdname llibrary
-#' @family package-related functions provided by utilbox
 #' @export
 list_loaded_packages = function() {
   c(sessionInfo()$basePkgs, names(sessionInfo()$otherPkgs))
 }
 
 #' @rdname llibrary
-#' @family package-related functions provided by utilbox
 #' @export
 package_is_installed = function(pckgs, character.only=FALSE) {
+  
   if(!character.only) pckg = as.character(substitute(pckg))
+  
   `names<-`(sapply(pckgs, requireNamespace, quietly=TRUE), pckgs)
+  
 }
 
+#' @title
 #' List objects in a package
 #'
-#' Lists all/exported objects in a package.
+#' @description
+#' List all/exported objects in a package.
 #'
-#' \code{list_package_exported} lists all exported objects by a package.
+#' `list_package_exported()` lists all exported objects by a package.
 #'
-#' \code{list_package_all} lists all objects defined in a package (including
-#' non-exported objects).
+#' `list_package_all()` lists all objects defined in a package 
+#' (including non-exported objects).
 #'
-#' `package_table` puts the objects into a table together 
+#' `object_table()` puts the objects into a table together
 #'
 #' @examples
 #' list_package_exported(utilbox)
@@ -186,7 +209,7 @@ list_package_exported = function(pckg, pattern, character.only=FALSE, mode) {
   if(!character.only) pckg = as.character(substitute(pckg))
   objs = getNamespaceExports(pckg)
   
-  package_table(objs, pckg, pattern, mode)
+  object_table(objs, pckg, pattern, mode)
   
 }
 
@@ -197,28 +220,43 @@ list_package_all = function(pckg, pattern, character.only=FALSE, all.names=TRUE,
   if(!character.only) pckg = as.character(substitute(pckg))
   objs = ls(envir=getNamespace(pckg), all.names=all.names)
   
-  package_table(objs, pckg, pattern, mode)
+  object_table(objs, pckg, pattern, mode)
   
 }
 
 #' @rdname list_package
 #' @export
-package_table = function(objs, pckg, pattern, mode) {
+object_table = function(objs, pckg, pattern, mode) {
 
-  stopifnot(is.character(pckg))
+  if(!is.character(pckg) && !is.environment(pckg))
+    error("Supply either a package name (character) or an environment.")
+    
+  if(is.character(pckg) && !namespace_exists(pckg))
+    error("Namespace '",pckg,"' not found.")
+
+  if(namespace_exists(pckg)) {  
+    is_exported = objs %in% getNamespaceExports(pckg)
+    env_pckg = orig_env(asNamespace(pckg))
+  } else {
+    is_exported = NULL
+    env_pckg = orig_env(pckg)
+  }
   
-  is_exported = objs %in% getNamespaceExports(pckg) 
-  clas1 = apply_pckg(objs, pckg, function(x, nam) h1(class(x)))
-  classes = apply_pckg(objs, pckg, function(x, nam) collapse0(class(x),','))
-  namespace = apply_pckg(objs, pckg, function(x, nam) t1(fun_code_to_text2(x)))
+  class1 = apply_pckg(objs, pckg, function(x) h1(class(x)))
+  classes = apply_pckg(objs, pckg, function(x) collapse0(class(x), sep=','))
+  namespace = apply_pckg(objs, pckg, function(x) orig_env(x))
+  namespace = ifelse(namespace==env_pckg, '', namespace)
+
   #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%.%str_patternize(nam)%.%'[(, ]') %m% fun_code_to_text(x)))
   
-  tbl = data.frame(name=objs, 
-                   exported=ifelse(is_exported, 'YES', 'no'), 
-                   primary_class=clas1, 
-                   all_classes=classes, 
-                   original_namespace=namespace, 
-                   row.names=NULL, stringsAsFactors=FALSE)
+  tbl = list(name=objs, 
+             exported=ifelse(is_exported, 'YES', 'no'), 
+             primary_class=class1, 
+             all_classes=classes, 
+             original_namespace=namespace)
+  
+  tbl = as.data.frame(list_clean(tbl), stringsAsFactors=FALSE)
+  rownames(tbl) = NULL
   
   if(!missing(pattern)) {
     tbl = tbl[`%m%`(pattern, tbl$name),]
@@ -233,80 +271,72 @@ package_table = function(objs, pckg, pattern, mode) {
 
 }
 
-#' Apply function to an object in a package
+#' @title
+#' Apply function to an object in a package or environment
 #'
-#' Applies function \code{f} to the object(s) whose names are in 
-#' \code{objs} and that are found in the package \code{pckg}. Useful
-#' for applying a function (e.g. \code{base::class}) to non-exported 
-#' objects inside a package.
+#' @description
+#' Applies function `f` to the object(s) whose names are in `objs` 
+#' and that are found in `pckg`, which is primarily intended to be a 
+#' package name (assume to be one when of class `character`), but can 
+#' also be an environment. The elipsis (`...`) is supplied to the 
+#' function `f`. `f` can have any number of arguments and only as many 
+#' as it accepts are supplied to it (as determined via [`nformals`]).
+#'
+#' This function is useful for applying a function `f` (e.g. 
+#' [`base::class`]) to exported and/or non-exported objects inside a 
+#' package as done for example by [`object_table`].
 #'
 #' @examples
 #' apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
 #'
 #' @family package-related functions provided by utilbox
 #' @export
-apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, envir=getNamespace(pckg), value_error=NA) {
-  workhorse(objs, function(n) {
-    try(do.call(f, list(get(n, envir=envir), n, ...)), silent=TRUE) %ERR% value_error
-  })
+apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, value_error=NA) {
+
+  if(is.character(pckg)) pckg = getNamespace(pckg)
+  
+  fun_to_apply = function(n) {
+    args = h1(list(get(n, envir=pckg), n, ...), nformals(f))
+    try(do.call(f, args), silent=TRUE) %ERR% value_error
+  }
+
+  workhorse(objs, fun_to_apply)
+  
 }
 
+#' @title
 #' Add path to the package path
 #'
-#' Adds a supplied path to the list of paths for searching packages
+#' @description
+#' Adds a supplied path to the list of paths for searching packages.
 #'
 #' @param libpath path to be added
 #'
-#' @details
-#' Adds a supplied path to the list of paths for searching packages. This is useful
-#' for instance when the default path is in a location which is write-protected and
-#' packages need to be installed into an alternative location.
+#' @details Adds a supplied path to the list of paths for searching 
+#' packages. This is useful for instance when the default path is in a 
+#' location which is write-protected and packages need to be installed 
+#' into an alternative location.
 #'
-#' @return A character vector with each command of the input function as an element.
+#' @return A character vector with each command of the input function 
+#' as an element.
 #'
 #' @name set_pkglib
 #'
 #' @family package-related functions provided by utilbox
 #' @export
 set_pkglib = function(libpath) {
+
   if(is.null(libpath)) return(invisible(0))
+  
   if(.libPaths()[1]!=libpath) return(invisible(1))
+  
   cat("Setting primary local R library to '",libpath,"' ...\n", sep="")
+  
   dir_exist_check(libpath)
+  
   .libPaths(libpath)
+  
   libpath %in% .libPaths()
-}
-
-#' Set a library to load automatically
-#'
-#' Add a library to the list of libraries loaded automatically at startup of R.
-#'
-#' @examples
-#' #R_add_lib_startup('utilbox')   # run this example only if you want to set 'utilbox' to load on startup
-#'
-#' @family package-related functions provided by utilbox
-#' @export
-R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   
-  if(missing(pckg) || is_empty(pckg)) {
-    return(invisible(NULL))
-  }
-  
-  if(missing(Rprof_file)) {
-    Rprof_file = R_default_Rprofile_file()
-  }
-  
-  catn('Modifying the file ',Rprof_file,' ...')
-  catn('Packages to be added among those that load at startup: ',collapse0(pckg, sep=", "))
-  
-  all_pckgs = union(getOption('defaultPackages'), pckg)
-
-  catnf = hijack(catn, file=Rprof_file, append=TRUE)
-  catnf("options(defaultPackages=c('",collapse0(all_pckgs, sep="','"),"'))")
-  catnf("cat(\"Packages loaded at startup:", " \",sQuote('" %.% all_pckgs %.% "'),\"", "\\n\")")
-  
-  catn("File ",Rprof_file," modified.")
-  catn("You must reload the R session for any changes to take effect.")
-  return(invisible(NULL))
 }
 

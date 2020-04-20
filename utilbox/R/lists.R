@@ -1,6 +1,8 @@
+#' @title
 #' Flattens a list
 #'
-#' An alias for `as.list(unlist(x))`.
+#' @description
+#' An alias for `as.list(unlist(...))`.
 #'
 #' @family list utilities provided by utilbox
 #' @export
@@ -8,12 +10,13 @@ list_flatten = function(x) {
   as.list(unlist(x))
 }
 
+#' @title
 #' Mirror list structure
 #'
-#' Mirrors the structure of the list `x`. In other words,
-#' it returns a list with the same numbers of elements
-#' at each list-depth. For now only mirroring up to depth
-#' 1 is implemented.
+#' @description
+#' Mirrors the structure of the list `x`. In other words, it returns 
+#' a list with the same numbers of elements at each list-depth. For now 
+#' only mirroring up to depth 1 is implemented.
 #'
 #' @family list utilities provided by utilbox
 #' @export
@@ -26,15 +29,18 @@ list_mirror = function(x, value, depth=1) {
   }
 }
 
+#' @title
 #' Recursive merge
 #'
-#' This does a recursive merge of lists. The code is taken from the package 
-#' reshape and modified to fix the bug in it. The bug was the missing ellipsis 
-#' in the call to \code{Recall()}.
+#' @description
+#' This does a recursive merge of lists. The code is taken from the 
+#' package reshape and modified to fix the bug in it. The bug was the 
+#' missing ellipsis in the call to `Recall()`.
 #'
 #' @family list utilities provided by utilbox
 #' @export
 merge_recurse = function(dfs, ...) {
+
   if(length(dfs) == 1) {
     dfs
   } else if(length(dfs) == 2) {
@@ -42,17 +48,22 @@ merge_recurse = function(dfs, ...) {
   } else {
     merge(dfs[[1]], Recall(dfs[-1], ...), all = TRUE, sort = FALSE, ...)
   }
+
 }
 
+#' @title
 #' Recursive append
 #'
-#' Appends multiple objects together by recursively calling [base::append].
+#' @description
+#' Appends multiple objects together by recursively calling 
+#' [`base::append`].
 #'
 #' @examples
 #' append_recurse(as.list(1:3), as.list(4:7), as.list(10:15))
 #'
 #' @export
 append_recurse = function(lists, ...) {
+  
   if(length(lists) == 1) {
     lists
   } else if(length(lists) == 2) {
@@ -60,23 +71,32 @@ append_recurse = function(lists, ...) {
   } else {
     append(x=lists[[1]], Recall(lists[-1], ...), ...)
   }
+  
 }
   
 
+#' @title
 #' Removes zero-length elements from a list
+#'
+#' @description
+#' Takes a list and removes all of its zero-length elements. 
+#' Optionally, the filtering function can be changed via `clean_by`.
+#'
 #' @examples
 #' list_clean(list(1:10, NULL, 'a'))
 #'
 #' @family list utilities provided by utilbox
 #' @export
-list_clean = function(L, null.rm=TRUE) {
-  Filter(length, L)
+list_clean = function(x, null.rm=TRUE, clean_by=length) {
+  Filter(clean_by, x)
 }
 
+#' @title
 #' Repeat elements in a list
 #'
-#' An extension of [base::rep] which works with lists which are
-#' not unlisted. For non-list types it works the same as [base::rep]].
+#' @description
+#' An extension of [`base::rep()`] which works with lists which are 
+#' not unlisted. For non-list types it works the same as [`base::rep()`].
 #'
 #' @examples
 #' rep_list(list(a=1,b=2), 3)
@@ -89,19 +109,22 @@ rep_list = function(...) {
 
 #' @rdname rep_list
 #' @export
-rep_list.list = function(x, n, length.out, bind=append_recurse, flatten=FALSE) {
+rep_list.list = function(x, n, each, length.out, bind=append_recurse, flatten=FALSE, rep_as_list=FALSE) {
 
   if(is_empty(x)) return(x)
   
+  if(rep_as_list && !is.list(x)) 
+    x = list(x)
+  
   ii = if(!missing(length.out)) {
     rep(1:length(x), length.out=length.out)
+  } else if(!missing(each)) {
+    rep(1:length(x), each=each)
   } else {
     rep(1:length(x), n)
   }
-  
+
   y = x[ii]
-  
-  #y = bind(h1(lapply(seq(1,n,1), function(i) x), length.out))
   
   if(flatten) list_flatten(y) else y
   
@@ -109,36 +132,22 @@ rep_list.list = function(x, n, length.out, bind=append_recurse, flatten=FALSE) {
 
 #' @rdname rep_list
 #' @export
-rep_list.numeric = rep_list.list
-
-#' @rdname rep_list
-#' @export
-rep_list.character = rep_list.list
-
-#' @rdname rep_list
-#' @export
-rep_list.logical = rep_list.list
-
-#' @rdname rep_list
-#' @export
-rep_list.complex = rep_list.list
-
-#' @rdname rep_list
-#' @export
-rep_list.factor = rep_list.list
-
-#' @rdname rep_list
-#' @export
-rep_list.data.frame = rep_list.list
+rep_list.default = rep_list.list
 
 #' @rdname rep_list
 #' @export
 rep_list.matrix = append_body(rep_list.list, expression(x = list(x)), where='first')
 
+#' @title
 #' Modify list
 #'
-#' A version of 'modifyList' from `utils` which drops zero-length elements in 'val'
-#' before updating 'x' (optionally can behave the same as modifyList)
+#' @description
+#' A version of [`utils::modifyList()`] which drops zero-length 
+#' elements in `val` before updating `x`. Optionally, it can behave the 
+#' exact same way as modifyList (when `drop_null_val=FALSE`).
+#'
+#' @examples
+#' list_update(list(a=1, b=2), list(a=100, c=200))
 #'
 #' @family list utilities provided by utilbox
 #' @export
@@ -150,19 +159,21 @@ list_update = function(x, val, ..., drop_null_val=TRUE) {
 #' @export
 modifyList2 = list_update
 
+#' @title
 #' Named list
 #'
-#' `nlist` creates a named list. The code `list(a = a, b = b)` 
-#' becomes `nlist(a,b)` and `list(a = a, b = 2)` becomes 
-#' `nlist(a, b = 2)`, etc. 
+#' @description
+#' `nlist()` creates a named list. The code `list(a = a, b = b)` 
+#' becomes `nlist(a,b)` and `list(a = a, b = 2)` becomes `nlist(a, b = 
+#' 2)`, etc.
 #'
-#' `nlist2` is a shorter original code which relies on existing
-#' code (`dots_to_nlist`). It should result in the exact
-#' same behavior as `nlist`.
+#' `nlist2()` is a shorter original code which relies on existing 
+#' code (`dots_to_nlist`). It should result in the exact same behavior 
+#' as `nlist()`.
 #'
-#' Credit: The code for `nlist` was lifted from the package 
-#' `loo` to avoid having to install that package just for this 
-#' one function. The code has been slightly modified.
+#' Credit: The code for `nlist()` was lifted from the package `loo` 
+#' to avoid having to install that package just for this one function. 
+#' The code has been slightly modified.
 #'
 #' @examples
 #' # uses the variable names to assign names
@@ -198,12 +209,15 @@ nlist2 = function (...) {
   dots_to_nlist()
 }
 
+#' @title
 #' Set list attributes (element-wise)
 #'
-#' Take a list (\code{x}), attribute name (\code{attrib_name}) and a list of 
-#' attributes (\code{attrib}) and sets the attribute named code{attrib_name}
-#' of each element of \code{x} to the corresponding value in code{attrib}.
-#' 
+#' @description
+#' `list_set_attr` takes a list (`x`), attribute name (`attrib_name`) 
+#' and a list of attributes (`attrib`) and sets the attribute named 
+#' `attrib_name` of each element of `x` to the corresponding value in 
+#' code{attrib}.
+#'
 #' @examples
 #' set_list_attr(list('a','b'), 'size', c(10,20))
 #'

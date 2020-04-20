@@ -24,22 +24,22 @@ lmean(x, w, na.rm = TRUE, ...)
 }
 \description{
 Various mean functions. Arithmetic, geometric, weighted geometric,
-harmonic and logistic means are implemented. Compares to [base::mean]
-these functions have remove `NA`s by default and return zero-length
-responses on zero-length input or input with no non-`NA` values.
-}
-\details{
-`amean` gives the arithmetic mean of `x`. 
+harmonic and logistic means are implemented. Compares to
+\code{\link[base:mean]{base::mean}} these functions have remove \code{NA}s by default and
+return zero-length responses on zero-length input or input with no
+non-\code{NA} values.
 
-`gmean` and `gmeanw` calculate the geometric mean of `x`, while the latter
-permits weighing.
+\code{amean()} gives the arithmetic mean of \code{x}.
 
-`hmean` calculates the harmonic mean (single value) of a single vector created as a
-combination of all its input arguments.
+\code{gmean()} and \code{gmeanw} calculate the geometric mean of \code{x}, while
+the latter permits weighing.
 
-`lmean` calculates the (weighted) logistic mean.
+\code{hmean()} calculates the harmonic mean (single value) of a single
+vector created as a combination of all its input arguments.
 
-`mean_na` is an alias for [base::mean] with `na.rm=TRUE`.
+\code{lmean()} calculates the (weighted) logistic mean.
+
+\code{mean_na()} is an alias for \code{\link[base:mean]{base::mean}} with \code{na.rm=TRUE}.
 }
 \examples{
 x = c(1,NA); mean(x); mean2(x)

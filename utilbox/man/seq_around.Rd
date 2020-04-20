@@ -7,16 +7,15 @@
 seq_around(a, b, m1, m2, len, add_a = FALSE, add_b = FALSE)
 }
 \description{
-Produces an equidistant sequence between a and b which contains both
-m1 and m2 of appropriate length near len. The sequence might not contain
-the border points points a and b. Forcing them into the sequence
-can be done via add_a and/or add_b, but the equi-distance of all points 
-might no longer be true.
+Produces an equidistant sequence between a and b which contains
+both m1 and m2 of appropriate length near len. The sequence might not
+contain the border points points a and b. Forcing them into the
+sequence can be done via add_a and/or add_b, but the equi-distance of
+all points might no longer be true.
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -24,20 +23,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

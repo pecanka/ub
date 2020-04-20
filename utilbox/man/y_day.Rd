@@ -12,11 +12,11 @@ y_day(
 )
 }
 \description{
-Calculated the date of the previous day or any other day relative to today 
-in the current time zone in the specified format. How many days are shifted
-to the past is controlled via \code{lag}, which accepts vector input.
-Negative values in \code{lag} shift the date to the past, positive 
-values shift the date into the future.
+Calculated the date of the previous day or any other day relative
+to today in the current time zone in the specified format. How many
+days are shifted to the past is controlled via \code{lag}, which accepts
+vector input. Negative values in \code{lag} shift the date to the past,
+positive values shift the date into the future.
 }
 \examples{
 y_day()          # yesterday

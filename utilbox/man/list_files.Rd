@@ -22,19 +22,20 @@ list_files_latest(...)
 list_files_biggest(...)
 }
 \description{
-A wrapper for [base::list.files] that allows multiple patterns at once and 
-files that match at least on of the patterns are returned. Optionally,
-files can be sorted according to attribute in \code{attrib}.
-}
-\details{
-Wrappers \code{list_files_latest} and \code{list_files_biggest} implement the
-sorting according to attributes "modification time" and "size", respectively.
+A wrapper for \code{\link[base:list.files]{base::list.files()}} that allows multiple patterns
+at once and files that match at least on of the patterns are
+returned. Optionally, files can be sorted according to attribute in
+\code{attrib}.
+
+\code{list_files_latest()} and \code{list_files_biggest()} are shortcuts to
+sorting according to attributes "modification time" and "size",
+respectively.
 }
 \seealso{
 Other file system functions provided by utilbox: 
+\code{\link{dir_create}()},
 \code{\link{dir_exist_check}()},
-\code{\link{dir_work}},
-\code{\link{file_exists}()},
-\code{\link{file_work}}
+\code{\link{file_path}()},
+\code{\link{file_rename}()}
 }
 \concept{file system functions provided by utilbox}

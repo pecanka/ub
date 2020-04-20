@@ -13,9 +13,10 @@ fix_bibliography(
 )
 }
 \description{
-Puts authors' names into 'Lastname1, Firstname1 and Lastname2, Firstname2'
-format in a bibtex bibliography file in 'infile', abbreviates the first 
-names with/without a dot and outputs the new bibliography into outfile
-Assumes that records are wrapped by '{' and '}' and not '"'. 
-(Consider removing this limitation)
+\code{fix_bibliography()} puts author names into the 'Lastname1,
+Firstname1 and Lastname2, Firstname2' format in a bibtex bibliography
+file \code{infile}. It also abbreviates the first names with/without a dot
+and outputs the new bibliography into outfile Assumes that records
+are wrapped by '{' and '}' and not '"'. This limitation might be
+removed in the future.
 }

@@ -7,11 +7,12 @@
 name_sort(x, get_order = FALSE)
 }
 \arguments{
-\item{x}{named object to be sorted. If names are missing, no sorting is done.}
+\item{x}{named object to be sorted. If names are missing, no
+sorting is done.}
 
-\item{get_order}{Determines whether the ordering of names or the ordered object
-is returned.}
+\item{get_order}{Determines whether the ordering of names or the
+ordered object is returned.}
 }
 \description{
-Sorts the input according to its names attribute.
+\code{name_sort()} sorts the input according to its names attribute.
 }

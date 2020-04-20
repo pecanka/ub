@@ -7,7 +7,7 @@
 file_size(files)
 }
 \description{
-Returns the file sizes in appropriate units.
+\code{file_size()} returns the file sizes in appropriate units.
 }
 \seealso{
 Other file system function provided by utilbox: 

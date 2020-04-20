@@ -4,25 +4,24 @@
 \alias{list_package}
 \alias{list_package_exported}
 \alias{list_package_all}
-\alias{package_table}
+\alias{object_table}
 \title{List objects in a package}
 \usage{
 list_package_exported(pckg, pattern, character.only = FALSE, mode)
 
 list_package_all(pckg, pattern, character.only = FALSE, all.names = TRUE, mode)
 
-package_table(objs, pckg, pattern, mode)
+object_table(objs, pckg, pattern, mode)
 }
 \description{
-Lists all/exported objects in a package.
-}
-\details{
-\code{list_package_exported} lists all exported objects by a package.
+List all/exported objects in a package.
 
-\code{list_package_all} lists all objects defined in a package (including
-non-exported objects).
+\code{list_package_exported()} lists all exported objects by a package.
 
-`package_table` puts the objects into a table together
+\code{list_package_all()} lists all objects defined in a package
+(including non-exported objects).
+
+\code{object_table()} puts the objects into a table together
 }
 \examples{
 list_package_exported(utilbox)
@@ -36,9 +35,6 @@ help(package = dplyr)
 }
 \seealso{
 Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
 \code{\link{apply_pckg}()},
 \code{\link{llibrary}()},
 \code{\link{set_pkglib}()}

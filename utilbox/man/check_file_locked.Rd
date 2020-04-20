@@ -7,8 +7,9 @@
 check_file_locked(file)
 }
 \description{
-Check if a given file is locked by another application (e.g. by Excel).
-Currently relies on a call to \code{wmic} and works on Windows only.
+Check if a given file is locked by another application (e.g. by
+Excel). Currently relies on a call to \code{wmic} and works on Windows
+only.
 }
 \seealso{
 Other file system function provided by utilbox: 

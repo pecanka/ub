@@ -14,21 +14,22 @@ zip_all_in_path(
 \arguments{
 \item{path}{Path to the files to zip up.}
 
-\item{check_status}{Determines whether a check for zero status code is performed.}
+\item{check_status}{Determines whether a check for zero status
+code is performed.}
 
-\item{extras}{Modifiers sent to the zip archiver. Defaults to '-m', 
-which moves the files into the archive.}
+\item{extras}{Modifiers sent to the zip archiver. Defaults to
+'-m', which moves the files into the archive.}
 
-\item{disable_warning}{Disables warning about archiving all files in the given
-path. Caution advised.}
+\item{disable_warning}{Disables warning about archiving all files
+in the given path. Caution advised.}
 }
 \value{
-List of names of archived files, list of the created archives and the 
-       corresponding status codes returned by the archiver.
+List of names of archived files, list of the created
+archives and the corresponding status codes returned by the archiver.
 }
 \description{
-\code{zip_all_in_path} compresses all files in the supplied path (\code{path}) 
-each into its own archive
+\code{zip_all_in_path} compresses all files in the supplied path
+(\code{path}) each into its own archive
 }
 \seealso{
 Other archiving utilities provided by utilbox: 

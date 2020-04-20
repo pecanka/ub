@@ -10,13 +10,12 @@ set_class(x, class)
 has_class(x, class)
 }
 \description{
-`set_class` attempts to set the class of `x` to `class` by calling
-`as.*` where `*` is substituted for the character value 
-in `class`.
-}
-\details{
-`has_class` checks if the class given in `class` is among the classes
-of `x`.
+\code{set_class()} attempts to set the class of \code{x} to \code{class} by
+calling \verb{as.*} where \code{*} is substituted for the character value in
+\code{class}.
+
+\code{has_class()} checks if the class given in \code{class} is among the
+classes of \code{x}.
 }
 \examples{
 set_class(1, 'character')

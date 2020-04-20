@@ -14,10 +14,10 @@ to \%<-\% from
 The value originally found in \code{from}.
 }
 \description{
-Operators that change the name of an object by reassigning the value from 
-its left-hand side (for \code{\%->\%}) or right-hand side (for 
-\code{\%->\%}) and assigning the value to the variable on the other
-side, thus effectively performing renaming of an object.
+Operators that change the name of an object by reassigning the
+value from its left-hand side (for \code{\%->\%}) or right-hand side
+(for \code{\%->\%}) and assigning the value to the variable on the
+other side, thus effectively performing renaming of an object.
 }
 \examples{
 a = 100; a \%->\% b; b; exists('a')  # after the call b is 100 and a does not exist

@@ -3,6 +3,7 @@
 \name{which_max}
 \alias{which_max}
 \alias{which_min}
+\alias{max0}
 \title{Maximum/minimum}
 \usage{
 which_max(
@@ -25,19 +26,23 @@ which_min(
   arr.ind = FALSE,
   eps = 0
 )
+
+max0(..., na.rm = FALSE, val0 = -Inf)
 }
 \description{
-A more versatile version of \code{base:which.max} and \code{which.min}.
-}
-\details{
-Essentially, the functions \code{which_max} and \code{which_min} 
-behave just like their base equivalents except they can return 
-the position of both first or last extreme in a vector (the last 
-by default). They also differ in the treatment of \code{NA}s. The
-removal of NA values can be done in two ways, they are either removed
-and then the position of the extreme in a vector stripped of \code{NA}s 
-is returned, or they are ignored (default) and the position of a extreme
-within the entire original vector is returned.
+More versatile versions of \code{base:which.max} and
+\code{base::which.min}.
+
+Essentially, the functions \code{which_max} and \code{which_min} behave just
+like their base equivalents except they can return the position of
+both first or last extreme in a vector (the last by default). They
+also differ in the treatment of \code{NA}s. The removal of NA values can
+be done in two ways, they are either removed and then the position of
+the extreme in a vector stripped of \code{NA}s is returned, or they are
+ignored (default) and the position of a extreme within the entire
+original vector is returned.
+
+\code{max0()} is a wrapper for \code{base::max} which does not produce warnings.
 }
 \examples{
 which_max(1:5)
@@ -48,57 +53,19 @@ which_max(c(NA,1:5), na.ignore=FALSE, na.rm=TRUE)
 }
 \seealso{
 Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
 \code{\link{Invert}()},
-\code{\link{all_permutations}()},
 \code{\link{as_numeric}()},
 \code{\link{downweight}()},
+\code{\link{extract_by_value}},
 \code{\link{force_as_}},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
+\code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
 \code{\link{make_numeric}()},
-\code{\link{max0}()},
 \code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
-\code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}}
-
-Other numeric functions provided by utilbox: 
-\code{\link{Invert1}()},
-\code{\link{Invert}()},
-\code{\link{all_permutations}()},
-\code{\link{as_numeric}()},
-\code{\link{downweight}()},
-\code{\link{force_as_}},
-\code{\link{frac_part}()},
-\code{\link{frac}()},
-\code{\link{int_part}()},
-\code{\link{lower_tri}()},
-\code{\link{make_numeric}()},
-\code{\link{max0}()},
-\code{\link{min_dif}()},
-\code{\link{mintersect}()},
-\code{\link{round2}()},
-\code{\link{round_nearest_power}()},
-\code{\link{round_nearest}()},
-\code{\link{rsignif}()},
-\code{\link{signif2}()},
-\code{\link{to_base_k}()},
-\code{\link{unspace}()},
-\code{\link{unzero}()},
-\code{\link{upper_tri}()},
-\code{\link{value_locale_position}},
-\code{\link{value_locale}}
+\code{\link{permutations}},
+\code{\link{replace_value}},
+\code{\link{sequences}},
+\code{\link{sets}},
+\code{\link{to_base_k}()}
 }
 \concept{numeric functions provided by utilbox}

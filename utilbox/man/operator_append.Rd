@@ -20,9 +20,9 @@ right \%apR\% left
 A list.
 }
 \description{
-Append one object to another via [base::append]. `\%append\%`
+Append one object to another via \code{\link[base:append]{base::append}}. \verb{\\\%append\\\%}
 appends the right-hand argument to the left-hand side, while
-`\%appendR\%` appends in the reverse order.
+\verb{\\\%appendR\\\%} appends in the reverse order.
 }
 \examples{
 list(a=1, b=2) \%append\% list(c=3)    # adds an element to the list on the LHS

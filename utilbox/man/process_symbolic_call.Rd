@@ -2,16 +2,11 @@
 % Please edit documentation in R/symbolic.R
 \name{process_symbolic_call}
 \alias{process_symbolic_call}
-\title{Process symbolic call
-Takes either a function, which it leave alone, or a symbolic 
-call (starting with `~`), which it turns into a function. 
-Inspired by `tidyverse`-style function supply.}
+\title{Process symbolic call}
 \usage{
 process_symbolic_call(call, narg)
 }
 \description{
-Process symbolic call
-Takes either a function, which it leave alone, or a symbolic 
-call (starting with `~`), which it turns into a function. 
-Inspired by `tidyverse`-style function supply.
+call (starting with \code{~}), which it turns into a function. Inspired
+by \code{tidyverse}-style function supply.
 }

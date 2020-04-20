@@ -13,15 +13,15 @@ str_is_empty_not(x, trim = FALSE)
 str_n_empty(x, trim = FALSE)
 }
 \description{
-`str_is_empty` checks for empty strings, i.e. strings with zero
-length. By default, white space is not trimmed prior to the check, 
-but this can be enabled by adding `trim=TRUE` to the call.
-}
-\details{
-`str_is_empty_not` is returns the negation of what `str_is_empty` returns.
+\code{str_is_empty} checks for empty strings, i.e. strings with zero
+length. By default, white space is not trimmed prior to the check,
+but this can be enabled by adding \code{trim=TRUE} to the call.
 
-`str_n_empty` counts the number of empty string in a character
-vector. Same defaults as `str_is_empty`.
+\code{str_is_empty_not} is returns the negation of what \code{str_is_empty}
+returns.
+
+\code{str_n_empty} counts the number of empty string in a character
+vector. Same defaults as \code{str_is_empty}.
 }
 \examples{
 str = c('hello','world','   ','')
@@ -38,6 +38,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -46,13 +47,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

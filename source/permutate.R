@@ -1,7 +1,14 @@
-#' Generates all permutations 
+#' @title
+#' Generates all permutations
 #'
-#' Generates all possible permutations of the elements of its argument.
+#' @description
+#' `all_permutations()` generates all possible permutations of the 
+#' elements of its argument.
 #'
+#' `is_permutation()` checks if the elements in the first argument 
+#' (`x`) correspond to a permutation of the second argument (`y`).
+#'
+#' @name permutations
 #' @family numeric functions provided by utilbox
 #' @export
 all_permutations = function(x) {
@@ -15,12 +22,7 @@ all_permutations = function(x) {
   matrix(x[ip], ncol=length(x))
 }
 
-#' Check for permutation
-#'
-#' Checks if the elements in the first argument (\code{x}) correspond to 
-#' a permutation of the second argument (\code{y}).
-#'
-#' @family check-performing functions provided by utilbox
+#' @rdname permutations
 #' @export
 is_permutation = function(x, y) {
   length(x)==length(y) &&

@@ -7,8 +7,9 @@
 Mode(x, all_modes = FALSE, exclude.na = TRUE)
 }
 \description{
-Finds the mode, i.e. the value that occurs with highest frequency in \code{x}.
-The function works for both numeric and character/factor data.
+\code{Mode()} finds the model of a sample \code{x}, which is the value that
+occurs with highest frequency in \code{x}. The function works for both
+numeric and character/factor data.
 }
 \examples{
 Mode(c(1:7,7))    # the highest frequency value is '7'

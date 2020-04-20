@@ -1,9 +1,45 @@
+#' @title
 #' Perform multiple testing procedure
 #'
-#' Given a vector of p-values on input, performs a selected multiple testing
-#' procedure.
+#' @description
+#' Given a vector of p-values on input, performs a selected multiple 
+#' testing procedure.
 #'
-#' @return A vector of rejections.
+#' @returns A vector of rejections (non-significance) statuses.
+#'
+#' @section Classical tests:
+#'
+#' `test_pval_bonf()` performs the Bonferroni corrections on a set of 
+#' p-values and returns the non-significance status of each p-value.
+#'
+#' `test_pval_holm()` performs the Holm test, `test_pval_hoch()` 
+#' performs the Hochberg test, `test_pval_beho()` performs the 
+#' Benjamini-Hochberg test, `test_pval_beye()` performs the 
+#' Benjamini-Yekutieli test, `test_pval_sfg()` performs the 
+#' Storey-Fincher-Goncharuk test.
+#'
+#' @section Harmonic mean p-value test:
+#'
+#' `test_pval_hmean()` simply calls [`harmonicmeanp::p.hmp()`], which 
+#' implements the global test based on the harmonic mean p-value, which 
+#' is a combination p-value that is insensitive to dependence among the 
+#' combined p-values.
+#'
+#' @section Hartung test for dependent p-values:
+#'
+#' `test_pval_hartung()` performs the Hartung test, which is suitable 
+#' for dependent p-values. It call the function `Hartung` from the 
+#' library `punitroots`, which can be found at r-forge (see examples 
+#' below for installation).
+#'
+#' @examples
+#' # classical bonferroni test
+#' test_pval_bonf(runif(10))
+#'
+#' # Hartung's test
+#' install.packages("urca")
+#' install.packages("CADFtest")
+#' install.packages("punitroots", repos="http://r-forge.r-project.org")
 #'
 #' @export
 test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TRUE) {
@@ -33,19 +69,21 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
   rej = rep(FALSE, length(p))
   if(meth=="hommel") {
     
+    check_namespace('statmod')
+
     if(any(wk)) rej[wk] = !statmod::hommel.test(pp, alpha=alpha)
     
   } else if(meth=="SFG") {
   
-    if(any(wk)) rej[wk] = !sfg.test(pp, alpha=alpha, lamSFG=lamSFG)
+    if(any(wk)) rej[wk] = !test_pval_sfg(pp, alpha=alpha, lamSFG=lamSFG)
   
   } else if(meth=="hmp") {
   
-    if(any(wk)) rej[which(wk)[1]] = !hmp.test(pp, alpha=alpha)
+    if(any(wk)) rej[which(wk)[1]] = !test_pval_hmean(pp, alpha=alpha)
   
   } else if(meth=="Hartung") {
   
-    if(any(wk)) rej[which(wk)[1]] = !hartung.test(pp, alpha=alpha)
+    if(any(wk)) rej[which(wk)[1]] = !test_pval_hartung(pp, alpha=alpha)
   
   } else if(any(meth==methods)) {
   
@@ -57,9 +95,9 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
 
 }
   
-#' Bonferroni test
+#' @rdname test_pval
 #' @export  
-bonf.test = function(p, alpha=0.05, lam=2, scale_up=TRUE, what="nr") {
+test_pval_bonf = function(p, alpha=0.05, lam=2, scale_up=TRUE, what="nr") {
  
   if(is.vector(p)) p = matrix(p, ncol=1)
 
@@ -72,9 +110,9 @@ bonf.test = function(p, alpha=0.05, lam=2, scale_up=TRUE, what="nr") {
   
 }
 
-#' Holm test
+#' @rdname test_pval
 #' @export  
-holm.test = function(p, alpha=0.05, what="nr") {
+test_pval_holm = function(p, alpha=0.05, what="nr") {
 
   n = length(p)
   i = 1:n
@@ -90,9 +128,9 @@ holm.test = function(p, alpha=0.05, what="nr") {
   
 }
 
-#' Hochberg test
+#' @rdname test_pval
 #' @export  
-hochberg.test = function(p, alpha=0.05, what="nr") {
+test_pval_hoch = function(p, alpha=0.05, what="nr") {
   
   n = length(p)
   i = 1:n
@@ -108,9 +146,9 @@ hochberg.test = function(p, alpha=0.05, what="nr") {
   
 }
 
-#' Benjamini-Hochberg test (FDR)
+#' @rdname test_pval
 #' @export  
-bh.test = function(p, alpha=0.05, what="nr") {
+test_pval_beho = function(p, alpha=0.05, what="nr") {
   
   n = length(p)
   i = 1:n
@@ -126,9 +164,9 @@ bh.test = function(p, alpha=0.05, what="nr") {
   
 }
 
-#' Benjamini-Yekutieli test (FDR)
+#' @rdname test_pval
 #' @export  
-by.test = function(p, alpha=0.05, what="nr") {
+test_pval_beye = function(p, alpha=0.05, what="nr") {
 
   n = length(p)
   i = 1:n
@@ -145,9 +183,9 @@ by.test = function(p, alpha=0.05, what="nr") {
   
 }
 
-#' Storey test (aka Storey-Fincher-Goncharuk test)
+#' @rdname test_pval
 #' @export  
-sfg.test = function(p, alpha=0.05, lamSFG=0.5, lam=2, scale_up=TRUE, what="nr") {
+test_pval_sfg = function(p, alpha=0.05, lamSFG=0.5, lam=2, scale_up=TRUE, what="nr") {
  
   if(is.vector(p)) p = matrix(p, ncol=1)
 
@@ -162,44 +200,58 @@ sfg.test = function(p, alpha=0.05, lamSFG=0.5, lam=2, scale_up=TRUE, what="nr") 
   
 }
   
-#' Harmonic mean p-value test
-#'
-#' This implements the global test based on the harmonic mean 
-#' p-value, which is a combination p-value that is insensitive
-#' to dependence among the combined p-values. 
-#'
-#' Requires package \code{harmonicmeanp}.
-#'
+#' @rdname test_pval
 #' @export  
-hmp_test = function(p, alpha=0.05, what="ns") { 
-  non_signif = harmonicmeanp::p.hmp(p) >= alpha
-  switch(what, "ns"=non_signif, 
-         stop(this_fun_name(), " can only return 'ns' (i.e. combined non-significance status)."))
+test_pval_hmean = function(p, alpha=0.05, what="ns") {
+ 
+  check_namespace('harmonicmeanp')
+
+  if(what!="ns")
+    stop("Only 'ns' (i.e. combined non-significance status) can be returned.")
+    
+  harmonicmeanp::p.hmp(p) >= alpha
   
 }
 
-#' Hartung test for dependent p-values
-#'
-#' Requires library \code{punitroots} which can be found at r-forge (see examples below for installation).
-#' 
-#' @examples
-#' install.packages("urca")
-#' install.packages("CADFtest")
-#' install.packages("punitroots", repos="http://r-forge.r-project.org")
+#' @rdname test_pval
 #' @export  
-hartung.test = function(p, alpha=0.05, kappa=0.2, what="ns") {
+test_pval_hartung = function(p, alpha=0.05, kappa=0.2, what="ns") {
  
+  check_namespace('punitroots')
+  
   non_signif = punitroots::Hartung(p, kappa=kappa)$p.value >= alpha
   
   switch(what, "ns"=non_signif, error("Unknown value in 'what'."))
   
 }
 
+#' @title
+#' Multiple testing
+#'
+#' @description
+#' `mtc_test()` takes a vector of p-values and performs a multiple 
+#' testing corrected test on it. Which test it is is determined via 
+#' `method`.
+#'
+#' `mtc_test_mul()` is a wrapper for it which can take multiple sets 
+#' of p-values (as columns of a matrix) and performs the multiple 
+#' testing corrected tests on each of the sets separately.
+#'
+#' @returns Logical vector (or matrix) indicating non-significance 
+#' statuses of each p-value.
+#'
+#' @examples
+#' mtc_test(runif(10))
+#' mtc_test_mul(cbind(runif(10),runif(10)))
+#'
 #' @export  
-mtc.test = function(p, alpha=0.05, method="holm") {
+mtc_test = function(p, alpha=0.05, method="holm") {
   
   ## Hommel not yet implemented here, so just use statmod's version
-  if(method=="hommel") return(statmod::hommel.test(p, alpha=alpha))
+  if(method=="hommel") {
+    check_namespace('statmod')
+    return(statmod::hommel.test(p, alpha=alpha))
+  }
   
   # Sort the p-values (if needed)
   po = if(method!="bonferroni" && is.unsorted(p)) sort(p) else p
@@ -232,16 +284,19 @@ mtc.test = function(p, alpha=0.05, method="holm") {
 }
 
 #' @export
-mtc.test.mul = function(p, alpha=0.05, method="holm") {
+mtc_test_mul = function(p, alpha=0.05, method="holm") {
 
   if(is.vector(p)) p = matrix(p, ncol=1)
 
   if(method=="hommel") {
     apply(p, 2, statmod::hommel.test, alpha=alpha) 
-  } else apply(p, 2, mtc.test, alpha=alpha, method=method)
+  } else {
+    apply(p, 2, mtc_test, alpha=alpha, method=method)
+  }
   
 }
 
+#' @title
 #' Fast multiple testing corrections
 #' @export
 mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hochberg","BH","BY","fdr","none","SFG"),
@@ -320,10 +375,14 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
 
 }
 
+#' @title
 #' Type-I and type-II errors
 #'
-#' Determine the type-I (FWER, FDR) and type-II (power) errors of 
-#' selected multiple testing procedures
+#' @description
+#' `mtp_errors()`, `mtp_errors_fast()`, `mtp_errors_slow() determine 
+#' the type-I (FWER, FDR) and type-II (power) errors of selected 
+#' multiple testing procedures.
+#'
 #' @export
 mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5, scale_up=TRUE) {
 
@@ -345,15 +404,16 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
   if(meth=="bonferroni") {
   
     if(TRUE) {
-    N = if(do_cond) apply(p < lam, 2, sum) else n
-    a = alpha / N * if(do_cond && scale_up) lam else 1
-    p0 = p[(n1+1):n,,drop=FALSE]
-    fwer = mean(apply(p0, 2, min) < a)
-    p1 = if(n1==0) NULL else p[1:n1,,drop=FALSE]
-    nsig = if(n1==0) NA else apply(p1 < a, 2, sum)
-    pow = sapply(1:n1, function(k) mean(nsig>=k))
-    } else
-    rej = bonf.test(p, alpha=alpha, lam=lam, scale_up=scale_up)
+      N = if(do_cond) apply(p < lam, 2, sum) else n
+      a = alpha / N * if(do_cond && scale_up) lam else 1
+      p0 = p[(n1+1):n,,drop=FALSE]
+      fwer = mean(apply(p0, 2, min) < a)
+      p1 = if(n1==0) NULL else p[1:n1,,drop=FALSE]
+      nsig = if(n1==0) NA else apply(p1 < a, 2, sum)
+      pow = sapply(1:n1, function(k) mean(nsig>=k))
+    } else {
+      rej = test_pval_bonf(p, alpha=alpha, lam=lam, scale_up=scale_up)
+    }
   
   } else {
   
@@ -373,19 +433,19 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
               
       rej[wk,i] = 
       if(meth=="bonferroni") {
-        !mtc.test(pp, alpha=alpha, method="bonferroni")
+        !mtc_test(pp, alpha=alpha, method="bonferroni")
       } else if(meth=="hommel") {
         !statmod::hommel.test(pp, alpha=alpha)
       } else if(meth=="holm") {
-        !holm.test(pp, alpha=alpha)
+        !test_pval_holm(pp, alpha=alpha)
       } else if(meth=="hochberg") {
-        !hochberg.test(pp, alpha=alpha)
+        !test_pval_hoch(pp, alpha=alpha)
       } else if(meth=="BH") {
-        !bh.test(pp, alpha=alpha)
+        !test_pval_beho(pp, alpha=alpha)
       } else if(meth=="BY") {
-        !by.test(pp, alpha=alpha)
+        !test_pval_beye(pp, alpha=alpha)
       } else if(meth=="SFG") {
-        !sfg.test(pp, alpha=alpha, lamSFG=lamSFG)
+        !test_pval_sfg(pp, alpha=alpha, lamSFG=lamSFG)
       } else if(any(meth==adj_methods)) {
         p.adjust(pp, method=meth) < alpha
       } else error("Unknown method '",method,"' in test_pval.")
@@ -401,8 +461,7 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
 
 } # mtp_errors
   
-#############################################################
-
+#' @title
 #' @name mtp_errors
 #' @export
 mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5, 
@@ -423,8 +482,7 @@ mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5
 
 }
   
-#############################################################
-
+#' @title
 #' @name mtp_errors
 #' @export
 mtp_errors_slow = function(p, methods, n1=0, k, alpha=0.05, lamSFG=0.5, lam, scale_up=TRUE, trace=1, what=c("fwer","fdr","power")) {

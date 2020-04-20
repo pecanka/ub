@@ -5,6 +5,8 @@
 \alias{str_patternize}
 \alias{str_unpatternize}
 \alias{unpatternize}
+\alias{str_escape}
+\alias{str_unescape}
 \title{Patternize a string}
 \usage{
 str_patternize(name, special = c("+", ".", "(", ")", "$", "?", "\\\\"))
@@ -14,19 +16,29 @@ patternize(name, special = c("+", ".", "(", ")", "$", "?", "\\\\"))
 str_unpatternize(pattern)
 
 unpatternize(pattern)
+
+str_escape(x, specials = NULL, specials0 = c(`\\\\n` = "\\\\\\\\n"))
+
+str_unescape(x, specials = NULL, specials0 = c(`\\\\n` = "\\\\\\\\n"))
 }
 \description{
-`str_patternize` wraps special characters in string name (possibly a vector) by 
-brackets so that it can be matched within regular expression matching (the case of 
-"\\" has to be treated differently). Useful for instance when working with file names.
-}
-\details{
-`str_unpatternize` does the reverse of \code{patternize()}.
+\code{str_patternize()} wraps special characters in string name
+(possibly a vector) by brackets so that it can be matched within
+regular expression matching (the case of "\\" has to be treated
+differently). Useful for instance when working with file names.
+
+\code{str_unpatternize()} does the reverse of \code{patternize()}.
+
+\code{str_escape()} escapes special characters in a string. By default,
+it escapes only the new line symbol (e.g. replaces \verb{\\\\n} with a
+\verb{\\\\\\\\n}).
 }
 \examples{
 regexpr('notes.txt', 'notes_txt')>0                # TRUE
 regexpr(str_patternize('notes.txt'), 'notes_txt')>0    # FALSE
 regexpr(str_patternize('notes.txt'), 'notes.txt')>0    # TRUE
+
+str_escape('\n')
 
 }
 \seealso{
@@ -34,6 +46,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
@@ -42,13 +55,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

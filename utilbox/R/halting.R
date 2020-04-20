@@ -1,12 +1,13 @@
+#' @title
 #' Throw an error and stop
 #'
-#' A more elaborate version of `base::stop()`. It can do beeping 
-#' and if inside an interactive session it does not halt the 
-#' execution but enters a browsing mode. It also returns a reliable
-#' exit status value (i.e. 1) in non-interactive mode.
+#' @description
+#' A more elaborate version of `base::stop()`. It can do beeping and 
+#' if inside an interactive session it does not halt the execution but 
+#' enters a browsing mode. It also returns a reliable exit status value 
+#' (i.e. 1) in non-interactive mode.
 #'
-#' Currently disabled, since it's functionality is currently not
-#' needed.
+#' Currently disabled, simply calls [`base::stop()`].
 #'
 #' @export
 error = function(..., sep="", quit=TRUE, Q, browser=interactive(), nskip1=0, envir=parent.frame()) {
@@ -42,10 +43,13 @@ error = function(..., sep="", quit=TRUE, Q, browser=interactive(), nskip1=0, env
 
 error = base::stop
 
+#' @title
 #' Stop execution
 #'
-#' A different way of stopping the execution. Intended to be called by halt but the behavior
-#' wasn't as hoped/expected. Abandoned for now. 
+#' @description
+#' A different way of stopping the execution. Intended to be called 
+#' by halt but the behavior wasn't as hoped/expected. Abandoned for now.
+#'
 #' @export
 .halt = function() {
 
@@ -55,11 +59,14 @@ error = base::stop
   
 }
 
+#' @title
 #' Print error and stop execution
 #'
-#' Prints an error message and stops. The actual way of stopping, however,
-#' depends on whether the code is run in interactive or non-interactive
-#' modes
+#' @description
+#' Prints an error message and stops. The actual way of stopping, 
+#' however, depends on whether the code is run in interactive or 
+#' non-interactive modes
+#'
 halt = function(error="") {
   
   if(interactive()) {

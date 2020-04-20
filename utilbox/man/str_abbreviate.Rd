@@ -7,9 +7,9 @@
 str_abbreviate(x, n1 = 12, n2)
 }
 \description{
-`str_abbreviate` takes a string and whenever it is long, it cuts
-out the middle section and replaces it with information about
-how many characters were cut out.
+\code{str_abbreviate} takes a string and whenever it is long, it cuts
+out the middle section and replaces it with information about how
+many characters were cut out.
 }
 \examples{
 let = collapse0(letters)

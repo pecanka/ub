@@ -1,8 +1,10 @@
+#' @title
 #' Type conversion
 #'
-#' Convert to type \code{numeric} without any warnings about non-numeric 
-#' elements. Non-numeric elements are turned into \code{NA}. Basically,
-#' a less verbose version of \code{base::as.numeric}.
+#' @description
+#' Convert to type `numeric` without any warnings about non-numeric 
+#' elements. Non-numeric elements are turned into `NA`. Basically, a 
+#' less verbose version of \code{base::as.numeric}.
 #'
 #' @examples
 #' as_numeric(c("1","2"))
@@ -17,14 +19,16 @@ as_numeric = function(x) {
   y
 }
 
+#' @title
 #' Type conversion
 #'
-#' Changes the type of \code{x} to \code{numeric} whenever all
-#' elements can be converted (using \code{as.numeric}. Otherwise,
-#' calls the function supplied in \code{on_error}. This allows
-#' a direct control of what happens on the conversion via supplying
-#' the error function. Basically, a more flexible (but by default 
-#' a more stringent) version of \code{base::as.numeric}.
+#' @description
+#' Changes the type of `x` to `numeric` whenever all elements can be 
+#' converted (using \code{base::as.numeric}. Otherwise, calls the 
+#' function supplied in `on_error`. This allows a direct control of what 
+#' happens on the conversion via supplying the error function. 
+#' Basically, a more flexible (but by default a more stringent) version 
+#' of \code{base::as.numeric()}.
 #'
 #' @examples
 #' make_numeric(c("1","2"))       # conversion works
@@ -44,11 +48,13 @@ make_numeric = function(x, convert=as.numeric, on_error=stop) {
   } else on_error("Cannot convert x to class 'numeric'.")
 }
 
+#' @title
 #' Force type conversion
 #'
-#' Convert to type integer (\code{force_as_integer}) or double 
-#' (\code{force_as_real)} by stripping all non-number substrings 
-#' in each element of \code{x}. 
+#' @description
+#' Convert to type integer (`force_as_integer()`) or double 
+#' (`force_as_real()`) by stripping all non-number substrings in each 
+#' element of `x`.
 #'
 #' This is a very radically forced conversion, which can be useful 
 #' when strange artefacts polluted the data, but caution is advised.
@@ -69,12 +75,25 @@ make_numeric = function(x, convert=as.numeric, on_error=stop) {
 #' @family numeric functions provided by utilbox
 #' @export
 force_as_integer = function(x, ignore_sign=TRUE, na_val) {
-  w = if(ignore_sign) rep(-1, length(x)) else regexpr(paste0('[-][0-9]'), x)
-  y = ifelse(w<0, gsub('[^0-9]*','',x),
-                  paste0('-',gsub('[^0-9]*','',substr(x,w+1,nchar(x)))))
+
+  w = if(ignore_sign) {
+    rep(FALSE, length(x)) 
+  } else {
+    grepl(paste0('[-][0-9]'), x)
+  }
+  
+  y = ifelse(!w, 
+             gsub('[^0-9]*','',x),
+             '-' %.% gsub('[^0-9]*','',substr(x,w+1,nchar(x))))
+                  
   y = as.integer(y)
-  if(!missing(na_val)) y[is.na(y)] = na_val
+  
+  if(!missing(na_val)) {
+    y[is.na(y)] = na_val
+  }
+  
   y
+  
 }
 
 #' @rdname force_as_
@@ -82,13 +101,23 @@ force_as_integer = function(x, ignore_sign=TRUE, na_val) {
 #' @family numeric functions provided by utilbox
 #' @export
 force_as_real = function(x, ignore_sign=TRUE, dec='.', dec_fixed=TRUE, na_val) {
-  w = regexpr(dec, x, fixed=dec_fixed)
-  lp = ifelse(w<0, force_as_integer(x, ignore_sign=ignore_sign, na_val='0'), 
-                   force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, na_val='0'))
-  rp = ifelse(w<0, 0, 
-                   force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
-  y = as.numeric(paste(lp,rp,sep='.'))
-  if(!missing(na_val)) y[is.na(y)] = na_val
+
+  w = grep(dec, x, fixed=dec_fixed)
+  
+  lp = ifelse(!w, 
+              force_as_integer(x, ignore_sign=ignore_sign, na_val='0'), 
+              force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, na_val='0'))
+                   
+  rp = ifelse(!w, 
+              0, 
+              force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
+              
+  y = as.numeric(lp %.% '.' %.% rp)
+  
+  if(!missing(na_val)) {
+    y[is.na(y)] = na_val
+  }
+  
   y
 }
 

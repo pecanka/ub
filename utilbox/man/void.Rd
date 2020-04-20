@@ -2,10 +2,12 @@
 % Please edit documentation in R/symbolic.R
 \name{void}
 \alias{void}
-\title{Empty-body functions}
+\title{These functions are useful when processing \code{\link{tidyverse}}-style
+functions.}
 \usage{
 void()
 }
 \description{
-These functions are useful when processing [tidyverse]-style functions.
+These functions are useful when processing \code{\link{tidyverse}}-style
+functions.
 }

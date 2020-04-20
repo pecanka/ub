@@ -7,7 +7,7 @@
 file_empty(file)
 }
 \description{
-`file_empty` checks if file exists, tries to read it to see 
+\code{file_empty} checks if file exists, tries to read it to see
 whether there is any data in it.
 }
 \seealso{

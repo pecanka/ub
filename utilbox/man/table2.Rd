@@ -7,7 +7,7 @@
 table2(..., obligate = NULL)
 }
 \description{
-Does the same thing as \code{base::table} but makes sure that the 
+Does the same thing as \code{base::table} but makes sure that the
 counts of values in \code{obligate} are included in the final table,
 although only if a tabulation of a single vector is performed.
 }

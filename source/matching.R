@@ -1,50 +1,75 @@
+#' @title
 #' Vectorized regular pattern matching
 #'
+#' @description
 #' Vectorized regular pattern matching, which takes multiple patterns.
 #'
+#' @rdname multi_grep
 #' @export
-vregexpr = Vectorize(base::regexpr)
+multi_grep = function(pattern, x, ..., workhorse=base::grepl) {
 
-#' Recursive string substitution
-#'
-#' Allows for multiple arguments in \code{what} and \code{with} which are replaced
-#' inside \code{where}. \code{what} and \code{with} are processed in parallel which
-#' means that they must have the same length or \code{with} must be of length 1. 
-#'
-#' \code{subm} leverages \code{base::sub}, while \code{gsubm} leverages \code{base::gsub}.
-#'
-#' @examples
-#' require(magrittr)
-#' subm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
-#' gsubm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
-#'
-#' @name subm
-#' @family string-manipulation functions provided by utilbox
-#' @export
-subm = function(x, what, with) {
-  multi_sub(x, what, with, workhorse=base::sub)
-}
-
-#' @rdname subm
-#' @family string-manipulation functions provided by utilbox
-#' @export
-gsubm = function(x, what, with) {
-  multi_sub(x, what, with, workhorse=base::gsub)
-}
-
-#' @rdname subm
-#' @family string-manipulation functions provided by utilbox
-#' @export
-multi_sub = function(x, what, with, workhorse=sub, ...) {
-  
-  if(length(what)==0) {
+  if(is_empty(x)) {
     return(x)
   }
   
-  if(length(with)==1) {
+  if(length(x)>1 && length(pattern) %nin% c(1,length(x)))
+    error("With 'x' non-scalar, 'pattern' must be a scalar or same length as 'x'.")
+
+  if(length(pattern)>1 && length(x) %nin% c(1,length(pattern)))
+    error("With 'pattern' non-scalar, 'x' must be a scalar or same length as 'pattern'.")
+    
+  n = max(length(x), length(pattern))
+  pattern = rep(pattern, length.out=n)
+  x = rep(x, length.out=n)
+  
+  sapply(seq_along(x), function(i) workhorse(pattern[i], x[i], ...))
+  
+}
+
+#' @rdname multi_grep
+#' @export
+grepm = function(pattern, x, ...) {
+
+  multi_grep(pattern, x, ..., workhorse=base::grep)
+  
+}
+
+#' @rdname multi_grep
+#' @export
+greplm = function(pattern, x, ...) {
+
+  multi_grep(pattern, x, ..., workhorse=base::grepl)
+  
+}
+
+#' @title
+#' Recursive string substitution
+#'
+#' @description
+#' Allows for multiple arguments in `what` and `with` which are 
+#' replaced inside `where`. `what` and `with` are processed in parallel 
+#' which means that they must have the same length or `with` must be of 
+#' length 1.
+#'
+#' `subm` leverages [`base::sub`], while `gsubm` leverages 
+#' [`base::gsub`].
+#'
+#' @examples
+#' subm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
+#' gsubm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
+#'
+#' @family string-manipulation functions provided by utilbox
+#' @export
+multi_sub = function(x, what, with, workhorse=base::sub, ...) {
+  
+  if(is_empty(what)) {
+    return(x)
+  }
+  
+  if(is_scalar(with)) {
     with = rep(with, length(what))
   }
-  if(length(what)==1) {
+  if(is_scalar(what)) {
     what = rep(what, length(with))
   }
   
@@ -55,38 +80,54 @@ multi_sub = function(x, what, with, workhorse=sub, ...) {
   Recall(y, what[-1], with[-1], workhorse=workhorse, ...)
   
 }
+#' @rdname multi_sub
+#' @export
+subm = function(x, what, with) {
+  multi_sub(x, what, with, workhorse=base::sub)
+}
 
-#' Substitution of \"@\" substrings
+#' @rdname multi_sub
+#' @export
+gsubm = function(x, what, with) {
+  multi_sub(x, what, with, workhorse=base::gsub)
+}
+
+
+#' @title
+#' Substitution of \"@\"-substrings
 #'
-#' `sub_at` and `gsub_at` perform the replacement of \"@-substrings\"
-#' inside a string `x`. \"@-substrings\" are strings that start with
-#' the character '@' (or the value supplied in `at`, more generally).
-#' The replacement of these substrings is governed by what follows the
-#' '@'. The string is then replaced (together with the '@') with the 
-#' values in the supplied arguments. The matching of the \"@-substrings\" 
-#' with the arguments can be controlled in three ways:
+#' @description
+#' `sub_at()` and `gsub_at()` perform the replacement of 
+#' \"@-substrings\" inside a string `x`. \"@-substrings\" are strings 
+#' that start with the character '@' (or the value supplied in `at`, 
+#' more generally). The replacement of these substrings is governed by 
+#' what follows the '@'. The string is then replaced (together with the 
+#' '@') with the values in the supplied arguments. The matching of the 
+#' \"@-substrings\" with the arguments can be controlled in three ways:
 
-#' 1. based on the name attributes of the argument when supplied as 
-#' named vectors or named lists (e.g. 
-#' `gsub_at(x, c(name='John', city='Prague'))`.
+#' @title
+#' 1. based on the name attributes of the argument when supplied as
+#' @description
+#' named vectors or named lists (e.g. `gsub_at(x, c(name='John', 
+#' city='Prague'))`.
 #'
 #' 2. as the actual arguments when supplied as named arguments (e.g. 
 #' `gsub_at(x, name='John', city='Prague')`).
 #'
-#' 3. from the symbols supplied in the function call 
-#' (e.g. `name='John'; city='Prague'; gsub_at(x, name, city)`).
+#' 3. from the symbols supplied in the function call (e.g. 
+#' `name='John'; city='Prague'; gsub_at(x, name, city)`).
 #'
 #' In principal, these methods can be combined (see examples below). 
-#' Furthermore, one can leverage a combination of naming arguments 
-#' and supplying named vectors/lists, where the names of the arguments
-#' and the names in the named vectors/lists are concatenated. Keep in
-#' mind that whenever the argument is a named vector/list, the names
-#' are concatenated with an added dot ('.'), while for unnamed vectors/lists
+#' Furthermore, one can leverage a combination of naming arguments and 
+#' supplying named vectors/lists, where the names of the arguments and 
+#' the names in the named vectors/lists are concatenated. Keep in mind 
+#' that whenever the argument is a named vector/list, the names are 
+#' concatenated with an added dot ('.'), while for unnamed vectors/lists 
 #' the concatenation happens without adding the dot.
 #'
-#' `substitute_at` is the general function which takes named vectors/lists 
-#' only and allows the specification of the workhorse function 
-#' (e.g. `sub`, `gsub`).
+#' `substitute_at()` is the general function which takes named 
+#' vectors/lists only and allows the specification of the workhorse 
+#' function (e.g. `sub`, `gsub`).
 #'
 #' @examples
 #' x = '@name lived in @city1 and @city2. @city2 became @whose home.'
@@ -130,18 +171,27 @@ substitute_at = function(x, sub_list, at='@', workhorse=subm) {
   workhorse(x, at %.% names(sub_list), sub_list)
 }
 
+#' @title
 #' Patternize a string
 #'
-#' `str_patternize` wraps special characters in string name (possibly a vector) by 
-#' brackets so that it can be matched within regular expression matching (the case of 
-#' "\\" has to be treated differently). Useful for instance when working with file names.
+#' @description
+#' `str_patternize()` wraps special characters in string name 
+#' (possibly a vector) by brackets so that it can be matched within 
+#' regular expression matching (the case of "\\" has to be treated 
+#' differently). Useful for instance when working with file names.
 #'
-#' `str_unpatternize` does the reverse of \code{patternize()}.
+#' `str_unpatternize()` does the reverse of `patternize()`.
+#'
+#' `str_escape()` escapes special characters in a string. By default, 
+#' it escapes only the new line symbol (e.g. replaces `\\n` with a 
+#' `\\\\n`).
 #'
 #' @examples
 #' regexpr('notes.txt', 'notes_txt')>0                # TRUE
 #' regexpr(str_patternize('notes.txt'), 'notes_txt')>0    # FALSE
 #' regexpr(str_patternize('notes.txt'), 'notes.txt')>0    # TRUE
+#'
+#' str_escape('\n')
 #'
 #' @name patternize
 #' @family string-manipulation functions provided by utilbox
@@ -169,13 +219,9 @@ str_unpatternize = function(pattern) {
 #' @export
 unpatternize = str_unpatternize
 
+#' @title
 #' Escape special characters
-#'
-#' Escapes special characters in a string. It replaces `\\n` with a `\\\\n`, etc.
-#'
-#' @examples
-#' str_escape('\n')
-#'
+#' @rdname patternize
 #' @export
 str_escape = function(x, specials=NULL, specials0 = c('\\n'='\\\\n')) {
 
@@ -187,7 +233,7 @@ str_escape = function(x, specials=NULL, specials0 = c('\\n'='\\\\n')) {
 
 }
 
-#' @rdname str_escape
+#' @rdname patternize
 #' @export
 str_unescape = function(x,  specials=NULL, specials0 = c('\\n'='\\\\n')) {
 

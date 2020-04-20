@@ -1,7 +1,9 @@
+#' @title
 #' Add all utilbox objects into Notepad++ highlighting
 #'
-#' Modifies the notepad language keyword groups in order
-#' for the utilbox objects to be highlighted by Notepad++.
+#' @description
+#' Modifies the notepad language keyword groups in order for the 
+#' utilbox objects to be highlighted by Notepad++.
 #'
 #' @export
 notepad_highlighting = function(keywords=NULL, field='type1', npp_path, npp_langs, backup=TRUE) {

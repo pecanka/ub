@@ -2,23 +2,21 @@
 % Please edit documentation in R/packages.R
 \name{apply_pckg}
 \alias{apply_pckg}
-\title{Apply function to an object in a package}
+\title{Apply function to an object in a package or environment}
 \usage{
-apply_pckg(
-  objs,
-  pckg,
-  f,
-  ...,
-  workhorse = sapply,
-  envir = getNamespace(pckg),
-  value_error = NA
-)
+apply_pckg(objs, pckg, f, ..., workhorse = sapply, value_error = NA)
 }
 \description{
-Applies function \code{f} to the object(s) whose names are in 
-\code{objs} and that are found in the package \code{pckg}. Useful
-for applying a function (e.g. \code{base::class}) to non-exported 
-objects inside a package.
+Applies function \code{f} to the object(s) whose names are in \code{objs}
+and that are found in \code{pckg}, which is primarily intended to be a
+package name (assume to be one when of class \code{character}), but can
+also be an environment. The elipsis (\code{...}) is supplied to the
+function \code{f}. \code{f} can have any number of arguments and only as many
+as it accepts are supplied to it (as determined via \code{\link{nformals}}).
+
+This function is useful for applying a function \code{f} (e.g.
+\code{\link[base:class]{base::class}}) to exported and/or non-exported objects inside a
+package as done for example by \code{\link{object_table}}.
 }
 \examples{
 apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
@@ -26,9 +24,6 @@ apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
 }
 \seealso{
 Other package-related functions provided by utilbox: 
-\code{\link{R_add_lib_startup}()},
-\code{\link{R_default_Rprofile_file}()},
-\code{\link{R_user_home}()},
 \code{\link{list_package}},
 \code{\link{llibrary}()},
 \code{\link{set_pkglib}()}

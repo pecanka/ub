@@ -7,12 +7,12 @@
 replace3(x, new_values, format)
 }
 \description{
-Replaces the values in \code{x} with \code{new_values} in the
-order of occurrence. If \code{new_values} is missing, it is
-set to the integers between 1 and the number of unique elements
-in \code{x}. Optionally, via the argument \code{format} a 
-function can be supplied which attempts to set the class of the
-output (e.g. \code{format=as.numeric}).
+\code{replace3()} replaces the values in \code{x} with \code{new_values} in the
+order of occurrence. If \code{new_values} is missing, it is set to the
+integers between 1 and the number of unique elements in \code{x}.
+Optionally, via the argument \code{format} a function can be supplied
+which attempts to set the class of the output (e.g.
+\code{format=as.numeric}).
 }
 \examples{
 x = c('b','b','aa','a','b','c','a')
@@ -25,7 +25,6 @@ replace3(x, c('bar','Aaron','and','Cuba'), format=as.numeric)  # produces a warn
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -33,20 +32,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

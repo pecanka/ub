@@ -7,7 +7,7 @@
 halt(error = "")
 }
 \description{
-Prints an error message and stops. The actual way of stopping, however,
-depends on whether the code is run in interactive or non-interactive
-modes
+Prints an error message and stops. The actual way of stopping,
+however, depends on whether the code is run in interactive or
+non-interactive modes
 }

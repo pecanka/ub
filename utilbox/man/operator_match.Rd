@@ -35,22 +35,23 @@ x \%notmatches\% pattern
 x \%nmes\% pattern
 }
 \description{
-`\%match\%` (alias `\%m\%`) is an operator version of [`base::regexpr`]. 
-It uses the left-hand side argument as the \code{pattern} and the right-hand 
-side argument as the \code{text} arguments of a call to \code{regexpr}. 
-The call to \code{regexpr} is vectorized, which means that the operator 
-also takes vector arguments (on either side).
-}
-\details{
-`\%mic\%` is a version of `\%m\%` which ignores case by default.
+\verb{\\\%match\\\%} (alias \verb{\\\%m\\\%}) is an operator version of
+\code{base::grepl}. It uses the left-hand side argument as the \code{pattern}
+and the right-hand side argument as the \code{text} arguments of a call to
+\code{base::grepl}. The call to \code{base::grepl} is vectorized,
+which means that the operator also takes vector arguments (on either
+side).
 
-\code{\%matches\%} does the same except with the roles of the two 
+\verb{\\\%mic\\\%} is a version of \verb{\\\%m\\\%} which ignores case by default.
+
+\code{\%matches\%} does the same except with the roles of the two
 arguments reversed.
 
-`\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias `\%nmes\%`) 
-are the negations of the two operators. 
+\verb{\\\%notmatch\%} (alias \verb{\\\%nm\\\%}) and \verb{\\\%notmatches\%} (alias
+\verb{\\\%nmes\\\%}) are the negations of the two operators.
 
-`\%nmic\%` is the case-insensitive version of `\%notmatch%` and `\%nm\%`.
+\verb{\\\%nmic\\\%} is the case-insensitive version of \verb{\\\%notmatch\%} and
+\verb{\\\%nm\\\%}.
 }
 \examples{
 # in one direction:

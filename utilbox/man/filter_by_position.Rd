@@ -17,15 +17,13 @@ nthr(x, n)
 nthmr(x, n)
 }
 \description{
-`nth` extracts the n-th element (single value) of an object 
-`x` (vector, list, etc.). It relies on `\`[[\`` for the
-extraction.
-}
-\details{
-`nthm` allows for multivariate input in `n`. It relies on 
-`\`[\`` for the extraction.
+\code{nth} extracts the n-th element (single value) of an object \code{x}
+(vector, list, etc.). It relies on \verb{\\}[[\`` for the extraction.
 
-`nthr` and `nthmr are the analogue of `nth` and `nthm` which 
+\code{nthm} allows for multivariate input in \code{n}. It relies on \verb{\\}[\``
+for the extraction.
+
+\code{nthr} and \verb{nthmr are the analogue of }nth\code{and}nthm` which
 determine index the position in reversed order.
 }
 \examples{
@@ -38,28 +36,21 @@ nthmr(1:10, 2:3)   # second and third from the end
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

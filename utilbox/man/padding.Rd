@@ -8,7 +8,7 @@
 \alias{spaces}
 \title{Format string}
 \usage{
-str_pad(x, min_width, side = c("left", "right"), padding = " ")
+str_pad(x, min_width, side = c("left", "right"), padding = " ", nextra = 0)
 
 int_pad(x, min_width, format, fmt = "d")
 
@@ -17,27 +17,27 @@ num_pad(x, min_nint, min_ndig = 6, fmt = "f", format)
 spaces(n, char = " ")
 }
 \description{
-`str_pad` pads to input to a given width (`width`).  It formats 
-the contents of `x` to a minimum width (character count) or other 
-specified format (via `format`). The minimum length is 
-easiest controlled via `min_width`. Non-character values are 
-converted to character using `base::as.character`.
-}
-\details{
-`int_pad` pads an integer with leading zeros.
+\code{str_pad} pads to input to a given width (\code{width}).  It formats
+the contents of \code{x} to a minimum width (character count) or other
+specified format (via \code{format}). The minimum length is easiest
+controlled via \code{min_width}. Non-character values are converted to
+character using \code{base::as.character}.
 
-`num_pad` pads a real/double with leading zeros.
+\code{int_pad} pads an integer with leading zeros.
 
-`spaces` produces an empty string of length `n`.
+\code{num_pad} pads a real/double with leading zeros.
 
-Note: Check out the function in `options()$str$formatNum` to see 
-how R formats numbers.
+\code{spaces} produces an empty string of length \code{n}.
+
+Check the function in \code{options()$str$formatNum} to see how R
+formats numbers.
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
@@ -46,13 +46,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

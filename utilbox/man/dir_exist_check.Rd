@@ -2,22 +2,67 @@
 % Please edit documentation in R/filesystem.R
 \name{dir_exist_check}
 \alias{dir_exist_check}
-\title{Directory existence check}
+\alias{file_exists}
+\alias{file_exists_check}
+\alias{file_exists_should}
+\alias{file_exists_must}
+\title{Check file/directory existence}
 \usage{
 dir_exist_check(dir, stop_if_fail = TRUE, create_on_missing = TRUE, trace = 1)
+
+file_exists(files, path, stop_on_missing = FALSE, warn_on_missing = TRUE)
+
+file_exists_check(
+  files,
+  path,
+  stop_on_missing = FALSE,
+  warn_on_missing = FALSE
+)
+
+file_exists_should(
+  files,
+  path,
+  stop_on_missing = FALSE,
+  warn_on_missing = TRUE
+)
+
+file_exists_must(files, path, stop_on_missing = TRUE, warn_on_missing = TRUE)
 }
 \description{
-Checks if directory \code{dir} exists (relative to the current working directory)
-and if not it tries to create it. On success the value supplied in \code{dir} is returned. 
-If directory creation fails, then an error is thrown unless \code{stop_if_fail=FALSE} 
-was supplied, in which case the value \code{./} is returned. Verboseness is controled
-via \code{trace} being set to 0 (no message) or otherwise.
+\code{dir_exist_check()} checks if directory \code{dir} exists (relative to
+the current working directory) and if not it tries to create it. On
+success the value supplied in \code{dir} is returned. If directory
+creation fails, then an error is thrown unless
+\code{stop_if_fail=FALSE} was supplied, in which case the value
+\verb{./} is returned. Verboseness is controled via \code{trace} being set
+to 0 (no message) or otherwise.
+
+\code{file_exists()} checks if a file or multiple files exist(s) relative to
+the path in \code{path}. If the existence check returns any \code{FALSE}, the
+behaviour depends on \code{stop_on_missing} and \code{warn_on_missing}. If the
+former is \code{TRUE}, an error is printed and the execution halts. If only
+the former is \code{TRUE}, a warning is shown but the execution continues.
+When both are \code{FALSE} no message is shown and a logical indicating
+each file's existence is returned.
+
+To achieve a clear distinction in code between what is expected in
+terms of existence, it is advised to use one of the three following
+aliases:
+
+\code{file_exists_checks()} shows no messages and only returns the
+logicals.
+
+\code{file_exists_should()} warns on any files missing but proceeds and
+returns the logicals.
+
+\code{file_exists_must()} is a strict checker that halts on any files
+missing.
 }
 \seealso{
 Other file system functions provided by utilbox: 
-\code{\link{dir_work}},
-\code{\link{file_exists}()},
-\code{\link{file_work}},
+\code{\link{dir_create}()},
+\code{\link{file_path}()},
+\code{\link{file_rename}()},
 \code{\link{list_files}()}
 }
 \concept{file system functions provided by utilbox}

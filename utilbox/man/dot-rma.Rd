@@ -7,11 +7,12 @@
 .rma(all.names = FALSE, keep = ".utilbox", envir = .GlobalEnv)
 }
 \description{
-Shorthand for removal of all objects (including hidden ones whose names start
-with a dot) from the environment in \code{envir} (\code{.GlobalEnv} by 
-default). This function is basically an alias for \code{rm(list=ls(envir=envir))}.
-}
-\details{
-Optionally, names of objects that should be excluded from removal can be supplied via \code{keep}.
+\code{.rma()} is a shorthand for removal of all objects (including
+hidden ones whose names start with a dot) from the environment in
+\code{envir} (\code{.GlobalEnv} by default). This function is basically an
+alias for \code{rm(list=ls(envir=envir))}.
+
+Optionally, names of objects that should be excluded from removal
+can be supplied via \code{keep}.
 }
 \concept{object listing, object loading and removing functions provided by utilbox}

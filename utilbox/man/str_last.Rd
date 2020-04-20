@@ -2,18 +2,20 @@
 % Please edit documentation in R/strings.R
 \name{str_last}
 \alias{str_last}
-\title{Last characters in a string}
+\title{Extract the last characters in a string}
 \usage{
 str_last(x, n = 1)
 }
 \description{
-Gets the last \code{n} characters from a string. Vectorized.
+\code{str_last()} gets the last \code{n} characters from a string.
+Vectorized.
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -22,13 +24,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_is_empty}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

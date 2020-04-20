@@ -1,19 +1,23 @@
+#' @title
 #' Show all available methods
 #'
-#' This is only an alias for [base::methods].
+#' @description
+#' This is an alias for [`utils::methods`].
 #'
 #' @export 
 all_methods = function(...) {
   methods(...)
 }
 
+#' @title
 #' Add class to the object's classes
 #'
-#' `add_class` adds the class specified in `what` as the 
-#' first among the classes of the object `x`. 
+#' @description
+#' `add_class()` adds the class specified in `what` as the first 
+#' among the classes of the object `x`.
 #'
-#' `drop_class` removes the specified class from the classes of 
-#' the given object.
+#' `drop_class()` removes the specified class from the classes of the 
+#' given object.
 #'
 #' @examples
 #' add_class(list(1:20), 'huge')
@@ -32,14 +36,16 @@ drop_class = function(x, class) {
   #`class<-`(x, class(x)[h1(which(class(x)!=class))])
 }
 
+#' @title
 #' Set class
 #'
-#' `set_class` attempts to set the class of `x` to `class` by calling
-#' `as.*` where `*` is substituted for the character value 
-#' in `class`.
+#' @description
+#' `set_class()` attempts to set the class of `x` to `class` by 
+#' calling `as.*` where `*` is substituted for the character value in 
+#' `class`.
 #'
-#' `has_class` checks if the class given in `class` is among the classes
-#' of `x`.
+#' `has_class()` checks if the class given in `class` is among the 
+#' classes of `x`.
 #'
 #' @examples
 #' set_class(1, 'character')
@@ -59,17 +65,19 @@ has_class = function(x, class) {
   #class %in% class(x)
 }
 
+#' @title
 #' Convert objects to class `huge`
 #'
-#' Class `huge` is intended to be used for objects with many elements which, 
-#' if all printed, would clutter the screen. With class `huge` 
-#' set, only a limited number of elements are actually printed.
-#' (extracted by [base::head]).
+#' @description
+#' Class `huge` is intended to be used for objects with many elements 
+#' which, if all printed, would clutter the screen. With class `huge` 
+#' set, only a limited number of elements are actually printed. 
+#' (extracted via [`base::head()`]).
 #'
-#' `is_huge` checks whether class \"`huge`\" is among the classes
-#' of the object in `x`.
+#' `is_huge()` checks whether class `huge` is among the classes of 
+#' the object in `x`.
 #'
-#' `as.huge` adds class \"`huge`\" as the first class of `x`. 
+#' `as.huge()` adds class `huge` as the first class of `x`.
 #'
 #' @examples
 #' as.huge(list(1:100))
@@ -169,9 +177,11 @@ print.huge.default = function(x, n, len, show_note=TRUE) {
 #  invisible(x)
 #}
 
+#' @title
 #' Methods for class truncated
 #'
-#' 
+#' @description
+#' `is_truncated()` checks whether and object is of class `truncated`.
 #'
 #' @name class_truncated
 #' @export
@@ -212,9 +222,12 @@ print.truncated = function(x) {
 
 }
 
+#' @title
 #' Methods for class \"`abbrevstr`\"
 #'
-#' 
+#' @description
+#' Printing method for class \"`abbrevstr`\", which extends 
+#' [`base::print`].
 #'
 #' @name class_abbrevstr
 #' @export

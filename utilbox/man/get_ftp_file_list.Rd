@@ -8,21 +8,14 @@ get_ftp_file_list(ftp)
 }
 \description{
 Gets a nice looking list of files present on an FTP server.
-}
-\details{
-The structure returned is dependent on the FTP site as there are
-various formats for directory listings dependent upon the server
-and the OS. you will need to play with this.
-have a look at the FTP with your browser first and adjust accordingly.
-some formats only return 4 columns.
 
-column 1: literal string first position mean file
-column 2: number 1
-column 3: owner
-column 4: group
-column 5: file size
-column 6: month
-column 7: day
-column 8: time (year)
-column 9: file name
+The structure returned is dependent on the FTP site as there are
+various formats for directory listings dependent upon the server and
+the OS. you will need to play with this. have a look at the FTP with
+your browser first and adjust accordingly. some formats only return 4
+columns.
+
+column 1: literal string first position mean file column 2: number
+1 column 3: owner column 4: group column 5: file size column 6: month
+column 7: day column 8: time (year) column 9: file name
 }

@@ -2,17 +2,24 @@
 % Please edit documentation in R/numchecks.R
 \name{is_number}
 \alias{is_number}
+\alias{is_scientific}
 \title{Check if a string contains a number}
 \usage{
 is_number(x, freduce = all, dec = ".", sep_thousand = "")
+
+is_scientific(x, freduce = all)
 }
 \description{
-Checks if the elements of a character vector contain numerical values. 
-The check is done by matching regular patterns against the supplied
-vector. The argument \code{freduce} expects a function-type object, 
-which is applied to the vector. Specifying of the decimal point and
-thousand separator is possible, although no checks on the sensibility
-of their positions within the character strings are performed.
+\code{is_number()} checks if the elements of a character vector contain
+numerical values. The check is done by matching regular patterns
+against the supplied vector. The argument \code{freduce} expects a
+function-type object, which is applied to the vector. Specifying of
+the decimal point and thousand separator is possible, although no
+checks on the sensibility of their positions within the character
+strings are performed.
+
+\code{is_scientific()} checks if 'x' is in scientific notation (e.g.
+1.234E5).
 }
 \examples{
 is_number('343')
@@ -20,21 +27,15 @@ is_number(c('343','x2'))
 is_number('3,443.0')
 is_number('343')
 
+is_scientific('100')
+is_scientific('1e2')
+
 }
 \seealso{
 Other check-performing functions provided by utilbox: 
 \code{\link{anyNonNA}()},
-\code{\link{drop_positive_negative}},
-\code{\link{is_all_same}()},
-\code{\link{is_decreasing}()},
-\code{\link{is_even}()},
-\code{\link{is_increasing}()},
-\code{\link{is_integer}()},
-\code{\link{is_na}()},
-\code{\link{is_odd}()},
-\code{\link{is_permutation}()},
-\code{\link{is_round}()},
-\code{\link{is_scientific}()},
-\code{\link{is_unique}()}
+\code{\link{extract_by_positiveness_negativeness}},
+\code{\link{numchecks}},
+\code{\link{rounding}}
 }
 \concept{check-performing functions provided by utilbox}

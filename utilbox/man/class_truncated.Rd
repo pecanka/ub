@@ -7,9 +7,7 @@
 \alias{[[.truncated}
 \alias{as.truncated.default}
 \alias{print.truncated}
-\title{rdname class_huge
-export
-Methods for class truncated}
+\title{Methods for class truncated}
 \usage{
 is_truncated(x)
 
@@ -22,7 +20,9 @@ as.truncated.default(x)
 \method{print}{truncated}(x)
 }
 \description{
+\code{is_truncated()} checks whether and object is of class \code{truncated}.
+}
+\details{
 rdname class_huge
 export
-Methods for class truncated
 }

@@ -2,17 +2,18 @@
 % Please edit documentation in R/strings.R
 \name{str_paste_grid}
 \alias{str_paste_grid}
-\title{Names for a list of combinations of vectors}
+\title{Grid pasting of strings}
 \usage{
 str_paste_grid(..., vars, sep1 = "=", sep2 = "_")
 }
 \description{
-Produces a concatenation of all possible combinations of elements in 
-in the supplied vectors.  for a list of combinations of vectors. Takes vectors with 
-parameter values and a vector of names and pastes them together in a 
-cartesian product way. Can be used to names the elements of a list
-which contains the results of a run of analysis for each combination 
-on a grid (cartesian product) of parameter combinations.
+\code{str_paste_grid()} produces a concatenation of all possible
+combinations of elements in in the supplied vectors.  for a list of
+combinations of vectors. Takes vectors with parameter values and a
+vector of names and pastes them together in a cartesian product way.
+Can be used to names the elements of a list which contains the
+results of a run of analysis for each combination on a grid
+(cartesian product) of parameter combinations.
 }
 \examples{
 cities = c("Prague","London")
@@ -41,6 +42,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -49,13 +51,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_is_empty}()},
 \code{\link{str_last}()},
 \code{\link{str_pos}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

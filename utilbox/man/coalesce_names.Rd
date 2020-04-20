@@ -7,22 +7,21 @@
 coalesce_names(x, y)
 }
 \description{
-`coalesce_names` fills in the missing (zero-length) 
-names in `x` with the corresponding names in `y`.
-}
-\details{
-`unempty_names` works similarly except it takes
-directly (through `names`) the vector names from which 
-to source the replacements for the missing names in `x`.
+\code{coalesce_names()} fills in the missing (zero-length) names in \code{x}
+with the corresponding names in \code{y}.
 
-`is_names_empty` checks for empty names. For an object
-without `names` (i.e. when `names(x)` returns `NULL`)
-it returns a vector of `FALSE` of the same length as `x`. 
+\code{unempty_names()} works similarly except it takes directly
+(through \code{names}) the vector names from which to source the
+replacements for the missing names in \code{x}.
 
-`has_any_names` is an alias for `!is.null(names(x))`.
+\code{is_names_empty()} checks for empty names. For an object without
+\code{names} (i.e. when \code{names(x)} returns \code{NULL}) it returns a vector of
+\code{FALSE} of the same length as \code{x}.
 
-`has_all_names` checks that `x` has any names and that 
-all those names are non-empty strings.
+\code{has_any_names()} is an alias for \code{!is.null(names(x))}.
+
+\code{has_all_names()} checks that \code{x} has any names and that all those
+names are non-empty strings.
 }
 \examples{
 x = c(a=1, b=2, 3, d=4)

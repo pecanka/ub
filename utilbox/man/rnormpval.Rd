@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulation.R
 \name{rnormpval}
 \alias{rnormpval}
-\title{Draw a normal distribution p-value}
+\title{Draw random sample of p-values under the normal distribution}
 \usage{
 rnormpval(
   M,
@@ -15,6 +15,7 @@ rnormpval(
 )
 }
 \description{
-Draws a random sample of p-values relative to the normal distribution with 
-parameters \code{m} (mean) and \code{s} (standard deviation).
+\code{rnormpval()} draws a random sample of size \code{M} of p-values
+relative to the normal distribution with parameters \code{m} (mean) and
+\code{s} (standard deviation).
 }

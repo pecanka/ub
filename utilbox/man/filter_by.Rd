@@ -4,6 +4,7 @@
 \alias{filter_by}
 \alias{filter_by_value}
 \alias{filter_by_value.default}
+\alias{filter_by_pattern}
 \alias{filter_by_name}
 \alias{filter_by_bool}
 \alias{filter_by_call}
@@ -13,6 +14,8 @@ filter_by_value(...)
 
 \method{filter_by_value}{default}(x, pattern, fixed = FALSE, exclude = FALSE)
 
+filter_by_pattern(x, pattern, fixed = FALSE, exclude = FALSE)
+
 filter_by_name(x, pattern, fixed = FALSE, exclude = FALSE)
 
 filter_by_bool(x, keep, exclude = FALSE)
@@ -20,24 +23,25 @@ filter_by_bool(x, keep, exclude = FALSE)
 filter_by_call(...)
 }
 \description{
-`filter_by_value` filters `x` based on whether its
-values match the pattern in `pattern`.
-}
-\details{
-`filter_by_name` filters `x` based on whether its
-names match the pattern in `pattern`.
+\code{filter_by_value} filters \code{x} based on whether its values match
+contain \code{pattern} as substring (fixed pattern matching).
 
-`filter_by_bool` filters `x` according to logical
-values in `keep`. It is just an alias for `x[keep]`.
+\code{filter_by_pattern} filters \code{x} based on whether its values match
+the pattern in \code{pattern} (regular pattern matching).
 
-`filter_by_call` filters an object (`x`) based on whether the
-results of a function (call given in `call`) match the pattern 
-in `pattern`. The `call` argument can be
-a standard R function (class `function`) or a symbolic
-`tidyverse`-style representation of a function, which uses the 
-formula sign \code{~} to represent a function with a single argument 
-\code{.x} and which is evaluated with \code{x} supplied to it as 
-the argument \code{.x}.
+\code{filter_by_name} filters \code{x} based on whether its names match the
+pattern in \code{pattern}.
+
+\code{filter_by_bool} filters \code{x} according to logical values in
+\code{keep}. It is just an alias for \verb{x[}keep\verb{]}.
+
+\code{filter_by_call} filters an object (\code{x}) based on whether the
+results of a function (call given in \code{call}) match the pattern in
+\code{pattern}. The \code{call} argument can be a standard R function (class
+\code{function}) or a symbolic \code{tidyverse}-style representation of a
+function, which uses the formula sign \code{~} to represent a
+function with a single argument \code{.x} and which is evaluated with \code{x}
+supplied to it as the argument \code{.x}.
 }
 \examples{
 v = c(first='hello',second='amsterdam')
@@ -56,28 +60,21 @@ filter_by_call(1:10, ~.x<5)
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
+\code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
-\code{\link{unname_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

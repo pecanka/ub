@@ -7,9 +7,9 @@
 setwd2(dir, create = TRUE, ask = TRUE, dir2 = "")
 }
 \description{
-A version of \code{setwd} which attempts to create the given path when it 
-does not exist. Unlike \code{setwd}, which throws an error when no path is 
-supplied, \code{setwd2} with missing path argument sets the working directory 
-to the output of \code{script_dir}. Additionally, it also takes the argument 
-\code{dir2} whose value is appended to the path being set.
+A version of \code{setwd} which attempts to create the given path when
+it does not exist. Unlike \code{setwd}, which throws an error when no path
+is supplied, \code{setwd2} with missing path argument sets the working
+directory to the output of \code{script_dir}. Additionally, it also takes
+the argument \code{dir2} whose value is appended to the path being set.
 }

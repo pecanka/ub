@@ -7,8 +7,8 @@
 anyNonNA(x, rowwise = TRUE)
 }
 \description{
-Check whether a row of \code{x} contains at least one non-NA value. Works for vectors
-and 2-arrays.
+\code{anyNonNA()} checks whether a row of \code{x} contains at least one
+non-NA value. Works for vectors and 2-arrays.
 }
 \examples{
 x = rbind(c(1,NA),c(NA,NA)); anyNonNA(x)
@@ -16,18 +16,9 @@ x = rbind(c(1,NA),c(NA,NA)); anyNonNA(x)
 }
 \seealso{
 Other check-performing functions provided by utilbox: 
-\code{\link{drop_positive_negative}},
-\code{\link{is_all_same}()},
-\code{\link{is_decreasing}()},
-\code{\link{is_even}()},
-\code{\link{is_increasing}()},
-\code{\link{is_integer}()},
-\code{\link{is_na}()},
+\code{\link{extract_by_positiveness_negativeness}},
 \code{\link{is_number}()},
-\code{\link{is_odd}()},
-\code{\link{is_permutation}()},
-\code{\link{is_round}()},
-\code{\link{is_scientific}()},
-\code{\link{is_unique}()}
+\code{\link{numchecks}},
+\code{\link{rounding}}
 }
 \concept{check-performing functions provided by utilbox}

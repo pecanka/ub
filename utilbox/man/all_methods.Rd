@@ -7,5 +7,5 @@
 all_methods(...)
 }
 \description{
-This is only an alias for [base::methods].
+This is an alias for \code{\link[utils:methods]{utils::methods}}.
 }

@@ -1,7 +1,9 @@
+#' @title
 #' Repeat object
 #'
-#' An upgraded version of \code{rep}. Allows for different number 
-#' of occurrences for each value supplied in the first argument.
+#' @description
+#' An upgraded version of `rep`. Allows for different number of 
+#' occurrences for each value supplied in the first argument.
 #'
 #' @examples
 #' rep2(c('a','b'), e=3:4)

@@ -7,6 +7,6 @@
 script_dir()
 }
 \description{
-\code{script_dir} returns the directory of the script file from 
-which it is called (via \code{source}).
+\code{script_dir} returns the directory of the script file from which
+it is called (via \code{source}).
 }

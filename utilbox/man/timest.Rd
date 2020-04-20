@@ -7,8 +7,8 @@
 timest(add_time = TRUE, add_pid = TRUE, format = "\%Y\%b\%d\%H\%M\%S")
 }
 \description{
-Generates a "unique" stamp based on the current system time and 
-the R process system ID.
+\code{timest()} generates a "unique" stamp based on the current system
+time and the R process system ID.
 }
 \examples{
 timest()
@@ -18,14 +18,14 @@ timest(format="\%Y\%m\%d\%H\%M\%S")
 }
 \seealso{
 Other system-related functions provided by utilbox: 
-\code{\link{.q}()},
+\code{\link{R_defaults}},
 \code{\link{R_gui_adjust}()},
 \code{\link{R_session_info}()},
-\code{\link{R_system_call_args}()},
 \code{\link{append_system_PATH}()},
-\code{\link{code_startup}},
 \code{\link{environment_variables}},
 \code{\link{get_system_PATH}()},
-\code{\link{is_win}()}
+\code{\link{is_win}()},
+\code{\link{pause}},
+\code{\link{stopping_control}}
 }
 \concept{system-related functions provided by utilbox}

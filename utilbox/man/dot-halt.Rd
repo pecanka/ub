@@ -7,6 +7,6 @@
 .halt()
 }
 \description{
-A different way of stopping the execution. Intended to be called by halt but the behavior
-wasn't as hoped/expected. Abandoned for now.
+A different way of stopping the execution. Intended to be called
+by halt but the behavior wasn't as hoped/expected. Abandoned for now.
 }

@@ -1,10 +1,13 @@
 
+#' @title
 #' Not-in-set operator
 #'
-#' Logical negation of the value matching operator \code{\%in\%}. The operator 
-#' \code{\%notin\%} (just like its alias \code{\%notin\%}) returns \code{TRUE} 
-#' for all elements of the first argument that are not contained among the
-#' elements of the second argument, and \code{FALSE} otherwise.
+#' @description
+#' Logical negation of the value matching operator \code{\%in\%}. The 
+#' operator \code{\%notin\%} (just like its alias \code{\%notin\%}) 
+#' returns `TRUE` for all elements of the first argument that are not 
+#' contained among the elements of the second argument, and `FALSE` 
+#' otherwise.
 #'
 #' @examples
 #' 1 %notin% 1:3
@@ -13,7 +16,10 @@
 #' @name not_in
 #' @family operators provided by utilbox
 #' @export
-`%notin%` = Negate(`%in%`)
+`%notin%` = function(...) {
+  !`%in%`(...)
+}
+#`%notin%` = Negate(`%in%`)
 
 #`%notin%` = function(a, b) {
 #  !(base::`%in%`(a, b))
@@ -23,10 +29,12 @@
 #' @export
 `%nin%` = `%notin%`
 
+#' @title
 #' Any-in-set operator
 #'
-#' Similar to the 'in-set' operator except the return value is
-#' reduced to a scalar via \code{any}.
+#' @description
+#' Similar to the 'in-set' operator except the return value is 
+#' reduced to a scalar via `any`.
 #'
 #' @examples
 #' 0:1 %anyin% 1:10
@@ -37,19 +45,22 @@
   any(`%in%`(x, table))
 }
 
+#' @title
 #' Concatenation operators
 #'
-#' Concatenation operators, which are aliases for `base::paste`. 
+#' @description
+#' Concatenation operators, which are aliases for `base::paste`.
 #'
 #' \code{\%.\%} is an operator versions of \code{base::paste0}.
 #'
 #' \code{\%..\%} is an operator versions of \code{base::paste}.
 #'
-#' \code{\%_\%} is an operator versions of \code{base::paste} with
+#' \code{\%_\%} is an operator versions of \code{base::paste} with 
 #' `sep='_'`.
 #'
-#' \code{\%__\%} is an operator versions of \code{base::paste} with
-#' `sep='_'` and which takes symbols as arguments (see the examples below).
+#' \code{\%__\%} is an operator versions of \code{base::paste} with 
+#' `sep='_'` and which takes symbols as arguments (see the examples 
+#' below).
 #'
 #' @name concatenate
 #' @examples
@@ -85,23 +96,27 @@
   do.call("paste", append(strings, list(sep=sep)))
 }
   
+#' @title
 #' Regular expression match operator
 #'
-#' `\%match\%` (alias `\%m\%`) is an operator version of [`base::regexpr`]. 
-#' It uses the left-hand side argument as the \code{pattern} and the right-hand 
-#' side argument as the \code{text} arguments of a call to \code{regexpr}. 
-#' The call to \code{regexpr} is vectorized, which means that the operator 
-#' also takes vector arguments (on either side).
+#' @description
+#' `\%match\%` (alias `\%m\%`) is an operator version of 
+#' `base::grepl`. It uses the left-hand side argument as the `pattern` 
+#' and the right-hand side argument as the `text` arguments of a call to 
+#' `base::grepl`. The call to `base::grepl` is vectorized, 
+#' which means that the operator also takes vector arguments (on either 
+#' side).
 #'
 #' `\%mic\%` is a version of `\%m\%` which ignores case by default.
 #'
 #' \code{\%matches\%} does the same except with the roles of the two 
 #' arguments reversed.
 #'
-#' `\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias `\%nmes\%`) 
-#' are the negations of the two operators. 
+#' `\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias 
+#' `\%nmes\%`) are the negations of the two operators.
 #'
-#' `\%nmic\%` is the case-insensitive version of `\%notmatch%` and `\%nm\%`.
+#' `\%nmic\%` is the case-insensitive version of `\%notmatch%` and 
+#' `\%nm\%`.
 #'
 #' @examples
 #' # in one direction:
@@ -121,10 +136,7 @@
 #' @name operator_match
 #' @family operators provided by utilbox
 #' @export
-`%match%` = function(pattern, x, exclude=FALSE, fixed=FALSE, ignore.case=FALSE) {
-  is_match = unname(unlist(vregexpr(pattern, x, fixed=fixed, ignore.case=ignore.case) > 0))
-  if(exclude) !is_match else is_match
-}
+`%match%` = greplm
 
 #' @rdname operator_match
 #' @export
@@ -132,11 +144,20 @@
 
 #' @rdname operator_match
 #' @export
-`%mic%` = hijack(`%match%`, ignore.case=TRUE)
+`%mic%` = function(pattern, x, ...) {
+  greplm(pattern, x, ignore.case=TRUE, ...)
+}
+#`%mic%` = `%match%`
+#base::formals(`%mic%`)[['ignore.case']] = TRUE
 
 #' @rdname operator_match 
 #' @export
-`%notmatch%` = hijack(`%match%`, exclude=TRUE)
+`%notmatch%` = function(pattern, x, ...) {
+  !greplm(pattern, x, ...)
+}
+#`%notmatch%` = `%match%`
+#base::formals(`%notmatch%`)[['exclude']] = TRUE
+#`%notmatch%` = hijack(`%match%`, exclude=TRUE)
 #`%notmatch%` = Negate(`%match%`)
 
 #' @rdname operator_match
@@ -145,12 +166,17 @@
 
 #' @rdname operator_match
 #' @export
-`%nmic%` = hijack(`%notmatch%`, ignore.case=TRUE)
+`%nmic%` = function(pattern, x, ...) {
+  !greplm(pattern, x, ignore.case=TRUE, ...)
+}
+#`%nmic%` = `%notmatch%`
+#base::formals(`%nmic%`)[['ignore.case']] = TRUE
+#`%nmic%` = hijack(`%notmatch%`, ignore.case=TRUE)
 
 #' @rdname operator_match 
 #' @export
-`%matches%` = function(x, pattern, exclude=FALSE, fixed=FALSE, ignore.case=FALSE) {
-  `%match%`(pattern, x, exclude=exclude, fixed=fixed, ignore.case=ignore.case)
+`%matches%` = function(x, pattern, ...) {
+  greplm(pattern, x, ...)
 }
 
 #' @rdname operator_match
@@ -159,28 +185,35 @@
 
 #' @rdname operator_match 
 #' @export
-`%notmatches%` = hijack(`%matches%`, exclude=TRUE)
+`%notmatches%` = function(x, pattern, ...) {
+  !greplm(pattern, x, ...)
+}
+#`%notmatches%` = `%matches%`
+#base::formals(`%notmatches%`)[['exclude']] = TRUE
+#`%notmatches%` = hijack(`%matches%`, exclude=TRUE)
 #`%notmatches%` = Negate(`%matches%`)
 
 #' @rdname operator_match
 #' @export
 `%nmes%` = `%notmatches%`
 
+#' @title
 #' Default value for NULL and zero-length objects
 #'
-#' `\%|||\%` is intented to be equivalent "\code{\%||\%}" operator in the 
-#' package \code{rlang}, but named differently as not to clash with it.
+#' @description
+#' `\%|||\%` is intented to be equivalent "\code{\%||\%}" operator in 
+#' the package `rlang`, but named differently as not to clash with it.
 #'
 #' `\%||||\%` extends this behavior to all zero-length objects.
 #'
 #' `\%|||||\%` extends this behavior further to include empty strings.
 #'
-#' `\%NA\%` is an operator version of `ifelse(is.na(x), y, x), which
+#' `\%NA\%` is an operator version of `ifelse(is.na(x), y, x), which 
 #' allows input of various types (vectors, lists, closures, etc.).
 #'
-#' `\%ERR\%` works analogously except that it checks for class `try-error`.
-#' If its first argument is of class `try-error` it returns its second
-#' argument (`y`). Otherwise it returns the first (`x`).
+#' `\%ERR\%` works analogously except that it checks for class 
+#' `try-error`. If its first argument is of class `try-error` it returns 
+#' its second argument (`y`). Otherwise it returns the first (`x`).
 #'
 #' @name operator_NULL
 #' @examples
@@ -219,14 +252,16 @@
   if(is_error(x)) y else x
 }
 
+#' @title
 #' Renaming operators
 #'
-#' Operators that change the name of an object by reassigning the value from 
-#' its left-hand side (for \code{\%->\%}) or right-hand side (for 
-#' \code{\%->\%}) and assigning the value to the variable on the other
-#' side, thus effectively performing renaming of an object.
+#' @description
+#' Operators that change the name of an object by reassigning the 
+#' value from its left-hand side (for \code{\%->\%}) or right-hand side 
+#' (for \code{\%->\%}) and assigning the value to the variable on the 
+#' other side, thus effectively performing renaming of an object.
 #'
-#' @return The value originally found in \code{from}.
+#' @return The value originally found in `from`.
 #'
 #' @name renaming_operators
 #' @examples
@@ -249,10 +284,12 @@
 #' @export
 `%<-%` = `body<-`(function(to, from, envir=parent.frame()) { }, value=body(`%->%`))
 
+#' @title
 #' Append operator
 #'
-#' Append one object to another via [base::append]. `\%append\%`
-#' appends the right-hand argument to the left-hand side, while
+#' @description
+#' Append one object to another via [`base::append`]. `\%append\%` 
+#' appends the right-hand argument to the left-hand side, while 
 #' `\%appendR\%` appends in the reverse order.
 #'
 #' @returns A list.
@@ -282,9 +319,11 @@
 #' @export
 `%apR%` = `%appendR%`
 
+#' @title
 #' Append operator
 #'
-#' Append one object to another via [base::c].
+#' @description
+#' Append one object to another via [`base::c`].
 #'
 #' @examples
 #' 1:10 %c% 11:15
@@ -302,11 +341,13 @@
   c(x, y)
 }
 
+#' @title
 #' List modify operator
 #'
-#' Merges two list together while updating the elements of the
-#' first list with the elements of the second list for the
-#' elements found in both lists.
+#' @description
+#' Merges two list together while updating the elements of the first 
+#' list with the elements of the second list for the elements found in 
+#' both lists.
 #'
 #' @examples
 #' list(a=1, b=2) %modify% list(b=3, c=4)

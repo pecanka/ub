@@ -7,7 +7,7 @@
 ifelsem(test, yes, no, simplify = FALSE, do_not_recycle_no = FALSE)
 }
 \description{
-`ifelsem` is an extension of [base::ifelse] which allows non-scalar
-response. It returns a list. An attempt at simplifying the response
-is made when `simplify=TRUE`.
+\code{ifelsem} is an extension of \code{\link[base:ifelse]{base::ifelse}} which allows
+non-scalar response. It returns a list. An attempt at simplifying the
+response is made when \code{simplify=TRUE}.
 }

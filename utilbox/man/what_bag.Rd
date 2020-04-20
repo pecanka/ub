@@ -7,10 +7,9 @@
 what_bag(x, bagsize = 20)
 }
 \description{
-"Puts" the elements of \code{x} into virtual bags each of size 
-\code{bagsize}, starting from bag labelled \"1\", then bag 
-labeled \"2\", and so on, and returns which bag each element 
-ended up in.
+"Puts" the elements of \code{x} into virtual bags each of size
+\code{bagsize}, starting from bag labelled \"1\", then bag labeled \"2\",
+and so on, and returns which bag each element ended up in.
 }
 \examples{
 what_bag(1:40)
@@ -20,7 +19,6 @@ what_bag(1:90, 25)
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{as_factor}()},
-\code{\link{dim_check}},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -28,20 +26,14 @@ Other sequence-related functions provided by utilbox:
 \code{\link{h1}()},
 \code{\link{insert}()},
 \code{\link{is_between}()},
-\code{\link{is_empty}()},
 \code{\link{is_run}},
 \code{\link{last_element}()},
-\code{\link{midpoints}()},
-\code{\link{nunique}()},
-\code{\link{or_between}()},
 \code{\link{rep2}()},
 \code{\link{replace2}()},
 \code{\link{replace3}()},
 \code{\link{seq2}()},
 \code{\link{seq_around}()},
-\code{\link{setdiffsym}()},
-\code{\link{shift}()},
-\code{\link{split_into_groups}()},
-\code{\link{unname_factor}()}
+\code{\link{sizechecks}},
+\code{\link{split_into_groups}()}
 }
 \concept{sequence-related functions provided by utilbox}

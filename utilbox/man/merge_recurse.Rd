@@ -7,9 +7,9 @@
 merge_recurse(dfs, ...)
 }
 \description{
-This does a recursive merge of lists. The code is taken from the package 
-reshape and modified to fix the bug in it. The bug was the missing ellipsis 
-in the call to \code{Recall()}.
+This does a recursive merge of lists. The code is taken from the
+package reshape and modified to fix the bug in it. The bug was the
+missing ellipsis in the call to \code{Recall()}.
 }
 \seealso{
 Other list utilities provided by utilbox: 

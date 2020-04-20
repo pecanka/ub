@@ -18,23 +18,21 @@ str_pos(
 
 str_first_occurence(x, what, miss = -1)
 
-str_last_occurence(x, what, miss = -1)
+str_last_occurence(x, what, miss = -1, escape = TRUE)
 }
 \description{
-`str_pos` finds the first (when `first=TRUE`) and/or the last 
-(`last=TRUE`) occurrence of a substring (given as regular pattern) 
-in a string.
-`str_first_occurence` returns the position of the first
-occurrence of `what` inside `x`, or the value in `miss`
-(-1 by default) if none find. It is functionally similar 
-to `str_pos(..., first=TRUE)` except that it escapes (via 
-[str_escape]) the substring in `what` first, allows a custom
-missingness indicator (`miss`) and is slightly faster.
-}
-\details{
-`str_last_occurence` is analogous to `str_first_occurence`
-except that it returns the position of the last occurrence
-of `what`
+\code{str_pos} finds the first (when \code{first=TRUE}) and/or the last
+(\code{last=TRUE}) occurrence of a substring (given as regular pattern) in
+a string.
+
+\code{str_first_occurence} returns the position of the first occurrence
+of \code{what} inside \code{x}, or the value in \code{miss} (-1 by default) if none
+find. It is functionally similar to \code{str_pos(..., first=TRUE)} except
+that it escapes (via \code{\link{str_escape}}) the substring in \code{what} first,
+allows a custom missingness indicator (\code{miss}) and is slightly faster.
+
+\code{str_last_occurence} is analogous to \code{str_first_occurence} except
+that it returns the position of the last occurrence of \code{what}
 }
 \examples{
 str_pos('hello world.', 'o', first=TRUE)
@@ -52,6 +50,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{ascii}()},
 \code{\link{collapse}()},
 \code{\link{cumpaste0}()},
+\code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
 \code{\link{str_add_punct}()},
@@ -60,13 +59,11 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_is_empty}()},
 \code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
-\code{\link{str_replace}()},
+\code{\link{str_rev}()},
 \code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
-\code{\link{strrev}()},
 \code{\link{sub_at}()},
-\code{\link{subm}()},
 \code{\link{toupperfirst}()}
 }
 \concept{string-manipulation functions provided by utilbox}

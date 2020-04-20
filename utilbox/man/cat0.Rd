@@ -4,6 +4,11 @@
 \alias{cat0}
 \alias{catn}
 \alias{catnn}
+\alias{msg}
+\alias{warn}
+\alias{note}
+\alias{.fc}
+\alias{flush_console}
 \title{Print text}
 \usage{
 cat0(
@@ -29,30 +34,55 @@ catn(
   eol = "\\n"
 )
 
-catnn(
+catnn(..., sep = "\\n", fill = TRUE)
+
+msg(
+  t,
   ...,
-  file = "",
-  sep = "\\n",
-  fill = TRUE,
-  labels = NULL,
-  append = FALSE,
-  eol = "\\n"
+  lead = "",
+  sep = "",
+  quit = FALSE,
+  wait = FALSE,
+  skip1 = 0,
+  skip2 = 0,
+  flush = TRUE
 )
+
+warn(..., skip1 = 1, skip2 = 1)
+
+note(...)
+
+.fc()
+
+flush_console(flush = TRUE, flush_cycle = 1, envir = utilbox_environment())
 }
 \description{
-Prints text to console or file via [base::cat]. Allows for optional
-}
-\details{
-`cat0` is basically an alias for [base::cat] that automatically 
-flushes the console buffer (when `flush=TRUE`). This only affects 
-buffered output enabled R sessions (e.g. Rgui on Windows)
+\code{cat0()} prints text to console or file via \code{\link[base:cat]{base::cat()}}. It is
+basically an alias for \code{\link[base:cat]{base::cat()}} that automatically flushes the
+console buffer (when \code{flush=TRUE}). This only affects buffered output
+enabled R sessions (e.g. Rgui on Windows)
 
-`catn` is an alias for `cat0` which in the default setting adds 
-a single end-of-line symbol (specified in `eol`, which `\\n` by
+\code{catn()} is an alias for \code{cat0()} which in the default setting
+adds a single end-of-line symbol (specified in \code{eol}, which \verb{\\\\n} by
 default) at the end of the strings.
 
-`catnn` extends `catn` to also use `eol` as the default value for 
-`sep`.
+\code{catnn()} extends \code{catn} to also use \code{eol} as the default value
+for \code{sep}.
 
 All of these allow a smart way of flushing the console.
+
+\code{msg()} prints a message and either stops execution or waits
+depending on arguments.
+
+\code{warn()} is an alias for \code{msg()} which appends the string
+\"WARNING\" to the printed message.
+
+\code{note()} prints a note and a request to wait (optional).
+
+\code{.fc()} is an alias for \code{\link[utils:flush.console]{utils::flush.console()}}.
+
+\code{flush_console()} is a more flexible way of flushing the console.
+It allows to flush only on every n-th print, where n is set by the
+value in \code{flush_cycle}.
 }
+\concept{printing function provided by utilbox}

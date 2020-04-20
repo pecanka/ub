@@ -7,5 +7,5 @@
 acor(x, lag = 1)
 }
 \description{
-Calculates autocorrelation of x with given lag
+Calculates the autocorrelation of \code{x} with given \code{lag}.
 }

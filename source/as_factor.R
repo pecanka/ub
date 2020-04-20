@@ -1,11 +1,18 @@
-#' Convert to factor
+#' @title
+#' Convert to factor and back
 #'
-#' Convert a vector to factor with levels determined by order of
-#' appearance, without sorting of levels (which \code{as.factor} 
-#' does).
+#' @description
+#' `as_factor()` converts a vector to class `factor` with levels 
+#' determined by order of appearance and \strong{without} sorting of 
+#' levels (unlike \code{base::as.factor}).
+#'
+#' `unname_factor()` removes the type factor produced by 
+#' `as_factor()`.
 #'
 #' @examples
 #' as_factor(c('Germany','Italy','Czechia'))
+#'
+#' unfactor(as_factor(c('Germany','Italy','Czechia')))
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
@@ -13,14 +20,7 @@ as_factor = function(x, ordered=FALSE) {
   factor(groups_of_unique(x), labels=unique(x), ordered=ordered)
 }
 
-#' Convert a factor to numerical
-#'
-#' Removes the type factor produced by \code{as_factor}.
-#'
-#' @examples
-#' unfactor(as_factor(c('Germany','Italy','Czechia')))
-#'
-#' @family sequence-related functions provided by utilbox
+#' @rdname as_factor
 #' @export
 unname_factor = function(x) {
   levels(x) = 1:nlevels(x)

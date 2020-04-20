@@ -7,9 +7,9 @@
 Colors(n = 20, skip = 0, randomize = FALSE, reverse = FALSE)
 }
 \description{
-Returns a list of \code{n} interesting and contrasting colors (at 
-least as far as neighbours go). Up to 100 unique colors. For 
-\code{n} above 100 the colors are recycled in a loop.
+Returns a list of \code{n} interesting and contrasting colors (at least
+as far as neighbours go). Up to 100 unique colors. For \code{n} above 100
+the colors are recycled in a loop.
 }
 \examples{
 Colors(1)                         # gives 1 (the first) color

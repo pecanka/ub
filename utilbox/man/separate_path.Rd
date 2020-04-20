@@ -7,8 +7,8 @@
 separate_path(files, path0 = "./")
 }
 \description{
-Separates the path portions from file names. Returns the paths and the proper
-file names in a list.
+Separates the path portions from file names. Returns the paths and
+the proper file names in a list.
 }
 \examples{
 separate_path("c:/Windows/system.dat")

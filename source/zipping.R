@@ -1,19 +1,21 @@
+#' @title
 #' Lists files in a zip archive
 #'
-#' Lists files within a zip archive that match the supplied regular expression
-#' pattern or patterns. Keeps only files that match at least one of the patterns
-#' in \code{pattern} or those that do not match any of the patterns when 
-#' \code{exclude} is \code{TRUE}.
+#' @description
+#' Lists files within a zip archive that match the supplied regular 
+#' expression pattern or patterns. Keeps only files that match at least 
+#' one of the patterns in `pattern` or those that do not match any of 
+#' the patterns when `exclude` is `TRUE`.
 #'
 #' @param zip Name of the zip archive(s) to read files from
-#' @param pattern Regular expression pattern(s) against which the discovered  
-#'                file names are matched
-#' @param exclude If \code{TRUE}, the pattern is used to exclude the discovered
-#'                files, otherwise files that match \code{pattern} are kept. 
-#'                Defaults to \code{FALSE}
+#' @param pattern Regular expression pattern(s) against which the 
+#' discovered file names are matched
+#' @param exclude If `TRUE`, the pattern is used to exclude the 
+#' discovered files, otherwise files that match `pattern` are kept. 
+#' Defaults to `FALSE`
 #'
-#' @return A character vector or list depending on whether the input in 
-#' \code{zipfiles} was of type \code{list}.
+#' @return A character vector or list depending on whether the input 
+#' in `zipfiles` was of type `list`.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -25,32 +27,42 @@ list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
   # Keep only files that match at least one of the patterns in 'pattern' or
   # those that do not match either of the patterns when exclude is TRUE
   pattern = paste(pattern, collapse="|")
-  f = function(x) regexpr(pattern, x) > 0
-  if(exclude) f = Negate(f)
+  
+  f = function(x) {
+    ifelse(exclude, `!`, I)(grepl(pattern, x))
+  }
+  
   files = lapply(files, Filter, f=f)
   
   return(if(is.list(zipfiles)) files else unlist(files))
   
 }
 
+#' @title
 #' Compress files individually
 #'
-#' A collection of functions useful for creating zip archives and unzipping them.
+#' @description
+#' A collection of functions useful for creating zip archives and 
+#' unzipping them.
 #'
 #' @details
 #'
-#' \code{zip_file} compresses files each into its own archive. Optionally adding time 
-#' stamps to the output files.
+#' `zip_file` compresses files each into its own archive. Optionally 
+#' adding time stamps to the output files.
 #'
-#' @param files List of files to compress. Exact file names, not regular patterns.
-#' @param extras Modifiers sent to the zip archiver. Defaults to '-m', 
-#'               which moves the files into the archive.
-#' @param appendix File name extension added to the name of each file by the archiver.
-#' @param add_timestamp Sets whether a unique time stamp is also added.
-#' @param check_status Determines whether a check for zero status code is performed.
+#' @param files List of files to compress. Exact file names, not 
+#' regular patterns.
+#' @param extras Modifiers sent to the zip archiver. Defaults to 
+#' '-m', which moves the files into the archive.
+#' @param appendix File name extension added to the name of each file 
+#' by the archiver.
+#' @param add_timestamp Sets whether a unique time stamp is also 
+#' added.
+#' @param check_status Determines whether a check for zero status 
+#' code is performed.
 #'
-#' @return List of file names of the created archive and the corresponding status 
-#'         codes returned by the archiver.
+#' @return List of file names of the created archive and the 
+#' corresponding status codes returned by the archiver.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -85,18 +97,22 @@ zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, ch
   
 }
 
+#' @title
 #' Compress multiple files into single archive
 #'
-#' \code{zip_files} compresses files into a single archive supplied via \code{zipfile}.
+#' @description
+#' `zip_files` compresses files into a single archive supplied via 
+#' `zipfile`.
 #'
-#' @param files List of files to compress. Exact file names, not regular patterns.
+#' @param files List of files to compress. Exact file names, not 
+#' regular patterns.
 #' @param path Path to the files.
 #' @param zipfile Name of the zip archive to create.
-#' @param extras Modifiers sent to the zip archiver. Defaults to '-m', 
-#'               which moves the files into the archive.
+#' @param extras Modifiers sent to the zip archiver. Defaults to 
+#' '-m', which moves the files into the archive.
 #'
-#' @return List of file names of the created archive and the corresponding status 
-#'         codes returned by the archiver.
+#' @return List of file names of the created archive and the 
+#' corresponding status codes returned by the archiver.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -117,35 +133,41 @@ zip_files = function(files, path=".", zipfile, extras="-m") {
   
 }
 
+#' @title
 #' Compress all files matching a pattern
 #'
-#' \code{zip_files_pattern} compresses files matching the pattern in \code{mask}
-#' (and not matching the pattern in \code{mask_exclude}) each into its own archive.
+#' @description
+#' `zip_files_pattern` compresses files matching the pattern in 
+#' `mask` (and not matching the pattern in `mask_exclude`) each into its 
+#' own archive.
 #'
-#' @param mask Regular pattern to match the files found in \code{path} against (for
-#'             inclusion).
-#' @param mask_exclude Regular pattern to match the files found in \code{path} 
-#'             against (for exclusion).
+#' @param mask Regular pattern to match the files found in `path` 
+#' against (for inclusion).
+#' @param mask_exclude Regular pattern to match the files found in 
+#' `path` against (for exclusion).
 #' @param outfile name of the output zip archive. Can be omitted.
-#' @param path Path to the files to be archived. 
-#' @param appendix File extension of the output archive. Relevant when \code{outfile} omitted
-#'             or when \code{single_archive} is \code{TRUE}.
-#' @param extras Modifiers sent to the zip archiver. Defaults to '-m', 
-#'             which moves the files into the archive.
-#' @param patternize Determines whether the mask is treated as given or whether the
-#'             special characters in it are wrapped to be matched accurately.
+#' @param path Path to the files to be archived.
+#' @param appendix File extension of the output archive. Relevant 
+#' when `outfile` omitted or when `single_archive` is `TRUE`.
+#' @param extras Modifiers sent to the zip archiver. Defaults to 
+#' '-m', which moves the files into the archive.
+#' @param patternize Determines whether the mask is treated as given 
+#' or whether the special characters in it are wrapped to be matched 
+#' accurately.
 #' @param chunk Batch size for the archiver.
 #' @param announce Determines whether details are announced.
-#' @param single_archive Determines whether a single archive is produced (\code{TRUE}) 
-#'        or whether each file is placed into its own archive (\code{FALSE}). In the
-#'        latter case the archive name is based on the file name and \code{appendix}.
-#' @param retry Determines whether repeated attempts are made to when the archiver 
-#'        returns a non-zero status code.
+#' @param single_archive Determines whether a single archive is 
+#' produced (`TRUE`) or whether each file is placed into its own archive 
+#' (`FALSE`). In the latter case the archive name is based on the file 
+#' name and `appendix`.
+#' @param retry Determines whether repeated attempts are made to when 
+#' the archiver returns a non-zero status code.
 #' @param nretries How many repeated attempts are made.
-#' @param browser_on_error Launch the \code{browser} upon non-zero status (for debugging).
+#' @param browser_on_error Launch the `browser` upon non-zero status 
+#' (for debugging).
 #'
-#' @return List of file names of the created archive and the corresponding status 
-#'         codes returned by the archiver.
+#' @return List of file names of the created archive and the 
+#' corresponding status codes returned by the archiver.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -174,7 +196,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
   ## Exclude the files that match mask_exclude
   if(!missing(mask_exclude)) {
     if(patternize) mask_exclude = str_patternize(mask_exclude)
-    files = files[regexpr(mask_exclude, files)<0]
+    files = files[!grepl(mask_exclude, files)]
   }
   
   ## Announce how many files will be zipped up
@@ -236,20 +258,23 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
   
 }
 
+#' @title
 #' Compress the entire path
 #'
-#' \code{zip_all_in_path} compresses all files in the supplied path (\code{path}) 
-#' each into its own archive
+#' @description
+#' `zip_all_in_path` compresses all files in the supplied path 
+#' (`path`) each into its own archive
 #'
 #' @param path Path to the files to zip up.
-#' @param check_status Determines whether a check for zero status code is performed.
-#' @param extras Modifiers sent to the zip archiver. Defaults to '-m', 
-#'               which moves the files into the archive.
-#' @param disable_warning Disables warning about archiving all files in the given
-#'        path. Caution advised.
+#' @param check_status Determines whether a check for zero status 
+#' code is performed.
+#' @param extras Modifiers sent to the zip archiver. Defaults to 
+#' '-m', which moves the files into the archive.
+#' @param disable_warning Disables warning about archiving all files 
+#' in the given path. Caution advised.
 #'
-#' @return List of names of archived files, list of the created archives and the 
-#'        corresponding status codes returned by the archiver.
+#' @return List of names of archived files, list of the created 
+#' archives and the corresponding status codes returned by the archiver.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -289,21 +314,26 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
   
 }
 
-#' \code{unzip_files} decompresses from \code{zipfile} all files that match the pattern 
-#' in \code{mask}, or those that do not match it if \code{mask_exclude} is \code{FALSE}.
+#' @title
+#' `unzip_files` decompresses from `zipfile` all files that match the 
+#' pattern
+#' @description
+#' in `mask`, or those that do not match it if `mask_exclude` is 
+#' `FALSE`.
 #'
-#' @param zipfiles List of files to decompress. Actual file names, not regular patterns.
-#' @param mask Regular pattern applied to the files inside the archives and only the
-#'        files that match this pattern (or do not match this pattern when 
-#'        \code{mask_exclude} is \code{FALSE}) and only files meeting these conditions
-#'        are decompressed.
-#' @param mask_exclude Determines how the \code{mask} is applied.        
-#' @param patternize Determines whether the mask is treated exactly (when 
-#'        \code{patternize=TRUE}) or whether it is treated as a regular pattern 
-#'        (when \code{patternize=FALSE}).
+#' @param zipfiles List of files to decompress. Actual file names, 
+#' not regular patterns.
+#' @param mask Regular pattern applied to the files inside the 
+#' archives and only the files that match this pattern (or do not match 
+#' this pattern when `mask_exclude` is `FALSE`) and only files meeting 
+#' these conditions are decompressed.
+#' @param mask_exclude Determines how the `mask` is applied.
+#' @param patternize Determines whether the mask is treated exactly 
+#' (when \code{patternize=TRUE}) or whether it is treated as a regular 
+#' pattern (when \code{patternize=FALSE}).
 #'
-#' @return List of file names of the decompressed files and the corresponding status 
-#'         codes returned by the archiver.
+#' @return List of file names of the decompressed files and the 
+#' corresponding status codes returned by the archiver.
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -329,16 +359,20 @@ unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, patternize
   unzipped_files = unzip(zipfile, files_in_zip)
   
   ## Check success
-  ok = all(sapply(str_patternize(files_in_zip), function(p) any(regexpr(p, unzipped_files)>0)))
+  patterns = str_patternize(files_in_zip)
+  ok = all(sapply(patterns, function(p) any(grepl(p, unzipped_files))))
   
   return(list(ios=ok-1, files=unzipped_files))
   
 }
 
+#' @title
 #' Read file inside a zip archive
 #'
-#' Reads a table from within a zip file (equivalent to read.table except the
-#' input file is expected to be a zip archive)
+#' @description
+#' `read_table_zip()` reads a table from within a zip file 
+#' (equivalent to read.table except the input file is expected to be a 
+#' zip archive)
 #'
 #' @family archiving utilities provided by utilbox
 #' @export
@@ -377,11 +411,17 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
     }
 
     # Skip the desired number of files and limit the number of files to the given maximum
-    if(skipnfiles>0) file_list = tail(file_list, -skipnfiles)
-    if(maxnfiles>0 && maxnfiles<length(file_list)) file_list = head(file_list, maxnfiles)
+    if(skipnfiles>0) {
+      file_list = tail(file_list, -skipnfiles)
+    }
+    if(maxnfiles>0 && maxnfiles<length(file_list)) {
+      file_list = head(file_list, maxnfiles)
+    }
     
     # Match the mask
-    if(!is.null(pattern)) file_list = file_list[regexpr(pattern, file_list)>0]
+    if(!is.null(pattern)) {
+      file_list = file_list[grepl(pattern, file_list)]
+    }
 
     # Make sure the file names are not too long
     restore_file = FALSE
@@ -441,6 +481,7 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
 
 } # read_table_zip
 
+#' @title
 #' Read a table from a single zip archive
 read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, trace=0, ...) {
   
@@ -498,6 +539,7 @@ read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_
   
 }
 
+#' @title
 #' Process the status of a zip call
 check_zip_ios = function(ios, file) {
 

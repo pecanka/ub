@@ -3,36 +3,45 @@
 \name{rep_list}
 \alias{rep_list}
 \alias{rep_list.list}
-\alias{rep_list.numeric}
-\alias{rep_list.character}
-\alias{rep_list.logical}
-\alias{rep_list.complex}
-\alias{rep_list.factor}
-\alias{rep_list.data.frame}
+\alias{rep_list.default}
 \alias{rep_list.matrix}
 \title{Repeat elements in a list}
 \usage{
 rep_list(...)
 
-\method{rep_list}{list}(x, n, length.out, bind = append_recurse, flatten = FALSE)
+\method{rep_list}{list}(
+  x,
+  n,
+  each,
+  length.out,
+  bind = append_recurse,
+  flatten = FALSE,
+  rep_as_list = FALSE
+)
 
-\method{rep_list}{numeric}(x, n, length.out, bind = append_recurse, flatten = FALSE)
+\method{rep_list}{default}(
+  x,
+  n,
+  each,
+  length.out,
+  bind = append_recurse,
+  flatten = FALSE,
+  rep_as_list = FALSE
+)
 
-\method{rep_list}{character}(x, n, length.out, bind = append_recurse, flatten = FALSE)
-
-\method{rep_list}{logical}(x, n, length.out, bind = append_recurse, flatten = FALSE)
-
-\method{rep_list}{complex}(x, n, length.out, bind = append_recurse, flatten = FALSE)
-
-\method{rep_list}{factor}(x, n, length.out, bind = append_recurse, flatten = FALSE)
-
-\method{rep_list}{data.frame}(x, n, length.out, bind = append_recurse, flatten = FALSE)
-
-\method{rep_list}{matrix}(x, n, length.out, bind = append_recurse, flatten = FALSE)
+\method{rep_list}{matrix}(
+  x,
+  n,
+  each,
+  length.out,
+  bind = append_recurse,
+  flatten = FALSE,
+  rep_as_list = FALSE
+)
 }
 \description{
-An extension of [base::rep] which works with lists which are
-not unlisted. For non-list types it works the same as [base::rep]].
+An extension of \code{\link[base:rep]{base::rep()}} which works with lists which are
+not unlisted. For non-list types it works the same as \code{\link[base:rep]{base::rep()}}.
 }
 \examples{
 rep_list(list(a=1,b=2), 3)
