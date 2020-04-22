@@ -7,7 +7,8 @@
 namespace_exists(ns)
 }
 \description{
-Checks if the given string corresponds to a namespace by
-attempting to call \code{\link[base:asNamespace]{base::asNamespace}} on it and checking whether
-an error occurred.
+Checks whether a namespace exists. For packages, this basically
+checks whether a package is installed. The check is done by
+calling \code{base::asNamespace(ns)} and returning a logical which
+indicates whether an error occurred on that call.
 }

@@ -10,7 +10,7 @@ add_col(.data, ...)
 \code{add_col()} adds a column(s) into the data frame \code{x}
 if the column(s) is/are not present. The way it is written is
 intended to work both for standard \code{data.frame} and other
-\code{data.frame} derived classes (such as \code{\link[dplyr:tibble]{dplyr::tibble()}}) provided
+\code{data.frame} derived classes (such as \code{dplyr::tibble()}) provided
 the derived class has the method \verb{[<-} defined.
 }
 \examples{

@@ -2,6 +2,7 @@
 #' List/close graphical devices
 #'
 #' @description
+#'
 #' List or close all graphical devices.
 #'
 #' `.all_devs` returns a list of all open graphical devices with an 
@@ -54,6 +55,7 @@
 #' Color palette
 #'
 #' @description
+#'
 #' Returns a specified number of colors a from a color palette. If 
 #' the requested number of colors is larger than the size of the palette 
 #' the colors are recycled.
@@ -98,6 +100,7 @@ palette_ub = function(n) {
 #' Generate a vector of colors
 #'
 #' @description
+#'
 #' Generate a vector of colors based on the values in the supplied 
 #' vector `x`.
 #'
@@ -114,6 +117,7 @@ as_color = function(x, palette=palette_ub) {
 #' A color palette
 #'
 #' @description
+#'
 #' Returns a list of `n` interesting and contrasting colors (at least 
 #' as far as neighbours go). Up to 100 unique colors. For `n` above 100 
 #' the colors are recycled in a loop.
@@ -157,6 +161,7 @@ Colors = function(n=20, skip=0, randomize=FALSE, reverse=FALSE) {
 #' Illustrate the utilbox color palette
 #'
 #' @description
+#'
 #' Produces a plot which shows the colors returned by `palette_ub`, 
 #' via a call to `Colors`.
 #'
@@ -182,6 +187,7 @@ show_Colors = function(n, col, cex=3, pch=16, pos1=2, pos2=4, adj1=-.25, adj2=0.
 #' Histogram
 #'
 #' @description
+#'
 #' A wrapper for \code{base::hist}, which allows to specify the 
 #' number of bins by through `nbreaks`.
 #'

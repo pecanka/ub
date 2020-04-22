@@ -2,6 +2,7 @@
 #' Default setting for R
 #'
 #' @description
+#'
 #' `R_get_default_pckgs()` lists the packages that R loads on startup.
 #'
 #' `R_add_lib_startup()` adds a library to the list of libraries 

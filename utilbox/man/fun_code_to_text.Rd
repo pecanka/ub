@@ -36,6 +36,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{append_body}()},
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},

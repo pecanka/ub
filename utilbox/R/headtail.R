@@ -2,11 +2,13 @@
 #' First and last elements
 #'
 #' @description
+#'
 #' Get the first or last `n` elements of an object.
 
 #' @title
 #' The two function are similar to, and relying on,
 #' @description
+#'
 #' \code{utils::head()} and \code{utils::tail()} with two main 
 #' differences. First, `h1()` and `t1()` have different default number 
 #' of elements (\code{n=1}). Second, if the requested number of elements 
@@ -36,20 +38,15 @@ h1 = function(x, ...) {
   UseMethod('h1')
 }
 
-# Import (sort of) the head and tail functions from package 'utils'
-# (Not exported by this package)
-head = utils::head
-tail = utils::tail
-
 #' @rdname h1
 #' @export
 h1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
     error("Asking for non-existing elements.")
   } else if(n<=0) {
-    head(x, n=n, ...) 
+    utils::head(x, n=n, ...) 
   } else {
-    head(rep_len(x, length.out=n), n=n, ...) 
+    utils::head(rep_len(x, length.out=n), n=n, ...) 
   }
 }
 
@@ -59,9 +56,9 @@ h1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -nrow(x) || n > nrow(x))) {
     error("Asking for non-existing elements.")
   } else if(n<=0) {
-    head(x, n=n, ...) 
+    utils::head(x, n=n, ...) 
   } else {
-    head(rep_df(x, ceiling(n/nrow(x))), n=n, ...)
+    utils::head(rep_df(x, ceiling(n/nrow(x))), n=n, ...)
   }
 }
 
@@ -71,7 +68,7 @@ h1.default = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
     error("Asking for non-existing elements.")
   } else {
-    head(x, n=n, ...)
+    utils::head(x, n=n, ...)
   }
 }
 
@@ -123,9 +120,9 @@ t1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
     error("Asking for non-existing elements.")
   } else if(n<=0) {
-    tail(x, n=n, ...) 
+    utils::tail(x, n=n, ...) 
   } else {
-    tail(rev(rep_len(rev(x), length.out=n)), n=n, ...) 
+    utils::tail(rev(rep_len(rev(x), length.out=n)), n=n, ...) 
   }
 }
 
@@ -135,9 +132,9 @@ t1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -nrow(x) || n > nrow(x))) {
     error("Asking for non-existing elements.")
   } else if(n<=0) {
-    tail(x, n=n, ...) 
+    utils::tail(x, n=n, ...) 
   } else {
-    tail(rev_rows(rep_df(rev_rows(x), ceiling(n/nrow(x)))), n=n, ...)    
+    utils::tail(rev_rows(rep_df(rev_rows(x), ceiling(n/nrow(x)))), n=n, ...)    
   }
 }
 
@@ -147,7 +144,7 @@ t1.default = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
     error("Asking for non-existing elements.")
   } else {
-    tail(x, n=n, ...)
+    utils::tail(x, n=n, ...)
   }
 }
 

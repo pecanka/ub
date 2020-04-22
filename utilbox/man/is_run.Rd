@@ -6,9 +6,9 @@
 \alias{is_end_of_run}
 \title{Starts and ends of run}
 \usage{
-is_start_of_run(x, is_first_start = TRUE)
+is_start_of_run(x, is_first_start = TRUE, tol)
 
-is_end_of_run(x, is_last_end = TRUE)
+is_end_of_run(x, is_last_end = TRUE, tol)
 }
 \description{
 Indicators of the beginnings (\code{is_start_of_run}) and ends

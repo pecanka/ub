@@ -2,6 +2,7 @@
 #' Get today's date
 #'
 #' @description
+#'
 #' Returns today's date (in the current time zone) in the specified 
 #' format.
 #'
@@ -25,6 +26,7 @@ t_day = function(format="%Y-%m-%d", set_return_class=base::as.character) {
 #' Get yesterday's date
 #'
 #' @description
+#'
 #' Calculated the date of the previous day or any other day relative 
 #' to today in the current time zone in the specified format. How many 
 #' days are shifted to the past is controlled via `lag`, which accepts 
@@ -51,6 +53,7 @@ y_day = function(format="%Y-%m-%d", lag=-1, relative_to_day, set_return_class=as
 #' Find the closest day among dates
 #'
 #' @description
+#'
 #' Takes a vector of dates in `dates` and a single date in `day`, 
 #' which are assumed to be in the 'YYYY-MM-DD' format, and find the 
 #' closest value in `dates` to the value in `day`. If `position` is 

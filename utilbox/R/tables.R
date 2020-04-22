@@ -2,6 +2,7 @@
 #' Contingency table
 #'
 #' @description
+#'
 #' Does the same thing as \code{base::table} but makes sure that the 
 #' counts of values in `obligate` are included in the final table, 
 #' although only if a tabulation of a single vector is performed.
@@ -30,6 +31,7 @@ table2 = function(..., obligate=NULL) {
 #' Quick tabulation
 #'
 #' @description
+#'
 #' A quicker version of \code{base::table}. Assumes natural number 
 #' values and every value outside 1,2,... is counted as 0.
 #' @export

@@ -2,6 +2,7 @@
 #' Upper- and lower-triangular
 #'
 #' @description
+#'
 #' `lower_tri()` and `upper_tri()` return the elements on the upper- 
 #' and lower-triangular as a vectors.
 #'
@@ -20,6 +21,7 @@ upper_tri = function(x, diag=TRUE) {
 #' Matrix checks
 #'
 #' @description
+#'
 #' `is_diag()` checks if 'x' is a diagonal matrix.
 #'
 #' `is_posdef()` checks if `M` is a positive-definite matrix.

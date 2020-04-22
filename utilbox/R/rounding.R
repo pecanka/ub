@@ -2,6 +2,7 @@
 #' Number of digits
 #'
 #' @description
+#'
 #' `ndigits()` determines the number of digits for an integer or a 
 #' real (for which the output reflects only the integer part).
 #'

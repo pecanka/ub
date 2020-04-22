@@ -3,12 +3,21 @@
 \name{padding}
 \alias{padding}
 \alias{str_pad}
+\alias{str_lengthen}
 \alias{int_pad}
 \alias{num_pad}
 \alias{spaces}
 \title{Format string}
 \usage{
 str_pad(x, min_width, side = c("left", "right"), padding = " ", nextra = 0)
+
+str_lengthen(
+  x,
+  min_width,
+  side = c("left", "right"),
+  padding = " ",
+  nextra = 0
+)
 
 int_pad(x, min_width, format, fmt = "d")
 
@@ -21,7 +30,9 @@ spaces(n, char = " ")
 the contents of \code{x} to a minimum width (character count) or other
 specified format (via \code{format}). The minimum length is easiest
 controlled via \code{min_width}. Non-character values are converted to
-character using \code{base::as.character}.
+character using \code{base::as.character}. \code{str_lengthen()} is an alias
+for \code{str_pad()} that exists primarily to allow easy disambiguation
+with \code{stringr::str_pad()}.
 
 \code{int_pad} pads an integer with leading zeros.
 
@@ -31,6 +42,12 @@ character using \code{base::as.character}.
 
 Check the function in \code{options()$str$formatNum} to see how R
 formats numbers.
+}
+\examples{
+str_pad('hello', 20)
+str_pad('hello', 20, '.')
+str_pad('hello', 20, 'right')
+
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 

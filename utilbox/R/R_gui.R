@@ -2,6 +2,7 @@
 #' Adjust R GUI
 #'
 #' @description
+#'
 #' `R_gui_adjust()` changes the way the GUI looks (e.g. font size, 
 #' font style). Without changing the default arguments, a call to 
 #' `Rgui_adjust` makes the font smaller so that more info fits the 

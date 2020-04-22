@@ -7,6 +7,7 @@
 \title{Processing of ellipsis and call arguments}
 \usage{
 dots_to_nlist(
+  keep_symbolic = FALSE,
   flatten = FALSE,
   assign_names = TRUE,
   names,
@@ -16,17 +17,20 @@ dots_to_nlist(
 args_to_nlist(envir = parent.frame())
 }
 \description{
-\code{dots_to_nlist()} returns the ellipsis of a parent function in a
+\code{dots_to_nlist()} returns the contents of the ellipsis of a parent function in a
 nice form. In calls with unnamed arguments it extracts the names of
 variables supplied in the call and uses them to assign names to the
-list produced from the ellipsis (\code{...}).
+list produced from the ellipsis (\code{...}). With \code{keep_symbolic=TRUE},
+\code{dots_to_nlist()} returns only the names of the supplied arguments
+in the symbolic form. A call to \code{as.character()} on the output then
+gives the names in character form. Using \code{keep_symbolic=TRUE} is handy
+for instance for processing symbolic calls (e.g. column names to sort by
+in \code{sort_df()} or packages to load in \code{llib()}).
 
 \code{args_to_nlist()} returns all arguments supplied or simply defined
-to the call of the parent function in a nice \verb{named list} form. With
-\code{only_called=TRUE} the function can be called at any point inside the
-function for which it is getting the arguments. With
-\code{only_called=FALSE}, in order to work properly, the call to
-\code{args_to_nlist} should be the first call inside the parent function,
+to the call of the parent function in a nice \verb{named list} form. In order
+for it to work properly, the call to \code{args_to_nlist()} should be the first
+call inside the parent function,
 otherwise the call to \code{ls} might return also objects that did not
 exist upon the call to the function.
 }
@@ -45,6 +49,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{append_body}()},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},

@@ -2,6 +2,7 @@
 #' Vectorized regular pattern matching
 #'
 #' @description
+#'
 #' Vectorized regular pattern matching, which takes multiple patterns.
 #'
 #' @rdname multi_grep
@@ -46,13 +47,14 @@ greplm = function(pattern, x, ...) {
 #' Recursive string substitution
 #'
 #' @description
+#'
 #' Allows for multiple arguments in `what` and `with` which are 
 #' replaced inside `where`. `what` and `with` are processed in parallel 
 #' which means that they must have the same length or `with` must be of 
 #' length 1.
 #'
-#' `subm` leverages [`base::sub`], while `gsubm` leverages 
-#' [`base::gsub`].
+#' `subm` leverages `base::sub`, while `gsubm` leverages 
+#' `base::gsub`.
 #'
 #' @examples
 #' subm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
@@ -97,6 +99,7 @@ gsubm = function(x, what, with) {
 #' Substitution of \"@\"-substrings
 #'
 #' @description
+#'
 #' `sub_at()` and `gsub_at()` perform the replacement of 
 #' \"@-substrings\" inside a string `x`. \"@-substrings\" are strings 
 #' that start with the character '@' (or the value supplied in `at`, 
@@ -108,6 +111,7 @@ gsubm = function(x, what, with) {
 #' @title
 #' 1. based on the name attributes of the argument when supplied as
 #' @description
+#'
 #' named vectors or named lists (e.g. `gsub_at(x, c(name='John', 
 #' city='Prague'))`.
 #'
@@ -175,6 +179,7 @@ substitute_at = function(x, sub_list, at='@', workhorse=subm) {
 #' Patternize a string
 #'
 #' @description
+#'
 #' `str_patternize()` wraps special characters in string name 
 #' (possibly a vector) by brackets so that it can be matched within 
 #' regular expression matching (the case of "\\" has to be treated 

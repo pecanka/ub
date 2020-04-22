@@ -1,7 +1,9 @@
 #' @title
-#' Get the original environment of a function or another object
+#' Original and parent environments
 #'
 #' @description
+
+#' `orig_env()` get the original environment of a function or another object.
 #' When an object defined in a namespace is printed, its namespace is 
 #' shown as the last line. If a function in a package has been defined 
 #' as an alias of a function from another package, this original 
@@ -12,21 +14,43 @@
 #' string. For objects with no such information printed it simply 
 #' returns the last element of a print call of that object.
 #'
+#' `all_parent_env()` returns the cascade of all parent environments
+#' of `x`. If no input is specified during a call to `all_parent_env()`,
+#' the default is to take the calling environment.
+#'
 #' @examples
 #' orig_env(mean)
 #'
+#' @name environments
 #' @export
 orig_env = function(fun) {
   t1(print2var(fun))
+}
+
+#' @rdname environments
+#' @export
+all_parent_env = function(x=parent.frame()) {
+  
+  if(!is.environment(x)) x = environment(x)
+  
+  pe = try(parent.env(x), silent=TRUE)
+  #if(is_error(pe)) browser()
+  
+  if(is_error(pe)) return(NULL)
+  
+  c(pe, all_parent_env(pe))
+  
 }
 
 #' @title
 #' Check for namespace
 #'
 #' @description
-#' Checks if the given string corresponds to a namespace by 
-#' attempting to call [`base::asNamespace`] on it and checking whether 
-#' an error occurred.
+#'
+#' Checks whether a namespace exists. For packages, this basically
+#' checks whether a package is installed. The check is done by 
+#' calling `base::asNamespace(ns)` and returning a logical which 
+#' indicates whether an error occurred on that call.
 #'
 #' @export
 namespace_exists = function(ns) {
@@ -117,20 +141,33 @@ get2 = function(what, envir, default_value, mode='any', inherits=TRUE) {
 #' assign2(c('x','y'), list(1:2, 'a'), what_as_list=TRUE)
 #'
 #' @export
-assign2 = function(where, what, envir=.GlobalEnv, what_as_list=FALSE) {
+assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_namespace=FALSE) {
   
   if(!what_as_list && length(what)!=1)
-    error("The length of 'what' must be 1 when 'what_as_list=FALSE'.")
+    error("The length of `what` must be 1 when `what_as_list=FALSE`.")
     
   if(what_as_list) {
     if(!is.list(what))
-      error("'what' must be a list when 'what_as_list=TRUE'.")
+      error("The value in `what` must be a list when `what_as_list=TRUE`.")
     if(length(what)!=length(where))
-      error("the lengths of 'where' and 'what' must match when 'what_as_list=TRUE'.")
+      error("The lengths of `where` and `what` must match when `what_as_list=TRUE`.")
+  } else {
+    what = list(what)
   }
+  
+  if(in_namespace && missing(ns))
+    error("The name of the namespace must be supplied via `ns` when `in_namespace=TRUE`.")
 
   for(i in seq_along(where)) {
-    assign(where[i], what[[min(length(what),i)]], envir=envir)
+    args = list(x=where[i], value=what[[min(length(what),i)]])
+    if(in_namespace) {
+      #fun = 'fixInNamespace'
+      fun = 'assignInNamespace'
+      do.call(fun, args %append% list(ns=ns))
+      #()
+    } else {
+      do.call(assign, args %append% list(envir=envir))
+    }
   }
   
 }
@@ -170,4 +207,3 @@ is_same_environment = function(x, y, assume_package_x=TRUE, assume_package_y=TRU
   identical(x, y)
 
 }
-

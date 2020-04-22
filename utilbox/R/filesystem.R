@@ -2,6 +2,7 @@
 #' List files matching regular pattern
 #'
 #' @description
+#'
 #' A wrapper for [`base::list.files()`] that allows multiple patterns 
 #' at once and files that match at least on of the patterns are 
 #' returned. Optionally, files can be sorted according to attribute in 
@@ -50,6 +51,7 @@ list_files_biggest = function(...) {
 #' Work with files and paths
 #'
 #' @description
+#'
 #' `is_absolute_path()` checks whether the supplied path (`path`), 
 #' which may or may not include a file name, is absolute or not. On 
 #' Windows, absolute means that it begins with '\<drive letter\>:/', on 
@@ -89,6 +91,7 @@ is_absolute_path = function(path) {
 #' Complete partial file names
 #'
 #' @description
+#'
 #' `file_match()` takes a list of files (`files`) and looks whether 
 #' they exist relative to the given path (`path`). If they do, they 
 #' remain unchanged. If they do not exist, an attempt is made to 
@@ -123,6 +126,7 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
 #' Create/remove a directory
 #'
 #' @description
+#'
 #' `dir_create()` is a verbose version of \code{base::dir.create()}.
 #'
 #' `dir_remove()` removes (unlinks) supplied directory/ies.
@@ -172,6 +176,7 @@ dir_slash_check = function(dir, fsep=.Platform$file.sep) {
 #' Check file/directory existence
 #'
 #' @description
+#'
 #'
 #' `dir_exist_check()` checks if directory `dir` exists (relative to 
 #' the current working directory) and if not it tries to create it. On 
@@ -273,6 +278,7 @@ file_exists_must = function(files, path, stop_on_missing=TRUE, warn_on_missing=T
 #' Rename or remove multiple files
 #'
 #' @description
+#'
 #' `file_rename()` renames one or multiple files.
 #'
 #' `file_remove()` removes one or multiple files.
@@ -365,6 +371,7 @@ file_timestamp = function(filename, attrib='mtime') {
 #' Sort files names
 #'
 #' @description
+#'
 #' `file_sort()` sorts files (specified in `files`) by their 
 #' attributes such as time or size. The attribute for sorting is 
 #' specified via `by`. The logical `decreasing` switches between 
@@ -413,6 +420,7 @@ file_sort_time = function(files, by="mtime", decreasing=TRUE) {
 #' Check file existence and emptiness
 #'
 #' @description
+#'
 #' `file_empty` checks if file exists, tries to read it to see 
 #' whether there is any data in it.
 #'
@@ -432,6 +440,7 @@ file_empty = function(file) {
 #' Get file sizes
 #'
 #' @description
+#'
 #' `file_size()` returns the file sizes in appropriate units.
 #'
 #' @family file system function provided by utilbox
@@ -444,6 +453,7 @@ file_size = function(files) {
 #' File open check
 #'
 #' @description
+#'
 #' `file_can_open_check()` checks whether a file can be opened.
 #'
 #' @family file system function provided by utilbox
@@ -460,6 +470,7 @@ file_can_open_check = function(filename) {
 #' File lock check
 #'
 #' @description
+#'
 #' Check if a given file is locked by another application (e.g. by 
 #' Excel). Currently relies on a call to `wmic` and works on Windows 
 #' only.
@@ -487,6 +498,7 @@ check_file_locked = function(file) {
 #' Drop dots from file names
 #'
 #' @description
+#'
 #' `clean_filename()` replaces dots in file names with the value in 
 #' `chr`. Useful for instance for changing file names of plots that are 
 #' to be included in a latex file where the dots cause trouble.
@@ -509,6 +521,7 @@ clean_filename = function(x, chr="-", keep_last_dot=TRUE) {
 #' Split file names
 #'
 #' @description
+#'
 #' Separates the path portions from file names. Returns the paths and 
 #' the proper file names in a list.
 #'
@@ -538,6 +551,7 @@ separate_path = function(files, path0="./") {
 #' Generate a random file name
 #'
 #' @description
+#'
 #' `random_filename()` generates a random file name of length `nchar` 
 #' by drawing from the set defined via `chars`.
 #'

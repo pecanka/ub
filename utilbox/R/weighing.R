@@ -2,6 +2,7 @@
 #' Down-weighing
 #'
 #' @description
+#'
 #' Down-weighs the values in `x` if they are below the pivot (`from`) 
 #' at the rate of determined by `speed`. More specifically, the value of 
 #' `speed` is used as the standard deviation of the normal density which 

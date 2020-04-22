@@ -2,6 +2,7 @@
 #' Throw an error and stop
 #'
 #' @description
+#'
 #' A more elaborate version of `base::stop()`. It can do beeping and 
 #' if inside an interactive session it does not halt the execution but 
 #' enters a browsing mode. It also returns a reliable exit status value 
@@ -34,7 +35,7 @@ error = function(..., sep="", quit=TRUE, Q, browser=interactive(), nskip1=0, env
   } else {
     cat0("\nERROR: ",err,"\n\n")
     utils::flush.console()
-    do.call("browser", list(), envir=sys.frame(sys.parent()))
+    do.call(browser, list(), envir=sys.frame(sys.parent()))
   }
   
   invisible(err)
@@ -47,6 +48,7 @@ error = base::stop
 #' Stop execution
 #'
 #' @description
+#'
 #' A different way of stopping the execution. Intended to be called 
 #' by halt but the behavior wasn't as hoped/expected. Abandoned for now.
 #'
@@ -63,6 +65,7 @@ error = base::stop
 #' Print error and stop execution
 #'
 #' @description
+#'
 #' Prints an error message and stops. The actual way of stopping, 
 #' however, depends on whether the code is run in interactive or 
 #' non-interactive modes

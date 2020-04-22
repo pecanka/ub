@@ -2,6 +2,7 @@
 #' Get the namespace of a package
 #'
 #' @description
+#'
 #' `get_package_namespace()` returns the namespace of the package 
 #' with name in `pckg`.
 #'
@@ -45,6 +46,7 @@ check_namespace = function(pckg, envir=parent.frame()) {
 #' Library operations
 #'
 #' @description
+#'
 #' `llibrary()` loads specified libraries. On input, `pckgs` must 
 #' either be a character vector of package names or a list with each of 
 #' its elements having the structure of \code{list(name=..., src=...)} 
@@ -141,7 +143,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
 #' @rdname llibrary
 #' @export
 llib = function(..., detach_first=FALSE) {
-  pckgs = as.character(dots_to_nlist())
+  pckgs = as.character(dots_to_nlist(keep_symbolic=TRUE))
   llibrary(pckgs, character.only=TRUE, detach_first=detach_first)
 }
 
@@ -183,6 +185,7 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' List objects in a package
 #'
 #' @description
+#'
 #' List all/exported objects in a package.
 #'
 #' `list_package_exported()` lists all exported objects by a package.
@@ -267,7 +270,7 @@ object_table = function(objs, pckg, pattern, mode) {
     tbl = tbl[mode_fits,]
   }
   
-  tbl
+  sort_df(tbl, primary_class, name)
 
 }
 
@@ -275,6 +278,7 @@ object_table = function(objs, pckg, pattern, mode) {
 #' Apply function to an object in a package or environment
 #'
 #' @description
+#'
 #' Applies function `f` to the object(s) whose names are in `objs` 
 #' and that are found in `pckg`, which is primarily intended to be a 
 #' package name (assume to be one when of class `character`), but can 
@@ -308,6 +312,7 @@ apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, value_error=NA) {
 #' Add path to the package path
 #'
 #' @description
+#'
 #' Adds a supplied path to the list of paths for searching packages.
 #'
 #' @param libpath path to be added

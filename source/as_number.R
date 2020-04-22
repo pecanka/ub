@@ -2,6 +2,7 @@
 #' Type conversion
 #'
 #' @description
+#'
 #' Convert to type `numeric` without any warnings about non-numeric 
 #' elements. Non-numeric elements are turned into `NA`. Basically, a 
 #' less verbose version of \code{base::as.numeric}.
@@ -23,6 +24,7 @@ as_numeric = function(x) {
 #' Type conversion
 #'
 #' @description
+#'
 #' Changes the type of `x` to `numeric` whenever all elements can be 
 #' converted (using \code{base::as.numeric}. Otherwise, calls the 
 #' function supplied in `on_error`. This allows a direct control of what 
@@ -52,6 +54,7 @@ make_numeric = function(x, convert=as.numeric, on_error=stop) {
 #' Force type conversion
 #'
 #' @description
+#'
 #' Convert to type integer (`force_as_integer()`) or double 
 #' (`force_as_real()`) by stripping all non-number substrings in each 
 #' element of `x`.

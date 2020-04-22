@@ -11,7 +11,7 @@ for(f in files) source(f)
 
 ##########
 #files = files['R.R' %m% files]
-files = files['dataframes.R' %m% files]
+files = files['sequences.R' %m% files]
 ##########
 
 #wait('The following files will be altered:',files,sep='\n  ')
@@ -22,7 +22,7 @@ ofiles = sapply(ofiles, function(o) o$output_file)
 catn('Files altered.')
 
 catn('Checking for any unintended changes to the actual code ...')
-check_ok = sapply(seq_along(files), function(i) compare_code(files[i], ofiles[i]))
+check_ok = sapply(seq_along(files), function(i) compare_script_code(files[i], ofiles[i]))
 catn('Finished.')
 
 if(all(check_ok)) {

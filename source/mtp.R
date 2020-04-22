@@ -2,6 +2,7 @@
 #' Perform multiple testing procedure
 #'
 #' @description
+#'
 #' Given a vector of p-values on input, performs a selected multiple 
 #' testing procedure.
 #'
@@ -229,6 +230,7 @@ test_pval_hartung = function(p, alpha=0.05, kappa=0.2, what="ns") {
 #' Multiple testing
 #'
 #' @description
+#'
 #' `mtc_test()` takes a vector of p-values and performs a multiple 
 #' testing corrected test on it. Which test it is is determined via 
 #' `method`.
@@ -379,6 +381,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
 #' Type-I and type-II errors
 #'
 #' @description
+#'
 #' `mtp_errors()`, `mtp_errors_fast()`, `mtp_errors_slow() determine 
 #' the type-I (FWER, FDR) and type-II (power) errors of selected 
 #' multiple testing procedures.

@@ -1,27 +1,17 @@
 #' @title
-#' Remove all objects
+#' Remove objects
 #'
 #' @description
+#'
 #' `.rma()` is a shorthand for removal of all objects (including 
 #' hidden ones whose names start with a dot) from the environment in 
 #' `envir` (`.GlobalEnv` by default). This function is basically an 
-#' alias for \code{rm(list=ls(envir=envir))}.
+#' alias for `rm(list=ls(envir=envir))`. Optionally, names of 
+#' objects that should be excluded from removal can be supplied via `keep`.
 #'
-#' Optionally, names of objects that should be excluded from removal 
-#' can be supplied via `keep`.
-#'
-#' @family object listing, object loading and removing functions provided by utilbox
-#' @export
-.rma = function(all.names=FALSE, keep=".utilbox", envir=.GlobalEnv) {
-  rm(list=setdiff(ls(envir=envir, all.names=all.names), keep), envir=envir)
-}
-
-#' @title
-#' Delete objects
-#'
-#' @description
-#' `rme()` deletes all supplied objects in the environment specified 
-#' in `envir`. Unlike the basic \code{base::rm} function, the current 
+#' `rme()` is a selective delete, which removes all supplied objects in the
+#' environment specified 
+#' in `envir`. Unlike the basic `base::rm` function, the current 
 #' function checks if the supplied objects exist in order to avoid 
 #' errors. Objects can be supplied as character strings or as symbols.
 #'
@@ -30,10 +20,18 @@
 #' rme(random_object)      # delete successfully
 #' rme(random_object)      # nothing to delete, but no error/warning
 #'
+#' @name remova_objects
+#' @family object listing, object loading and removing functions provided by utilbox
+#' @export
+.rma = function(all.names=FALSE, keep=".utilbox", envir=.GlobalEnv) {
+  base::rm(list=setdiff(ls(envir=envir, all.names=all.names), keep), envir=envir)
+}
+
+#' @rdname remova_objects
 #' @export
 .rme = function(..., envir=parent.frame()) {
-  dots = dots_to_nlist()
-  suppressWarnings(do.call(rm, append(dots, list(envir=envir))))
+  dots = as.character(dots_to_nlist(keep_symbolic=TRUE))
+  suppressWarnings(do.call(base::rm, list(list=dots, envir=envir)))
   #suppressWarnings(rm(..., envir=envir))
 }
 
@@ -47,6 +45,7 @@
 #' Same object check
 #'
 #' @description
+#'
 #' `is_same_object()` checks whether all of the supplied arguments 
 #' correspond to the same object in memory. Arguments can be given as 
 #' variables or by name (as character).
@@ -69,6 +68,7 @@ is_same_object = function(..., envir = parent.frame()) {
 #' Functions for memory unit conversion
 #'
 #' @description
+#'
 #' `get_unit()` determines the appropriate unit of memory for the 
 #' size of the object `x`.
 #'
@@ -110,6 +110,7 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigit=3) {
 #' List all objects and their sizes
 #'
 #' @description
+#'
 #' `lsos()` lists objects in the given environment and returns their 
 #' names and sizes.
 #'
@@ -185,6 +186,7 @@ obj_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=paren
 #' List and load objects from a file
 #'
 #' @description
+#'
 #' `load_objects()` is a more verbose version of `base::load()`. 
 #' `load_objects()` can announce which objects have been loaded, the 
 #' user can also specify which objects are expected and an error is 

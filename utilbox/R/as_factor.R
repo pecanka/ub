@@ -2,6 +2,7 @@
 #' Convert to factor and back
 #'
 #' @description
+#'
 #' `as_factor()` converts a vector to class `factor` with levels 
 #' determined by order of appearance and \strong{without} sorting of 
 #' levels (unlike \code{base::as.factor}).

@@ -4,7 +4,14 @@
 \alias{assign2}
 \title{Assign into multiple variables}
 \usage{
-assign2(where, what, envir = .GlobalEnv, what_as_list = FALSE)
+assign2(
+  where,
+  what,
+  envir = .GlobalEnv,
+  ns,
+  what_as_list = FALSE,
+  in_namespace = FALSE
+)
 }
 \description{
 Assign a value or multiple values into multiple variables with a

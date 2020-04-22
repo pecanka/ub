@@ -2,6 +2,7 @@
 #' Minimal distance within a vector
 #'
 #' @description
+#'
 #' Get the minimal distance between elements of `x`.
 #'
 #' @family numeric functions provided by utilbox
@@ -15,6 +16,7 @@ min_dif = function(x) {
 #' Maximum/minimum
 #'
 #' @description
+#'
 #' More versatile versions of `base:which.max` and 
 #' `base::which.min`.
 #'

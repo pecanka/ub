@@ -2,22 +2,20 @@
 #' Directory of the current script
 #'
 #' @description
+#'
 #' `script_dir` returns the directory of the script file from which 
 #' it is called (via `source`).
 #'
 #' @export
 script_dir = function() {
-  if("ofile" %in% names(sys.frame(1))) {
-    dirname(sys.frame(1)$ofile)
-  } else {
-    "."
-  }
+  ifelse("ofile" %in% names(sys.frame(1)), dirname(sys.frame(1)$ofile), '.')
 }
 
 #' @title
 #' Set working directory
 #'
 #' @description
+#'
 #' A version of `setwd` which attempts to create the given path when 
 #' it does not exist. Unlike `setwd`, which throws an error when no path 
 #' is supplied, `setwd2` with missing path argument sets the working 
@@ -55,6 +53,7 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
 #' Sourcing check
 #'
 #' @description
+#'
 #' `is_sourced()` checks whether the script from which it is called 
 #' is being sourced (via either `source()` or `sys.source()`) "at" (when 
 #' \code{exact_level=TRUE}) or "above" (when \code{exact_level=FALSE}) 
@@ -153,6 +152,7 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
 #' Get the list of objects created by sourcing a file
 #'
 #' @description
+#'
 #' Find out what objects would be created if a file was sourced (via 
 #' [`base::sys.source`]) and return the list.
 #'

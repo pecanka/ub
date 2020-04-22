@@ -2,6 +2,7 @@
 #' Repeat object
 #'
 #' @description
+#'
 #' An upgraded version of `rep`. Allows for different number of 
 #' occurrences for each value supplied in the first argument.
 #'

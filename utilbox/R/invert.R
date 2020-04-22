@@ -2,6 +2,7 @@
 #' Find (pseudo)inverse, square root, and sqrt-inverse matrices
 #'
 #' @description
+#'
 #' `Invert1()` does element-wise inversion (as in \"one over\") of 
 #' all non-zero elements `x`, while the zero-valued elements are kept 
 #' unchanged.

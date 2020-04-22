@@ -2,6 +2,7 @@
 #' Recursive joins
 #'
 #' @description
+#'
 #' `join_recurse()` performs a join of multiple data frames (or 
 #' tibbles) supplied in a list. In order to function properly it 
 #' requires a join function to be supplied. and exist. This can be for 
@@ -51,7 +52,7 @@ join_recurse = function(list, ..., join) {
 
   stopifnot(is.list(list))
   
-  if(!exists('join', mode='function'))
+  if(!is.function(join) && !exists(join, mode='function'))
     error("The function '",join,"' supplied in 'join' does not exist.",
           " If you are using the defaults, remember that the package",
           " 'dplyr' needs to be installed.")
@@ -70,37 +71,37 @@ join_recurse = function(list, ..., join) {
 
 #' @rdname join_recurse
 #' @export
-full_join_recurse = function(list, ...join='full_join') {
+full_join_recurse = function(list, ..., join='full_join') {
   join_recurse(list, ..., join=join)
 }
 
 #' @rdname join_recurse
 #' @export
-left_join_recurse = function(list, ...join='left_join') {
+left_join_recurse = function(list, ..., join='left_join') {
   join_recurse(list, ..., join=join)
 }
 
 #' @rdname join_recurse
 #' @export
-right_join_recurse = function(list, ...join='right_join') {
+right_join_recurse = function(list, ..., join='right_join') {
   join_recurse(list, ..., join=join)
 }
 
 #' @rdname join_recurse
 #' @export
-anti_join_recurse = function(list, ...join='anti_join') {
+anti_join_recurse = function(list, ..., join='anti_join') {
   join_recurse(list, ..., join=join)
 }
 
 #' @rdname join_recurse
 #' @export
-semi_join_recurse = function(list, ...join='semi_join') {
+semi_join_recurse = function(list, ..., join='semi_join') {
   join_recurse(list, ..., join=join)
 }
 
 #' @rdname join_recurse
 #' @export
-inner_join_recurse = function(list, ...join='inner_join') {
+inner_join_recurse = function(list, ..., join='inner_join') {
   join_recurse(list, ..., join=join)
 }
 

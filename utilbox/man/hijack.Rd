@@ -8,8 +8,9 @@ hijack(FUN, ...)
 }
 \description{
 A function that allows for changing of default values for
-arguments of other functions. Similar to \code{\link[base:formals]{base::formals}} but nicer
-syntax.
+arguments of other functions. Similar to \code{\link[base:formals]{base::formals}}, which it
+leverages, but arguably with nicer syntax. Besides revaluing the defaults
+of existing arguments, it also allows adding new arguments.
 }
 \examples{
 cat = hijack(cat, sep='')        # equivalent to cat0
@@ -22,6 +23,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{is_error}()},
 \code{\link{namespaces}},

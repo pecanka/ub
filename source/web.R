@@ -5,6 +5,7 @@
 #' Public IP address
 #'
 #' @description
+#'
 #' Gets ones public IP address using the ipify.com API. The default 
 #' server can be changed.
 #'
@@ -24,6 +25,7 @@ get_my_ip = function(server = "https://api.ipify.org", trace=1) {
 #' Download file
 #'
 #' @description
+#'
 #' A wrapper for `download.file()` that handles missing files without 
 #' stopping on error. It uses the input URL to define the destination 
 #' file.
@@ -52,6 +54,7 @@ web_file_exists = function(url, ...) {
 #' List file on an FTP server
 #'
 #' @description
+#'
 #' Gets a nice looking list of files present on an FTP server.
 #'
 #' The structure returned is dependent on the FTP site as there are 

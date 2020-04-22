@@ -12,6 +12,7 @@
 \alias{\%mes\%}
 \alias{\%notmatches\%}
 \alias{\%nmes\%}
+\alias{\%m_any\%}
 \title{Regular expression match operator}
 \usage{
 pattern \%match\% x
@@ -33,6 +34,8 @@ x \%mes\% pattern
 x \%notmatches\% pattern
 
 x \%nmes\% pattern
+
+pattern \%m_any\% x
 }
 \description{
 \verb{\\\%match\\\%} (alias \verb{\\\%m\\\%}) is an operator version of
@@ -52,6 +55,12 @@ arguments reversed.
 
 \verb{\\\%nmic\\\%} is the case-insensitive version of \verb{\\\%notmatch\%} and
 \verb{\\\%nm\\\%}.
+
+\verb{\\\%m_any\\\%} is an \"any pattern\" matching operator. For its RHS,
+it checks whether its elements match any of the patterns on the
+LHS, and returns logical indicators of this match. If an element
+on the RHS does not match any of the patters specified on the LHS,
+its corresponding returns value is \code{FALSE}, otherwise it is \code{TRUE}.
 }
 \examples{
 # in one direction:

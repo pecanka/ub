@@ -11,7 +11,7 @@
 \usage{
 insert(...)
 
-\method{insert}{list}(x, what, at, count = 1, replace_old = FALSE, new_old = TRUE)
+\method{insert}{list}(x, what, at, count = 1, replace_old = FALSE, new_old = FALSE)
 
 \method{insert}{default}(x, what, ...)
 

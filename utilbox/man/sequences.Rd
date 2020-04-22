@@ -21,9 +21,8 @@ midpoints(x)
 spaces. With \code{rotate=FALSE} the rotated elements are replaced with
 \code{value_rotated} (\code{NA} by default).
 
-\code{frac} gives sequential fractions. It is similar to
-\code{base::diff} except that it returns lagged ratios instead of
-lagged differences.
+\code{frac} gives sequential fractions. It is similar to \code{base::diff}
+except that it returns lagged ratios instead of lagged differences.
 
 \code{midpoints} find the midpoints between individual elements of a
 sequence given in \code{x}.

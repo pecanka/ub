@@ -2,6 +2,7 @@
 #' Utilbox internals
 #'
 #' @description
+#'
 #' `get_utilbox` retrieves a value of a variabled named in `x` from 
 #' the utilbox's package namespace or the hidden environment created in 
 #' `.GlobalEnv` by a call to `utilbox_environment()`.
@@ -102,6 +103,7 @@ utilbox_inits = function(x) {
 #' Source utilbox code files
 #'
 #' @description
+#'
 #' Sources the specified files relative to the path in `path`. If 
 #' `files` is not specified, it sources all files in the path.
 #'

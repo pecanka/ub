@@ -2,6 +2,7 @@
 #' Group belonging indices
 #'
 #' @description
+#'
 #' For each element in `x`, `groups_of_unique()` determines which 
 #' group (first group, second group, etc.) the element belongs to and 
 #' returns the group indices. The groups are determined based on the 
@@ -23,6 +24,7 @@ groups_of_unique = function(x, format=as.numeric) {
 #' Split an object into groups
 #'
 #' @description
+#'
 #' Split the elements of an object into groups (referred to as 
 #' \"bags\") of given size.
 #'
@@ -35,13 +37,19 @@ groups_of_unique = function(x, format=as.numeric) {
 #' @family sequence-related functions provided by utilbox
 #' @export
 split_into_groups = function(x, n) {
+
+  if(missing(n))
+    error("Supply the number of groups to divide `x` into.")
+  
   tapply(x, (seq_along(x) - 1) %/% max(1,ceiling(n)) + 1, `[`, simplify=FALSE)
+  
 }
 
 #' @title
 #' Virtually bag the elements of `x`
 #'
 #' @description
+#'
 #' "Puts" the elements of `x` into virtual bags each of size 
 #' `bagsize`, starting from bag labelled \"1\", then bag labeled \"2\", 
 #' and so on, and returns which bag each element ended up in.

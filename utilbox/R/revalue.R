@@ -2,6 +2,7 @@
 #' Replace values
 #'
 #' @description
+#'
 #' `unzero()` replace all zeros in `x` with the content of `value`.
 #'
 #' `unspace()` replaces  all space characters (or characters matching 

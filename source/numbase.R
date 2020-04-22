@@ -2,6 +2,7 @@
 #' Convert base
 #'
 #' @description
+#'
 #' `to_base_k()` converts the values in `x` (assumed to be `numeric`, 
 #' and thus in base 10) from the decimal base to base `k`.
 #'

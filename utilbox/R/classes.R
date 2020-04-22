@@ -2,6 +2,7 @@
 #' Show all available methods
 #'
 #' @description
+#'
 #' This is an alias for [`utils::methods`].
 #'
 #' @export 
@@ -13,6 +14,7 @@ all_methods = function(...) {
 #' Add class to the object's classes
 #'
 #' @description
+#'
 #' `add_class()` adds the class specified in `what` as the first 
 #' among the classes of the object `x`.
 #'
@@ -40,6 +42,7 @@ drop_class = function(x, class) {
 #' Set class
 #'
 #' @description
+#'
 #' `set_class()` attempts to set the class of `x` to `class` by 
 #' calling `as.*` where `*` is substituted for the character value in 
 #' `class`.
@@ -69,10 +72,11 @@ has_class = function(x, class) {
 #' Convert objects to class `huge`
 #'
 #' @description
+#'
 #' Class `huge` is intended to be used for objects with many elements 
 #' which, if all printed, would clutter the screen. With class `huge` 
 #' set, only a limited number of elements are actually printed. 
-#' (extracted via [`base::head()`]).
+#' (extracted via `base::head()`).
 #'
 #' `is_huge()` checks whether class `huge` is among the classes of 
 #' the object in `x`.
@@ -181,6 +185,7 @@ print.huge.default = function(x, n, len, show_note=TRUE) {
 #' Methods for class truncated
 #'
 #' @description
+#'
 #' `is_truncated()` checks whether and object is of class `truncated`.
 #'
 #' @name class_truncated
@@ -226,6 +231,7 @@ print.truncated = function(x) {
 #' Methods for class \"`abbrevstr`\"
 #'
 #' @description
+#'
 #' Printing method for class \"`abbrevstr`\", which extends 
 #' [`base::print`].
 #'

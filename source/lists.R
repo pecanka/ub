@@ -2,6 +2,7 @@
 #' Flattens a list
 #'
 #' @description
+#'
 #' An alias for `as.list(unlist(...))`.
 #'
 #' @family list utilities provided by utilbox
@@ -14,6 +15,7 @@ list_flatten = function(x) {
 #' Mirror list structure
 #'
 #' @description
+#'
 #' Mirrors the structure of the list `x`. In other words, it returns 
 #' a list with the same numbers of elements at each list-depth. For now 
 #' only mirroring up to depth 1 is implemented.
@@ -33,6 +35,7 @@ list_mirror = function(x, value, depth=1) {
 #' Recursive merge
 #'
 #' @description
+#'
 #' This does a recursive merge of lists. The code is taken from the 
 #' package reshape and modified to fix the bug in it. The bug was the 
 #' missing ellipsis in the call to `Recall()`.
@@ -55,6 +58,7 @@ merge_recurse = function(dfs, ...) {
 #' Recursive append
 #'
 #' @description
+#'
 #' Appends multiple objects together by recursively calling 
 #' [`base::append`].
 #'
@@ -79,6 +83,7 @@ append_recurse = function(lists, ...) {
 #' Removes zero-length elements from a list
 #'
 #' @description
+#'
 #' Takes a list and removes all of its zero-length elements. 
 #' Optionally, the filtering function can be changed via `clean_by`.
 #'
@@ -95,6 +100,7 @@ list_clean = function(x, null.rm=TRUE, clean_by=length) {
 #' Repeat elements in a list
 #'
 #' @description
+#'
 #' An extension of [`base::rep()`] which works with lists which are 
 #' not unlisted. For non-list types it works the same as [`base::rep()`].
 #'
@@ -136,12 +142,15 @@ rep_list.default = rep_list.list
 
 #' @rdname rep_list
 #' @export
-rep_list.matrix = append_body(rep_list.list, expression(x = list(x)), where='first')
+rep_list.matrix = function(x, ...) { 
+  rep_list.list(x=list(x), ...)
+}
 
 #' @title
 #' Modify list
 #'
 #' @description
+#'
 #' A version of [`utils::modifyList()`] which drops zero-length 
 #' elements in `val` before updating `x`. Optionally, it can behave the 
 #' exact same way as modifyList (when `drop_null_val=FALSE`).
@@ -163,6 +172,7 @@ modifyList2 = list_update
 #' Named list
 #'
 #' @description
+#'
 #' `nlist()` creates a named list. The code `list(a = a, b = b)` 
 #' becomes `nlist(a,b)` and `list(a = a, b = 2)` becomes `nlist(a, b = 
 #' 2)`, etc.
@@ -213,6 +223,7 @@ nlist2 = function (...) {
 #' Set list attributes (element-wise)
 #'
 #' @description
+#'
 #' `list_set_attr` takes a list (`x`), attribute name (`attrib_name`) 
 #' and a list of attributes (`attrib`) and sets the attribute named 
 #' `attrib_name` of each element of `x` to the corresponding value in 

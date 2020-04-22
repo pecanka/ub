@@ -122,6 +122,8 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
       ifelse(!any(is_special), length(b)+1, is_special[1])
   })
   
+  hb_is_exported = sapply(hb_code, function(b) any('@export' %mic% b))
+  
   # alter the block ends to ignore the lines below "specials"
   hb_ends = hb_begs - 1 + hb_specials - 1
   
@@ -148,8 +150,8 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
       next
     }
     
-    is_t_beg = i == (hbT_begs[[ib]] %||||% -1)
-    is_d_beg = i == (hbD_begs[[ib]] %||||% -1)
+    is_t_beg = i == (hbT_begs[[ib]] %||||% -1) && hb_is_exported[i]
+    is_d_beg = i == (hbD_begs[[ib]] %||||% -1) && hb_is_exported[i]
     is_p_beg = '@param' %m% tolower(code[i])
     is_s_beg = '@section' %m% tolower(code[i])
     is_i_beg = '(\\item|\\enum|[!][[])' %m% tolower(code[i])
@@ -168,7 +170,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     
     # current line is the first line in the block or it is
     # an empty line (only "#'" on it) => save it unaltered
-    if(i %in% hb_begs || is_empt || is_beg) {
+    if(i %in% hb_begs || is_empt || is_beg || hb_is_exported[i]) {
       #if(!is_p_beg) k = 0
       C[j] = C[j] %.% code[i]
       C_rdnames[j] = hb_rdnames[ib]
@@ -201,30 +203,25 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
 #' @rdname script_help_fix
 #' @export
 script_help_clean_and_wrap = function(Help, RDs, max_width=70, eol="\n#' ", punctuation='.!?', 
-  split_code=TRUE, split='\\n') {
+  trim_trailing_space=TRUE, replace_tag_code=TRUE, scrub_multiple_spaces=TRUE) {
 
   # get rid of trailing spaces
-  Help = str_trim_space(Help, 'right')
+  if(trim_trailing_space) 
+    Help = str_trim_space(Help, 'right')
 
   # replace the long-winded \code{...} with `...`
-  #Help = replace_code_tag(Help, RDs, '')
-  
-  # . first do the
-  # references that are local, then separately do the ones that
-  # are external and turn them into links via the use of square
-  # brackets, that is '[...]'
-  #Help = replace_code_tag(Help, RDs, extra=':', TRUE)
+  if(replace_tag_code) 
+    Help = replace_code_tag(Help, RDs)
   
   # get rid of multiple consecutive spaces
-  Help = str_scrub_space(Help, pattern="([^#]')[ ]+", s="\\1 ")
+  if(scrub_multiple_spaces)
+    Help = str_scrub_space(Help, pattern="([^#]')[ ]+", s="\\1 ")
 
   ## and add full stops but only in the descriptions
   ##Help[focus2] = str_add_punct(Help[focus2], punct=punctuation)
   
-  # focus only on the lines that exceed the character limit
-  long = nchar(Help) > max_width
-
   # wrap the lines
+  long = nchar(Help) > max_width
   Help[long] = str_wrap(Help[long], max_width, eol, break_only_at_space=TRUE)
   
   Help
@@ -251,32 +248,27 @@ extract_rdname = function(x) {
 }
   
 # function to replace \code{...} with `...`
-replace_code_tag = function(x, rds, extra="", add_brackets=FALSE, as_link=TRUE) {
+replace_code_tag = function(x, rds, add_brackets=FALSE, as_link=FALSE) {
   
-  for(e in extra) {
-    
-    pattern = '[\\]code[{]([a-zA-Z0-9_.()'%.%e%.%']+)+[}]' 
+  #pattern = '[\\]code[{]([a-zA-Z0-9:+_.()]+)[}]' 
+  pattern = '[\\]code[{]([^{}}]+)[}]' 
 
-    aslnk = as_link && grepl('[:]',e)
-    
-    # replace code with 
-    repl = ifelse(aslnk,'[`','`') %.% '\\1' %.% ifelse(add_brackets,'()','') %.% 
-           ifelse(aslnk,'`]','`')
-    x = gsub(pattern, repl, x)
-    
-    # put all links in "code" font
-    x = gsub('[[]([^`].+[^`])[]]', '[`\\1`]', x)
-    
-    # place brackets inside the ticks
-    x = gsub('[`]([]]?)[(][)]', '()`\\1', x)
-    
-    # remove potential double brackets
-    x = gsub('[(][)][(][)]','()',x)
-    
-  }
+  # replace the code tag with ticks
+  repl = ifelse(as_link,'[','') %.% 
+         '`\\1`' %.% 
+         ifelse(add_brackets,'()','') %.% 
+         ifelse(as_link,']','')
+  x = gsub(pattern, repl, x)
   
-  #browser()
+  # put all links in "code" font
+  x = gsub('[[]([^`].+[^`])[]]', '[`\\1`]', x)
   
+  # place brackets outside the ticks inside them
+  x = gsub('[`]([]]?)[(][)]', '()`\\1', x)
+  
+  # remove potential double brackets
+  x = gsub('[(][)][(][)]','()',x)
+    
   x
 
 }

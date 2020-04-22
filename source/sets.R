@@ -2,6 +2,7 @@
 #' Sets
 #'
 #' @description
+#'
 #' `mintersect()` finds the intersection of multiple sets.
 #'
 #' `setdiffsym()` determines the \"symmetric difference\" of the 

@@ -2,6 +2,7 @@
 #' Lists files in a zip archive
 #'
 #' @description
+#'
 #' Lists files within a zip archive that match the supplied regular 
 #' expression pattern or patterns. Keeps only files that match at least 
 #' one of the patterns in `pattern` or those that do not match any of 
@@ -42,6 +43,7 @@ list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
 #' Compress files individually
 #'
 #' @description
+#'
 #' A collection of functions useful for creating zip archives and 
 #' unzipping them.
 #'
@@ -101,6 +103,7 @@ zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, ch
 #' Compress multiple files into single archive
 #'
 #' @description
+#'
 #' `zip_files` compresses files into a single archive supplied via 
 #' `zipfile`.
 #'
@@ -137,6 +140,7 @@ zip_files = function(files, path=".", zipfile, extras="-m") {
 #' Compress all files matching a pattern
 #'
 #' @description
+#'
 #' `zip_files_pattern` compresses files matching the pattern in 
 #' `mask` (and not matching the pattern in `mask_exclude`) each into its 
 #' own archive.
@@ -262,6 +266,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
 #' Compress the entire path
 #'
 #' @description
+#'
 #' `zip_all_in_path` compresses all files in the supplied path 
 #' (`path`) each into its own archive
 #'
@@ -318,6 +323,7 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
 #' `unzip_files` decompresses from `zipfile` all files that match the 
 #' pattern
 #' @description
+#'
 #' in `mask`, or those that do not match it if `mask_exclude` is 
 #' `FALSE`.
 #'
@@ -370,6 +376,7 @@ unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, patternize
 #' Read file inside a zip archive
 #'
 #' @description
+#'
 #' `read_table_zip()` reads a table from within a zip file 
 #' (equivalent to read.table except the input file is expected to be a 
 #' zip archive)
@@ -468,7 +475,9 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
   } # for(zipfile in zipfiles)
   
   # Sort the result list according to names
-  if(sort_by_name && length(RES)>0) RES = name_sort(RES)
+  if(sort_by_name && length(RES)>0) {
+    RES = sort_by_names(RES)
+  }
   #if(sort_by_name && length(RES)>0) {
   #  ord = order(names(RES))
   #  RES = RES[ord]

@@ -2,6 +2,7 @@
 #' R session info
 #'
 #' @description
+#'
 #' `R_system_call_args()` returns the trailing arguments of the call 
 #' that invoked the current R session. Useful when calling Rscript on a 
 #' script and modifying its behavior via flags

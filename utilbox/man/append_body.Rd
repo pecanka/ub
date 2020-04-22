@@ -4,7 +4,13 @@
 \alias{append_body}
 \title{Append the body of a function}
 \usage{
-append_body(fun, calls, where = c("first", "last", "at"), at = NULL)
+append_body(
+  fun,
+  calls,
+  where = c("first", "last", "at"),
+  at = NULL,
+  replace_at = TRUE
+)
 }
 \description{
 Takes an existing function \code{fun} and changes its body by appending
@@ -20,7 +26,11 @@ to it the calls supplied in \code{calls}. The calls can either be of class
 \"at\": \code{calls} must be of length 1 and be of class character and
 its content is parsed and evaluated. It can reference the selected
 old line (which one that is is determined by the value in \code{at}) as
-\code{.oldline.} (see the example below).
+\code{.oldline.} (see the example below). A call with non-missing \code{at}
+and missing  \code{where} implies \code{where='at'}.
+
+Remember to use \verb{<-} in any assignment strings (not \code{=}) supplied to
+\code{append_body()}.
 }
 \examples{
 f = function() { x = pi }
@@ -43,7 +53,7 @@ f(1:5, 3:10)
 # without affecting the returned value of the function. The line 
 # in the original code that is altered is determined thru 'at'.
 call = "substitute(y -> x, list(y=.oldline.))"
-f = append_body(setdiffsym, call, where='at', at=1)
+f = append_body(setdiffsym, call, at=1)
 f = append_body(f, c("cat(\"And the symmetric set difference is...\n\")", "x"), where='last')
 f(1:5, 3:10)
 
@@ -53,6 +63,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},

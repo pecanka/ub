@@ -2,6 +2,7 @@
 #' Stopping and quitting
 #'
 #' @description
+#'
 #' `.sow()` sets `options()$warn` to either 0 or 2, which makes R 
 #' either stop when a warning is issued (>=2) or not (0). If the argument 
 #' `turn_on` is missing, the function acts as a toggle turning stopping 

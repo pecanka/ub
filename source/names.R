@@ -2,6 +2,7 @@
 #' Names functions
 #'
 #' @description
+#'
 #' `coalesce_names()` fills in the missing (zero-length) names in `x` 
 #' with the corresponding names in `y`.
 #'

@@ -7,6 +7,7 @@
 \alias{filter_by_pattern}
 \alias{filter_by_name}
 \alias{filter_by_bool}
+\alias{filter_by_bool.default}
 \alias{filter_by_call}
 \title{Filter an object based}
 \usage{
@@ -18,7 +19,9 @@ filter_by_pattern(x, pattern, fixed = FALSE, exclude = FALSE)
 
 filter_by_name(x, pattern, fixed = FALSE, exclude = FALSE)
 
-filter_by_bool(x, keep, exclude = FALSE)
+filter_by_bool()
+
+\method{filter_by_bool}{default}(x, keep, exclude = FALSE)
 
 filter_by_call(...)
 }
@@ -55,6 +58,11 @@ filter_by_bool(v, c(TRUE,FALSE))
 filter_by_call(v, ~nchar(.x)>6)
 
 filter_by_call(1:10, ~.x<5)
+
+x = 1; f = function() { x = 2; filter_by_call(1:10, ~.x>x) }; print(f())
+
+f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~.x$z>x) }; print(f())
+f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~z>x) }; print(f())
 
 }
 \seealso{

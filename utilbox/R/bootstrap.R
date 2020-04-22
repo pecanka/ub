@@ -2,6 +2,7 @@
 #' Bootstrap
 #'
 #' @description
+#'
 #' Returns a vector of B bootstrap values of real-valued statistic 
 #' `T`, where `T` should be an R-function which returns a scalar. 
 #' Arguments of `T` can be supplied via the ellipsis (`...`). If length 

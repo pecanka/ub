@@ -2,6 +2,7 @@
 #' Get ASCII code
 #'
 #' @description
+#'
 #' Returns an ASCII table code of a character in `x`.
 #'
 #' @family string-manipulation functions provided by utilbox
@@ -14,6 +15,7 @@ ascii = function(x) {
 #' Cumulative paste0
 #'
 #' @description
+#'
 #' Takes a vector and cumulatively pastes it together.
 #'
 #' @examples
@@ -29,6 +31,7 @@ cumpaste0 = function(x, .sep="") {
 #' Collapse a string vector
 #'
 #' @description
+#'
 #' `collapse0` takes a vector and collapses it into a single string. 
 #' Equivalent to [`base::paste`] with `collapse=''`. The functions 
 #' `collapse1`, `collapse0n`, `collapse0nq` are aliases for `collapse0` 
@@ -78,6 +81,7 @@ collapse0nq = function(x, ..., sep="'\n'") {
 #' Capitalization
 #'
 #' @description
+#'
 #' Capitalize first letters of each element in the vector `string`.
 #'
 #' @examples
@@ -94,6 +98,7 @@ toupperfirst = function(x) {
 #' Lagged differences for strings
 #'
 #' @description
+#'
 #' Compares neighbouring elements in a string vector and indicates as 
 #' `TRUE/FALSE` the differences. Returns `TRUE` if the corresponding 
 #' elements are different, and `FALSE` whet they are the same. Similar 
@@ -112,6 +117,7 @@ str_diff = function(x) {
 #' String splitting
 #'
 #' @description
+#'
 #' Splits a string vector `x` by character string `split`. 
 #' `str_split` is basically the same as [`base::strsplit`] except that 
 #' for zero-length strings it does not return a zero-length element in 
@@ -127,14 +133,18 @@ str_diff = function(x) {
 #' @family string-manipulation functions provided by utilbox
 #' @export
 str_split = function(x, split, ..., unlist_for_scalar=FALSE) {
+
   y = lapply(base::strsplit(x, split=split, ...), `%||||%`, "")
+  
   if(length(x)==1 && unlist_for_scalar) unlist(y) else y
+  
 }
 
 #' @title
 #' String splitting
 #'
 #' @description
+#'
 #' Splits string into a vector of individual characters.
 #'
 #' @rdname str_split
@@ -149,6 +159,7 @@ str2vector = function(x, split='', ..., unlist_for_scalar=TRUE) {
 #' String trimming
 #'
 #' @description
+#'
 #' Removes trailing spaces from the beginning and end of a string.
 #'
 #' @family string-manipulation functions provided by utilbox
@@ -163,6 +174,7 @@ str_trim_space = function(x, side=c('both','left','right')) {
 #' Remove extra white space
 #'
 #' @description
+#'
 #' Replaces multiple consecutive white spaces with a single one.
 #'
 #' @examples
@@ -178,6 +190,7 @@ str_scrub_space = function(x, pattern='[ ]+', s=' ', fixed=FALSE) {
 #' Add punctuation
 #'
 #' @description
+#'
 #' Adds a punctuation (`p`) to the ends of all elements in a 
 #' character vector that do not end in one of the punctuation marks 
 #' (`punct`).
@@ -196,52 +209,10 @@ str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
 }
 
 #' @title
-#' Empty string check
-#'
-#' @description
-#' `str_is_empty` checks for empty strings, i.e. strings with zero 
-#' length. By default, white space is not trimmed prior to the check, 
-#' but this can be enabled by adding `trim=TRUE` to the call.
-#'
-#' `str_is_empty_not` is returns the negation of what `str_is_empty` 
-#' returns.
-#'
-#' `str_n_empty` counts the number of empty string in a character 
-#' vector. Same defaults as `str_is_empty`.
-#'
-#' @examples
-#' str = c('hello','world','   ','')
-#' str_is_empty(str)             # only the first is empty
-#' str_is_empty(str, TRUE)       # both empty
-#' str_is_empty_not(str)         # both non-empty
-#' str_is_empty_not(str, TRUE)   # only the second is non-empty
-#' str_n_empty(str)              # counts 1 empty
-#' str_n_empty(str, TRUE)        # counts 2 empty
-#' 
-#' @name str_is_empty
-#' @family string-manipulation functions provided by utilbox
-#' @export
-str_is_empty = function(x, trim=FALSE) {
-  !nzchar(if(trim) str_trim_space(x) else x)
-}
-
-#' @title
-#' @name str_is_empty
-#' @export
-str_is_empty_not = function(x, trim=FALSE) {
-  nzchar(if(trim) str_trim_space(x) else x)
-}
-
-#' @rdname str_is_empty
-#' @export
-str_n_empty = function(x, trim=FALSE) {
-  sum(str_is_empty(x, trim=trim))
-}
-
-#' @title
 #' Insert substring into a string (additive)
 #'
 #' @description
+#'
 #' `str_insert()` inserts a substring into a string at a given 
 #' position. If the position in `pos` is larger than the character count 
 #' of the string, the substring either simply attached to the end of the 
@@ -282,6 +253,7 @@ str_replace = function(x, substring, pos, insert_white=FALSE, str2_shift=0) {
 #' Extract the last characters in a string
 #'
 #' @description
+#'
 #' `str_last()` gets the last `n` characters from a string. 
 #' Vectorized.
 #'
@@ -295,6 +267,7 @@ str_last = function(x, n=1) {
 #' Reverse the order of characters in a string
 #'
 #' @description
+#'
 #' `str_rev` takes character input (scalar, vector, list, etc) and 
 #' reverses the order of characters in each of its elements. Generally, 
 #' tries to preserve input class (i.e. lists stay lists).
@@ -313,6 +286,7 @@ str_rev = function(x, simplify=!is.list(x)) {
 #' Find the first or last occurrence of a substring
 #'
 #' @description
+#'
 #' `str_pos` finds the first (when `first=TRUE`) and/or the last 
 #' (`last=TRUE`) occurrence of a substring (given as regular pattern) in 
 #' a string.
@@ -371,11 +345,14 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #' Format string
 #'
 #' @description
+#'
 #' `str_pad` pads to input to a given width (`width`).  It formats 
 #' the contents of `x` to a minimum width (character count) or other 
 #' specified format (via `format`). The minimum length is easiest 
 #' controlled via `min_width`. Non-character values are converted to 
-#' character using `base::as.character`.
+#' character using `base::as.character`. `str_lengthen()` is an alias
+#' for `str_pad()` that exists primarily to allow easy disambiguation 
+#' with `stringr::str_pad()`.
 #'
 #' `int_pad` pads an integer with leading zeros.
 #'
@@ -386,30 +363,44 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #' Check the function in `options()$str$formatNum` to see how R 
 #' formats numbers.
 #'
+#' @examples
+#' str_pad('hello', 20)
+#' str_pad('hello', 20, '.')
+#' str_pad('hello', 20, 'right')
+#'
 #' @name padding
 #' @family string-manipulation functions provided by utilbox
 #' @export
 str_pad = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) {
 
+  if(is_empty(x)) return(x)
+  
   side = match.arg(side)
 
   if(!is.character(x)) x = as.character(x)
   if(missing(min_width)) min_width = max(nchar(x))
   min_width = min_width + nextra
+  
+  npd = ceiling((min_width - nchar(x))/max(1,nchar(padding)))
+  pad = substr(spaces(npd, padding), 1, min_width-nchar(x))
 
   if(side=='left') {
-    #if(missing(format)) format = '%0'%.%min_width%.%'s'
-    #sprintf(format, x)
-    paste0(spaces(min_width - nchar(x), padding), x)
+    pad %.% x
   } else {
-    paste0(x, spaces(min_width - nchar(x), padding))
+    x %.% pad
   }
 
 }
 
 #' @rdname padding
 #' @export
+str_lengthen = str_pad
+
+#' @rdname padding
+#' @export
 int_pad = function(x, min_width, format, fmt='d') {
+  
+  if(is_empty(x)) return(x)
   
   if(missing(format)) {
     if(missing(min_width)) {
@@ -425,6 +416,9 @@ int_pad = function(x, min_width, format, fmt='d') {
 #' @rdname padding
 #' @export
 num_pad = function(x, min_nint, min_ndig=6, fmt='f', format) {
+
+  if(is_empty(x)) return(x)
+  
   if(missing(format)) {
     if(missing(min_nint)) {
       min_nint = max(ndigits(int_part(x)))
@@ -439,14 +433,18 @@ num_pad = function(x, min_nint, min_ndig=6, fmt='f', format) {
 #' @rdname padding
 #' @export
 spaces = function(n, char=' ') {
-  #sapply(n, function(n1) collapse0(rep(char,pmax(0,n1))))
+
+  if(missing(n)) return(NULL)
+  
   strrep(char, pmax(0,n))
+  
 }
 
 #' @title
 #' Wrap text
 #'
 #' @description
+#'
 #' Wrap text. In other words, place newline symbols (`\\n`) along a 
 #' string to make its printout (via e.g. `base::cat`) \"wrap nicely\", 
 #' that is not exceed a given width (set by `max_width`).
@@ -509,6 +507,7 @@ str_wrap_one = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE, m
 #' Grid pasting of strings
 #'
 #' @description
+#'
 #' `str_paste_grid()` produces a concatenation of all possible 
 #' combinations of elements in in the supplied vectors.  for a list of 
 #' combinations of vectors. Takes vectors with parameter values and a 
@@ -568,6 +567,7 @@ str_paste_grid = function(..., vars, sep1='=', sep2='_') {
 #' Shorten a string
 #'
 #' @description
+#'
 #' `str_abbreviate` takes a string and whenever it is long, it cuts 
 #' out the middle section and replaces it with information about how 
 #' many characters were cut out.

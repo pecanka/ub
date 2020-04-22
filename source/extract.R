@@ -2,6 +2,7 @@
 #' Get every n-th element of an object
 #'
 #' @description
+#'
 #' `nth` extracts the n-th element (single value) of an object `x` 
 #' (vector, list, etc.). It relies on `\`[[\`` for the extraction.
 #'
@@ -12,10 +13,21 @@
 #' determine index the position in reversed order.
 #'
 #' @examples
-#' nth(1:10, 2)       # second
-#' nthm(1:10, 2:3)    # second and third
-#' nthr(1:10, 2)      # second from the end
-#' nthmr(1:10, 2:3)   # second and third from the end
+#' # extaction of value
+#' nth(1:10, 2)             # second
+#' nthm(1:10, 3:4)          # third and fourth
+#' nthr(1:10, 2)            # second from the end
+#' nthmr(1:10, 3:4)         # third and fourth from the end
+#'
+#' # extaction and assignment of value
+#' y = as.list(1:10)
+#' nth(y, 2) = Inf       # second
+#' nthm(y, 3:5) = Inf    # third thru fifth
+#' nthr(y, 2) = Inf      # second from the end
+#' nthmr(y, 3:5) = Inf   # third thru fifth from the end
+#'
+#' # extract via logicals
+#' nthm(y, sapply(y, is.finite))
 #'
 #' @name filter_by_position
 #' @family sequence-related functions provided by utilbox
@@ -33,19 +45,53 @@ nthm = function(x, n) {
 #' @rdname filter_by_position
 #' @export
 nthr = function(x, n) {
-  x[[length(x)+1-n]]
+  x[[n_nth_rev(n, x)]]
 }
 
 #' @rdname filter_by_position
 #' @export
 nthmr = function(x, n) {
-  if(n>0) x[length(x)+1-n] else x[-(length(x) + 1 - abs(n))]
+  x[n_nth_rev(n, x)]
+}
+
+#' @rdname filter_by_position
+#' @export
+`nth<-` = function(x, n, value) {
+  `[[<-`(x, n, value)
+}
+
+#' @rdname filter_by_position
+#' @export
+`nthm<-` = function(x, n, value) {
+  `[<-`(x, n, value)
+}
+
+#' @rdname filter_by_position
+#' @export
+`nthr<-` = function(x, n, value) {
+  `[[<-`(x, n_nth_rev(n, x), value)
+}
+
+#' @rdname filter_by_position
+#' @export
+`nthmr<-` = function(x, n, value) {
+  `[<-`(x, n_nth_rev(n, x), value)
+}
+
+# process indexes for reversed extraction/assignment
+n_nth_rev = function(n, x) {
+  if(is.logical(n)) {
+    rev(n)
+  } else {
+    ifelse(n>0, length(x)+1-n, -(length(x) + 1 - abs(n)))
+  }
 }
 
 #' @title
 #' Get every n-th element of an object
 #'
 #' @description
+#'
 #' Extracts every n-th element of an object (vector, list, etc.) 
 #' starting from 'start'.
 #'
@@ -63,6 +109,7 @@ every_nth = function(x, n, start=1L) {
 #' Get the last element
 #'
 #' @description
+#'
 #' Returns the last element in an vector or list.
 #'
 #' @family sequence-related functions provided by utilbox
@@ -75,6 +122,7 @@ last_element = function(x) {
 #' Locate value
 #'
 #' @description
+#'
 #' `first_nonzero` finds the value of the last non-zero element in 
 #' `x`.
 #'
@@ -191,6 +239,7 @@ first_nonempty = function(x) {
 #' Locate position of a value
 #'
 #' @description
+#'
 #' `w_first_nonzero` finds the position of the last non-zero element 
 #' in `x`.
 #'
@@ -321,6 +370,7 @@ w_first_nonempty.list = function(x) {
 #' Extract elements based on their positiveness/negativeness
 #'
 #' @description
+#'
 #' `positive` extract all positive elements in `x`.
 #'
 #' `negative` extacts all negative elements in `x`.
@@ -358,6 +408,7 @@ nonpositive = function(x) {
 #' Filter an object based
 #'
 #' @description
+#'
 #' `filter_by_value` filters `x` based on whether its values match 
 #' contain `pattern` as substring (fixed pattern matching).
 #'
@@ -391,6 +442,11 @@ nonpositive = function(x) {
 #'
 #' filter_by_call(1:10, ~.x<5)
 #'
+#' x = 1; f = function() { x = 2; filter_by_call(1:10, ~.x>x) }; print(f())
+#'
+#' f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~.x$z>x) }; print(f())
+#' f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~z>x) }; print(f())
+#'
 #' @name filter_by
 #' @family sequence-related functions provided by utilbox
 #' @export
@@ -401,50 +457,72 @@ filter_by_value = function(...) {
 #' @rdname filter_by
 #' @export
 filter_by_value.default = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  x[`%m%`(pattern, x, fixed=fixed, exclude=exclude)]
+  keep = `%m%`(pattern, x, fixed=fixed, exclude=exclude)
+  if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
 filter_by_pattern = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  x[`%m%`(pattern, x, exclude=exclude)]
+  keep = `%m%`(pattern, x, fixed=fixed, exclude=exclude)
+  if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
 filter_by_name = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  x[`%m%`(pattern, names(x), fixed=fixed, exclude=exclude)]
+  keep = `%m%`(pattern, names(x), fixed=fixed, exclude=exclude)
+  if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
-filter_by_bool = function(x, keep, exclude=FALSE) {
-  if(exclude) x[!keep] else x[keep]
+filter_by_bool = function() {
+  UseMethod("filter_by_bool")
+}
+  
+#' @rdname filter_by
+#' @export
+filter_by_bool.default = function(x, keep, exclude=FALSE) {
+  if(exclude) keep = !keep
+  if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
 filter_by_call = function(...) {
   
-  lazy_dots_to_args_and_call(...)
-  nargs = length(args)
+  # translate the dots into this creates 'args' and 'call' in this environment
+  args = dots_to_nlist()
   
-  if(nargs==0) return(NULL)
+  if(length(args)<2) 
+    error('Supply both the vector to filter and the call to filter it with.')
+  
+  call = nthr(args, 1)
+  args = nthmr(args, -1)
+  
+  ##lazy_dots_to_args_and_call(...)     
+  ##nargs = length(args)
+  
+  #if(is_empty(args)) return(NULL)
   
   #names(args) = symbolic_call_names(length(args))
-  fun_call = process_symbolic_call(call, nargs)
-  fltr = do.call(fun_call, args)
-  args[[1]][fltr]
+  fun = process_symbolic_call(call, length(args))
+  
+  # call the function constructed by `process_symbolic_call` while 
+  # making sure the function can see what's in the environment
+  # from which `filter_by_call` was called
+  environment(fun) = parent.frame()
+  fltr = do.call(fun, unname(args))
+  
+  x = args[[1]]
+  if(is_dimtwo(x)) x[fltr,] else x[fltr]
   
 }
 
-lazy_dots_to_args_and_call = function(..., envir=parent.frame()) {
-
-  args = list(...)
-  
-  if(length(args)==0) error('Supply a call.')
-  
-  assign('call', nthr(args,1), envir=envir)
-  assign('args', nthmr(args, -1), envir=envir)
-  
-}
+#lazy_dots_to_args_and_call = function(..., envir=parent.frame()) {
+#  args = list(...)
+#  if(is_empty(args)) error('Supply a call.')
+#  assign('call', nthr(args,1), envir=envir)
+#  assign('args', nthmr(args, -1), envir=envir)
+#}

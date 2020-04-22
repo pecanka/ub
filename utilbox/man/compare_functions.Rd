@@ -22,6 +22,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{append_body}()},
 \code{\link{call_to_list}},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},

@@ -2,6 +2,7 @@
 #' Value replacement
 #'
 #' @description
+#'
 #' Replaces the values in `x` with `new_values` either in the order 
 #' of occurrence if `old_values` is missing, or using `old_values` for 
 #' reference.
@@ -50,6 +51,7 @@ replace2 = function(x, new_values, old_values, is_pattern=TRUE, number_new_value
 #' Value replacement
 #'
 #' @description
+#'
 #' `replace3()` replaces the values in `x` with `new_values` in the 
 #' order of occurrence. If `new_values` is missing, it is set to the 
 #' integers between 1 and the number of unique elements in `x`. 

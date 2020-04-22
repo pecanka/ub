@@ -68,7 +68,7 @@ compare_functions = function(fun1, fun2, by_name=FALSE, envir1, envir2) {
 #' `objects`)..
 #'
 #' @export
-compare_code = function(file1, file2, verbose=TRUE) {
+compare_script_code = function(file1, file2, verbose=TRUE) {
 
   if(verbose) {
     cat0("Comparing files '",file1,"' and '",file2,"' ... ")

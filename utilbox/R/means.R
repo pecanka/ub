@@ -2,6 +2,7 @@
 #' Various means
 #'
 #' @description
+#'
 #' Various mean functions. Arithmetic, geometric, weighted geometric, 
 #' harmonic and logistic means are implemented. Compares to 
 #' [`base::mean`] these functions have remove `NA`s by default and 

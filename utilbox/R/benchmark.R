@@ -2,6 +2,7 @@
 #' Benchmarking
 #'
 #' @description
+#'
 #' Simply a short-named alias for `microbenchmark::microbenchmark`.
 #'
 #' @export

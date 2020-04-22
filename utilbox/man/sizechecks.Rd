@@ -5,8 +5,10 @@
 \alias{is_empty}
 \alias{is_empty.default}
 \alias{is_empty.data.frame}
+\alias{is_any_empty}
 \alias{is_nonempty}
 \alias{is_scalar}
+\alias{is_vector}
 \alias{is_dimtwo}
 \alias{is_dimtwoplus}
 \title{Size checks}
@@ -17,30 +19,38 @@ is_empty(...)
 
 \method{is_empty}{data.frame}(x)
 
+is_any_empty(x)
+
 is_nonempty(...)
 
 is_scalar(x)
+
+is_vector(x)
 
 is_dimtwo(x)
 
 is_dimtwoplus(x)
 }
 \description{
-\code{is_empty} checks whether the supplied object has zero no
-elements. It is similar to \code{\link[rlang:is_empty]{rlang::is_empty}}, except applicable
+\code{is_empty()} checks whether the supplied object has zero no
+elements. It is similar to \code{rlang::is_empty()}, except applicable
 also to data frames, for which it derives length from the production
 of the dimension (obtained via \code{dim}).
 
-\code{is_nonempty} is a negation of `is_empty.
+\code{is_any_empty()} is a element-wise check for emptiness. It applies
+\code{is_empty()} to the elements of its argument via \code{base::sapply}. Useful
+for checking emptiness within a \code{list}-class object.
 
-\code{is_scalar} checks whether the supplied is a scalar (vector, list,
+\code{is_nonempty()} is a negation of \code{is_empty()}.
+
+\code{is_scalar()} checks whether the supplied is a scalar (vector, list,
 etc.).
 
-\code{is_dimtwo} checks for two-dimensionality (e.g. matrix, data
+\code{is_dimtwo()} checks for two-dimensionality (e.g. matrix, data
 frame).
 
-\code{is_dimtwoplus} checks for dimensionality 2 or more (e.g. matrix,
-data frame, 2D array, 3D array).
+\code{is_dimtwoplus()} checks whether the dimensionality is at least 2 (e.g.
+matrix, data frame, 2D array, 3D array).
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 

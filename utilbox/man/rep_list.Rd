@@ -29,15 +29,7 @@ rep_list(...)
   rep_as_list = FALSE
 )
 
-\method{rep_list}{matrix}(
-  x,
-  n,
-  each,
-  length.out,
-  bind = append_recurse,
-  flatten = FALSE,
-  rep_as_list = FALSE
-)
+\method{rep_list}{matrix}(x, ...)
 }
 \description{
 An extension of \code{\link[base:rep]{base::rep()}} which works with lists which are

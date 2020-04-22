@@ -9,7 +9,7 @@
 #' order for `x` to not be classified as an error. `ok_set` allows to 
 #' give multiple such values. In other words, the content of `ok_value` 
 #' is compared directly to `x`, while `ok_set` is gone through and 
-#' compared with `x` as a set (via [`base::sapply`]).
+#' compared with `x` as a set (via `base::sapply`).
 #'
 #' @returns Logical indicating whether `x` was classified as an error.
 #'
@@ -62,8 +62,9 @@ is_error = function(x, ok_value, ok_set, compare_via=identical,
 #' Hide input
 #'
 #' @description
-#' Takes input and returns it invisibly. Useful for instance for 
-#' hiding errors and warning messages within [`base::tryCatch`] (see the 
+#'
+#' `hide()` is a simple funciton which takes input and returns it back invisibly. It is useful for instance for 
+#' hiding errors and warning messages within `base::tryCatch` (see the 
 #' examples).
 #'
 #' @examples

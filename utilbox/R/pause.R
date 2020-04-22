@@ -2,6 +2,7 @@
 #' Pause execution / wait
 #'
 #' @description
+#'
 #' `wait()` pauses the execution until either the ENTER key (for 
 #' continue) or ESC (for quit) are pressed.
 #'

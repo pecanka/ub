@@ -41,7 +41,7 @@ truncate_huge(...)
 Class \code{huge} is intended to be used for objects with many elements
 which, if all printed, would clutter the screen. With class \code{huge}
 set, only a limited number of elements are actually printed.
-(extracted via \code{\link[base:head]{base::head()}}).
+(extracted via \code{base::head()}).
 
 \code{is_huge()} checks whether class \code{huge} is among the classes of
 the object in \code{x}.

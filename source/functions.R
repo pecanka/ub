@@ -19,9 +19,11 @@ this_fun_name = function(e=sys.parent()) {
 #' Argument hijack function
 #'
 #' @description
+#'
 #' A function that allows for changing of default values for 
-#' arguments of other functions. Similar to [`base::formals`] but nicer 
-#' syntax.
+#' arguments of other functions. Similar to [`base::formals`], which it
+#' leverages, but arguably with nicer syntax. Besides revaluing the defaults
+#' of existing arguments, it also allows adding new arguments.
 #'
 #' @examples
 #' cat = hijack(cat, sep='')        # equivalent to cat0
@@ -30,10 +32,19 @@ this_fun_name = function(e=sys.parent()) {
 #' @family coding-related functions provided by utilbox
 #' @export
 hijack = function(FUN, ...) {
+  
   .FUN = FUN
   args = list(...)
-  lapply(seq_along(args), function(i) formals(.FUN)[[names(args)[i]]] <<- args[[i]])
+  w_old = names(args) %in% names(formals(.FUN))
+  
+  lapply(seq_along(args[w_old]), function(i) formals(.FUN)[[names(args)[i]]] <<- args[[i]])
+  
+  if(any(!w_old)) {
+    formals(.FUN) = formals(.FUN) %append% args[!w_old]  
+  }
+  
   .FUN
+  
 }
 
 #' @title
@@ -101,6 +112,31 @@ fun_code_to_text = function(fun, file=NULL) {
   
 }
 
+#' Dump the source code of a function to a file
+#'
+#' Dumps the source code of a function `fun` to a file `file`.
+#'
+#' @family coding-related functions provided by utilbox
+#' @export
+fun_dump_code = function(fun, file) {
+
+  catnn(collapse0n(print2var(fun)), file=file)
+  
+}
+
+#' Separate lines of the code of a function 
+#'
+#' `fun_separate_lines()` converts the body of a function (`fun`) to a list where
+#' each element in the list corresponds to one line for the purposes of altering 
+#' the code for instance via `append_body()` below or via `base::trace()`.
+#'
+#' @export
+fun_separate_lines = function(fun) {
+  b = as.list(body(fun))
+  num = seq(1, length(b), 1) - ifelse(identical(b[[1]], as.name('{')), 1, 0)
+  `names<-`(b, "'at' line number "%.%num)
+}
+
 #' @title
 #' Append the body of a function
 #'
@@ -118,7 +154,11 @@ fun_code_to_text = function(fun, file=NULL) {
 #' \"at\": `calls` must be of length 1 and be of class character and 
 #' its content is parsed and evaluated. It can reference the selected 
 #' old line (which one that is is determined by the value in `at`) as 
-#' `.oldline.` (see the example below).
+#' `.oldline.` (see the example below). A call with non-missing `at` 
+#' and missing  `where` implies `where='at'`.
+#'
+#' Remember to use `<-` in any assignment strings (not `=`) supplied to
+#' `append_body()`.
 #'
 #' @examples
 #' f = function() { x = pi }
@@ -141,21 +181,21 @@ fun_code_to_text = function(fun, file=NULL) {
 #' # without affecting the returned value of the function. The line 
 #' # in the original code that is altered is determined thru 'at'.
 #' call = "substitute(y -> x, list(y=.oldline.))"
-#' f = append_body(setdiffsym, call, where='at', at=1)
+#' f = append_body(setdiffsym, call, at=1)
 #' f = append_body(f, c("cat(\"And the symmetric set difference is...\n\")", "x"), where='last')
 #' f(1:5, 3:10)
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-append_body = function(fun, calls, where=c('first','last','at'), at=NULL) {
+append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replace_at=TRUE) {
   
-  where = match.arg(where)
+  where = if(missing(where) && !missing(at)) 'at' else match.arg(where)
   
-  oldbody = as.list(body(fun))
+  old_body = as.list(body(fun))
   
   # drop the brackets if there are any
-  if(identical(oldbody[[1]], as.name('{'))) {
-    oldbody = oldbody[-1]
+  if(identical(old_body[[1]], as.name('{'))) {
+    old_body = old_body[-1]
   }
   
   # append the call at the top ('first') or at the bottom ('last')
@@ -165,10 +205,10 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL) {
       calls = lapply(calls, str2lang)
     }
     
-    newbody = if(where=='first') {
-      append(calls, oldbody)
+    new_body = if(where=='first') {
+      append(calls, old_body)
     } else {
-      append(oldbody, calls)
+      append(old_body, calls)
     }
   
   # alter the original code line number 'at' with the parsed and evaluated
@@ -180,16 +220,103 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL) {
     if(missing(at))
       error("With where='at' a value for 'at' must be supplied.")
     
-    at = min(at, length(oldbody))
-    .oldline. = oldbody[[at]]
-    oldbody[[at]] = eval(parse(text=calls[[1]]))
-    newbody = oldbody
+    calls = calls[[1]]
+    #browser()
+    at = min(at, length(old_body))
+    .oldline. = old_body[[at]]
+    
+    new_code = gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE)
+    new_code = unlist(strsplit(new_code, ';'))
+    new_code = lapply(new_code, str2lang)
+    new_code = lapply(new_code, function(nc) do.call(bquote, list(nc)))
+    
+    new_body = insert(old_body, list(new_code), at, replace_old=replace_at)
+
+    #bquote_ready = str2lang(gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE))
+    #new_code = do.call(bquote, list(bquote_ready))
+
+    #old_code = collapse0(print2var(.oldline.), sep=';')
+    #calls = gsub('.oldline.', old_code, calls, fixed=TRUE)
+    #new_code = str2lang(calls)
+    #oldbody[[at]] = new_code
+    
+    #oldbody[[at]] = eval(parse(text=calls))
+    #newbody = oldbody
     
   }
   
   # assign the modified code back into fun and return the function
-  body(fun) = as.call(c(as.name("{"), newbody))
+  body(fun) = as.call(c(as.name("{"), new_body))
   
   fun
   
 }
+
+#' Replacement in expressions
+#'
+#' Similarly to `gsub` and `sub`, the functions `gsub_lang` and `sub_lang`
+#' perform replacement in expressions. The expressions are first converted
+#' to strings, the replacement is executed (via `base::gsub` or `base::sub`)
+#' and the result is converted back to language expressions. The input can
+#' be a list of expressions or a function.
+#'
+#' @examples
+#' # let's modify the `get2` function to return an NA when the requested
+#' # object is not found.
+#' get3 = hijack(get2, default_value2=NA)
+#' get3 = gsub(get3, 'default_value', 'default_value2')
+#' 
+#' @export
+lang_sub = function(code, pattern, repl, fixed=TRUE, workhorse=gsub) {
+
+  expr = code
+  
+  if(is.function(code)) {
+    expr = as.list(body(expr))
+  }
+  
+  for(i in seq_along(expr)) {
+  
+    line = as.character(expr[i])
+    line = gsub(pattern, repl, line, fixed=fixed)
+    line = str2lang(line)
+    expr[[i]] = line
+  
+  }
+  
+  if(is.function(code)) {
+    body(code) = as.call(expr)
+    expr = code
+  }
+  
+  expr
+  
+}
+
+#' @rdname lang_sub
+#' @export
+gsub_lang = function(...) {
+  lang_sub(..., workhorse=gsub)
+}
+
+#' @rdname lang_sub
+#' @export
+sub_lang = function(...) {
+  lang_sub(..., workhorse=sub)
+}
+
+#' export
+#bquote2 = function (expr, where = parent.frame()) {
+#  unquote <- function(e) {
+#    if (is.pairlist(e)) {
+#      as.pairlist(lapply(e, unquote))
+#    } else if (length(e) <= 1L) {
+#      e
+#    } else if (e[[1L]] == as.name(".")) {
+#      eval(e[[2L]], where)
+#    } else {
+#      as.call(lapply(e, unquote))
+#    }
+#  }
+#  unquote(substitute(expr))
+#}

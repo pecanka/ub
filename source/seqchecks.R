@@ -2,6 +2,7 @@
 #' Between check
 #'
 #' @description
+#'
 #' `is_between()` is a shortcut for `x>=a & x<=b` (for 
 #' `sharp_left=TRUE` and `sharp_right=TRUE`). Other combinations of 
 #' `TRUE/FALSE for `sharp_left,sharp_right` lead to non-sharp 
@@ -45,6 +46,7 @@ or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
 #' Starts and ends of run
 #'
 #' @description
+#'
 #' Indicators of the beginnings (`is_start_of_run`) and ends 
 #' (`is_end_of_run`) of "runs", where "runs" are subsequences with 
 #' unchanging values.
@@ -62,13 +64,29 @@ or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
-is_start_of_run = function(x, is_first_start=TRUE) {
-  c(is_first_start, diff(x)!=0)
+is_start_of_run = function(x, is_first_start=TRUE, tol) {
+
+  if(!is.numeric(x)) {
+    x = as.numeric(as_factor(x))
+  }
+  
+  if(missing(tol)) tol = .Machine$double.eps
+  
+  c(is_first_start, abs(diff(x))>tol)
+  
 }
 
 #' @rdname is_run
 #' @export
-is_end_of_run = function(x, is_last_end=TRUE) {
-  c(diff(x)!=0, is_last_end)
+is_end_of_run = function(x, is_last_end=TRUE, tol) {
+
+  if(!is.numeric(x)) {
+    x = as.numeric(as_factor(x))
+  }
+  
+  if(missing(tol)) tol = .Machine$double.eps
+  
+  c(abs(diff(x))>tol, is_last_end)
+  
 }
 

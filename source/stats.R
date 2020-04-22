@@ -2,6 +2,7 @@
 #' Mode of a sample
 #'
 #' @description
+#'
 #' `Mode()` finds the model of a sample `x`, which is the value that 
 #' occurs with highest frequency in `x`. The function works for both 
 #' numeric and character/factor data.
@@ -25,6 +26,7 @@ Mode = function(x, all_modes=FALSE, exclude.na=TRUE) {
 #' Empirical probability frequency (density)
 #'
 #' @description
+#'
 #' `edf()` gives the empirical probability frequency (i.e. the 
 #' density).
 #'
@@ -41,6 +43,7 @@ edf = function(x) {
 #' Get autocorrelation
 #'
 #' @description
+#'
 #' Calculates the autocorrelation of `x` with given `lag`.
 #'
 #' @export
@@ -52,6 +55,7 @@ acor = function(x, lag=1) {
 #' Logit, probit, inverse logit functions
 #'
 #' @description
+#'
 #' `logit()` gives the logit function, which is also the quantile 
 #' function of the logistic distribution. More exactly, it is the 
 #' function *f(p)=log(p/(1-p))*.
@@ -86,6 +90,7 @@ ilogit = function(q) {
 #' Produce a variance matrix
 #'
 #' @description
+#'
 #' Produces a variance matrix with `rho` on the diagonal according to 
 #' the specified type which can be either "random" (see `rvariance`) or 
 #' has the structure according to `type`.

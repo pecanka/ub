@@ -2,6 +2,7 @@
 #' Weighted chi-square distribution
 #'
 #' @description
+#'
 #' `qchisqw()` calculates the quantile function of the weighted 
 #' chisquare distribution, which is the distribution that arises when 
 #' independent chisquare-distributed variables with `df0` degrees of 

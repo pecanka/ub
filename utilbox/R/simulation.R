@@ -2,6 +2,7 @@
 #' Draw a positive-definite matrix
 #'
 #' @description
+#'
 #' `rposdefmat()` generates a \"random\" (more like arbitrary) 
 #' positive-definite matrix with user-specified positive eigenvalues. If 
 #' eigenvalues are not specified, they are generated from a uniform 
@@ -46,6 +47,7 @@ rvariance = function(n, sigma2=rep(1,n), ev=runif(n,1,200)) {
 #' Draw random sample of p-values under the normal distribution
 #'
 #' @description
+#'
 #' `rnormpval()` draws a random sample of size `M` of p-values 
 #' relative to the normal distribution with parameters `m` (mean) and 
 #' `s` (standard deviation).
@@ -89,6 +91,7 @@ rnormpval = function(M, mu, Sigma=def_Sigma(rho, N=length(mu)), rho=0, two.sided
 #' Sample from a distribution
 #'
 #' @description
+#'
 #' `samplepdf()` samples `n` variables from an arbitrary density 
 #' function specified in `pdf`.
 #'
@@ -120,6 +123,7 @@ samplepdf = function(n, pdf, ..., spdf.lower = -Inf, spdf.upper = Inf) {
 #' Simulate p-values
 #'
 #' @description
+#'
 #' `simulate_pval()` simulates p-values (from the normal model only 
 #' so far).
 #'

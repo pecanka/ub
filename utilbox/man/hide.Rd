@@ -7,8 +7,8 @@
 hide(x, ...)
 }
 \description{
-Takes input and returns it invisibly. Useful for instance for
-hiding errors and warning messages within \code{\link[base:tryCatch]{base::tryCatch}} (see the
+\code{hide()} is a simple funciton which takes input and returns it back invisibly. It is useful for instance for
+hiding errors and warning messages within \code{base::tryCatch} (see the
 examples).
 }
 \examples{
@@ -22,6 +22,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},
 \code{\link{namespaces}},

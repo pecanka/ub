@@ -2,6 +2,7 @@
 #' P-value combination
 #'
 #' @description
+#'
 #' Combines p-values using one of the available methods.
 #'
 #' @export
@@ -28,6 +29,7 @@ combine_pvalues = function(P, lam, method=c("jelle","jakub","fisher","stouffer")
 #' P-value combination using Fisher method
 #'
 #' @description
+#'
 #' Combines p-values using the Fisher combination methods.
 #'
 #' @export
@@ -39,6 +41,7 @@ combine_fisher = function(p, silent=TRUE) {
 #' P-value combination using Fisher method
 #'
 #' @description
+#'
 #' Combines p-values using the Stouffer's combination methods
 #' @export
 combine_stouffer = function(p, silent=TRUE) {
@@ -115,6 +118,7 @@ combine_stouffer = function(p, silent=TRUE) {
 #' Combine p-values
 #'
 #' @description
+#'
 #' Performs combination of p-values using Fisher method or Box method 
 #' (the latter via Jelle's code in .pAsymptotic or Jakub's code below
 #' @export

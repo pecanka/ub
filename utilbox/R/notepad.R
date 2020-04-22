@@ -2,6 +2,7 @@
 #' Add all utilbox objects into Notepad++ highlighting
 #'
 #' @description
+#'
 #' Modifies the notepad language keyword groups in order for the 
 #' utilbox objects to be highlighted by Notepad++.
 #'

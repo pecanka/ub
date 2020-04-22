@@ -2,6 +2,7 @@
 #' Insert element into sequence
 #'
 #' @description
+#'
 #' Insert the elements in `what` inside `x` at the positions given in 
 #' `at`. The positions in `at` are always taken relative to the original 
 #' values in `x`. Each element is inserted `count` times, where `count` 
@@ -99,7 +100,7 @@ insert = function(...) {
 
 #' @rdname insert
 #' @export
-insert.list = function(x, what, at, count=1, replace_old=FALSE, new_old=TRUE) {
+insert.list = function(x, what, at, count=1, replace_old=FALSE, new_old=FALSE) {
 
   if(is_empty(x)) return(x)
   
@@ -198,7 +199,7 @@ insert1.list = function(x, what, at, count=1, replace=FALSE) {
   
   start = head(x, at - 1)
   middle = rep_list(what, count, rep_as_list=TRUE)
-  end = if(at==1) x else tail(x, -(at - 1 + replace))
+  end = if(at==1 && !replace) x else tail(x, -(at - 1 + replace))
 
   start %append% middle %append% end
   

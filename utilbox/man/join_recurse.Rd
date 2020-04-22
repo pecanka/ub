@@ -12,17 +12,17 @@
 \usage{
 join_recurse(list, ..., join)
 
-full_join_recurse(list, ...join = "full_join")
+full_join_recurse(list, ..., join = "full_join")
 
-left_join_recurse(list, ...join = "left_join")
+left_join_recurse(list, ..., join = "left_join")
 
-right_join_recurse(list, ...join = "right_join")
+right_join_recurse(list, ..., join = "right_join")
 
-anti_join_recurse(list, ...join = "anti_join")
+anti_join_recurse(list, ..., join = "anti_join")
 
-semi_join_recurse(list, ...join = "semi_join")
+semi_join_recurse(list, ..., join = "semi_join")
 
-inner_join_recurse(list, ...join = "inner_join")
+inner_join_recurse(list, ..., join = "inner_join")
 }
 \arguments{
 \item{list}{A list of tibbles to be recursively joined.}

@@ -31,8 +31,9 @@ script_help_clean_and_wrap(
   max_width = 70,
   eol = "\\n#' ",
   punctuation = ".!?",
-  split_code = TRUE,
-  split = "\\\\n"
+  trim_trailing_space = TRUE,
+  replace_tag_code = TRUE,
+  scrub_multiple_spaces = TRUE
 )
 }
 \description{

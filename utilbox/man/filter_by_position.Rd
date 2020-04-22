@@ -6,6 +6,10 @@
 \alias{nthm}
 \alias{nthr}
 \alias{nthmr}
+\alias{nth<-}
+\alias{nthm<-}
+\alias{nthr<-}
+\alias{nthmr<-}
 \title{Get every n-th element of an object}
 \usage{
 nth(x, n)
@@ -15,6 +19,14 @@ nthm(x, n)
 nthr(x, n)
 
 nthmr(x, n)
+
+nth(x, n) <- value
+
+nthm(x, n) <- value
+
+nthr(x, n) <- value
+
+nthmr(x, n) <- value
 }
 \description{
 \code{nth} extracts the n-th element (single value) of an object \code{x}
@@ -27,10 +39,21 @@ for the extraction.
 determine index the position in reversed order.
 }
 \examples{
-nth(1:10, 2)       # second
-nthm(1:10, 2:3)    # second and third
-nthr(1:10, 2)      # second from the end
-nthmr(1:10, 2:3)   # second and third from the end
+# extaction of value
+nth(1:10, 2)             # second
+nthm(1:10, 3:4)          # third and fourth
+nthr(1:10, 2)            # second from the end
+nthmr(1:10, 3:4)         # third and fourth from the end
+
+# extaction and assignment of value
+y = as.list(1:10)
+nth(y, 2) = Inf       # second
+nthm(y, 3:5) = Inf    # third thru fifth
+nthr(y, 2) = Inf      # second from the end
+nthmr(y, 3:5) = Inf   # third thru fifth from the end
+
+# extract via logicals
+nthm(y, sapply(y, is.finite))
 
 }
 \seealso{

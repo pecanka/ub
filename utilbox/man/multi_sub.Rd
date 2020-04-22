@@ -18,8 +18,8 @@ replaced inside \code{where}. \code{what} and \code{with} are processed in paral
 which means that they must have the same length or \code{with} must be of
 length 1.
 
-\code{subm} leverages \code{\link[base:sub]{base::sub}}, while \code{gsubm} leverages
-\code{\link[base:gsub]{base::gsub}}.
+\code{subm} leverages \code{base::sub}, while \code{gsubm} leverages
+\code{base::gsub}.
 }
 \examples{
 subm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')

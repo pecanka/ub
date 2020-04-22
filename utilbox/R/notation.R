@@ -2,6 +2,7 @@
 #' Convert a number to an abbreviated notation
 #'
 #' @description
+#'
 #' `short_notation()` (alias `N2T()`) and `short_notation_exp()` 
 #' (alias `N2Texp()`) convert a number (possibly supplied as character) 
 #' and shortens it representation. Small numbers are left intact, large 

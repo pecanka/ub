@@ -3,6 +3,7 @@
 #' Not-in-set operator
 #'
 #' @description
+#'
 #' Logical negation of the value matching operator \code{\%in\%}. The 
 #' operator \code{\%notin\%} (just like its alias \code{\%notin\%}) 
 #' returns `TRUE` for all elements of the first argument that are not 
@@ -33,6 +34,7 @@
 #' Any-in-set operator
 #'
 #' @description
+#'
 #' Similar to the 'in-set' operator except the return value is 
 #' reduced to a scalar via `any`.
 #'
@@ -49,6 +51,7 @@
 #' Concatenation operators
 #'
 #' @description
+#'
 #' Concatenation operators, which are aliases for `base::paste`.
 #'
 #' \code{\%.\%} is an operator versions of \code{base::paste0}.
@@ -91,7 +94,7 @@
 #' @rdname concatenate
 #' @export
 `%__%` = function(..., sep="_") {
-  dots = match.call(expand.dots = FALSE)$`...`
+  dots = as.character(dots_to_nlist()) #match.call(expand.dots = FALSE)$`...`
   strings = as.list(as.character(dots))
   do.call("paste", append(strings, list(sep=sep)))
 }
@@ -100,6 +103,7 @@
 #' Regular expression match operator
 #'
 #' @description
+#'
 #' `\%match\%` (alias `\%m\%`) is an operator version of 
 #' `base::grepl`. It uses the left-hand side argument as the `pattern` 
 #' and the right-hand side argument as the `text` arguments of a call to 
@@ -117,6 +121,12 @@
 #'
 #' `\%nmic\%` is the case-insensitive version of `\%notmatch%` and 
 #' `\%nm\%`.
+#'
+#' `\%m_any\%` is an \"any pattern\" matching operator. For its RHS,
+#' it checks whether its elements match any of the patterns on the
+#' LHS, and returns logical indicators of this match. If an element
+#' on the RHS does not match any of the patters specified on the LHS,
+#' its corresponding returns value is `FALSE`, otherwise it is `TRUE`.
 #'
 #' @examples
 #' # in one direction:
@@ -197,10 +207,18 @@
 #' @export
 `%nmes%` = `%notmatches%`
 
+#' @rdname operator_match
+#' @export
+`%m_any%` = function(pattern, x, ...) {
+  sapply(x, function(y) any(greplm(pattern, y, ...)))
+}
+
+
 #' @title
 #' Default value for NULL and zero-length objects
 #'
 #' @description
+#'
 #' `\%|||\%` is intented to be equivalent "\code{\%||\%}" operator in 
 #' the package `rlang`, but named differently as not to clash with it.
 #'
@@ -256,6 +274,7 @@
 #' Renaming operators
 #'
 #' @description
+#'
 #' Operators that change the name of an object by reassigning the 
 #' value from its left-hand side (for \code{\%->\%}) or right-hand side 
 #' (for \code{\%->\%}) and assigning the value to the variable on the 
@@ -288,6 +307,7 @@
 #' Append operator
 #'
 #' @description
+#'
 #' Append one object to another via [`base::append`]. `\%append\%` 
 #' appends the right-hand argument to the left-hand side, while 
 #' `\%appendR\%` appends in the reverse order.
@@ -323,6 +343,7 @@
 #' Append operator
 #'
 #' @description
+#'
 #' Append one object to another via [`base::c`].
 #'
 #' @examples
@@ -345,6 +366,7 @@
 #' List modify operator
 #'
 #' @description
+#'
 #' Merges two list together while updating the elements of the first 
 #' list with the elements of the second list for the elements found in 
 #' both lists.

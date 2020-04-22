@@ -1,43 +1,8 @@
 #' @title
-#' Conditional element selection with (possible) non-scalar response
-#'
-#' @description
-#' `ifelsem` is an extension of [`base::ifelse`] which allows 
-#' non-scalar response. It returns a list. An attempt at simplifying the 
-#' response is made when `simplify=TRUE`.
-#'
-#' @export
-ifelsem = function(test, yes, no, simplify=FALSE, do_not_recycle_no=FALSE) {
-  
-  if(is_empty(test)) return(logical(0))
-  
-  # "test" the test (i.e. perform the checks on classes, etc. 
-  # of test that ifelse does)
-  test = ifelse(test, TRUE, FALSE)
-  len = length(test)
-  
-  # if recycling of 'no' disabled, stay with 'yes' for the missing
-  # elements
-  if(do_not_recycle_no) {
-    test[(1:len) > length(no)] = TRUE
-  }
-  
-  w_yes = which(test)
-  w_no = which(!test)
-  
-  ans = as.list(rep(NA, len))
-  
-  ans[w_yes] = rep_list(yes, length=len)[w_yes]
-  ans[w_no] = rep_list(no, length=len)[w_no]
-  
-  if(simplify) unlist(ans) else ans
-
-}
-
-#' @title
 #' Pipe friendly conditional operation
 #'
 #' @description
+#'
 #' Apply a transformation on the data only if a condition is met, by 
 #' default if condition is not met the input is returned unchanged.
 #'

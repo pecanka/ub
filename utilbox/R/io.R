@@ -2,6 +2,7 @@
 #' Reads file
 #'
 #' @description
+#'
 #' Reads a text from a file as a single string. By default, reads the 
 #' entire file.
 #'

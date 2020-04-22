@@ -4,16 +4,13 @@
 \alias{seq2}
 \title{Get a sequence}
 \usage{
-seq2(...)
+seq2(from = 1, to = 1, ...)
 }
 \description{
 \code{seq2()} produces a sequence in a manner very similar to
 \code{\link[base:seq]{base::seq}} except for when the inputs would default to a
 decreasing sequence (e.g. \code{seq(0)}, \code{seq(1,0)}) for which it returns
 a zero-length numeric vector.
-
-seq(1,3,l=NULL); seq2(1,3,l=NULL)            # same beharior
-(error)
 }
 \examples{
 seq2(10)           # same as seq(10)
@@ -22,18 +19,25 @@ seq2(1,0,by=1)     # no error (unlike seq(1,0,by=1))
 # comparisons of `seq2` with `seq`
 n = 0; seq2(n); seq(n)                       # different beharior
 n = 1; seq2(n); seq(n)                       # same beharior
-n = 2; seq2(n); seq(n)                       # same beharior
+n = 5; seq2(n); seq(n)                       # same beharior
 
 to = 0; seq2(1,to); seq(1,to)                # different beharior
 to = 0; seq2(1,to,-1); seq(1,to,-1)          # same beharior
 to = 1; seq2(1,to); seq(1,to)                # same beharior
 to = 2; seq2(1,to); seq(1,to)                # same beharior
 
-to = 0; seq2(1,to,1); seq(1,to,1)            # different beharior
+to = 0; seq2(to=to); seq(to=to)              # different beharior
+to = 1; seq2(to=to); seq(to=to)              # same beharior
+to = 7; seq2(to=to); seq(to=to)              # same beharior
+
+to = 0; try(seq2(1,to,1)); try(seq(1,to,1))  # same beharior (i.e. an error)
 to = 4; seq2(1,to,1); seq(1,to,1)            # same beharior
 
-to = 0; seq2(1,to,l=5); seq(1,to,l=5)        # different beharior
+to = 0; seq2(1,to,l=5); seq(1,to,l=5)        # same beharior
 to = 4; seq2(1,to,2); seq(1,to,2)            # same beharior
+
+to = 0; seq2(to=to,l=5); seq(to=to,l=5)      # different beharior
+
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 

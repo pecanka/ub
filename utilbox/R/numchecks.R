@@ -2,6 +2,7 @@
 #' Non-NA value check
 #'
 #' @description
+#'
 #' `anyNonNA()` checks whether a row of `x` contains at least one 
 #' non-NA value. Works for vectors and 2-arrays.
 #'
@@ -23,6 +24,7 @@ anyNonNA = function(x, rowwise=TRUE) {
 #' Check
 #'
 #' @description
+#'
 #' `is_na()` checks if a reduction of elements of `x` is `NA`. The 
 #' default reduction function is `all`, which returns `TRUE` whenever 
 #' all elements of its argument are `NA` or `x` is 0-length. A useful 
@@ -99,6 +101,7 @@ is_even = function(x, tol=.Machine$double.eps) {
 #' Check if a string contains a number
 #'
 #' @description
+#'
 #' `is_number()` checks if the elements of a character vector contain 
 #' numerical values. The check is done by matching regular patterns 
 #' against the supplied vector. The argument `freduce` expects a 

@@ -2,6 +2,7 @@
 #' Split a matrix or data frame
 #'
 #' @description
+#'
 #' Takes a matrix, data frame or any two-dimensional object (array) 
 #' and splits its rows according to the grouping supplied in `f`. Uses 
 #' \code{base::split} as the workhorse, see \code{?base::split} for more 
@@ -28,7 +29,8 @@ split_rows = function(x, f=seq_len(nrow(x)), drop=FALSE, ...) {
 
 #' @title Reverse the order of rows/colums
 #'
-#' @description `rev_rows()` reverses the order of rows of a matrix, 
+#' @description
+#'`rev_rows()` reverses the order of rows of a matrix, 
 #' a data frame or a 2-dimensional array.
 #'
 #' `rev_cols()` reverses the order of columns.
@@ -61,13 +63,15 @@ rev_cols = function(x) {
 
 #' @title Check for identical columns
 #'
-#' @description `identical_cols()` takes a matrix, data frame or any 
+#' @description
+#'`identical_cols()` takes a matrix, data frame or any 
 #' two-dimensional object (array) and checks whether all (or a subset 
 #' of, when `w` given) its columns are identical in terms of content, 
 #' not necessarily in terms of equality of column names.
 #'
 #' @title
 #' @param x A two-dimensional object to be checked. @description
+#'
 #' @param w (Optional) A vector giving a subset of columns to be 
 #' considered.
 #'
@@ -94,10 +98,11 @@ identical_cols = function(x, w) {
 
 #' @title Safe column addition
 #'
-#' @description `add_col()` adds a column(s) into the data frame `x` 
+#' @description
+#'`add_col()` adds a column(s) into the data frame `x` 
 #' if the column(s) is/are not present. The way it is written is 
 #' intended to work both for standard `data.frame` and other 
-#' `data.frame` derived classes (such as [`dplyr::tibble()`]) provided 
+#' `data.frame` derived classes (such as `dplyr::tibble()`) provided 
 #' the derived class has the method `[<-` defined.
 #'
 #' @examples
@@ -123,7 +128,8 @@ add_col = function(.data, ...) {
 
 #' @title Repeat data frame
 #'
-#' @description `rep_df()` repeats the input (`x`) a total of `n` 
+#' @description
+#'`rep_df()` repeats the input (`x`) a total of `n` 
 #' times and bind the result together using the function specified in 
 #' `bind`. Primarily intended for data frames (hence the name) and 
 #' matrices, but can be used for objects of another type (e.g. lists) as 

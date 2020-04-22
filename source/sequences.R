@@ -1,14 +1,13 @@
-#' @title
-#' Points in a sequence
+#' @title Points in a sequence
 #'
 #' @description
+#'
 #' `shift()` shifts (rotate) the elements in a vector in `x` by `lag` 
 #' spaces. With `rotate=FALSE` the rotated elements are replaced with 
 #' `value_rotated` (`NA` by default).
 #'
-#' `frac` gives sequential fractions. It is similar to 
-#' \code{base::diff} except that it returns lagged ratios instead of 
-#' lagged differences.
+#' `frac` gives sequential fractions. It is similar to `base::diff` 
+#' except that it returns lagged ratios instead of lagged differences.
 #'
 #' `midpoints` find the midpoints between individual elements of a 
 #' sequence given in `x`.
@@ -64,10 +63,10 @@ midpoints = function(x) {
 
 ### OLD CODE BELOW ###
 
-#' @title
-#' Get a sequence
+#' @title Get a sequence
 #'
 #' @description
+#'
 #' `seq2()` produces a sequence in a manner very similar to 
 #' [`base::seq`] except for when the inputs would default to a 
 #' decreasing sequence (e.g. `seq(0)`, `seq(1,0)`) for which it returns 
@@ -80,44 +79,56 @@ midpoints = function(x) {
 #' # comparisons of `seq2` with `seq`
 #' n = 0; seq2(n); seq(n)                       # different beharior
 #' n = 1; seq2(n); seq(n)                       # same beharior
-#' n = 2; seq2(n); seq(n)                       # same beharior
+#' n = 5; seq2(n); seq(n)                       # same beharior
 #'
 #' to = 0; seq2(1,to); seq(1,to)                # different beharior
 #' to = 0; seq2(1,to,-1); seq(1,to,-1)          # same beharior
 #' to = 1; seq2(1,to); seq(1,to)                # same beharior
 #' to = 2; seq2(1,to); seq(1,to)                # same beharior
 #'
-#' to = 0; seq2(1,to,1); seq(1,to,1)            # different beharior
+#' to = 0; seq2(to=to); seq(to=to)              # different beharior
+#' to = 1; seq2(to=to); seq(to=to)              # same beharior
+#' to = 7; seq2(to=to); seq(to=to)              # same beharior
+#'
+#' to = 0; try(seq2(1,to,1)); try(seq(1,to,1))  # same beharior (i.e. an error)
 #' to = 4; seq2(1,to,1); seq(1,to,1)            # same beharior
 #'
-#' to = 0; seq2(1,to,l=5); seq(1,to,l=5)        # different beharior
+#' to = 0; seq2(1,to,l=5); seq(1,to,l=5)        # same beharior
 #' to = 4; seq2(1,to,2); seq(1,to,2)            # same beharior
-#
-#' @title
-#' seq2(1,3,by=0.1,l=10); seq(1,3,by=0.1,l=10)  # same beharior 
-#' (error)
-#
-#' @title
-#' seq(1,3,l=5); seq2(1,3,l=5)                  # same beharior
-#' @description
-#' seq(1,3,l=NULL); seq2(1,3,l=NULL)            # same beharior 
-#' (error)
+#'
+#' to = 0; seq2(to=to,l=5); seq(to=to,l=5)      # different beharior
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
-seq2 = function(...) {
+seq2 = function(from=1, to=1, ...) {
 
-  stop("THIS CODE IS MISSING. FINISH IT.")
-
-  args = dots_to_nlist(names=c('from','to'))
-  do.call(base::seq, args)
+  args = dots_to_nlist(names=c('by', 'length.out', 'along.with'))
+  
+  if(length(args)==0) {
+    
+    if(!missing(from) && missing(to)) {
+      to = from
+      from = 1
+    } else if(missing(from) && !missing(to)) {
+      by = 1
+    }
+    
+    if(to<from) {
+      numeric(0)
+    } else {
+      base::seq(from, to, by=1)
+    }
+    
+  } else {  
+    do.call(base::seq, nlist(from, to) %append% args)
+  }
   
 } 
 
-#' @title
-#' Produce a sequence of numbers
+#' @title Produce a sequence of numbers
 #'
 #' @description
+#'
 #' Produces an equidistant sequence between a and b which contains 
 #' both m1 and m2 of appropriate length near len. The sequence might not 
 #' contain the border points points a and b. Forcing them into the 

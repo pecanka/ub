@@ -2,6 +2,7 @@
 #' Determine the kind of session and the system.
 #'
 #' @description
+#'
 #' `is_win` returns `TRUE` when the current system is Windows.
 #'
 #' `is_linux` returns `TRUE` when the current system is Linux/Unix.
@@ -50,6 +51,7 @@ is_rstudio = function() {
 #' Get and set environment variables
 #'
 #' @description
+#'
 #' `set_envir_var` sets a system environment variable, 
 #' `get_envir_var` reads a value of a system environment variable.
 #'
@@ -73,6 +75,7 @@ set_envir_var = function(name) {
 #' System search paths
 #'
 #' @description
+#'
 #' `get_system_PATH()` reads and returns the system search paths.
 #'
 #' `append_system_PATH()` adds the supplied path among the system 

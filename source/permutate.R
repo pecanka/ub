@@ -2,6 +2,7 @@
 #' Generates all permutations
 #'
 #' @description
+#'
 #' `all_permutations()` generates all possible permutations of the 
 #' elements of its argument.
 #'

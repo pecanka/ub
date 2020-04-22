@@ -2,6 +2,7 @@
 #' Format time
 #'
 #' @description
+#'
 #' `format_time()` takes time in seconds and format it to natural 
 #' language. Useful for printing runtime. The hour information can be 
 #' optionally dropped for times under one hour (via `drop_hour=TRUE`). 
@@ -60,6 +61,7 @@ format_time = function(tim, drop_hour=TRUE, drop_minute=TRUE, prec=3) {
 #' Clock control functions
 #'
 #' @description
+#'
 #' Approximate timing of code execution. Useful to announce at what 
 #' times different steps in a (long) running script were started and 
 #' finished. The times are only approximate because when `announce=TRUE` 

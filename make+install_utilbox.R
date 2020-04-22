@@ -51,10 +51,10 @@ if(!dir.exists(package$dir)) create(package$dir)
 ## Delete all existing files in the package
 cat("Deleting any old files that might be present...\n")
 files = list.files(package$dir, full.names=TRUE, recursive=TRUE)
-files = files[!file.info(files)$isdir]
-if(!do_update_documentation) files = files[regexpr('/man/',files)<=0]
-if(do_quick_install) files = files[regexpr('NAMESPACE',files)<=0]
-if(length(files)>0) sapply(files, file.remove)
+files = files[!file.info(files)$isdir]                                  # keep directories
+if(!do_update_documentation) files = files[!grepl('/man/',files)]       # keep man files if documentation is not to be updated
+if(do_quick_install) files = files[!grepl('NAMESPACE',files)]           # keep the NAMESPACE file on quick install
+if(length(files)>0) sapply(files, file.remove)                          # remove what's left in 'files'
 
 ## Copy all of the source files to the package directory
 cat("Copying source files to the package R directory...\n")
@@ -86,12 +86,17 @@ build(package$name, path='build')
 cat("Installing the package...\n")
 install(package$name, quick=do_quick_install)
 
+# Copy the newly created NAMESPACE file 
+if(!do_quick_install) {
+  file.copy(file.path(package$dir,'NAMESPACE'), '.', overwrite=TRUE)
+}
+
 cat("Adding the package's source path variable to .GlobalEnv and to .Rprofile so that it is set at R startup ...\n")
 package_complete_path = file.path(path, package$filedir)
 startup_code = paste0("assign('.",package$name,"_source_path', '", package_complete_path, "', envir=.GlobalEnv)")
 assign('.utilbox_source_path', package_complete_path, envir=.GlobalEnv)
-R_del_code_startup(substr(startup_code, 1, 30))
-R_add_code_startup(startup_code)
+utilbox::R_del_code_startup(substr(startup_code, 1, 30))
+utilbox::R_add_code_startup(startup_code)
 
 cat("Cleaning up...\n")
 rm(package, path, files)

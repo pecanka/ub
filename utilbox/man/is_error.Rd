@@ -25,7 +25,7 @@ to require that \code{x} has certain value (the value in \code{ok_value}) in
 order for \code{x} to not be classified as an error. \code{ok_set} allows to
 give multiple such values. In other words, the content of \code{ok_value}
 is compared directly to \code{x}, while \code{ok_set} is gone through and
-compared with \code{x} as a set (via \code{\link[base:sapply]{base::sapply}}).
+compared with \code{x} as a set (via \code{base::sapply}).
 }
 \examples{
 is_error(try(x = .this.is.a.missing.variable))
@@ -64,6 +64,7 @@ Other coding-related functions provided by utilbox:
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
 \code{\link{fun_code_to_text}()},
+\code{\link{fun_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{namespaces}},

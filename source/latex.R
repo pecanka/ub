@@ -2,6 +2,7 @@
 #' Fix LaTeX Bibliography
 #'
 #' @description
+#'
 #' `fix_bibliography()` puts author names into the 'Lastname1, 
 #' Firstname1 and Lastname2, Firstname2' format in a bibtex bibliography 
 #' file `infile`. It also abbreviates the first names with/without a dot 

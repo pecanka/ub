@@ -2,6 +2,7 @@
 #' Return the output of a print call as string
 #'
 #' @description
+#'
 #' Returns the output of a print call as string. Useful for saving 
 #' the output of a print call into a variable. Simply an alias for 
 #' [`utils::capture.output`].
@@ -15,6 +16,7 @@ print2var = function(fun, file=NULL) {
 #' Print text
 #'
 #' @description
+#'
 #' `cat0()` prints text to console or file via [`base::cat()`]. It is 
 #' basically an alias for [`base::cat()`] that automatically flushes the 
 #' console buffer (when `flush=TRUE`). This only affects buffered output 
@@ -45,10 +47,11 @@ print2var = function(fun, file=NULL) {
 #'
 #' @family printing function provided by utilbox
 #' @export
-cat0 = function(..., file="", sep="", fill=FALSE, labels=NULL, append=FALSE, 
-  flush=TRUE, flush_cycle=1, envir=utilbox_environment(), fill_using_options=FALSE) {
+cat0 = function(..., file="", sep="", fill=FALSE, pad=FALSE, padding=' ', pad_side='right', 
+  labels=NULL, append=FALSE, flush=TRUE, flush_cycle=1, envir=utilbox_environment(), 
+  fill_using_options=FALSE) {
   
-  if(isFALSE(fill) || fill_using_options) {
+  if(isFALSE(pad) && (isFALSE(fill) || fill_using_options)) {
     
     base::cat(..., file=file, sep=sep, fill=as.numeric(fill)>0, labels=labels, append=append)
     
@@ -57,8 +60,13 @@ cat0 = function(..., file="", sep="", fill=FALSE, labels=NULL, append=FALSE,
   } else {
 
     x = do.call(collapse0, list(list(...), sep=sep))
-    x = str_wrap(x, if(isTRUE(fill)) options()$width else fill)
-
+    if(!isFALSE(pad)) {
+      x = str_pad(x, pad, side=pad_side, padding=padding)
+    }
+    if(!isFALSE(fill)) {
+      x = str_wrap(x, if(isTRUE(fill)) options()$width else fill)
+    }
+    
     base::cat(x, file=file, append=append)
     
   }

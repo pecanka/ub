@@ -2,6 +2,7 @@
 #' Normal distribution
 #'
 #' @description
+#'
 #' `upnorm()` returns upper tail probabilities of a normal 
 #' distribution.
 #'
