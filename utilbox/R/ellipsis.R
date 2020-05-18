@@ -55,7 +55,7 @@ args_to_nlist = function(envir=parent.frame()) {
 
   nams = ls(all.names=TRUE, envir=envir)
   
-  present = sapply(nams, function(n) eval(parse(text='!missing('%.%n%.%')'), envir=envir))
+  present = sapply(nams, function(n) eval(parse(text='!missing('%p%n%p%')'), envir=envir))
   
   nams = filter_by_bool(nams, present)
   

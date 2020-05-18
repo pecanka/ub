@@ -68,14 +68,14 @@
 #' @name concatenate
 #' @examples
 #' a = 'multi'; b = 'tasking'
-#' a %.% b            # yields 'multitasking'
+#' a %p% b            # yields 'multitasking'
 #' a %..% b           # yields 'multi tasking'
 #' a %_% b            # yields 'multi_tasking'
 #' a %__% b           # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
 #'
 #' @family operators provided by utilbox
 #' @export
-`%.%` = function(x, y) {
+`%p%` = function(x, y) {
   paste0(x, y)
   #do.call("paste0", list(...))
 }
@@ -105,7 +105,7 @@
 #' @rdname concatenate
 #' @export
 `%.^%` = function(x, y) {
-  ifelse(greplm('^('%.%x%.%')', y), y, x%.%y)
+  ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
 }
 
 #' @title

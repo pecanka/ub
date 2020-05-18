@@ -55,6 +55,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{cumpaste0}()},
 \code{\link{multi_sub}()},
 \code{\link{patternize}()},
+\code{\link{str_cut}()},
 \code{\link{str_diff}()},
 \code{\link{str_grab}()},
 \code{\link{str_insert}()},
@@ -62,7 +63,6 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
 \code{\link{str_rev}()},
-\code{\link{str_split}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},
 \code{\link{toupperfirst}()}

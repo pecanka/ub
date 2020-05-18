@@ -59,6 +59,7 @@ R_append_default_pckgs = function(..., system_var_name='R_DEFAULT_PACKAGES') {
 R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   
   if(missing(pckg) || is_empty(pckg)) {
+    catn('Specify a library to add to startup.')
     return(invisible(NULL))
   }
   
@@ -72,8 +73,16 @@ R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   all_pckgs = union(getOption('defaultPackages'), pckg)
 
   catnf = hijack(catn, file=Rprof_file, append=TRUE)
-  catnf("options(defaultPackages=c('",collapse0(all_pckgs, sep="','"),"'))")
-  catnf("cat(\"Packages loaded at startup:", " \",sQuote('" %.% all_pckgs %.% "'),\"", "\\n\")")
+  catnf(".inst = utils::installed.packages()[,'Package']")
+  catnf(".defs = c('",collapse0(all_pckgs, sep="','"),"')")
+  catnf(".defs_avail = intersect(.defs, .inst)")
+  catnf(".defs_miss = setdiff(.defs, .inst)")
+  catnf("options(defaultPackages = .defs_avail)")
+  #catnf("cat('Packages loaded at startup:', " \",sQuote('" %p% all_pckgs %p% "'),\"", "\\n\")")
+  catnf("cat('Packages loaded at startup: ',paste(sapply(.defs_avail, sQuote), collapse=' '),'\\n')")
+  catnf("if(length(.defs_miss)>0) cat('Packages not loaded at startup (not installed): ',paste(sapply(.defs_miss, sQuote), collapse=' '),'\\n')")
+  catnf("rm(.defs, .inst, .defs_avail, .defs_miss)")
+
   
   catn("File ",Rprof_file," modified.")
   catn("You must reload the R session for any changes to take effect.")
@@ -93,7 +102,7 @@ R_add_code_startup = function(code, Rprof_file) {
   catnf = hijack(catn, file=Rprof_file, append=TRUE)
 
   add_line = function(line) {
-    added = "eval(parse(text=\"" %.% line %.% "\"))"
+    added = "eval(parse(text=\"" %p% line %p% "\"))"
     catnf(added)
     added
   }

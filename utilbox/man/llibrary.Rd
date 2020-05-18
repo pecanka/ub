@@ -55,6 +55,7 @@ package_is_installed('utilbox')
 \seealso{
 Other package-related functions provided by utilbox: 
 \code{\link{apply_pckg}()},
+\code{\link{lib_dependencies}()},
 \code{\link{set_pkglib}()}
 }
 \concept{package-related functions provided by utilbox}

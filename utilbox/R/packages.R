@@ -22,7 +22,7 @@ get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE
 
   if(!character.only) pckg = as.character(substitute(pckg))
   
-  ns = try(as.environment("package:"%.%pckg), silent=TRUE)
+  ns = try(as.environment("package:"%p%pckg), silent=TRUE)
   
   if(is_error(ns) && stop_on_error)
     error("Namespace for package '",pckg,"' not found.")
@@ -96,7 +96,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     if(any(lib$name==loaded_packages)) {
       if(!detach_first) next
       catn("Detaching package ",lib$name," ...")
-      detach('package:'%.%lib$name, character.only=TRUE)
+      detach('package:'%p%lib$name, character.only=TRUE)
     }
     
     # Announce loading of the current package
@@ -273,7 +273,7 @@ object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   namespace = apply_pckg(objs, pckg, function(x) orig_env(x))
   namespace = ifelse(namespace==env_pckg, '', namespace)
 
-  #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%.%str_patternize(nam)%.%'[(, ]') %m% fun_code_to_text(x)))
+  #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%p%str_patternize(nam)%p%'[(, ]') %m% fun_code_to_text(x)))
   
   tbl = list(package=pckg,
              object=objs, 
@@ -371,3 +371,45 @@ set_pkglib = function(libpath) {
   
 }
 
+#' Package dependencies
+#'
+#' `lib_dependencies` lists dependencies for all packages supplied in `pckg`. 
+#' It is nothing but a wrapper for `tools::package_dependencies`.
+#'
+#' `install_package_dependencies` (re)installs all dependencies of the 
+#' supplied packages. Useful when an error occurred during a previous
+#' package installation and some packages were not installed.
+#'
+#' @family package-related functions provided by utilbox
+#' @export
+lib_dependencies = function(pckg, ...) {
+  tools::package_dependencies(pckg, ...)
+}
+
+#' @rdname lib_dependencies
+#' @export
+install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FALSE) {
+  
+  catn = function(...) base::cat(...,'\n')
+  
+  catn('Listing all package dependencies ...')
+  pckgs = unlist(lib_dependencies(pckg))
+  
+  if(length(pckgs)==0) {
+    catn('The supplied packages have no dependencies.')
+    return(invisible(NULL))
+  }
+  
+  if(skip_installed) {
+    pckgs = setdiff(pckgs, installed.packages()[,'Package'])
+  }
+  
+  if(length(pckgs)==0) {
+    catn('All dependencies are already installed.')
+  }
+  
+  for(p in pckgs) {
+    install.packages(p, ...)
+  }
+  
+}

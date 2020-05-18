@@ -26,7 +26,7 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   # 20000 characters, a limitations of Notepad++) by the R base, 
   # Keywords7 is reserved for overflow by the tidyverse words.
   if(missing(fields)) {
-    fields = 'Keywords' %.% c(1:6,8)
+    fields = 'Keywords' %p% c(1:6,8)
   }
 
   if(length(fields)>1 && length(keywords)>1 && !is.list(keywords))
@@ -96,7 +96,7 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   # set what entry to look for (via 'keyword=' on input)
   update_lang_open = '<(Language|UserLang) name=\"r\"'
   update_lang_close = '</(Language|UserLang)>'
-  update_kwrd_open = '<Keywords name=\"' %.% key_name %.% '\">'
+  update_kwrd_open = '<Keywords name=\"' %p% key_name %p% '\">'
   update_kwrd_close = '</Keywords>'
 
   # locate the correct language entry
@@ -124,10 +124,10 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   }
   
   nlhold = 'XXX'
-  extra_keyname_hold = unnumber(key_name) %.% nlhold
-  extra_keyname = unnumber(key_name) %.% (force_as_integer(key_name)+0:n_extra_keywords)
-  new_kw_all = str_break(new_kw_all, max_nchar, eol='</Keywords>\n<Keywords name=\"'%.%
-                          extra_keyname_hold%.%'\"> ', break_only_at_space=TRUE)
+  extra_keyname_hold = unnumber(key_name) %p% nlhold
+  extra_keyname = unnumber(key_name) %p% (force_as_integer(key_name)+0:n_extra_keywords)
+  new_kw_all = str_break(new_kw_all, max_nchar, eol='</Keywords>\n<Keywords name=\"'%p%
+                          extra_keyname_hold%p%'\"> ', break_only_at_space=TRUE)
   if(n_extra_keywords > 0) {
     new_kw_all = subm(new_kw_all, extra_keyname_hold, extra_keyname[-1])
   }
@@ -138,7 +138,7 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   old_kw = unlist(str_grab('>[^<>]*<', code_kw))
   
   # update the entry
-  new_kw = '> ' %.% new_kw_all %.% ' <'
+  new_kw = '> ' %p% new_kw_all %p% ' <'
   code_kw = sub('>[^<>]*<', new_kw, code_kw)
   code[wkw] = c(code_kw, rep('', w_kwrd_close-w_kwrd_open))
   
@@ -179,7 +179,7 @@ notepad_pckg_keys = function(pckgs, pattern, exclude=TRUE, what=c('all','exporte
 #' Keywords 8 (utilbox) are currently returned. 
 notepad_keywords = function(field, do_methods=FALSE) {
 
-  pattern_drop = '^'%.%str_last(pckgs_Methods(do_methods), drop=TRUE)%.%'[.]'
+  pattern_drop = '^'%p%str_last(pckgs_Methods(do_methods), drop=TRUE)%p%'[.]'
   
   if('Keywords1' %in% field) 
     Keywords1 = c('function','C','c','if','else','for','while','repeat',

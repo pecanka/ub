@@ -41,8 +41,8 @@ setdiffsym = function(x, y, labels, report_counts=TRUE) {
   
   tdi = ' (#difference|#intersect|#total)'
   Counts =
-    c('x: '%.%collapse0(c(length(dxy),length(x)-length(dxy),length(x)),sep='|'),
-      'y: '%.%collapse0(c(length(dyx),length(y)-length(dyx),length(y)),sep='|'))%.%tdi
+    c('x: '%p%collapse0(c(length(dxy),length(x)-length(dxy),length(x)),sep='|'),
+      'y: '%p%collapse0(c(length(dyx),length(y)-length(dyx),length(y)),sep='|'))%p%tdi
                 
   structure(`names<-`(list(dxy, dyx), labels), Counts=Counts)
   

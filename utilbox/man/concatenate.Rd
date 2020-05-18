@@ -2,14 +2,14 @@
 % Please edit documentation in R/operators.R
 \name{concatenate}
 \alias{concatenate}
-\alias{\%.\%}
+\alias{\%p\%}
 \alias{\%..\%}
 \alias{\%_\%}
 \alias{\%__\%}
 \alias{\%.^\%}
 \title{Concatenation operators}
 \usage{
-x \%.\% y
+x \%p\% y
 
 x \%..\% y
 
@@ -35,7 +35,7 @@ below).
 }
 \examples{
 a = 'multi'; b = 'tasking'
-a \%.\% b            # yields 'multitasking'
+a \%p\% b            # yields 'multitasking'
 a \%..\% b           # yields 'multi tasking'
 a \%_\% b            # yields 'multi_tasking'
 a \%__\% b           # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)

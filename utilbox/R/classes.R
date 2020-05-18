@@ -58,7 +58,7 @@ drop_class = function(x, class) {
 #'
 #' @export
 set_class = function(x, class) {
-  do.call('as.'%.%class, list(x))
+  do.call('as.'%p%class, list(x))
 }
 
 #' @rdname set_class
@@ -264,7 +264,7 @@ truncate_huge.default = function(x, n) {
 }
 
 msg_character_shortened = function(ncut, cut_symbol='......') {
-  ifelse(ncut<=0, '', cut_symbol %.% ' (' %.% ncut %.% ' characters omitted) ' %.% cut_symbol)
+  ifelse(ncut<=0, '', cut_symbol %p% ' (' %p% ncut %p% ' characters omitted) ' %p% cut_symbol)
 }
 
 default_trunc_info = function() {
@@ -283,7 +283,7 @@ print_trunc_note = function() {
   any_hidden = get_utilbox("trunc_n_hidden")
   #print(any_hidden)
   if(any_hidden>0) {
-    msg = "Note: For objects of class 'huge' only the first " %.% n_limit %.% 
+    msg = "Note: For objects of class 'huge' only the first " %p% n_limit %p% 
           " elements were printed. Use print(n=...) to change this limit."
     catn('\n',msg)
     invisible(msg)

@@ -39,21 +39,21 @@ format_time = function(tim, drop_hour=TRUE, drop_minute=TRUE, prec=3) {
   if(th==0 && drop_hour) {
     th = NULL 
   } else if(th<10) {
-    th = "0" %.% th
+    th = "0" %p% th
     drop_minute = FALSE
   }
   
   if(tm==0 && drop_minute) {
     tm = NULL 
   } else if(tm<10) {
-    tm = "0" %.% tm
+    tm = "0" %p% tm
   }
   
   if(!is.null(tm) && ts<10) {
-    ts = "0" %.% ts
+    ts = "0" %p% ts
   }
   
-  collapse0(c(td, collapse0(c(th,tm,ts),sep=":")), sep=' days and ') %.% ifelse(is.null(tm)," seconds","")
+  collapse0(c(td, collapse0(c(th,tm,ts),sep=":")), sep=' days and ') %p% ifelse(is.null(tm)," seconds","")
   
 }
 
@@ -112,7 +112,7 @@ start_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what
   d1 = clock(FALSE)
   
   if(announce) {
-    catn(lead,toupperfirst(what %.% "started at "), paste0(d1),out,".")
+    catn(lead,toupperfirst(what %p% "started at "), paste0(d1),out,".")
   }
 
   v_start = '._start_time_variable'
@@ -159,8 +159,8 @@ stop_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what=
   d12 = difftime(d2, d1, unit="secs")
 
   if(announce) {
-    catn(lead,toupperfirst(what %.% "started at "), paste0(d1), out, ".")
-    catn(lead,toupperfirst(what %.% "finished at "), paste0(d2), out, ".")
+    catn(lead,toupperfirst(what %p% "started at "), paste0(d1), out, ".")
+    catn(lead,toupperfirst(what %p% "finished at "), paste0(d2), out, ".")
     catn(lead,"Total ", tolower(what), "runtime of ", format_time(as.numeric(d12)), out,".")
   }
 

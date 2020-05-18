@@ -33,7 +33,7 @@ process_symbolic_call = function(call, narg) {
 #' `symbolic_call_names()` returns the names of arguments that are 
 #' needed by a symbolic call.
 symbolic_call_names = function(n) {
-  h1('.' %.% shift(base::letters, 3), n, stop_on_greedy=TRUE)
+  h1('.' %p% shift(base::letters, 3), n, stop_on_greedy=TRUE)
 }
 
 ##' These functions are useful when processing [`tidyverse`]-style 

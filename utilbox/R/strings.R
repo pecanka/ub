@@ -118,23 +118,23 @@ str_diff = function(x) {
 #'
 #' @description
 #'
-#' `str_split()` splits a string vector `x` by character string `split`. 
+#' `str_cut()` splits a string vector `x` by character string `split`. 
 #' Basically, it is the same as [`base::strsplit`] except that 
 #' for zero-length strings it does not return a zero-length element in 
 #' the returned list. 
 #'
-#' `str2vector()` is an alias for `str_split()` with the default value 
+#' `str2vector()` is an alias for `str_cut()` with the default value 
 #' for split set to '' (an empty string) so that it ends up producing a 
 #' vector of individual characters. It also unlists the returned value 
 #' for scalar `x`.
 #'
 #' @examples
-#' str_split(c('a-b','a-c','a-d','','c-d','c-e'),'-')
+#' str_cut(c('a-b','a-c','a-d','','c-d','c-e'),'-')
 #'
-#' @name str_split
+#' @name str_cut
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_split = function(x, split, ..., unlist_for_scalar=FALSE) {
+str_cut = function(x, split, ..., unlist_for_scalar=FALSE) {
 
   y = lapply(base::strsplit(x, split=split, ...), `%||||%`, "")
   
@@ -142,10 +142,10 @@ str_split = function(x, split, ..., unlist_for_scalar=FALSE) {
   
 }
 
-#' @rdname str_split
+#' @rdname str_cut
 #' @export
 str2vector = function(x, split='', ..., unlist_for_scalar=TRUE) {
-  str_split(x, split=split, ..., unlist_for_scalar=unlist_for_scalar)
+  str_cut(x, split=split, ..., unlist_for_scalar=unlist_for_scalar)
 }
 
 #' Remove empty substrings
@@ -203,7 +203,7 @@ str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
     punct = unlist(strsplit(punct, ''))
   }
   no_punc = str_last(str_trim_space(x, side='right')) %notin% punct
-  ifelse(no_punc, x %.% p, x)
+  ifelse(no_punc, x %p% p, x)
 }
 
 #' @title
@@ -235,10 +235,10 @@ str_insert = function(x, what, pos, insert_white=FALSE, str2_shift=0, workhorse=
   str1 = do.call(workhorse, list(x, 1, pos-1))
   if(insert_white) {
     nspace = pos - 1 - nchar(str1) + nchar(what)
-    what = sprintf('%'%.%nspace%.%'s', what)
+    what = sprintf('%'%p%nspace%p%'s', what)
   }
   str2 = do.call(workhorse, list(x, pos + str2_shift, nchar(x)))
-  str1 %.% what %.% str2
+  str1 %p% what %p% str2
 }
 
 #' @rdname str_insert
@@ -353,7 +353,7 @@ str_pos = function(string, what, first=TRUE, last=FALSE, patternize=FALSE, escap
 #' @rdname str_pos
 #' @export
 str_first_occurence = function(x, what, miss=-1) {
-  p = c(unlist(regexpr('('%.%str_escape(what)%.%')', x)))
+  p = c(unlist(regexpr('('%p%str_escape(what)%p%')', x)))
   ifelse(p < 0, miss, p)
 }
 
@@ -361,7 +361,7 @@ str_first_occurence = function(x, what, miss=-1) {
 #' @export
 str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
   w = if(escape) str_escape(what) else what
-  p = c(t1(unlist(gregexpr('(' %.%w%.%')', x))))
+  p = c(t1(unlist(gregexpr('(' %p%w%p%')', x))))
   ifelse(p < 0, miss, p)
 }
 
@@ -408,9 +408,9 @@ str_pad2 = function(x, min_width, side=c('left','right'), padding=' ', nextra=0)
   pad = substr(spaces(npd, padding), 1, min_width-nchar(x))
 
   if(side=='left') {
-    pad %.% x
+    pad %p% x
   } else {
-    x %.% pad
+    x %p% pad
   }
 
 }
@@ -429,7 +429,7 @@ int_pad = function(x, min_width, format, fmt='d') {
     if(missing(min_width)) {
       min_width = max(ndigits(x))
     }  
-    format = '%0' %.% min_width %.% fmt
+    format = '%0' %p% min_width %p% fmt
   }
   
   sprintf(format, x)
@@ -447,7 +447,7 @@ num_pad = function(x, min_nint, min_ndig=6, fmt='f', format) {
       min_nint = max(ndigits(int_part(x)))
     }  
     min_width = min_nint + I(x<0) + min_ndig + 1
-    format = '%0' %.% min_width %.% fmt
+    format = '%0' %p% min_width %p% fmt
   }
   
   sprintf(format, x)
@@ -525,7 +525,7 @@ str_break_single = function(x, max_width=Inf, eol='\n', break_only_at_space=FALS
     x
   } else {
     args = nlist(max_width, eol, break_only_at_space)
-    substr(x, 1, wb) %.% ifelse(wb==weol, '', eol) %.% 
+    substr(x, 1, wb) %p% ifelse(wb==weol, '', eol) %p% 
       do.call(Recall, list(substr(x, wb+1, n)) %append% args)
   }
   
@@ -626,7 +626,7 @@ str_abbreviate = function(x, n1=12, n2) {
   part1 = substr(x, 1, n1)
   part2 = substr(x, pmax(nchar(x)-n2+1, n1+1), nchar(x))
   ncut = nchar(x) - nchar(part1) - nchar(part2)
-  x = part1 %.% msg_character_shortened(ncut) %.% part2
+  x = part1 %p% msg_character_shortened(ncut) %p% part2
   
   structure(x, ncut=ncut, class=c('abbrevstr', class(x)))
 

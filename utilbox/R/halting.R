@@ -26,9 +26,9 @@ error = function(..., sep="", quit=TRUE, Q, browser=interactive(), nskip1=0, env
   if(!missing(browser) && isTRUE(browser)) quit = FALSE
 
   cat0(spaces(nskip1, "\n"))
-  err = ifelse(str_is_empty(fparent), "", "occured in function `"%.%
-        fparent%.%"()` with message: ") %.%
-        ifelse(str_is_empty(msg), "(no message)", msg) %.% '\n'
+  err = ifelse(str_is_empty(fparent), "", "occured in function `"%p%
+        fparent%p%"()` with message: ") %p%
+        ifelse(str_is_empty(msg), "(no message)", msg) %p% '\n'
   
   if(quit) {
     halt(err) 
@@ -75,7 +75,7 @@ halt = function(error="") {
   if(interactive()) {
   
     if(!str_is_empty(error)) catn()
-    stop(error %.% "\nExecution halted.\n", call.=FALSE)
+    stop(error %p% "\nExecution halted.\n", call.=FALSE)
     
   } else {
   

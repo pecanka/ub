@@ -90,7 +90,7 @@ transfer_object = function(from, to, what, check_existence=FALSE, delete=TRUE) {
 
   stopifnot(is.environment(from), is.environment(to), length(what)==1)
   
-  question = "Object named '" %.% what %.% "' already exists in the" %.%
+  question = "Object named '" %p% what %p% "' already exists in the" %p%
              " destination environment. Proceed?"
 
   proceed = !check_existence || !exists(what, envir=to) || ask(question)
@@ -198,8 +198,8 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
 #' @export
 is_same_environment = function(x, y, assume_package_x=TRUE, assume_package_y=TRUE) {
 
-  if(is.character(x) && assume_package_x) x = 'package:' %.% x
-  if(is.character(y) && assume_package_y) y = 'package:' %.% y
+  if(is.character(x) && assume_package_x) x = 'package:' %p% x
+  if(is.character(y) && assume_package_y) y = 'package:' %p% y
   
   if(is.character(x)) x = as.environment(x)
   if(is.character(y)) y = as.environment(y)

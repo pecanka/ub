@@ -179,7 +179,7 @@ show_Colors = function(n, col, cex=3, pch=16, pos1=2, pos2=4, adj1=-.25, adj2=0.
   y = - ((y-1)%%20+1)
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
   plot(y=y, x=x, cex=cex, pch=pch, col=col, xlim=range(x)+c(-1,3), ylim=range(y)+c(-1,1), axes=FALSE)
-  text(1:length(col)%.%'.', x=x+adj1, y=y, cex=0.7, pos=pos1)
+  text(1:length(col)%p%'.', x=x+adj1, y=y, cex=0.7, pos=pos1)
   text(col, x=x+adj2, y=y, cex=0.8, pos=pos2)
 }
 

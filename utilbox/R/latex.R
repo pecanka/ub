@@ -63,9 +63,9 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
       a = a[nchar(a)>0]
       for(j in seq2(1,(length(a)-1),1)) {
         a[j] = if(!grepl(special_words,a[j])) {
-          substr(a[j],1,1) %.% dot 
+          substr(a[j],1,1) %p% dot 
         } else {
-          " " %.% a[j]
+          " " %p% a[j]
         }
       }
       
@@ -82,16 +82,16 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
         n[i] = if(split==0) {
           collapse1(a) 
         } else {
-          collapse1(tail(a,-split)) %.% ", " %.% collapse1(head(a, split))
+          collapse1(tail(a,-split)) %p% ", " %p% collapse1(head(a, split))
         }
         
       } else {
-        n[i] = collapse0(head(a, -1)) %.% tail(a,1)
+        n[i] = collapse0(head(a, -1)) %p% tail(a,1)
       }
     }
     
     # Paste the author line back together
-    x[k] = s1 %.% "{" %.% paste(n, collapse=" and ") %.% "},"
+    x[k] = s1 %p% "{" %p% paste(n, collapse=" and ") %p% "},"
     
   }
 

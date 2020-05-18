@@ -45,11 +45,11 @@
 #' make_numeric(c('1','a'), on_error=err)
 #'
 #' # remove all numbers
-#' unnumber('x: '%.%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
+#' unnumber('x: '%p%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
 #' # remove all numbers and number strings (including the decimal point)
-#' unnumber('x: '%.%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
+#' unnumber('x: '%p%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
 #' # remove all numbers and number strings (including the decimal point)
-#' unnumber('x: '%.%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
+#' unnumber('x: '%p%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
 #'
 #' @family numeric conversion functions provided by utilbox
 #' @export
@@ -82,7 +82,7 @@ force_as_integer = function(x, ignore_sign=TRUE, na_val) {
   
   y = ifelse(!w, 
              gsub('[^0-9]*','',x),
-             '-' %.% gsub('[^0-9]*','',substr(x,w+1,nchar(x))))
+             '-' %p% gsub('[^0-9]*','',substr(x,w+1,nchar(x))))
                   
   y = as.integer(y)
   
@@ -108,7 +108,7 @@ force_as_real = function(x, ignore_sign=TRUE, dec='.', dec_fixed=TRUE, na_val) {
               0, 
               force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
               
-  y = as.numeric(lp %.% '.' %.% rp)
+  y = as.numeric(lp %p% '.' %p% rp)
   
   if(!missing(na_val)) {
     y[is.na(y)] = na_val
@@ -124,9 +124,9 @@ unnumber = function(x, drop_dec=FALSE, drop_sign=FALSE) {
   dsp = if(drop_sign) '[+-]?' else ''
   
   pattern = if(drop_dec) {
-    collapse0(dsp%.%c('[0-9][.]?[0-9]','[.]?[0-9]','[0-9][.]?','[0-9]'), sep="|")
+    collapse0(dsp%p%c('[0-9][.]?[0-9]','[.]?[0-9]','[0-9][.]?','[0-9]'), sep="|")
   } else {
-    dsp%.%'[0-9]'
+    dsp%p%'[0-9]'
   }
   
   gsub(pattern,'', x)

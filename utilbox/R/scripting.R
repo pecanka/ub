@@ -107,7 +107,7 @@ source_files = function(files, path='.', announce=TRUE, normalize=FALSE,
   envir=.GlobalEnv, report_new=TRUE) {
 
   ff = file_path(path, files, normalize=normalize)
-  msgs = "Sourcing file '" %.% ff %.% "' ... "
+  msgs = "Sourcing file '" %p% ff %p% "' ... "
   
   new = list()
   for(i in seq_along(ff)) {

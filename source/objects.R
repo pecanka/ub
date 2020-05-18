@@ -102,7 +102,7 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigit=3) {
 
   s = rsignif(x / sapply(unit, de_unit), ndigit)
   
-  if(append_unit) as.character(s) %.% unit else s
+  if(append_unit) as.character(s) %p% unit else s
 
 }
 

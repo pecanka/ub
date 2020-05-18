@@ -134,7 +134,7 @@ fun_dump_code = function(fun, file) {
 fun_separate_lines = function(fun) {
   b = as.list(body(fun))
   num = seq(1, length(b), 1) - ifelse(identical(b[[1]], as.name('{')), 1, 0)
-  `names<-`(b, "'at' line number "%.%num)
+  `names<-`(b, "'at' line number "%p%num)
 }
 
 #' @title

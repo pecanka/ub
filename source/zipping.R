@@ -222,7 +222,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
     
     # If single archive should be produced, add the flag 'g' (from the 2nd file on)
     ichunk = ichunk + 1
-    if(single_archive && ichunk==2) extras = "-"%.%sub("-","",extras)%.%"g"
+    if(single_archive && ichunk==2) extras = "-"%p%sub("-","",extras)%p%"g"
     
     # Zip the current file up. Possibly try a few times in case a file access error occurred
     iis = c(1,rep(2,5))[c(TRUE, rep(retry,nretries))]
@@ -304,8 +304,8 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
       of = paste0(f,".zip")
       ios = zip(of, f, extras=extras)
       if(check_status) check_zip_ios(ios, f)
-      files = c(files, d%.%f)
-      zipfiles = c(zipfiles, d%.%of)
+      files = c(files, d%p%f)
+      zipfiles = c(zipfiles, d%p%of)
       Ios = c(Ios, ios)
     }
     
@@ -554,15 +554,15 @@ check_zip_ios = function(ios, file) {
 
   if(ios==0) return(invisible(nlist(ios, msg='OK')))
   
-  msg = "There might have been a problem during the zipping"%.%
-    ifelse(!missing(file), "file '"%.%file%.%"'", "")%.%
-    " (status code "%.%ios%.%")." %.%
+  msg = "There might have been a problem during the zipping"%p%
+    ifelse(!missing(file), "file '"%p%file%p%"'", "")%p%
+    " (status code "%p%ios%p%")." %p%
     if(ios==127) {
-      "The zip archiver appears to be missing (zip returned code 127)."%.% 
+      "The zip archiver appears to be missing (zip returned code 127)."%p% 
       ifelse(is_win(), " (Hint: Install Rtools)","")
     } else if(ios==12) {
-      "The zip archiver reported an error 'name not matched' (status code "%.%
-      ios%.%"). This occurred probably due to some of the file names"%.%
+      "The zip archiver reported an error 'name not matched' (status code "%p%
+      ios%p%"). This occurred probably due to some of the file names"%p%
       " being very long. Attempting to continue regardless..."
   }
            

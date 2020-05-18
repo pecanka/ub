@@ -174,7 +174,7 @@ sub_at = function(x, ..., at='@') {
 #' @rdname sub_at
 #' @export
 substitute_at = function(x, sub_list, at='@', workhorse=subm) {
-  workhorse(x, at %.% names(sub_list), sub_list)
+  workhorse(x, at %p% names(sub_list), sub_list)
 }
 
 #' @title

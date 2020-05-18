@@ -15,7 +15,7 @@
 #' snippet2 = paste0(rep('Printing function.', t=30), collapse=' ')
 #' snippet3 = "\n#'\n#' @example\n#' f('Hello world!')\n#'\n#' @export\n"
 #' snippet4 = "f = function(x) {\n  print(x)\n}"
-#' script_help_fix(code=snippet1 %.% snippet2 %.% snippet3 %.% snippet4)
+#' script_help_fix(code=snippet1 %p% snippet2 %p% snippet3 %p% snippet4)
 #'
 #' @export
 script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.!?', 
@@ -30,7 +30,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
     if(verbose) catn("Adding wrapping to file '",file,"' ...")
     code = readLines(file)
   } else if(split_code) {
-    code = unlist(str_split(code, split))
+    code = unlist(str_cut(code, split))
   }
   
   # fix typos (where #" is in the place of #')
@@ -53,7 +53,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
 
   # save the results to file
   if(!missing(file)) {
-    writeLines(Code, file2 <- file%.%'.wrapped') 
+    writeLines(Code, file2 <- file%p%'.wrapped') 
     if(verbose) catn("Output saved to file '",file2,"'.")
   } else {
     file = file2 = NULL
@@ -172,7 +172,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     # an empty line (only "#'" on it) => save it unaltered
     if(i %in% hb_begs || is_empt || is_beg || hb_is_exported[i]) {
       #if(!is_p_beg) k = 0
-      C[j] = C[j] %.% code[i]
+      C[j] = C[j] %p% code[i]
       C_rdnames[j] = hb_rdnames[ib]
       next
     }
@@ -182,7 +182,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     is_d_beg = is_d_beg || is_empt_p
     #k = k+1
     if(!is_d_beg) j = j-1
-    C[j] = str_trim_space(C[j] %.% ifelse(is_d_beg, "#'", "")) %..% strip_start(code[i])
+    C[j] = str_trim_space(C[j] %p% ifelse(is_d_beg, "#'", "")) %..% strip_start(code[i])
     # save the current rdname    
     C_rdnames[j] = hb_rdnames[ib]
     
@@ -254,9 +254,9 @@ replace_code_tag = function(x, rds, add_brackets=FALSE, as_link=FALSE) {
   pattern = '[\\]code[{]([^{}}]+)[}]' 
 
   # replace the code tag with ticks
-  repl = ifelse(as_link,'[','') %.% 
-         '`\\1`' %.% 
-         ifelse(add_brackets,'()','') %.% 
+  repl = ifelse(as_link,'[','') %p% 
+         '`\\1`' %p% 
+         ifelse(add_brackets,'()','') %p% 
          ifelse(as_link,']','')
   x = gsub(pattern, repl, x)
   

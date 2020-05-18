@@ -154,7 +154,7 @@ insert.default = function(x, what, ...) {
   
   if(is.vector(x)) {
     
-    yy = tryCatch(do.call('as.'%.%class(x)[1], list(y)), warning=hide, error=hide)
+    yy = tryCatch(do.call('as.'%p%class(x)[1], list(y)), warning=hide, error=hide)
     
     if(!is_error(yy)) {
       attributes(yy) = attributes(y)

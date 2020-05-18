@@ -61,11 +61,11 @@ err = function(x) {catn("Problem converting the values:\n"); print(x[!is_number(
 make_numeric(c('1','a'), on_error=err)
 
 # remove all numbers
-unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
+unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
 # remove all numbers and number strings (including the decimal point)
-unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
+unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
 # remove all numbers and number strings (including the decimal point)
-unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
+unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
 
 }
 \concept{numeric conversion functions provided by utilbox}

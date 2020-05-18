@@ -112,8 +112,8 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
   
   type = type %|||% c('exact','partial','free')
 
-  p = list(exact='^'%.%str_patternize(p)%.%'$', 
-           partial='^'%.%str_patternize(p), 
+  p = list(exact='^'%p%str_patternize(p)%p%'$', 
+           partial='^'%p%str_patternize(p), 
            free=str_patternize(p))
 
   lf = hijack(list.files, path=path, full.names=full.names)
@@ -252,8 +252,8 @@ file_exists = function(files, path, stop_on_missing=FALSE, warn_on_missing=TRUE)
 }
 
 msg_files_missing = function(files, path='.') {
-  "The following files are missing (relative to path '" %.% path %.% "'):\n" %.% 
-  collapse0n(files, "\n") %.% '\n'
+  "The following files are missing (relative to path '" %p% path %p% "'):\n" %p% 
+  collapse0n(files, "\n") %p% '\n'
 }
   
 #' @rdname dir_exist_check
@@ -512,7 +512,7 @@ clean_filename = function(x, chr="-", keep_last_dot=TRUE) {
   if(p<=0) {
     gsub("[.]", chr, x)
   } else {
-    gsub("[.]", chr, substr(x,1,p-1)) %.% substr(x,p,nchar(x))
+    gsub("[.]", chr, substr(x,1,p-1)) %p% substr(x,p,nchar(x))
   }
   
 }
@@ -580,7 +580,7 @@ random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-
 #' @export
 file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
   
-  file_bak = file %.% '_' %.% timest(add_pid=pid) %.% '.bak'
+  file_bak = file %p% '_' %p% timest(add_pid=pid) %p% '.bak'
   
   if(!missing(path)) {
     file = file_path(path, file)
