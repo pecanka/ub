@@ -4,28 +4,35 @@
 \alias{operator_match}
 \alias{\%match\%}
 \alias{\%m\%}
-\alias{\%mic\%}
+\alias{\%m_ic\%}
 \alias{\%notmatch\%}
 \alias{\%nm\%}
-\alias{\%nmic\%}
+\alias{\%nm_ic\%}
 \alias{\%matches\%}
 \alias{\%mes\%}
 \alias{\%notmatches\%}
 \alias{\%nmes\%}
 \alias{\%m_any\%}
+\alias{\%m_any_ic\%}
+\alias{\%mes_any\%}
+\alias{\%mes_any_ic\%}
+\alias{\%nm_any\%}
+\alias{\%nm_any_ic\%}
+\alias{\%nmes_any\%}
+\alias{\%nmes_any_ic\%}
 \title{Regular expression match operator}
 \usage{
 pattern \%match\% x
 
 pattern \%m\% x
 
-pattern \%mic\% x
+pattern \%m_ic\% x
 
 pattern \%notmatch\% x
 
 pattern \%nm\% x
 
-pattern \%nmic\% x
+pattern \%nm_ic\% x
 
 x \%matches\% pattern
 
@@ -36,6 +43,20 @@ x \%notmatches\% pattern
 x \%nmes\% pattern
 
 pattern \%m_any\% x
+
+pattern \%m_any_ic\% x
+
+x \%mes_any\% pattern
+
+x \%mes_any_ic\% pattern
+
+pattern \%nm_any\% x
+
+pattern \%nm_any_ic\% x
+
+x \%nmes_any\% pattern
+
+x \%nmes_any_ic\% pattern
 }
 \description{
 \verb{\\\%match\\\%} (alias \verb{\\\%m\\\%}) is an operator version of
@@ -45,7 +66,7 @@ and the right-hand side argument as the \code{text} arguments of a call to
 which means that the operator also takes vector arguments (on either
 side).
 
-\verb{\\\%mic\\\%} is a version of \verb{\\\%m\\\%} which ignores case by default.
+\verb{\\\%m_ic\\\%} is a version of \verb{\\\%m\\\%} which ignores case by default.
 
 \code{\%matches\%} does the same except with the roles of the two
 arguments reversed.
@@ -53,7 +74,7 @@ arguments reversed.
 \verb{\\\%notmatch\%} (alias \verb{\\\%nm\\\%}) and \verb{\\\%notmatches\%} (alias
 \verb{\\\%nmes\\\%}) are the negations of the two operators.
 
-\verb{\\\%nmic\\\%} is the case-insensitive version of \verb{\\\%notmatch\%} and
+\verb{\\\%nm_ic\\\%} is the case-insensitive version of \verb{\\\%notmatch\%} and
 \verb{\\\%nm\\\%}.
 
 \verb{\\\%m_any\\\%} is an \"any pattern\" matching operator. For its RHS,
@@ -61,6 +82,8 @@ it checks whether its elements match any of the patterns on the
 LHS, and returns logical indicators of this match. If an element
 on the RHS does not match any of the patters specified on the LHS,
 its corresponding returns value is \code{FALSE}, otherwise it is \code{TRUE}.
+
+\verb{\\\%m_any_ic\%} is a case-insensitive version of \verb{\\\%m_any\%}.
 }
 \examples{
 # in one direction:
@@ -74,8 +97,8 @@ its corresponding returns value is \code{FALSE}, otherwise it is \code{TRUE}.
 "daylight" \%matches\% "ai"
 
 # case insensitive version:
-"DAYlight" \%mic\% "ay"
-"DAYlight" \%mic\% "ai"
+"DAYlight" \%m_ic\% "ay"
+"DAYlight" \%m_ic\% "ai"
 
 }
 \seealso{

@@ -129,34 +129,32 @@ seq2 = function(from=1, to=1, ...) {
 #'
 #' @description
 #'
-#' Produces an equidistant sequence between a and b which contains 
-#' both m1 and m2 of appropriate length near len. The sequence might not 
-#' contain the border points points a and b. Forcing them into the 
-#' sequence can be done via add_a and/or add_b, but the equi-distance of 
-#' all points might no longer be true.
+#' Produces an equidistant sequence between `a` and `b` of length approximately 
+#' `len` which contains both `m1` and `m2`. The sequence might not contain the 
+#' border points `a` and `b`. Enforcing their presence in the sequence can be
+#' done via  `add_a=TRUE` and/or `add_b=TRUE`, althought then the equi-distance
+#' of all points might no longer be true.
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
 seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   
-  stopifnot(!missing(a))
+  if(missing(a))
+    error("Supply 'a'.")
   
   if(length(a)>1) {
   
     b = max(a)
     a = min(a)
-    if(missing(len) && is_integer(a) && is_integer(b)) len = b-a+1
+    if(missing(len) && is_integer(a) && is_integer(b)) 
+      len = b - a + 1
     
   } else stopifnot(!missing(b))
   
-  if(a > b) {
-    
-    if(len>1) 
-      error("With 'len' above 1 the value in 'b' cannot be smaller than value in 'a'!")
+  if(a > b && len>1)
+    error("With 'len' above 1 the value in 'b' cannot be smaller than value in 'a'!")
       
-    return(a)
-    
-  }
+  if(a > b) return(a)
 
   # Use ordinary seq if both middle points
   if(missing(m1) && missing(m2)) {

@@ -2,35 +2,70 @@
 % Please edit documentation in R/as_number.R
 \name{as_numeric}
 \alias{as_numeric}
+\alias{make_numeric}
+\alias{force_as_integer}
+\alias{force_as_real}
+\alias{unnumber}
 \title{Type conversion}
 \usage{
 as_numeric(x)
+
+make_numeric(x, convert = as.numeric, on_error = stop)
+
+force_as_integer(x, ignore_sign = TRUE, na_val)
+
+force_as_real(x, ignore_sign = TRUE, dec = ".", dec_fixed = TRUE, na_val)
+
+unnumber(x, drop_dec = FALSE, drop_sign = FALSE)
 }
 \description{
-Convert to type \code{numeric} without any warnings about non-numeric
+\code{as_numeric()} converts to type \code{numeric} without any warnings about non-numeric
 elements. Non-numeric elements are turned into \code{NA}. Basically, a
 less verbose version of \code{base::as.numeric}.
+
+\code{make_numeric()} changes the type of \code{x} to \code{numeric} whenever all elements can be
+converted (using \code{base::as.numeric}. Otherwise, calls the
+function supplied in \code{on_error}. This allows a direct control of what
+happens on the conversion via supplying the error function.
+Basically, a more flexible (but by default a more stringent) version
+of \code{base::as.numeric()}.
+
+\code{force_as_integer()} and \code{force_as_real()} convert to type \code{integer} and
+\code{double}, respectively, by stripping all non-number substrings in each
+element of \code{x}.This is a very radically forced conversion, which can be useful
+when strange artefacts polluted the data, but caution is advised.
+
+\code{force_unnumber()} removes all number characters from \code{x}. (It does not remove
+the character parts of a number in the scientific notation.)
 }
 \examples{
+# convert to numeric type
 as_numeric(c("1","2"))
 as_numeric(c("1","a"))
 
+make_numeric(c("1","2"))       # conversion works
+make_numeric(c("1","x"))       # conversion fails
+
+# force as integers
+force_as_integer(c('1','2'))
+force_as_integer(c('1','x'))
+force_as_integer(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
+
+# force as real numbers
+force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
+force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'), ignore_signFALSE)
+force_as_real(c('1','x'))
+
+# an example of a custom error function
+err = function(x) {catn("Problem converting the values:\n"); print(x[!is_number(x,I)]); stop()}
+make_numeric(c('1','a'), on_error=err)
+
+# remove all numbers
+unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
+# remove all numbers and number strings (including the decimal point)
+unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
+# remove all numbers and number strings (including the decimal point)
+unnumber('x: '\%.\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
+
 }
-\seealso{
-Other numeric functions provided by utilbox: 
-\code{\link{Invert}()},
-\code{\link{downweight}()},
-\code{\link{extract_by_value}},
-\code{\link{force_as_}},
-\code{\link{locate_position_of_value}},
-\code{\link{lower_tri}()},
-\code{\link{make_numeric}()},
-\code{\link{min_dif}()},
-\code{\link{permutations}},
-\code{\link{replace_value}},
-\code{\link{sequences}},
-\code{\link{sets}},
-\code{\link{to_base_k}()},
-\code{\link{which_max}()}
-}
-\concept{numeric functions provided by utilbox}
+\concept{numeric conversion functions provided by utilbox}

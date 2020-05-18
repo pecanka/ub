@@ -3,27 +3,30 @@
 \name{filter_by}
 \alias{filter_by}
 \alias{filter_by_value}
-\alias{filter_by_value.default}
 \alias{filter_by_pattern}
 \alias{filter_by_name}
 \alias{filter_by_bool}
-\alias{filter_by_bool.default}
 \alias{filter_by_call}
+\alias{filter_out}
 \title{Filter an object based}
 \usage{
-filter_by_value(...)
+filter_by_value(x, pattern, fixed = TRUE, exclude = FALSE)
 
-\method{filter_by_value}{default}(x, pattern, fixed = FALSE, exclude = FALSE)
+filter_by_pattern(
+  x,
+  pattern,
+  fixed = FALSE,
+  exclude = FALSE,
+  ignore.case = FALSE
+)
 
-filter_by_pattern(x, pattern, fixed = FALSE, exclude = FALSE)
+filter_by_name(x, pattern, fixed = FALSE, exclude = FALSE, ignore.case = FALSE)
 
-filter_by_name(x, pattern, fixed = FALSE, exclude = FALSE)
-
-filter_by_bool()
-
-\method{filter_by_bool}{default}(x, keep, exclude = FALSE)
+filter_by_bool(x, keep, exclude = FALSE)
 
 filter_by_call(...)
+
+filter_out(x, pattern, fixed = FALSE, ignore.case = FALSE)
 }
 \description{
 \code{filter_by_value} filters \code{x} based on whether its values match
@@ -45,6 +48,9 @@ results of a function (call given in \code{call}) match the pattern in
 function, which uses the formula sign \code{~} to represent a
 function with a single argument \code{.x} and which is evaluated with \code{x}
 supplied to it as the argument \code{.x}.
+
+In all of these function the pattern can be a vector at a match
+against any of its components is sufficient.
 }
 \examples{
 v = c(first='hello',second='amsterdam')
@@ -67,7 +73,6 @@ f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~z>x) }; print(f())
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{as_factor}()},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{groups_of_unique}()},
@@ -83,6 +88,7 @@ Other sequence-related functions provided by utilbox:
 \code{\link{seq_around}()},
 \code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
+\code{\link{to_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

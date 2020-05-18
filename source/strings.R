@@ -118,10 +118,12 @@ str_diff = function(x) {
 #'
 #' @description
 #'
-#' Splits a string vector `x` by character string `split`. 
-#' `str_split` is basically the same as [`base::strsplit`] except that 
+#' `str_split()` splits a string vector `x` by character string `split`. 
+#' Basically, it is the same as [`base::strsplit`] except that 
 #' for zero-length strings it does not return a zero-length element in 
-#' the returned list. `str2vector` is an alias with the default value 
+#' the returned list. 
+#'
+#' `str2vector()` is an alias for `str_split()` with the default value 
 #' for split set to '' (an empty string) so that it ends up producing a 
 #' vector of individual characters. It also unlists the returned value 
 #' for scalar `x`.
@@ -140,27 +142,45 @@ str_split = function(x, split, ..., unlist_for_scalar=FALSE) {
   
 }
 
-#' @title
-#' String splitting
-#'
-#' @description
-#'
-#' Splits string into a vector of individual characters.
-#'
 #' @rdname str_split
-#' @family string-manipulation functions provided by utilbox
 #' @export
 str2vector = function(x, split='', ..., unlist_for_scalar=TRUE) {
   str_split(x, split=split, ..., unlist_for_scalar=unlist_for_scalar)
 }
 
+#' Remove empty substrings
+#'
+#' `str_deempty()` drops all elements in `x` that have only spaces in them.
+#
+#' @examples
+#' str_deempty(c('a','',' ','   '))
+#'
+#' @export
+str_deempty = function(x) {
+  filter_out(x, '^[ ]*$')
+}
 
 #' @title
 #' String trimming
 #'
 #' @description
 #'
-#' Removes trailing spaces from the beginning and end of a string.
+#' `str_trim_space()` removes trailing spaces from the beginning and 
+#' the end of a string.
+#'
+#' `str_scrub_space()` replaces multiple consecutive white spaces with 
+#' a single one.
+#'
+#' `str_add_punct()` adds a punctuation mark (given in `p`) to the ends 
+#' of all elements in a character vector that do not end in one of the 
+#' punctuation marks (`punct`).
+#'
+#' @examples
+#' x = ' fas  fdas    fdsfas fsdafdfs         dfsa '
+#' str_trim_space(x)
+#' str_scrub_space(x)
+#'
+#' str_add_punct(c('hello','world!'), '!') # adds to the 1st, but not the 2nd
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
@@ -170,35 +190,13 @@ str_trim_space = function(x, side=c('both','left','right')) {
   gsub(pattern, '', x)
 }
 
-#' @title
-#' Remove extra white space
-#'
-#' @description
-#'
-#' Replaces multiple consecutive white spaces with a single one.
-#'
-#' @examples
-#' str_scrub_space(' fas  fdas    fdsfas fsdafdfs         dfsa ')
-#'
-#' @family string-manipulation functions provided by utilbox
+#' @rdname str_trim_space
 #' @export
 str_scrub_space = function(x, pattern='[ ]+', s=' ', fixed=FALSE) {
   gsub(pattern, s, x, fixed=fixed)
 }
 
-#' @title
-#' Add punctuation
-#'
-#' @description
-#'
-#' Adds a punctuation (`p`) to the ends of all elements in a 
-#' character vector that do not end in one of the punctuation marks 
-#' (`punct`).
-#'
-#' @examples
-#' str_add_punct(c('hello','world!'), '!') # adds to the 1st, but not the 2nd
-#'
-#' @family string-manipulation functions provided by utilbox
+#' @rdname str_trim_space
 #' @export
 str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
   if(split_punct && length(punct)==1 && nchar(punct)>1) {
@@ -220,16 +218,16 @@ str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
 #' appropriate number of trailing white spaces are inserted before the 
 #' substring is attached.
 #'
-#' `str_replace()` does replacive insertions.
+#' `str_overwrite()` does replacive insertions.
 #'
 #' @examples
 #' str_insert('My name is John Doe', ' not', 10)
 #' str_insert(c('First name: ','Last name: ') , c('John','Doe'), 11)
 #' str_insert(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
 #'
-#' str_replace('My name is John Doe', ' Jack', 11)
-#' str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20)
-#' str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
+#' str_overwrite('My name is John Doe', ' Jack', 11)
+#' str_overwrite(c('First name: ','Last name: ') , c('John','Doe'), 20)
+#' str_overwrite(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
@@ -245,7 +243,7 @@ str_insert = function(x, what, pos, insert_white=FALSE, str2_shift=0, workhorse=
 
 #' @rdname str_insert
 #' @export
-str_replace = function(x, substring, pos, insert_white=FALSE, str2_shift=0) {
+str_overwrite = function(x, substring, pos, insert_white=FALSE, str2_shift=0) {
   str_insert(x, substring, pos, insert_white, nchar(substring)-str2_shift)
 }
 
@@ -254,13 +252,39 @@ str_replace = function(x, substring, pos, insert_white=FALSE, str2_shift=0) {
 #'
 #' @description
 #'
-#' `str_last()` gets the last `n` characters from a string. 
-#' Vectorized.
+#' `str_grab()` extracts the substring that matches the pattern
+#' in `pattern` from a string.
+#'
+#' `str_first()` extracts (`drop=FALSE`) or removes (`drop=TRUE`) the first 
+#' `n` characters from a string. 
+#'
+#' `str_last()` extracts (`drop=FALSE`) or removes (`drop=TRUE`) the last 
+#' `n` characters from a string. 
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_last = function(x, n=1) {
-  substr(x, nchar(x)-n+1, nchar(x))
+str_grab = function(pattern, x, ..., workhorse=gregexpr) {
+  regmatches(x, workhorse(pattern, x, ...))
+}
+
+#' @rdname str_grab
+#' @export
+str_first = function(x, n=1, drop=FALSE) {
+  if(drop) {
+    substr(x, n+1, nchar(x))
+  } else {
+    substr(x, 1, n)
+  }
+}
+
+#' @rdname str_grab
+#' @export
+str_last = function(x, n=1, drop=FALSE) {
+  if(drop) {
+    substr(x, 1, nchar(x)-n)
+  } else {
+    substr(x, nchar(x)-n+1, nchar(x))
+  }
 }
 
 #' @title
@@ -346,13 +370,12 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #'
 #' @description
 #'
-#' `str_pad` pads to input to a given width (`width`).  It formats 
+#' `str_pad2` pads to input to a given width (`width`).  It formats 
 #' the contents of `x` to a minimum width (character count) or other 
 #' specified format (via `format`). The minimum length is easiest 
 #' controlled via `min_width`. Non-character values are converted to 
 #' character using `base::as.character`. `str_lengthen()` is an alias
-#' for `str_pad()` that exists primarily to allow easy disambiguation 
-#' with `stringr::str_pad()`.
+#' for `str_pad2()`.
 #'
 #' `int_pad` pads an integer with leading zeros.
 #'
@@ -364,14 +387,14 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #' formats numbers.
 #'
 #' @examples
-#' str_pad('hello', 20)
-#' str_pad('hello', 20, '.')
-#' str_pad('hello', 20, 'right')
+#' str_pad2('hello', 20)
+#' str_pad2('hello', 20, '.')
+#' str_pad2('hello', 20, 'right')
 #'
 #' @name padding
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_pad = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) {
+str_pad2 = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) {
 
   if(is_empty(x)) return(x)
   
@@ -394,7 +417,7 @@ str_pad = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) 
 
 #' @rdname padding
 #' @export
-str_lengthen = str_pad
+str_lengthen = str_pad2
 
 #' @rdname padding
 #' @export
@@ -445,33 +468,30 @@ spaces = function(n, char=' ') {
 #'
 #' @description
 #'
-#' Wrap text. In other words, place newline symbols (`\\n`) along a 
+#' `str_break()` wraps (or more generally breaks) a string text. In other words, 
+#' it places the value in `eol` (the new line symbol `\\n` by default) along a 
 #' string to make its printout (via e.g. `base::cat`) \"wrap nicely\", 
-#' that is not exceed a given width (set by `max_width`).
-#'
-#' `str_wrap_one` does the actual work for input of length 1, 
-#' `str_wrap` is a wrapper around it useful for multivariate input (`x`).
+#' that is not exceed a given width (set by `max_width`). By default,
+#' it places the breaks (`eol`) anywhere, while with `break_only_at_space=TRUE` 
+#' it only places the breaks between words.
 #'
 #' @examples
 #' string = collapse0(rep(collapse0(letters[1:8]),10), sep=" ")
 #'
 #' # insert line breaks at given width
-#' catn(str_wrap(string, max_width=20))
+#' catn(str_break(string, max_width=20))
 #'
 #' # insert only at spaces
-#' catn(str_wrap(string, max_width=20, break_only_at_space=TRUE))
+#' catn(str_break(string, max_width=20, break_only_at_space=TRUE))
 #'
 #' @export
-str_wrap = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
+str_break = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
 
-  sapply(x, str_wrap_one, max_width, eol, break_only_at_space, USE.NAMES=FALSE)
+  sapply(x, str_break_single, max_width, eol, break_only_at_space, USE.NAMES=FALSE)
   
 }
 
-#' @title
-#' @name str_wrap
-#' @export
-str_wrap_one = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE, max_nlines=Inf) {
+str_break_single = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
   
   stopifnot(length(x)==1, length(max_width)==1, length(eol)==1)
   
@@ -483,24 +503,46 @@ str_wrap_one = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE, m
   weol = str_first_occurence(x, eol, Inf)
   wsp = 1 + str_last_occurence(substr(x,2,max_width), '\\s+', miss=Inf)
   
-  if(weol<wb) wb = weol
+  if(weol<wb) {
+    wb = weol
+  }
+  
   if(!break_only_at_space) {
     wb = max_width
   } else {
-    if(wsp<wb) wb = wsp
+  
+    if(wsp<wb) {
+      wb = wsp
+    }
+    
     if(wb>max_width) {
       wb = str_first_occurence(substr(x,max_width,n), '\\s+', miss=n)
     }
+    
   }
   
   if(wb >= n || wb==n-1 && str_last(x)==eol) {
     x
   } else {
-    args = nlist(max_width, eol, break_only_at_space, max_nlines)
+    args = nlist(max_width, eol, break_only_at_space)
     substr(x, 1, wb) %.% ifelse(wb==weol, '', eol) %.% 
       do.call(Recall, list(substr(x, wb+1, n)) %append% args)
   }
   
+}
+
+#' Count the number of lines in a string
+#'
+#' `str_n_lines()` counts the number of lines a string will print on 
+#' (without further wrapping). Effectively, it counts the new line symbols 
+#' (in `eol`) and adds 1.
+#'
+#' @examples
+#' str_n_lines('this string\nhas only\nthree lines.')
+#'
+#' @export
+str_n_lines = function(x, eol='\\n') {
+  sapply(gregexpr(eol, x), length) + 1
 }
 
 #' @title

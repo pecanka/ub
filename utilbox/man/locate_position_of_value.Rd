@@ -78,12 +78,9 @@ operates on lists.
 \seealso{
 Other numeric functions provided by utilbox: 
 \code{\link{Invert}()},
-\code{\link{as_numeric}()},
 \code{\link{downweight}()},
 \code{\link{extract_by_value}},
-\code{\link{force_as_}},
 \code{\link{lower_tri}()},
-\code{\link{make_numeric}()},
 \code{\link{min_dif}()},
 \code{\link{permutations}},
 \code{\link{replace_value}},

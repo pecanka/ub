@@ -16,7 +16,6 @@ rep2(c('a','b'), e=3:4)
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{as_factor}()},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -32,6 +31,7 @@ Other sequence-related functions provided by utilbox:
 \code{\link{seq_around}()},
 \code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
+\code{\link{to_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

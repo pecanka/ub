@@ -1,5 +1,5 @@
 #' @title
-#' Bootstrap
+#' Simple bootstrap
 #'
 #' @description
 #'
@@ -13,12 +13,13 @@
 #' sd(bootstrap(rnorm(100), mean, B=1000))    # compare with 1/sqrt(100)
 #'
 #' @export
-bootstrap = function(x, T, B = 100., ..., portion=1e8) {
+Bootstrap = function(x, statistic, B = 100., ..., portion=1e8) {
+  
   if(length(x)*B < portion) {
     X = matrix(sample(x, length(x)*B, replace = TRUE), nrow=length(x))
-    apply(X, 2, T, ...)
+    apply(X, 2, statistic, ...)
   } else {
-    sapply(1:B, function(i) T(sample(x, replace = TRUE), ...))
+    sapply(1:B, function(i) statistic(sample(x, replace = TRUE), ...))
   }
   
 }

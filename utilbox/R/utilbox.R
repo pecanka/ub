@@ -23,7 +23,7 @@
 #' returns creates and/or returns the hidden environment located in 
 #' `.GlobalEnv`.
 #'
-#' `utilbox_environment()` creates the working namespace called 
+#' `utilbox_environment()` creates the working environment called 
 #' `.utilbox`, which is used by some of the functions of the `utilbox` 
 #' package (e.g. `cat0`) to store private variables.
 #'
@@ -118,9 +118,7 @@ source_utilbox = function(..., path, normalize=FALSE, envir=.GlobalEnv,
   files = dots_to_nlist()
 
   if(missing(path)) {
-    if(exists('.utilbox_source_path', envir=.GlobalEnv)) {
-      path = get('.utilbox_source_path', envir=.GlobalEnv)
-    }
+    path = get0('.utilbox_source_path', .GlobalEnv, ifnotfound='.')
   }
 
   # list all files in the given path when no actual

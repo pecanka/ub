@@ -7,6 +7,53 @@
 #'
 #' @family list utilities provided by utilbox
 #' @export
+list_empty = function(x) {
+  
+  if(is.list(x) && !has_all_names(x))
+    error("Supply either a vector of names in 'x' or a \"fully\" named list.")
+  
+  if(is.list(x) || has_all_names(x)) {
+    x = names(x)
+  }
+  
+  nlapply(`names<-`(rep_list(list(NA),length(x)), x), function(x) NULL)
+  
+}
+
+#' @title
+#' Check of class character
+#'
+#' @description
+#'
+#' `is_all_character()` checks whether all elements in an object are of class
+#' `character`. For atomic 'x', `base::as.character()` is called directly. For 
+#' non-atomic `x` (e.g. `list`), `base::as.character()` is called via `base::sapply()`.
+#' 
+#' @examples
+#' is.character(letters)                      # TRUE
+#' is.character(list(letters))                # FALSE
+#' is_all_character(list(letters))            # TRUE
+#' is_all_character(list(letters, 1:10))      # FALSE
+#'
+#' @family list utilities provided by utilbox
+#' @export
+is_all_character = function(x) {
+  if(is.atomic(x)) {
+    is.character(x)
+  } else {
+    all(sapply(x, is.character))
+  }
+}
+
+#' @title
+#' Flattens a list
+#'
+#' @description
+#'
+#' An alias for `as.list(unlist(...))`.
+#'
+#' @family list utilities provided by utilbox
+#' @export
 list_flatten = function(x) {
   as.list(unlist(x))
 }
@@ -92,7 +139,7 @@ append_recurse = function(lists, ...) {
 #'
 #' @family list utilities provided by utilbox
 #' @export
-list_clean = function(x, null.rm=TRUE, clean_by=length) {
+list_clean = function(x, clean_by=length) {
   Filter(clean_by, x)
 }
 
@@ -217,6 +264,16 @@ nlist = function (...) {
 #' @export
 nlist2 = function (...) {
   dots_to_nlist()
+}
+
+#' Named list apply
+#'
+#' `nlapply()` is an alias for `base::sapply() which returns a named list
+#' by default (by setting `USE.NAMES=TRUE` and `simplify=FALSE`).
+#'
+#' @export
+nlapply = function(...) {
+  sapply(..., USE.NAMES=TRUE, simplify=FALSE)
 }
 
 #' @title

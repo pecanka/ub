@@ -10,7 +10,6 @@
 #' intersection of the supplied sets.
 #'
 #' `is_subset()` checks whether `x` is a subset of `y`. 
-#' `is_subset2()` does the same thing.
 #'
 #' @examples
 #' setdiffsym(1:5,3:7)
@@ -21,25 +20,36 @@
 #' @export
 mintersect = function(...) {
   sets = list(...)
-  set = sets[[1]]
-  for(i in seq_along(sets)[-1]) set = intersect(set, sets[[i]])
-  return(set)
+  set = sets[1][[1]]
+  for(i in seq_along(sets)[-1]) {
+    set = intersect(set, sets[[i]])
+  }
+  set
 }
 
 #' @rdname sets
 #' @export
-setdiffsym = function(x, y, labels=c('x','y')) {
-  `names<-`(list(base::setdiff(x,y), base::setdiff(y,x)), labels)
+setdiffsym = function(x, y, labels, report_counts=TRUE) {
+  
+  if(missing(labels)) {
+    labels = c('x','y')
+    #labels = unlist(argvars_to_nlist())
+  }
+  
+  dxy = base::setdiff(x,y)
+  dyx = base::setdiff(y,x)
+  
+  tdi = ' (#difference|#intersect|#total)'
+  Counts =
+    c('x: '%.%collapse0(c(length(dxy),length(x)-length(dxy),length(x)),sep='|'),
+      'y: '%.%collapse0(c(length(dyx),length(y)-length(dyx),length(y)),sep='|'))%.%tdi
+                
+  structure(`names<-`(list(dxy, dyx), labels), Counts=Counts)
+  
 }
 
 #' @rdname sets
 #' @export
 is_subset = function(x, y) {
   all(x %in% y)
-}
-
-#' @rdname sets
-#' @export
-is_subset2 = function(x, y) {
-  is_empty(setdiff(x, y))
 }

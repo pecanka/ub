@@ -8,9 +8,9 @@
 \usage{
 multi_grep(pattern, x, ..., workhorse = base::grepl)
 
-grepm(pattern, x, ...)
+grepm(pattern, x, ..., exclude = FALSE)
 
-greplm(pattern, x, ...)
+greplm(pattern, x, ..., exclude = FALSE)
 }
 \description{
 Vectorized regular pattern matching, which takes multiple patterns.

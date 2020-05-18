@@ -67,7 +67,7 @@ or_between <- function(x, intervals, sharp_left=FALSE, sharp_right=FALSE) {
 is_start_of_run = function(x, is_first_start=TRUE, tol) {
 
   if(!is.numeric(x)) {
-    x = as.numeric(as_factor(x))
+    x = as.numeric(to_factor(x))
   }
   
   if(missing(tol)) tol = .Machine$double.eps
@@ -81,7 +81,7 @@ is_start_of_run = function(x, is_first_start=TRUE, tol) {
 is_end_of_run = function(x, is_last_end=TRUE, tol) {
 
   if(!is.numeric(x)) {
-    x = as.numeric(as_factor(x))
+    x = as.numeric(to_factor(x))
   }
   
   if(missing(tol)) tol = .Machine$double.eps

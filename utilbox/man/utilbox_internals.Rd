@@ -49,7 +49,7 @@ namespace of the utilbox package. If it failed for some reason, it
 returns creates and/or returns the hidden environment located in
 \code{.GlobalEnv}.
 
-\code{utilbox_environment()} creates the working namespace called
+\code{utilbox_environment()} creates the working environment called
 \code{.utilbox}, which is used by some of the functions of the \code{utilbox}
 package (e.g. \code{cat0}) to store private variables.
 }

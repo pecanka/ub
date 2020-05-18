@@ -150,10 +150,18 @@ llib = function(..., detach_first=FALSE) {
 #' @rdname llibrary
 #' @export
 unload_library = function(pckgs=NULL, character.only=FALSE) {
+
   if(!character.only) pckgs = as.character(substitute(pckgs))
+  
   for(pckg in pckgs) {
-    detach(paste0("package:",pckg), character.only=TRUE, unload=TRUE)
+    ps = c(utilbox::`%.^%`("package:", pckg), pckg)
+    res1 = try(detach(ps[1], character.only=TRUE, unload=TRUE), silent=TRUE)
+    res2 = try(detach(ps[2], character.only=TRUE, unload=TRUE), silent=TRUE)
+    if(utilbox::is_error(res1) && utilbox::is_error(res2)) {
+      warning("Unloading of package '", pckg,"' failed.")
+    }
   }
+  
   return(invisible(TRUE))
   
 }
@@ -193,43 +201,58 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' `list_package_all()` lists all objects defined in a package 
 #' (including non-exported objects).
 #'
-#' `object_table()` puts the objects into a table together
+#' `object_table()` puts the objects and their main characteristics into 
+#' a single table (class `data.frame`).
 #'
 #' @examples
-#' list_package_exported(utilbox)
-#' list_package_all(utilbox)
+#' list_package_exported('utilbox')
+#' list_package_all('utilbox')
 #'
 #' # lsf.str("package:dplyr")   # see also
 #' # ls("package:dplyr")        # see also (works when the package is loaded)
 #' help(package = dplyr)
 #' # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 #'
-#' @name list_package
-#' @family package-related functions provided by utilbox
 #' @export
-list_package_exported = function(pckg, pattern, character.only=FALSE, mode) {
+list_package = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL) {
 
-  if(!character.only) pckg = as.character(substitute(pckg))
-  objs = getNamespaceExports(pckg)
+  what = match.arg(what)
   
-  object_table(objs, pckg, pattern, mode)
+  if(!is.character(pckg))
+    error("Supply package name as character.")
+    
+  if(!namespace_exists(pckg)) {
+    warning("Namespace '",pckg,"' does not exist and thus its objects cannot be obtained.")
+    return(NULL)
+  }
+
+  detail = ifelse(what=='all', ifelse(all.names, "visible","existing"), 'exported')
+  catn("Listing all ",detail," objects in the package '",pckg,"' ...")
+  objs = if(what=='all') {
+    ls(envir=getNamespace(pckg), all.names=all.names)
+  } else {
+    filter_out(getNamespaceExports(pckg), ifelse(all.names, '^$', '^[.]'))
+  }
+  
+  object_table(objs, pckg, pattern, exclude, mode)
   
 }
 
 #' @rdname list_package
 #' @export
-list_package_all = function(pckg, pattern, character.only=FALSE, all.names=TRUE, mode) {
-
-  if(!character.only) pckg = as.character(substitute(pckg))
-  objs = ls(envir=getNamespace(pckg), all.names=all.names)
-  
-  object_table(objs, pckg, pattern, mode)
-  
+list_package_exported = function(pckg, pattern, exclude=FALSE, mode=NULL) {
+  nlapply(pckg, list_package, pattern, NA, exclude, 'exported', mode)
 }
 
 #' @rdname list_package
 #' @export
-object_table = function(objs, pckg, pattern, mode) {
+list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
+  nlapply(pckg, list_package, pattern, all.names, exclude, 'all', mode)
+}
+
+#' @rdname list_package
+#' @export
+object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
 
   if(!is.character(pckg) && !is.environment(pckg))
     error("Supply either a package name (character) or an environment.")
@@ -252,25 +275,28 @@ object_table = function(objs, pckg, pattern, mode) {
 
   #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%.%str_patternize(nam)%.%'[(, ]') %m% fun_code_to_text(x)))
   
-  tbl = list(name=objs, 
+  tbl = list(package=pckg,
+             object=objs, 
              exported=ifelse(is_exported, 'YES', 'no'), 
              primary_class=class1, 
              all_classes=classes, 
              original_namespace=namespace)
   
   tbl = as.data.frame(list_clean(tbl), stringsAsFactors=FALSE)
-  rownames(tbl) = NULL
+
+  if('object' %nin% colnames(tbl)) 
+    return(tbl) 
   
-  if(!missing(pattern)) {
-    tbl = tbl[`%m%`(pattern, tbl$name),]
+  if(!missing(pattern) && !str_is_empty(pattern)) {
+    tbl = tbl[`%m_any%`(pattern, tbl$object, exclude=exclude),]
   }
   
-  if(!missing(mode)) {
-    mode_fits = apply_pckg(tbl$name, pckg, function(x, nam) mode(x) == mode, value_error=FALSE)
+  if(!missing(mode) && is.character(mode)) {
+    mode_fits = apply_pckg(tbl$object, pckg, function(x, nam) mode(x) == mode, value_error=FALSE)
     tbl = tbl[mode_fits,]
   }
   
-  sort_df(tbl, primary_class, name)
+  `rownames<-`(sort_df(tbl, primary_class, object), 1:nrow(tbl))
 
 }
 

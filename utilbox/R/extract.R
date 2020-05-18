@@ -171,7 +171,7 @@ last_nonzero = function(x) {
 #' @rdname extract_by_value
 #' @export
 first_positive = function(x) {
-  w[w_first_nonzero(x)]
+  x[w_first_nonzero(x)]
 }
 
 #' @rdname extract_by_value
@@ -429,6 +429,9 @@ nonpositive = function(x) {
 #' function with a single argument `.x` and which is evaluated with `x` 
 #' supplied to it as the argument `.x`.
 #'
+#' In all of these function the pattern can be a vector at a match
+#' against any of its components is sufficient.
+#'
 #' @examples
 #' v = c(first='hello',second='amsterdam')
 #'
@@ -450,40 +453,30 @@ nonpositive = function(x) {
 #' @name filter_by
 #' @family sequence-related functions provided by utilbox
 #' @export
-filter_by_value = function(...) {
-  UseMethod("filter_by_value")
-}
-
-#' @rdname filter_by
-#' @export
-filter_by_value.default = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  keep = `%m%`(pattern, x, fixed=fixed, exclude=exclude)
+filter_by_value = function(x, pattern, fixed=TRUE, exclude=FALSE) {
+  keep = not_if(`%m_any%`(pattern, x, fixed=fixed), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
-filter_by_pattern = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  keep = `%m%`(pattern, x, fixed=fixed, exclude=exclude)
+filter_by_pattern = function(x, pattern, fixed=FALSE, exclude=FALSE, ignore.case=FALSE) {
+  keep = not_if(`%m_any%`(pattern, x, fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
-filter_by_name = function(x, pattern, fixed=FALSE, exclude=FALSE) {
-  keep = `%m%`(pattern, names(x), fixed=fixed, exclude=exclude)
+filter_by_name = function(x, pattern, fixed=FALSE, exclude=FALSE, ignore.case=FALSE) {
+  keep = not_if(`%m_any%`(parent, names(x), fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
-filter_by_bool = function() {
-  UseMethod("filter_by_bool")
-}
-  
 #' @rdname filter_by
 #' @export
-filter_by_bool.default = function(x, keep, exclude=FALSE) {
+filter_by_bool = function(x, keep, exclude=FALSE) {
   if(exclude) keep = !keep
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
@@ -519,6 +512,15 @@ filter_by_call = function(...) {
   if(is_dimtwo(x)) x[fltr,] else x[fltr]
   
 }
+
+#' @rdname filter_by
+#' @export
+filter_out = function(x, pattern, fixed=FALSE, ignore.case=FALSE) {
+  if(is_empty(x)) return(x)
+  keep = sapply(x, `%nm_any%`, pattern=pattern, fixed=fixed, ignore.case=ignore.case)
+  if(is_dimtwo(x)) x[keep,] else x[keep]
+}
+  
 
 #lazy_dots_to_args_and_call = function(..., envir=parent.frame()) {
 #  args = list(...)

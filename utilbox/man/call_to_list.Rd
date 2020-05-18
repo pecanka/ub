@@ -4,6 +4,7 @@
 \alias{call_to_list}
 \alias{dots_to_nlist}
 \alias{args_to_nlist}
+\alias{argvars_to_nlist}
 \title{Processing of ellipsis and call arguments}
 \usage{
 dots_to_nlist(
@@ -15,6 +16,8 @@ dots_to_nlist(
 )
 
 args_to_nlist(envir = parent.frame())
+
+argvars_to_nlist(envir = parent.frame())
 }
 \description{
 \code{dots_to_nlist()} returns the contents of the ellipsis of a parent function in a

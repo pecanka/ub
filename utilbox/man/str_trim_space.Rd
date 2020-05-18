@@ -2,12 +2,34 @@
 % Please edit documentation in R/strings.R
 \name{str_trim_space}
 \alias{str_trim_space}
+\alias{str_scrub_space}
+\alias{str_add_punct}
 \title{String trimming}
 \usage{
 str_trim_space(x, side = c("both", "left", "right"))
+
+str_scrub_space(x, pattern = "[ ]+", s = " ", fixed = FALSE)
+
+str_add_punct(x, p = ".", punct = ".!?", trim = TRUE, split_punct = TRUE)
 }
 \description{
-Removes trailing spaces from the beginning and end of a string.
+\code{str_trim_space()} removes trailing spaces from the beginning and
+the end of a string.
+
+\code{str_scrub_space()} replaces multiple consecutive white spaces with
+a single one.
+
+\code{str_add_punct()} adds a punctuation mark (given in \code{p}) to the ends
+of all elements in a character vector that do not end in one of the
+punctuation marks (\code{punct}).
+}
+\examples{
+x = ' fas  fdas    fdsfas fsdafdfs         dfsa '
+str_trim_space(x)
+str_scrub_space(x)
+
+str_add_punct(c('hello','world!'), '!') # adds to the 1st, but not the 2nd
+
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 
@@ -17,15 +39,13 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
-\code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
+\code{\link{str_grab}()},
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
-\code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
 \code{\link{str_rev}()},
-\code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{sub_at}()},
 \code{\link{toupperfirst}()}

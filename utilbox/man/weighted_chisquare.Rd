@@ -6,9 +6,9 @@
 \alias{pchisqw}
 \title{Weighted chi-square distribution}
 \usage{
-qchisqw(p, weights, lower.tail = TRUE, epsw = 0.00001, epsv = 1e-12, df0 = 2)
+qchisqw(p, weights, lower.tail = TRUE, epsw = 1e-05, epsv = 1e-12, df0 = 2)
 
-pchisqw(x, weights, lower.tail = TRUE, epsw = 0.00001, df0 = 2)
+pchisqw(x, weights, lower.tail = TRUE, epsw = 1e-05, df0 = 2)
 }
 \description{
 \code{qchisqw()} calculates the quantile function of the weighted

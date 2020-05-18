@@ -9,7 +9,7 @@
 #'
 #' @export
 print2var = function(fun, file=NULL) {
-  capture.output(print(fun))
+  utils::capture.output(print(fun))
 }
   
 #' @title
@@ -61,10 +61,10 @@ cat0 = function(..., file="", sep="", fill=FALSE, pad=FALSE, padding=' ', pad_si
 
     x = do.call(collapse0, list(list(...), sep=sep))
     if(!isFALSE(pad)) {
-      x = str_pad(x, pad, side=pad_side, padding=padding)
+      x = str_lengthen(x, pad, side=pad_side, padding=padding)
     }
     if(!isFALSE(fill)) {
-      x = str_wrap(x, if(isTRUE(fill)) options()$width else fill)
+      x = str_break(x, if(isTRUE(fill)) options()$width else fill)
     }
     
     base::cat(x, file=file, append=append)

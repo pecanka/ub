@@ -20,13 +20,10 @@ elements of its argument.
 \seealso{
 Other numeric functions provided by utilbox: 
 \code{\link{Invert}()},
-\code{\link{as_numeric}()},
 \code{\link{downweight}()},
 \code{\link{extract_by_value}},
-\code{\link{force_as_}},
 \code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
-\code{\link{make_numeric}()},
 \code{\link{min_dif}()},
 \code{\link{replace_value}},
 \code{\link{sequences}},

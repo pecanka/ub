@@ -50,6 +50,10 @@ unspace = function(x, s='-', space='\\s+', workhorse=gsub) {
 #' @rdname replace_value
 #' @export
 de_na = function(x, y, use_all_y=FALSE) {
+  if(is.null(y) && length(x)>1) {
+    y = list(NULL)
+  }
+  if(length(x)==1 && is.na(x)) return(y)
   if(use_all_y) {
     x[is.na(x)] = rep(y, length.out=sum(is.na(x)))
     x

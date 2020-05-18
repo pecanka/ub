@@ -1,3 +1,19 @@
+#' A caller
+#'
+#' Takes expression in a character vector and evaluates it in the 
+#' calling frame.
+#'
+#' @examples
+#' x = NULL
+#' print(x)
+#' cc('x','=1')
+#' print(x)
+#'
+#' @export
+cc = function(...) {
+  eval(str2lang(paste0(...)), envir=parent.frame())
+}
+
 ###
 # Example of the usage of the trace function
 #

@@ -7,15 +7,14 @@
 seq_around(a, b, m1, m2, len, add_a = FALSE, add_b = FALSE)
 }
 \description{
-Produces an equidistant sequence between a and b which contains
-both m1 and m2 of appropriate length near len. The sequence might not
-contain the border points points a and b. Forcing them into the
-sequence can be done via add_a and/or add_b, but the equi-distance of
-all points might no longer be true.
+Produces an equidistant sequence between \code{a} and \code{b} of length approximately
+\code{len} which contains both \code{m1} and \code{m2}. The sequence might not contain the
+border points \code{a} and \code{b}. Enforcing their presence in the sequence can be
+done via  \code{add_a=TRUE} and/or \code{add_b=TRUE}, althought then the equi-distance
+of all points might no longer be true.
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{as_factor}()},
 \code{\link{every_nth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
@@ -31,6 +30,7 @@ Other sequence-related functions provided by utilbox:
 \code{\link{seq2}()},
 \code{\link{sizechecks}},
 \code{\link{split_into_groups}()},
+\code{\link{to_factor}()},
 \code{\link{what_bag}()}
 }
 \concept{sequence-related functions provided by utilbox}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/strings.R
 \name{str_insert}
 \alias{str_insert}
-\alias{str_replace}
+\alias{str_overwrite}
 \title{Insert substring into a string (additive)}
 \usage{
 str_insert(
@@ -14,7 +14,7 @@ str_insert(
   workhorse = substring
 )
 
-str_replace(x, substring, pos, insert_white = FALSE, str2_shift = 0)
+str_overwrite(x, substring, pos, insert_white = FALSE, str2_shift = 0)
 }
 \description{
 \code{str_insert()} inserts a substring into a string at a given
@@ -24,16 +24,16 @@ string (when \code{insert_white=FALSE}, default behavior) or the
 appropriate number of trailing white spaces are inserted before the
 substring is attached.
 
-\code{str_replace()} does replacive insertions.
+\code{str_overwrite()} does replacive insertions.
 }
 \examples{
 str_insert('My name is John Doe', ' not', 10)
 str_insert(c('First name: ','Last name: ') , c('John','Doe'), 11)
 str_insert(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
 
-str_replace('My name is John Doe', ' Jack', 11)
-str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20)
-str_replace(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
+str_overwrite('My name is John Doe', ' Jack', 11)
+str_overwrite(c('First name: ','Last name: ') , c('John','Doe'), 20)
+str_overwrite(c('First name: ','Last name: ') , c('John','Doe'), 20, insert=TRUE)
 
 }
 \seealso{
@@ -44,14 +44,12 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
-\code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
+\code{\link{str_grab}()},
 \code{\link{str_is_empty}()},
-\code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
 \code{\link{str_rev}()},
-\code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},

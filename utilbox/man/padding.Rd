@@ -2,14 +2,14 @@
 % Please edit documentation in R/strings.R
 \name{padding}
 \alias{padding}
-\alias{str_pad}
+\alias{str_pad2}
 \alias{str_lengthen}
 \alias{int_pad}
 \alias{num_pad}
 \alias{spaces}
 \title{Format string}
 \usage{
-str_pad(x, min_width, side = c("left", "right"), padding = " ", nextra = 0)
+str_pad2(x, min_width, side = c("left", "right"), padding = " ", nextra = 0)
 
 str_lengthen(
   x,
@@ -26,13 +26,12 @@ num_pad(x, min_nint, min_ndig = 6, fmt = "f", format)
 spaces(n, char = " ")
 }
 \description{
-\code{str_pad} pads to input to a given width (\code{width}).  It formats
+\code{str_pad2} pads to input to a given width (\code{width}).  It formats
 the contents of \code{x} to a minimum width (character count) or other
 specified format (via \code{format}). The minimum length is easiest
 controlled via \code{min_width}. Non-character values are converted to
 character using \code{base::as.character}. \code{str_lengthen()} is an alias
-for \code{str_pad()} that exists primarily to allow easy disambiguation
-with \code{stringr::str_pad()}.
+for \code{str_pad2()}.
 
 \code{int_pad} pads an integer with leading zeros.
 
@@ -44,9 +43,9 @@ Check the function in \code{options()$str$formatNum} to see how R
 formats numbers.
 }
 \examples{
-str_pad('hello', 20)
-str_pad('hello', 20, '.')
-str_pad('hello', 20, 'right')
+str_pad2('hello', 20)
+str_pad2('hello', 20, '.')
+str_pad2('hello', 20, 'right')
 
 }
 \seealso{
@@ -56,15 +55,13 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{cumpaste0}()},
 \code{\link{multi_sub}()},
 \code{\link{patternize}()},
-\code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
+\code{\link{str_grab}()},
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
-\code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
 \code{\link{str_rev}()},
-\code{\link{str_scrub_space}()},
 \code{\link{str_split}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},

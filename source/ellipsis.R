@@ -63,6 +63,12 @@ args_to_nlist = function(envir=parent.frame()) {
   
 }
 
+#' @rdname call_to_list
+#' @export
+argvars_to_nlist = function(envir=parent.frame()) {
+  eval(parse(text="lapply(as.list(match.call(expand.dots=FALSE))[-1], as.character)"), envir=envir)
+}
+
 #args_to_nlist2 = function(envir=parent.frame()) {
 #  lapply(call[-1], eval, envir=envir)
 #  #call = as.list(nthr(sys.calls(),2))

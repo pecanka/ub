@@ -20,7 +20,9 @@ list_update(list(a=1, b=2), list(a=100, c=200))
 }
 \seealso{
 Other list utilities provided by utilbox: 
+\code{\link{is_all_character}()},
 \code{\link{list_clean}()},
+\code{\link{list_empty}()},
 \code{\link{list_flatten}()},
 \code{\link{list_mirror}()},
 \code{\link{list_set_attr}()},

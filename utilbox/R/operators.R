@@ -75,20 +75,23 @@
 #'
 #' @family operators provided by utilbox
 #' @export
-`%.%` = function(...) {
-  do.call("paste0", list(...))
+`%.%` = function(x, y) {
+  paste0(x, y)
+  #do.call("paste0", list(...))
 }
 
 #' @rdname concatenate
 #' @export
-`%..%` = function(...) {
-  do.call("paste", list(...))
+`%..%` = function(x, y) {
+  paste(x, y)
+  #do.call("paste", list(...))
 }
 
 #' @rdname concatenate
 #' @export
-`%_%` = function(...) {
-  do.call("paste", list(..., sep='_'))
+`%_%` = function(x, y) {
+  paste(x, y, sep="_")
+  #do.call("paste", list(..., sep='_'))
 }
 
 #' @rdname concatenate
@@ -99,6 +102,12 @@
   do.call("paste", append(strings, list(sep=sep)))
 }
   
+#' @rdname concatenate
+#' @export
+`%.^%` = function(x, y) {
+  ifelse(greplm('^('%.%x%.%')', y), y, x%.%y)
+}
+
 #' @title
 #' Regular expression match operator
 #'
@@ -111,7 +120,7 @@
 #' which means that the operator also takes vector arguments (on either 
 #' side).
 #'
-#' `\%mic\%` is a version of `\%m\%` which ignores case by default.
+#' `\%m_ic\%` is a version of `\%m\%` which ignores case by default.
 #'
 #' \code{\%matches\%} does the same except with the roles of the two 
 #' arguments reversed.
@@ -119,7 +128,7 @@
 #' `\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias 
 #' `\%nmes\%`) are the negations of the two operators.
 #'
-#' `\%nmic\%` is the case-insensitive version of `\%notmatch%` and 
+#' `\%nm_ic\%` is the case-insensitive version of `\%notmatch%` and 
 #' `\%nm\%`.
 #'
 #' `\%m_any\%` is an \"any pattern\" matching operator. For its RHS,
@@ -127,6 +136,8 @@
 #' LHS, and returns logical indicators of this match. If an element
 #' on the RHS does not match any of the patters specified on the LHS,
 #' its corresponding returns value is `FALSE`, otherwise it is `TRUE`.
+#'
+#' `\%m_any_ic%` is a case-insensitive version of `\%m_any%`.
 #'
 #' @examples
 #' # in one direction:
@@ -140,8 +151,8 @@
 #' "daylight" %matches% "ai"
 #'
 #' # case insensitive version:
-#' "DAYlight" %mic% "ay"
-#' "DAYlight" %mic% "ai"
+#' "DAYlight" %m_ic% "ay"
+#' "DAYlight" %m_ic% "ai"
 #'
 #' @name operator_match
 #' @family operators provided by utilbox
@@ -154,16 +165,16 @@
 
 #' @rdname operator_match
 #' @export
-`%mic%` = function(pattern, x, ...) {
-  greplm(pattern, x, ignore.case=TRUE, ...)
+`%m_ic%` = function(pattern, x, ...) {
+  `%match%`(pattern, x, ignore.case=TRUE, ...)
 }
-#`%mic%` = `%match%`
-#base::formals(`%mic%`)[['ignore.case']] = TRUE
+#`%m_ic%` = `%match%`
+#base::formals(`%m_ic%`)[['ignore.case']] = TRUE
 
 #' @rdname operator_match 
 #' @export
 `%notmatch%` = function(pattern, x, ...) {
-  !greplm(pattern, x, ...)
+  !`%match%`(pattern, x, ...)
 }
 #`%notmatch%` = `%match%`
 #base::formals(`%notmatch%`)[['exclude']] = TRUE
@@ -176,17 +187,17 @@
 
 #' @rdname operator_match
 #' @export
-`%nmic%` = function(pattern, x, ...) {
-  !greplm(pattern, x, ignore.case=TRUE, ...)
+`%nm_ic%` = function(pattern, x, ...) {
+  !`%match%`(pattern, x, ignore.case=TRUE, ...)
 }
-#`%nmic%` = `%notmatch%`
-#base::formals(`%nmic%`)[['ignore.case']] = TRUE
-#`%nmic%` = hijack(`%notmatch%`, ignore.case=TRUE)
+#`%nm_ic%` = `%notmatch%`
+#base::formals(`%nm_ic%`)[['ignore.case']] = TRUE
+#`%nm_ic%` = hijack(`%notmatch%`, ignore.case=TRUE)
 
 #' @rdname operator_match 
 #' @export
 `%matches%` = function(x, pattern, ...) {
-  greplm(pattern, x, ...)
+  `%match%`(pattern, x, ...)
 }
 
 #' @rdname operator_match
@@ -196,7 +207,7 @@
 #' @rdname operator_match 
 #' @export
 `%notmatches%` = function(x, pattern, ...) {
-  !greplm(pattern, x, ...)
+  !`%matches%`(pattern, x, ...)
 }
 #`%notmatches%` = `%matches%`
 #base::formals(`%notmatches%`)[['exclude']] = TRUE
@@ -210,9 +221,50 @@
 #' @rdname operator_match
 #' @export
 `%m_any%` = function(pattern, x, ...) {
-  sapply(x, function(y) any(greplm(pattern, y, ...)))
+  sapply(x, function(y) any(`%match%`(pattern, y, ...)))
 }
 
+#' @rdname operator_match
+#' @export
+`%m_any_ic%` = function(pattern, x, ignore.case=TRUE, ...) {
+  sapply(x, function(y) any(`%match%`(pattern, y, ignore.case=ignore.case, ...)))
+}
+
+#' @rdname operator_match
+#' @export
+`%mes_any%` = function(x, pattern, ...) {
+  `%m_any%`(pattern , x, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%mes_any_ic%` = function(x, pattern, ignore.case=TRUE, ...) {
+  `%m_any%`(pattern, x, ignore.case=ignore.case, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%nm_any%` = function(pattern, x, ...) {
+  !`%m_any%`(pattern, x, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%nm_any_ic%` = function(pattern, x, ignore.case=TRUE, ...) {
+  !`%m_any%`(pattern, x, ignore.case=ignore.case, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%nmes_any%` = function(x, pattern, ...) {
+  !(pattern %m_any% x)
+}
+
+#' @rdname operator_match
+#' @export
+`%nmes_any_ic%` = function(x, pattern, ignore.case=TRUE, ...) {
+  !(pattern %m_any_ic% x)
+}
 
 #' @title
 #' Default value for NULL and zero-length objects

@@ -2,15 +2,21 @@
 % Please edit documentation in R/environments.R
 \name{get2}
 \alias{get2}
+\alias{mget2}
 \title{Get an object}
 \usage{
-get2(what, envir, default_value, mode = "any", inherits = TRUE)
+get2(what, envir = parent.frame(), ifnotfound, mode = "any", inherits = TRUE)
+
+mget2(what, envir = parent.frame(), ...)
 }
 \description{
-\code{get2()} gets an object from the given environment (\code{envir}). Checks if it exists
-first and if the object does not exist it returns the value in
-\code{default_value}. If \code{envir} is missing, it simply looks for the object
-names 'what' on the search path.
+\code{get2()} extracts an object from the given environment (\code{envir}).
+Checks if it exists first and if the object does not exist it returns
+the value in \code{ifnotfound}. If \code{envir} is missing, it simply looks
+for the object names 'what' on the search path. Similar to \code{base::get0()}
+except that it does not have any value set for \code{ifnotfound} by default.
+
+\code{get2m()} extracts multiple objects and returns them in a list.
 }
 \examples{
 get2('fklasdfjskadfjlsd', envir=.GlobalEnv, NA)

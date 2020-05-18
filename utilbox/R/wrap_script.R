@@ -101,7 +101,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
   
   # find the second non-empty line in each block (i.e. the first description line)
   hbD_begs_rel = lapply(hb_code, function(b) 
-    if(any("@description" %mic% b)) NULL else w_nth_nonzero(!is_empty_line(b),2))
+    if(any("@description" %m_ic% b)) NULL else w_nth_nonzero(!is_empty_line(b),2))
   hbD_begs = lapply(seq(nblocks), function(i) hbD_begs_rel[[i]] + hb_begs[i] - 1)
   #rm(hbD_begs_rel)
 
@@ -122,7 +122,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
       ifelse(!any(is_special), length(b)+1, is_special[1])
   })
   
-  hb_is_exported = sapply(hb_code, function(b) any('@export' %mic% b))
+  hb_is_exported = sapply(hb_code, function(b) any('@export' %m_ic% b))
   
   # alter the block ends to ignore the lines below "specials"
   hb_ends = hb_begs - 1 + hb_specials - 1
@@ -222,7 +222,7 @@ script_help_clean_and_wrap = function(Help, RDs, max_width=70, eol="\n#' ", punc
   
   # wrap the lines
   long = nchar(Help) > max_width
-  Help[long] = str_wrap(Help[long], max_width, eol, break_only_at_space=TRUE)
+  Help[long] = str_break(Help[long], max_width, eol, break_only_at_space=TRUE)
   
   Help
   

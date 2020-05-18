@@ -569,3 +569,32 @@ random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-
   
 }
 
+#' @title
+#' Backup a file
+#'
+#' @description
+#'
+#' `file_backup()` creates a backup of the given file by creating a copy.
+#'
+#' @family file system function provided by utilbox
+#' @export
+file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
+  
+  file_bak = file %.% '_' %.% timest(add_pid=pid) %.% '.bak'
+  
+  if(!missing(path)) {
+    file = file_path(path, file)
+  }
+  
+  if(!missing(path_backup)) {
+    file_bak = file_path(path_backup, file_bak)
+  } else if(!missing(path)) {
+    file_bak = file_path(path, file_bak)
+  }
+  
+  if(announce) 
+    catn("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+    
+  file.copy(file, file_bak)
+  
+}

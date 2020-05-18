@@ -15,5 +15,4 @@ returns \code{Inf}.
 nformals(mode)
 nformals(mean)
 
-
 }

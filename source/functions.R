@@ -59,7 +59,7 @@ hijack = function(FUN, ...) {
 #' nformals(mode)
 #' nformals(mean)
 #'
-#' 
+#' @export 
 nformals = function(fun, envir=parent.frame()) {
 
   if(is.character(fun)) {

@@ -25,7 +25,6 @@ into an alternative location.
 \seealso{
 Other package-related functions provided by utilbox: 
 \code{\link{apply_pckg}()},
-\code{\link{list_package}},
 \code{\link{llibrary}()}
 }
 \concept{package-related functions provided by utilbox}

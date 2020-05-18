@@ -3,12 +3,12 @@
 \name{environments}
 \alias{environments}
 \alias{orig_env}
-\alias{all_parent_env}
+\alias{all_parent_envs}
 \title{Original and parent environments}
 \usage{
-orig_env(fun)
+orig_env(obj, na = "")
 
-all_parent_env(x = parent.frame())
+all_parent_envs(x = parent.frame())
 }
 \description{
 \code{orig_env()} get the original environment of a function or another object.
@@ -22,11 +22,14 @@ shown when \code{print(utilbox::head)} is called. The function
 string. For objects with no such information printed it simply
 returns the last element of a print call of that object.
 
-\code{all_parent_env()} returns the cascade of all parent environments
-of \code{x}. If no input is specified during a call to \code{all_parent_env()},
+\code{all_parent_envs()} returns the cascade of all parent environments
+of \code{x}. If no input is specified during a call to \code{all_parent_envs()},
 the default is to take the calling environment.
 }
 \examples{
 orig_env(mean)
+
+all_parent_envs()
+all_parent_envs(mean)
 
 }

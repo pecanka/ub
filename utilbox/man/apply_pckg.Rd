@@ -24,7 +24,6 @@ apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
 }
 \seealso{
 Other package-related functions provided by utilbox: 
-\code{\link{list_package}},
 \code{\link{llibrary}()},
 \code{\link{set_pkglib}()}
 }

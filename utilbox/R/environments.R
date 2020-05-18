@@ -14,22 +14,26 @@
 #' string. For objects with no such information printed it simply 
 #' returns the last element of a print call of that object.
 #'
-#' `all_parent_env()` returns the cascade of all parent environments
-#' of `x`. If no input is specified during a call to `all_parent_env()`,
+#' `all_parent_envs()` returns the cascade of all parent environments
+#' of `x`. If no input is specified during a call to `all_parent_envs()`,
 #' the default is to take the calling environment.
 #'
 #' @examples
 #' orig_env(mean)
 #'
+#' all_parent_envs()
+#' all_parent_envs(mean)
+#'
 #' @name environments
 #' @export
-orig_env = function(fun) {
-  t1(print2var(fun))
+orig_env = function(obj, na='') {
+  last_line = t1(print2var(obj))
+  ifelse('<environment:.namespace:' %m% last_line, last_line, na)
 }
 
 #' @rdname environments
 #' @export
-all_parent_env = function(x=parent.frame()) {
+all_parent_envs = function(x=parent.frame()) {
   
   if(!is.environment(x)) x = environment(x)
   
@@ -104,25 +108,27 @@ transfer_object = function(from, to, what, check_existence=FALSE, delete=TRUE) {
 #' Get an object
 #'
 #' @description
-#' `get2()` gets an object from the given environment (`envir`). Checks if it exists 
-#' first and if the object does not exist it returns the value in 
-#' `default_value`. If `envir` is missing, it simply looks for the object
-#' names 'what' on the search path.
+#'
+#' `get2()` extracts an object from the given environment (`envir`). 
+#' Checks if it exists first and if the object does not exist it returns 
+#' the value in `ifnotfound`. If `envir` is missing, it simply looks 
+#' for the object names 'what' on the search path. Similar to `base::get0()`
+#' except that it does not have any value set for `ifnotfound` by default.
+#'
+#' `get2m()` extracts multiple objects and returns them in a list.
 #'
 #' @examples
 #' get2('fklasdfjskadfjlsd', envir=.GlobalEnv, NA)
 #'
 #' @export
-get2 = function(what, envir, default_value, mode='any', inherits=TRUE) {
-  
-  if(missing(envir) && exists(what)) {
-    get(what, mode=mode, inherits=inherits)
-  } else if(!missing(envir) && exists(what, envir=envir)) {
-    get(what, envir=envir, mode=mode, inherits=inherits)
-  } else {
-    default_value
-  }
-  
+get2 = function(what, envir=parent.frame(), ifnotfound, mode='any', inherits=TRUE) {
+  get0(what, mode=mode, envir=envir, inherits=inherits) %|||% ifnotfound
+}
+
+#' @rdname get2
+#' @export
+mget2 = function(what, envir=parent.frame(), ...) {
+  nlapply(what, get2, envir=envir, ...)
 }
 
 #' @title

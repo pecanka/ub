@@ -7,11 +7,20 @@
 \alias{object_table}
 \title{List objects in a package}
 \usage{
-list_package_exported(pckg, pattern, character.only = FALSE, mode)
+list_package(
+  pckg,
+  pattern,
+  all.names = TRUE,
+  exclude = FALSE,
+  what = c("all", "exported"),
+  mode = NULL
+)
 
-list_package_all(pckg, pattern, character.only = FALSE, all.names = TRUE, mode)
+list_package_exported(pckg, pattern, exclude = FALSE, mode = NULL)
 
-object_table(objs, pckg, pattern, mode)
+list_package_all(pckg, pattern, all.names = TRUE, exclude = FALSE, mode = NULL)
+
+object_table(objs, pckg, pattern, exclude = FALSE, mode)
 }
 \description{
 List all/exported objects in a package.
@@ -21,11 +30,12 @@ List all/exported objects in a package.
 \code{list_package_all()} lists all objects defined in a package
 (including non-exported objects).
 
-\code{object_table()} puts the objects into a table together
+\code{object_table()} puts the objects and their main characteristics into
+a single table (class \code{data.frame}).
 }
 \examples{
-list_package_exported(utilbox)
-list_package_all(utilbox)
+list_package_exported('utilbox')
+list_package_all('utilbox')
 
 # lsf.str("package:dplyr")   # see also
 # ls("package:dplyr")        # see also (works when the package is loaded)
@@ -33,10 +43,3 @@ help(package = dplyr)
 # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 
 }
-\seealso{
-Other package-related functions provided by utilbox: 
-\code{\link{apply_pckg}()},
-\code{\link{llibrary}()},
-\code{\link{set_pkglib}()}
-}
-\concept{package-related functions provided by utilbox}

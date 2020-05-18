@@ -4,7 +4,7 @@
 \alias{list_clean}
 \title{Removes zero-length elements from a list}
 \usage{
-list_clean(x, null.rm = TRUE, clean_by = length)
+list_clean(x, clean_by = length)
 }
 \description{
 Takes a list and removes all of its zero-length elements.
@@ -16,6 +16,8 @@ list_clean(list(1:10, NULL, 'a'))
 }
 \seealso{
 Other list utilities provided by utilbox: 
+\code{\link{is_all_character}()},
+\code{\link{list_empty}()},
 \code{\link{list_flatten}()},
 \code{\link{list_mirror}()},
 \code{\link{list_set_attr}()},

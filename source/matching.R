@@ -13,6 +13,9 @@ multi_grep = function(pattern, x, ..., workhorse=base::grepl) {
     return(x)
   }
   
+  if(!is.character(pattern))
+    error("pattern must be type 'character'.")
+    
   if(length(x)>1 && length(pattern) %nin% c(1,length(x)))
     error("With 'x' non-scalar, 'pattern' must be a scalar or same length as 'x'.")
 
@@ -29,17 +32,17 @@ multi_grep = function(pattern, x, ..., workhorse=base::grepl) {
 
 #' @rdname multi_grep
 #' @export
-grepm = function(pattern, x, ...) {
+grepm = function(pattern, x, ..., exclude=FALSE) {
 
-  multi_grep(pattern, x, ..., workhorse=base::grep)
+  not_if(multi_grep(pattern, x, ..., workhorse=base::grep), exclude)
   
 }
 
 #' @rdname multi_grep
 #' @export
-greplm = function(pattern, x, ...) {
+greplm = function(pattern, x, ..., exclude=FALSE) {
 
-  multi_grep(pattern, x, ..., workhorse=base::grepl)
+  not_if(multi_grep(pattern, x, ..., workhorse=base::grepl), exclude)
   
 }
 
@@ -93,7 +96,6 @@ subm = function(x, what, with) {
 gsubm = function(x, what, with) {
   multi_sub(x, what, with, workhorse=base::gsub)
 }
-
 
 #' @title
 #' Substitution of \"@\"-substrings

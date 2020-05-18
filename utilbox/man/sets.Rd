@@ -5,16 +5,13 @@
 \alias{mintersect}
 \alias{setdiffsym}
 \alias{is_subset}
-\alias{is_subset2}
 \title{Sets}
 \usage{
 mintersect(...)
 
-setdiffsym(x, y, labels = c("x", "y"))
+setdiffsym(x, y, labels, report_counts = TRUE)
 
 is_subset(x, y)
-
-is_subset2(x, y)
 }
 \description{
 \code{mintersect()} finds the intersection of multiple sets.
@@ -24,7 +21,6 @@ supplied sets, which is all of the elements that are outside the
 intersection of the supplied sets.
 
 \code{is_subset()} checks whether \code{x} is a subset of \code{y}.
-\code{is_subset2()} does the same thing.
 }
 \examples{
 setdiffsym(1:5,3:7)
@@ -34,13 +30,10 @@ setdiffsym(1:5,3:7, 'vector')
 \seealso{
 Other numeric functions provided by utilbox: 
 \code{\link{Invert}()},
-\code{\link{as_numeric}()},
 \code{\link{downweight}()},
 \code{\link{extract_by_value}},
-\code{\link{force_as_}},
 \code{\link{locate_position_of_value}},
 \code{\link{lower_tri}()},
-\code{\link{make_numeric}()},
 \code{\link{min_dif}()},
 \code{\link{permutations}},
 \code{\link{replace_value}},

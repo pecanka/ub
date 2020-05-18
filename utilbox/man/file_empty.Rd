@@ -14,6 +14,7 @@ whether there is any data in it.
 Other file system function provided by utilbox: 
 \code{\link{check_file_locked}()},
 \code{\link{clean_filename}()},
+\code{\link{file_backup}()},
 \code{\link{file_can_open_check}()},
 \code{\link{file_size}()},
 \code{\link{file_sort}()},

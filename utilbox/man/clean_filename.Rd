@@ -14,6 +14,7 @@ to be included in a latex file where the dots cause trouble.
 \seealso{
 Other file system function provided by utilbox: 
 \code{\link{check_file_locked}()},
+\code{\link{file_backup}()},
 \code{\link{file_can_open_check}()},
 \code{\link{file_empty}()},
 \code{\link{file_size}()},

@@ -6,15 +6,18 @@
 \alias{\%..\%}
 \alias{\%_\%}
 \alias{\%__\%}
+\alias{\%.^\%}
 \title{Concatenation operators}
 \usage{
-... \%.\% NA
+x \%.\% y
 
-... \%..\% NA
+x \%..\% y
 
-... \%_\% NA
+x \%_\% y
 
 ... \%__\% sep
+
+x \%.^\% y
 }
 \description{
 Concatenation operators, which are aliases for \code{base::paste}.

@@ -10,15 +10,15 @@ str_split(x, split, ..., unlist_for_scalar = FALSE)
 str2vector(x, split = "", ..., unlist_for_scalar = TRUE)
 }
 \description{
-Splits a string vector \code{x} by character string \code{split}.
-\code{str_split} is basically the same as \code{\link[base:strsplit]{base::strsplit}} except that
+\code{str_split()} splits a string vector \code{x} by character string \code{split}.
+Basically, it is the same as \code{\link[base:strsplit]{base::strsplit}} except that
 for zero-length strings it does not return a zero-length element in
-the returned list. \code{str2vector} is an alias with the default value
+the returned list.
+
+\code{str2vector()} is an alias for \code{str_split()} with the default value
 for split set to '' (an empty string) so that it ends up producing a
 vector of individual characters. It also unlists the returned value
 for scalar \code{x}.
-
-Splits string into a vector of individual characters.
 }
 \examples{
 str_split(c('a-b','a-c','a-d','','c-d','c-e'),'-')
@@ -32,35 +32,13 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},
-\code{\link{str_add_punct}()},
 \code{\link{str_diff}()},
+\code{\link{str_grab}()},
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
-\code{\link{str_last}()},
 \code{\link{str_paste_grid}()},
 \code{\link{str_pos}()},
 \code{\link{str_rev}()},
-\code{\link{str_scrub_space}()},
-\code{\link{str_trim_space}()},
-\code{\link{sub_at}()},
-\code{\link{toupperfirst}()}
-
-Other string-manipulation functions provided by utilbox: 
-\code{\link{ascii}()},
-\code{\link{collapse}()},
-\code{\link{cumpaste0}()},
-\code{\link{multi_sub}()},
-\code{\link{padding}},
-\code{\link{patternize}()},
-\code{\link{str_add_punct}()},
-\code{\link{str_diff}()},
-\code{\link{str_insert}()},
-\code{\link{str_is_empty}()},
-\code{\link{str_last}()},
-\code{\link{str_paste_grid}()},
-\code{\link{str_pos}()},
-\code{\link{str_rev}()},
-\code{\link{str_scrub_space}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},
 \code{\link{toupperfirst}()}
