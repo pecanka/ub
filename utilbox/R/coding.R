@@ -74,5 +74,14 @@ cc = function(...) {
 # Pointers in R can be implemented using environments, since environments do not
 #   get coppied when used as arguments of a function
 #
+#
+# # How to overwrite a locked function in a package
+#
+# #library(osmdata)
+# environmentIsLocked(asNamespace("curl"))
+# unlockBinding(sym = "has_internet", asNamespace("curl"))
+# assign(x = "has_internet", value = {function() T}, envir = asNamespace("curl"))
+# curl:::has_internet()
+#
 ###
 

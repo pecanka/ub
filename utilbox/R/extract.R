@@ -474,8 +474,6 @@ filter_by_name = function(x, pattern, fixed=FALSE, exclude=FALSE, ignore.case=FA
   
 #' @rdname filter_by
 #' @export
-#' @rdname filter_by
-#' @export
 filter_by_bool = function(x, keep, exclude=FALSE) {
   if(exclude) keep = !keep
   if(is_dimtwo(x)) x[keep,] else x[keep]

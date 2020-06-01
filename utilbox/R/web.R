@@ -39,6 +39,40 @@ download_file = function(url, destfile=separate_paths(url)$files, ...) {
 }
 
 #' @title
+#' Download a file and read it
+#'
+#' `read_url_via_download()` is a workaround for when a direct reading of
+#' files from the web does not work (e.g. due to proxy) while the files
+#' are accessible for download. `read_url_via_download()` takes the url 
+#' address of the file to read via `url` and after downloading it reads
+#' the file using `fun` (e.g. `base::scan` or `xml2::read_html`). The
+#' downloaded file is deleted after reading unless `retain_file=TRUE`.
+#'
+#' @examples
+#' read_url_via_download('https://www.r-project.org/news.html') 
+#'
+#' @export
+read_url_via_download = function(url, read_fun, ..., retain_file=FALSE, destfile, opts=list()) {
+
+  if(missing(read_fun)) {
+    read_fun = hijack(scan, what='character', quiet=TRUE, sep='\n')
+  }
+
+  if(missing(destfile)) {
+    destfile = random_filename(nchar=10)%p%'.tmp'
+  }
+
+  if(!retain_file) {
+    on.exit(file.remove(destfile))
+  }
+
+  do.call(download.file, nlist(url, destfile) %append% opts)
+  
+  read_fun(destfile, ...)
+  
+}
+
+#' @title
 #' Check the existence of a file on the web
 #'
 #'
