@@ -138,27 +138,38 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
 #' @family file system functions provided by utilbox
 #' @export
 dir_create = function(dir, ask=interactive(), verbose=FALSE) {
+
+  invisible(sapply(dir, dir_create1, ask, verbose))
   
+}
+
+dir_create1 = function(dir, ask=interactive(), verbose=FALSE) {
+
   if(!dir.exists(dir)) {
     
     if(ask) {
-      wait("Directory '",dir,"' does not exist and it will be created ...")
+      wait("The directory '",dir,"' does not exist relative to the current path ('",
+           getwd(),"') and will be created ...")
     }
     
     res = dir.create(dir, showWarnings=FALSE, recursive=TRUE)
     
     if(!dir.exists(dir) && verbose) {
-      warn("Directory '",dir,"' could not be created!")
+      warn("Directory '",dir,"' could not be created.")
     }
       
   } else {
+  
     res = FALSE
-    if(verbose) catn("No need to create, directory '",dir,"' already exists.")
+    if(verbose) {
+      catn("No need to create, directory '",dir,"' already exists.")
+    }
+    
   }
     
-  invisible(dir)
+  res
     
-}
+} 
 
 #' @rdname dir_create
 #' @export

@@ -240,14 +240,14 @@ list_package = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('al
 
 #' @rdname list_package
 #' @export
-list_package_exported = function(pckg, pattern, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package, pattern, NA, exclude, 'exported', mode)
+list_package_exported = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
+  nlapply(pckg, list_package, pattern=pattern, all.names=all.names, exclude=exclude, what='exported', mode=mode)
 }
 
 #' @rdname list_package
 #' @export
 list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package, pattern, all.names, exclude, 'all', mode)
+  nlapply(pckg, list_package, pattern=pattern, all.names=all.names, exclude=exclude, what='all', mode=mode)
 }
 
 #' @rdname list_package

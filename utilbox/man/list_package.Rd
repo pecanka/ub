@@ -16,7 +16,13 @@ list_package(
   mode = NULL
 )
 
-list_package_exported(pckg, pattern, exclude = FALSE, mode = NULL)
+list_package_exported(
+  pckg,
+  pattern,
+  all.names = TRUE,
+  exclude = FALSE,
+  mode = NULL
+)
 
 list_package_all(pckg, pattern, all.names = TRUE, exclude = FALSE, mode = NULL)
 

@@ -24,7 +24,10 @@ script_dir = function() {
 #'
 #' @export
 setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
-  if(missing(dir) || is.null(dir)) {
+
+  no_input = missing(dir) || is.null(dir)
+  
+  if(no_input) {
     dir = script_dir()
   }
   
@@ -33,21 +36,58 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
   }
   
   if(!dir.exists(dir)) {
+    
+    if(no_input) {
+      return(invisible(getwd()))
+    }
+  
     if(create) {
-      if(ask) {
-        wait("Directory '",dir,"' does not exist and it will be created ...")
-      }
-      dir.create(dir)
+      
+      dir_create(dir, ask=ask)
+      
+      #if(ask) {
+      #  wait("Directory '",dir,"' does not exist and it will be created ...")
+      #}
+      #dir.create(dir)
+      
     } else {
       error("Cannot change working directory to '",dir,"' since it",
-            " does not exist. Use 'create=TRUE' for missing directories",
-            " to be created.")
+            " does not exist and 'create' is FALSE. Use 'create=TRUE'",
+            " to enable the creation of non-existing directories.")
     }
+    
   }
   
-  invisible(setwd(dir))
+  setwd(dir)
+  
+  invisible(getwd())
   
 }
+# setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
+  # if(missing(dir) || is.null(dir)) {
+    # dir = script_dir()
+  # }
+  
+  # if(nchar(dir2)>0) {
+    # dir = file.path(dir, dir2)
+  # }
+  
+  # if(!dir.exists(dir)) {
+    # if(create) {
+      # if(ask) {
+        # wait("Directory '",dir,"' does not exist and it will be created ...")
+      # }
+      # dir.create(dir)
+    # } else {
+      # error("Cannot change working directory to '",dir,"' since it",
+            # " does not exist. Use 'create=TRUE' for missing directories",
+            # " to be created.")
+    # }
+  # }
+  
+  # invisible(setwd(dir))
+  
+# }
 
 #' @title
 #' Sourcing check
