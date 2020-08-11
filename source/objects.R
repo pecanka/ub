@@ -80,18 +80,31 @@ is_same_object = function(..., envir = parent.frame()) {
 #' @examples
 #' get_unit(rep(1,1e7))
 #'
+#' de_unit(c('kB','GB')
+#'
 #' @export
 get_unit = function(n) {
-  w = pmax(1, pmin(trunc(log10(n)/3)+1, 5))
-  ifelse(is.na(w), w, switch(w, "B", "kB", "MB", "GB", "TB"))
+
+  units = c("B", "KB", "MB", "GB", "TB", "PB")
+  
+  w = pmax(1, pmin(trunc(log10(n)/3)+1, length(units)))
+  
+  ifelse(is.na(w), w, units[w])
+  #ifelse(is.na(w), w, switch(w, "B", "kB", "MB", "GB", "TB"))
   #sapply(w, function(y) ifelse(is.na(y), y, switch(y, "B", "kB", "MB", "GB", "TB")))
+  
 }
 
 #' @rdname get_unit
 #' @export
 de_unit = function(unit) {
-  ifelse(is.na(unit), NA, switch(unit,"B"=1,"kB"=1e3,"MB"=1e6,"GB"=1e9,"TB"=1e12))
+
+  units = c("B"=1, "K"=1e3, "KB"=1e3, "M"=1e6, "MB"=1e6, "G"=1e9, "GB"=1e9, "T"=1e12, "TB"=1e12, "P"=1e15, "PB"=1e15)
+  
+  ifelse(is.na(unit), NA, units[toupper(unit)])
+  #ifelse(is.na(unit), NA, switch(toupper(unit),"B"=1,"K"=, "KB"=1e3, "M"=, "MB"=1e6, "G"=, "GB"=1e9, "T"=, "TB"=1e12))
   #return(if(is.na(unit) || is.nan(unit)) NA else switch(unit, "B"=1, "kB"=1e3, "MB"=1e6, "GB"=1e9, "TB"=1e12))
+  
 }
 
 #' @rdname get_unit

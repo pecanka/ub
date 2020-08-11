@@ -67,8 +67,11 @@ filter_by_call(1:10, ~.x<5)
 
 x = 1; f = function() { x = 2; filter_by_call(1:10, ~.x>x) }; print(f())
 
+# both of these should work and print the sequence 3:10
 f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~.x$z>x) }; print(f())
 f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~z>x) }; print(f())
+f = function() { x = 2; d = data.frame(z=1:10); filter_by_call(d, ~.x$z>x) }; print(f())
+f = function() { x = 2; d = data.frame(z=1:10); filter_by_call(d, ~z>x) }; print(f())
 
 }
 \seealso{

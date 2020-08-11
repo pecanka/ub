@@ -32,8 +32,10 @@ of \code{base::as.numeric()}.
 
 \code{force_as_integer()} and \code{force_as_real()} convert to type \code{integer} and
 \code{double}, respectively, by stripping all non-number substrings in each
-element of \code{x}.This is a very radically forced conversion, which can be useful
-when strange artefacts polluted the data, but caution is advised.
+element of \code{x}. This is a very radically forced conversion, which can be useful
+when strange artefacts polluted the data, but caution is advised. If the argument
+\code{na_val} is supplied, \code{NA} values in the result of the conversion are replaced
+with the value in \code{na_val}.
 
 \code{force_unnumber()} removes all number characters from \code{x}. (It does not remove
 the character parts of a number in the scientific notation.)
@@ -55,6 +57,7 @@ force_as_integer(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
 force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
 force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'), ignore_signFALSE)
 force_as_real(c('1','x'))
+force_as_real(1:10)
 
 # an example of a custom error function
 err = function(x) {catn("Problem converting the values:\n"); print(x[!is_number(x,I)]); stop()}

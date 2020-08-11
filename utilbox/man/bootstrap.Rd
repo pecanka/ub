@@ -4,7 +4,7 @@
 \alias{Bootstrap}
 \title{Simple bootstrap}
 \usage{
-Bootstrap(x, statistic, B = 100, ..., portion = 1e+08)
+Bootstrap(x, statistic, B = 100, ..., portion = 100000000)
 }
 \description{
 Returns a vector of B bootstrap values of real-valued statistic

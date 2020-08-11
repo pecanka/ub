@@ -5,7 +5,14 @@
 \alias{Invert1}
 \title{Find (pseudo)inverse, square root, and sqrt-inverse matrices}
 \usage{
-Invert(M, inv = FALSE, sq = FALSE, sqinv = FALSE, eps = 1e-12, drop = FALSE)
+Invert(
+  M,
+  inv = FALSE,
+  sq = FALSE,
+  sqinv = FALSE,
+  eps = 0.000000000001,
+  drop = FALSE
+)
 
 Invert1(x)
 }

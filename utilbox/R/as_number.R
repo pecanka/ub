@@ -16,8 +16,10 @@
 #'
 #' `force_as_integer()` and `force_as_real()` convert to type `integer` and 
 #' `double`, respectively, by stripping all non-number substrings in each 
-#' element of `x`.This is a very radically forced conversion, which can be useful 
-#' when strange artefacts polluted the data, but caution is advised.
+#' element of `x`. This is a very radically forced conversion, which can be useful 
+#' when strange artefacts polluted the data, but caution is advised. If the argument
+#' `na_val` is supplied, `NA` values in the result of the conversion are replaced
+#' with the value in `na_val`.
 #'
 #' `force_unnumber()` removes all number characters from `x`. (It does not remove
 #' the character parts of a number in the scientific notation.)
@@ -39,6 +41,7 @@
 #' force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
 #' force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'), ignore_signFALSE)
 #' force_as_real(c('1','x'))
+#' force_as_real(1:10)
 #'
 #' # an example of a custom error function
 #' err = function(x) {catn("Problem converting the values:\n"); print(x[!is_number(x,I)]); stop()}
@@ -98,15 +101,14 @@ force_as_integer = function(x, ignore_sign=TRUE, na_val) {
 #' @export
 force_as_real = function(x, ignore_sign=TRUE, dec='.', dec_fixed=TRUE, na_val) {
 
-  w = grep(dec, x, fixed=dec_fixed)
+  x = as.character(x)
+  w = regexpr(dec, x, fixed=dec_fixed)
   
-  lp = ifelse(!w, 
-              force_as_integer(x, ignore_sign=ignore_sign, na_val='0'), 
-              force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, na_val='0'))
+  lp = ifelse(w<=0, force_as_integer(x, ignore_sign=ignore_sign, na_val='0'), 
+                    force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, na_val='0'))
                    
-  rp = ifelse(!w, 
-              0, 
-              force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
+  rp = ifelse(w<=0, 0, 
+                    force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
               
   y = as.numeric(lp %p% '.' %p% rp)
   

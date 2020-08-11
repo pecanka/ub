@@ -23,17 +23,28 @@ process_symbolic_call = function(call, narg) {
   if(!identical(call[[1]], as.symbol('~'))) 
     error('The call is not a valid formula.')
   if(!is.call(call[[2]])) 
-    error('The call is not of class \"call\".')
+    error('The call is not of class "call".')
   
   #f = list(void_x, void_xy, void_xyz, void_general)[[bound_between(narg, 1, 4)]]
   append_body(void_general, call[[2]], where='last')
      
 }
 
+#' Arguments for a symbolic call
+#'
 #' `symbolic_call_names()` returns the names of arguments that are 
-#' needed by a symbolic call.
+#' needed by a symbolic call. Specifically, it returns the first `n`
+#' elements of the sequence
+#'
+#' @examples
+#' symbolic_call_names(10)
+#' symbolic_call_names(100)
+#'
+#' @export
 symbolic_call_names = function(n) {
-  h1('.' %p% shift(base::letters, 3), n, stop_on_greedy=TRUE)
+  #h1('.' %p% shift(base::letters, 3), n, stop_on_greedy=TRUE)
+  nl = length(letters)
+  h1('.' %p% shift(base::letters, 3), n) %p% h1(rep(c("",1:ceiling(n/nl)), e=nl), n)
 }
 
 ##' These functions are useful when processing [`tidyverse`]-style 

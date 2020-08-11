@@ -24,4 +24,6 @@ bytes) to an appropriate other unit.
 \examples{
 get_unit(rep(1,1e7))
 
+de_unit(c('kB','GB')
+
 }

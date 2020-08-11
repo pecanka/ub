@@ -2,12 +2,17 @@
 % Please edit documentation in R/symbolic.R
 \name{symbolic_call_names}
 \alias{symbolic_call_names}
-\title{\code{symbolic_call_names()} returns the names of arguments that are
-needed by a symbolic call.}
+\title{Arguments for a symbolic call}
 \usage{
 symbolic_call_names(n)
 }
 \description{
 \code{symbolic_call_names()} returns the names of arguments that are
-needed by a symbolic call.
+needed by a symbolic call. Specifically, it returns the first \code{n}
+elements of the sequence
+}
+\examples{
+symbolic_call_names(10)
+symbolic_call_names(100)
+
 }

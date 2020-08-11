@@ -447,8 +447,11 @@ nonpositive = function(x) {
 #'
 #' x = 1; f = function() { x = 2; filter_by_call(1:10, ~.x>x) }; print(f())
 #'
+#' # both of these should work and print the sequence 3:10
 #' f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~.x$z>x) }; print(f())
 #' f = function() { x = 2; filter_by_call(data.frame(z=1:10), ~z>x) }; print(f())
+#' f = function() { x = 2; d = data.frame(z=1:10); filter_by_call(d, ~.x$z>x) }; print(f())
+#' f = function() { x = 2; d = data.frame(z=1:10); filter_by_call(d, ~z>x) }; print(f())
 #'
 #' @name filter_by
 #' @family sequence-related functions provided by utilbox
@@ -498,13 +501,18 @@ filter_by_call = function(...) {
   #if(is_empty(args)) return(NULL)
   
   #names(args) = symbolic_call_names(length(args))
-  fun = process_symbolic_call(call, length(args))
+  fun_fltr = process_symbolic_call(call, length(args))
   
-  # call the function constructed by `process_symbolic_call` while 
-  # making sure the function can see what's in the environment
-  # from which `filter_by_call` was called
-  environment(fun) = parent.frame()
-  fltr = do.call(fun, unname(args))
+  # make sure that the function constructed by `process_symbolic_call` can see 
+  # the contents of the environment from which `filter_by_call` was called
+  environment(fun_fltr) = parent.frame()
+
+  # call the filtering function
+  fltr = do.call(fun_fltr, unname(args))
+  #fltr = do.call(fun_fltr, unname(args), envir=parent.frame())
+
+  #pf = parent.frame()
+  #fltr = do.call(fun_fltr, unname(args), envir=pf)
   
   x = args[[1]]
   if(is_dimtwo(x)) x[fltr,] else x[fltr]
