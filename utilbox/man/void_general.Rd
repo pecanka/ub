@@ -2,12 +2,12 @@
 % Please edit documentation in R/symbolic.R
 \name{void_general}
 \alias{void_general}
-\title{These functions are useful when processing \code{\link{tidyverse}}-style
+\title{These functions are useful when processing \code{tidyverse}-style
 functions.}
 \usage{
 void_general(...)
 }
 \description{
-These functions are useful when processing \code{\link{tidyverse}}-style
+These functions are useful when processing \code{tidyverse}-style
 functions.
 }

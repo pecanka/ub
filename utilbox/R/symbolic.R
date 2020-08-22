@@ -47,13 +47,8 @@ symbolic_call_names = function(n) {
   h1('.' %p% shift(base::letters, 3), n) %p% h1(rep(c("",1:ceiling(n/nl)), e=nl), n)
 }
 
-##' These functions are useful when processing [`tidyverse`]-style 
-##' functions.
-#void = function() {}
-#void_x = function(.x) {}
-#void_xy = function(.x, .y) {}
-#void_xyz = function(.x, .y, .z) {}
-
+#' These functions are useful when processing `tidyverse`-style
+#' functions.
 void_general = function(...) {
   args = list(...)
   names(args) = symbolic_call_names(length(args))

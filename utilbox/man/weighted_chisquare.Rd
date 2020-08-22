@@ -6,14 +6,7 @@
 \alias{pchisqw}
 \title{Weighted chi-square distribution}
 \usage{
-qchisqw(
-  p,
-  weights,
-  lower.tail = TRUE,
-  epsw = 0.00001,
-  epsv = 0.000000000001,
-  df0 = 2
-)
+qchisqw(p, weights, lower.tail = TRUE, epsw = 0.00001, epsv = 1e-12, df0 = 2)
 
 pchisqw(x, weights, lower.tail = TRUE, epsw = 0.00001, df0 = 2)
 }
