@@ -6,6 +6,9 @@
 #' `ndigits()` determines the number of digits for an integer or a 
 #' real (for which the output reflects only the integer part).
 #'
+#' `ndecimals()` determines how many non-zero decimal places are
+#' needed to print a number.
+#'
 #' `is_round()` checks if values in `x` are round (i.e. equal to 
 #' integers).
 #'
@@ -36,6 +39,12 @@
 #' @export
 ndigits = function(x) {
   floor(log10(pmax(1,abs(x)))) + 1
+}
+
+#' @name rounding
+#' @export
+ndecimals = function(x) {
+  pmax(0, nchar(format(abs(x-as.integer(x))))-2)
 }
 
 #' @rdname rounding
