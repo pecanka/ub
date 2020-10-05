@@ -71,7 +71,28 @@ namespace_exists = function(ns) {
 #' environment is performed (when `check_existence=TRUE`).
 #'
 #' @examples
+#' # create two environment and populate one
+#' env1=new.env()
+#' env2=new.env()
+#' assign('x', rnorm(10), envir=env1)
+#' assign('y', "hello world", envir=env1)
+#' ls(envir=env1)
 #' 
+#' # transfer all objects from env1 to env2 (without deletion, so basically "copy")
+#' transfer_objects(env1, env2, delete=FALSE)
+#' ls(envir=env1)
+#' ls(envir=env2)
+#'
+#' # transfer all objects from env1 to env2 (with deletion, so proper "transfer")
+#' transfer_objects(env1, env2)
+#' ls(envir=env1)
+#' ls(envir=env2)
+#'
+#'
+#' # transfer one object back from env2 to env1
+#' transfer_objects(env1, env2, 'x')
+#' ls(envir=env1)
+#' ls(envir=env2)
 #'
 #' @export
 transfer_objects = function(from, to, what, check_existence=FALSE, delete=TRUE) {
@@ -80,13 +101,9 @@ transfer_objects = function(from, to, what, check_existence=FALSE, delete=TRUE) 
     what = ls(all.names=TRUE, envir=from)
   }
 
-  sapply(what, function(w) transfer_object(from, to, w, check_existence, delete))
-
-}
-
-#' @rdname transfer_objects
-#' @export
-transfer_object = function(from, to, what, check_existence=FALSE, delete=TRUE) {
+  if(length(what)>1) {
+    sapply(what, function(w) transfer_object(from, to, w, check_existence, delete))
+  }
 
   stopifnot(is.environment(from), is.environment(to), length(what)==1)
   
@@ -95,11 +112,11 @@ transfer_object = function(from, to, what, check_existence=FALSE, delete=TRUE) {
 
   proceed = !check_existence || !exists(what, envir=to) || ask(question)
 
-  fail1 = !proceed || is_error(try(assign(what, get(what, envir=from), envir=to)))
+  ftransfered = !proceed || is_error(try(assign(what, get(what, envir=from), envir=to)))
   
-  fail2 = !proceed || !delete || is_error(try(rm(list=what, envir=from)))
+  fdeleted = !proceed || !delete || is_error(try(rm(list=what, envir=from)))
   
-  data.frame(object=what, transfered=!fail1, deleted=!fail2, 
+  data.frame(object=what, transfered=!ftransfered, deleted=!fdeleted, 
              row.names=FALSE, stringsAsFactors=FALSE)
   
 }
@@ -174,6 +191,42 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
     } else {
       do.call(assign, args %append% list(envir=envir))
     }
+  }
+  
+}
+
+#' Assign for locked environments
+#'
+#' `assign_locked()` assigns the supplied value in `value` to an object named in `x`
+#' inside the namespace named in `namespace` (as character). If the object named in `x`
+#' is locked, the binding is first unlocked and, depending on the value in `keep_unlocked`
+#' is relocked afterwards. In locked environments only existing objects can be 
+#' modified by `assign_locked()`.
+#'
+#' @export
+assign_locked = function(x, value, envir, namespace, keep_unlocked=FALSE) {
+
+  if(!is.character(x))
+    error("Supply name of an object as character.")
+  
+  if(missing(envir)) {
+    envir = if(is.character(namespace)) asNamespace(namespace) else namespace
+  }
+  
+  if(!exists(x, envir=envir))
+    error("Object '",x,"' not found in ",print2var(envir),
+          ". The object must exist in order to be overwritten.")
+ 
+  is_locked = base::environmentIsLocked(envir)
+  
+  if(is_locked) {
+    unlockBinding(sym = x, envir)
+  }
+  
+  assign(x = x, value = value, envir = envir)
+  
+  if(is_locked && !keep_unlocked) {
+    lockBinding(sym = x, envir)
   }
   
 }

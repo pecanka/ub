@@ -12,10 +12,10 @@ is_all_character(x)
 non-atomic \code{x} (e.g. \code{list}), \code{base::as.character()} is called via \code{base::sapply()}.
 }
 \examples{
-is.character(letters)                      # TRUE
-is.character(list(letters))                # FALSE
-is_all_character(list(letters))            # TRUE
-is_all_character(list(letters, 1:10))      # FALSE
+is.character(letters)                      # returns TRUE
+is.character(list(letters))                # returns FALSE
+is_all_character(list(letters))            # returns TRUE
+is_all_character(list(letters, 1:10))      # returns FALSE
 
 }
 \seealso{

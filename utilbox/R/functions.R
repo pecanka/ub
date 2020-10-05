@@ -169,7 +169,7 @@ fun_separate_lines = function(fun) {
 #' print(f())                           # returns pi^2 - 1 (i.e. 8.869604)
 #'
 #' # Modify an existing function:
-#' call = str2lang("cat(\"And the symmetric set difference is...\n\")")
+#' call = base::str2lang("cat(\"And the symmetric set difference is...\n\")")
 #' f = append_body(setdiffsym, call, where='first')
 #' f(1:5, 3:10)
 #'
@@ -202,7 +202,7 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replac
   if(where %in% c('first', 'last')) {
     
     if(is.character(calls)) {
-      calls = lapply(calls, str2lang)
+      calls = lapply(calls, base::str2lang)
     }
     
     new_body = if(where=='first') {
@@ -227,17 +227,17 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replac
     
     new_code = gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE)
     new_code = unlist(strsplit(new_code, ';'))
-    new_code = lapply(new_code, str2lang)
+    new_code = lapply(new_code, base::str2lang)
     new_code = lapply(new_code, function(nc) do.call(bquote, list(nc)))
     
     new_body = insert(old_body, list(new_code), at, replace_old=replace_at)
 
-    #bquote_ready = str2lang(gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE))
+    #bquote_ready = base::str2lang(gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE))
     #new_code = do.call(bquote, list(bquote_ready))
 
     #old_code = collapse0(print2var(.oldline.), sep=';')
     #calls = gsub('.oldline.', old_code, calls, fixed=TRUE)
-    #new_code = str2lang(calls)
+    #new_code = base::str2lang(calls)
     #oldbody[[at]] = new_code
     
     #oldbody[[at]] = eval(parse(text=calls))
@@ -279,7 +279,7 @@ lang_sub = function(code, pattern, repl, fixed=TRUE, workhorse=gsub) {
   
     line = as.character(expr[i])
     line = gsub(pattern, repl, line, fixed=fixed)
-    line = str2lang(line)
+    line = base::str2lang(line)
     expr[[i]] = line
   
   }

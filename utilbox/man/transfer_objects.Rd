@@ -2,12 +2,9 @@
 % Please edit documentation in R/environments.R
 \name{transfer_objects}
 \alias{transfer_objects}
-\alias{transfer_object}
 \title{Transfer objects between environments}
 \usage{
 transfer_objects(from, to, what, check_existence = FALSE, delete = TRUE)
-
-transfer_object(from, to, what, check_existence = FALSE, delete = TRUE)
 }
 \description{
 Transfers the specified objects (in \code{what}) or all objects (when
@@ -15,6 +12,27 @@ Transfers the specified objects (in \code{what}) or all objects (when
 (\verb{env2'). Optionally, an existence check in the destination  environment is performed (when }check_existence=TRUE`).
 }
 \examples{
+# create two environment and populate one
+env1=new.env()
+env2=new.env()
+assign('x', rnorm(10), envir=env1)
+assign('y', "hello world", envir=env1)
+ls(envir=env1)
 
+# transfer all objects from env1 to env2 (without deletion, so basically "copy")
+transfer_objects(env1, env2, delete=FALSE)
+ls(envir=env1)
+ls(envir=env2)
+
+# transfer all objects from env1 to env2 (with deletion, so proper "transfer")
+transfer_objects(env1, env2)
+ls(envir=env1)
+ls(envir=env2)
+
+
+# transfer one object back from env2 to env1
+transfer_objects(env1, env2, 'x')
+ls(envir=env1)
+ls(envir=env2)
 
 }

@@ -11,7 +11,7 @@
 #'
 #' @export
 cc = function(...) {
-  eval(str2lang(paste0(...)), envir=parent.frame())
+  eval(base::str2lang(paste0(...)), envir=parent.frame())
 }
 
 ###

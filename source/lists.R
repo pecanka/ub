@@ -30,10 +30,10 @@ list_empty = function(x) {
 #' non-atomic `x` (e.g. `list`), `base::as.character()` is called via `base::sapply()`.
 #' 
 #' @examples
-#' is.character(letters)                      # TRUE
-#' is.character(list(letters))                # FALSE
-#' is_all_character(list(letters))            # TRUE
-#' is_all_character(list(letters, 1:10))      # FALSE
+#' is.character(letters)                      # returns TRUE
+#' is.character(list(letters))                # returns FALSE
+#' is_all_character(list(letters))            # returns TRUE
+#' is_all_character(list(letters, 1:10))      # returns FALSE
 #'
 #' @family list utilities provided by utilbox
 #' @export

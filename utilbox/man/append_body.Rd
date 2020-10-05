@@ -41,7 +41,7 @@ f = append_body(f, c(quote(x <- x^2), quote(x-1)))
 print(f())                           # returns pi^2 - 1 (i.e. 8.869604)
 
 # Modify an existing function:
-call = str2lang("cat(\"And the symmetric set difference is...\n\")")
+call = base::str2lang("cat(\"And the symmetric set difference is...\n\")")
 f = append_body(setdiffsym, call, where='first')
 f(1:5, 3:10)
 

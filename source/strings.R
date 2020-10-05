@@ -487,11 +487,9 @@ spaces = function(n, char=' ') {
 #' @export
 str_break = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
 
-  sapply(x, str_break_single, max_width, eol, break_only_at_space, USE.NAMES=FALSE)
-  
-}
-
-str_break_single = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
+  if(length(x)>1) {
+    sapply(x, str_break, max_width, eol, break_only_at_space, USE.NAMES=FALSE)
+  }
   
   stopifnot(length(x)==1, length(max_width)==1, length(eol)==1)
   

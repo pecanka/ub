@@ -22,6 +22,8 @@
 #' @export
 format_time = function(tim, drop_hour=TRUE, drop_minute=TRUE, prec=3) {
 
+  if(is.na(tim)) return(NA)
+  
   td = tim %/% 86400
   tim = tim - td * 86400
   th = tim %/% 3600

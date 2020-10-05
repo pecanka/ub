@@ -32,10 +32,8 @@ for(p in c('devtools','roxygen2')) {
 path = find_script_dir() 	# e.g. 'd:/Dropbox/Projects/R/utilbox/'
 
 cat("Working path:",path,"\n")
-
 if(path=='.')
   stop("Something is probably wrong with the identification of the path. I better stop here.")
-
 setwd(path)
 
 if(do_quick_install) {
@@ -59,12 +57,14 @@ if(length(files)>0) sapply(files, file.remove)                          # remove
 ## Copy all of the source files to the package directory
 cat("Copying source files to the package R directory...\n")
 files = list.files(pattern='^.*[.]R$', path=package$filedir, full.names=TRUE)
+dir = paste0(package$dir,"/R/")
+if(!dir.exists(dir)) dir.create(dir)
 for(f in files) {
-  file.copy(f, paste0(package$dir,"/R/",sub('.*/','',f)), overwrite=TRUE)
+  stopifnot(file.copy(f, paste0(dir,sub('.*/','',f)), overwrite=TRUE))
 }
 
 cat("Placing the description file into the package directory...\n")
-file.copy('DESCRIPTION', package$dir)
+stopifnot(file.copy('DESCRIPTION', package$dir, overwrite=TRUE))
 
 ## Create documentation
 if(do_update_documentation) {
@@ -102,4 +102,7 @@ cat("Cleaning up...\n")
 rm(package, path, files)
 cat("Finished.\n")
 
-if(!do_update_documentation) cat("\nWARNING: DOCUMENTATION NOT UPDATED.\n\n")
+if(!do_update_documentation) 
+  cat("\nWARNING: DOCUMENTATION NOT UPDATED.\n\n")
+  
+ 
