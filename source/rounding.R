@@ -83,8 +83,12 @@ round_nearest_power = function(x, base=10) {
 
 #' @rdname rounding
 #' @export
-rsignif = function(x, ndigit=0) {
-  ifelse(x==0, x, int_part(x) + signif(frac_part(x), digits=ndigit))
+rsignif = function(x, ndigits=0) {
+  if(ndigits(x) >= ndigits || ndigits==0) {
+    round(x)
+  } else {
+    ifelse(x==0, x, int_part(x) + signif(frac_part(x), digits=ndigits))
+  }
 }
 
 #' @rdname rounding

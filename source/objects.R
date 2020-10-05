@@ -116,6 +116,7 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
   if(missing(unit)) unit = get_unit(x)
 
   s = rsignif(x / sapply(unit, de_unit), ndigits)
+  print(s)
   
   if(append_unit) paste(format(s), unit, sep=sep) else s
 
@@ -177,27 +178,33 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   
   names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
   
-  object_class = napply(names, function(y) as.character(class(y))[1])
-  object_mode = napply(names, mode)
-  object_type = ifelse(is.na(object_class), object_mode, object_class)
+  obj_class = napply(names, function(y) as.character(class(y))[1])
+  obj_mode = napply(names, mode)
+  obj_type = ifelse(is.na(obj_class), obj_mode, obj_class)
   
-  #object_size = napply(names, function(y) object.size(get(y, envir=envir)))
-  object_size_in_bytes = napply(names, function(y) object.size(y))
-  object_size = object_size(list=names, with_unit=TRUE, ndigits=1)
-  name_envir = print2var(envir)
+  #obj_size = napply(names, function(y) object.size(get(y, envir=envir)))
+  obj_size_byte = napply(names, function(y) object.size(y))
+  obj_size = object_size(list=names, with_unit=TRUE, ndigits=1)
   
-  #object_dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
-  object_dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
+  #obj_dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
+  #obj_dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
+  #vec = is.na(obj_dim)[, 1] & (obj_type != "function")
+  #obj_dim[vec, 1] = napply(names, length)[vec]
+
+  obj_len = napply(names, length)
+  obj_dim = napply(names, function(y) paste(dim(y), collapse=' x '))
   
-  vec = is.na(object_dim)[, 1] & (object_type != "function")
-  object_dim[vec, 1] = napply(names, length)[vec]
-  out = data.frame(object_type, object_size_in_bytes, object_size, object_dim, name_envir)
-  names(out) = c("Type", "Size in bytes", "Size", "Rows", "Columns", "Environment")
+  name_envir = if(length(obj_class)==0) NULL else print2var(envir)
+
+  out = data.frame(obj_type, obj_size_byte, obj_size, obj_len, obj_dim, name_envir)
+  names(out) = c("Type", "Size in bytes", "Size", "Length", "Dimensions", "Environment")
   
   if(!missing(order_by))
     out = out[order(out[[order_by]], decreasing=decreasing),]
   
-  if(head) out = head(out, n)
+  if(head) {
+    out = head(out, n)
+  }
   
   return(out)
 
