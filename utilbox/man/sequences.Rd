@@ -17,9 +17,11 @@ frac(x)
 midpoints(x)
 }
 \description{
-\code{shift()} shifts (rotate) the elements in a vector in \code{x} by \code{lag}
-spaces. With \code{rotate=FALSE} the rotated elements are replaced with
-\code{value_rotated} (\code{NA} by default).
+\code{shift()} shifts the elements in a vector in \code{x} by \code{lag} spaces.
+With \code{rotate=TRUE} (default), the elements are rotated, meaning
+those at the end move to the beginning (for \code{lag>0}) or those at
+the beginning move to the end (for \code{lag<0}). With \code{rotate=FALSE}
+the rotated elements are replaced with \code{value_rotated} (\code{NA} by default).
 
 \code{frac} gives sequential fractions. It is similar to \code{base::diff}
 except that it returns lagged ratios instead of lagged differences.

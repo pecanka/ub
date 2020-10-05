@@ -2,24 +2,36 @@
 % Please edit documentation in R/objects.R
 \name{lsos}
 \alias{lsos}
-\alias{obj_size}
+\alias{object_size}
+\alias{.ls.objects}
 \title{List all objects and their sizes}
 \usage{
 lsos(..., envir = parent.frame(), n = 10)
 
-obj_size(
+object_size(
   ...,
   list = character(),
   unit = "B",
   with_unit = TRUE,
   envir = parent.frame(),
-  ndigit = 2
+  ndigits = 2
+)
+
+.ls.objects(
+  pos = 1,
+  pattern,
+  envir = parent.frame(),
+  order_by,
+  decreasing = FALSE,
+  head = FALSE,
+  n = 5,
+  all.names = TRUE
 )
 }
 \description{
 \code{lsos()} lists objects in the given environment and returns their
 names and sizes.
 
-\code{obj_size()} returns the sizes of supplied objects (in memory unit
+\code{object_size()} returns the sizes of supplied objects (in memory unit
 given in 'unit').
 }

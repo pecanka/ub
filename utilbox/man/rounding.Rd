@@ -3,6 +3,7 @@
 \name{rounding}
 \alias{rounding}
 \alias{ndigits}
+\alias{ndecimals}
 \alias{is_round}
 \alias{int_part}
 \alias{frac_part}
@@ -14,6 +15,8 @@
 \title{Number of digits}
 \usage{
 ndigits(x)
+
+ndecimals(x)
 
 is_round(x, eps = .Machine$double.eps)
 
@@ -34,6 +37,9 @@ signif2(x, ...)
 \description{
 \code{ndigits()} determines the number of digits for an integer or a
 real (for which the output reflects only the integer part).
+
+\code{ndecimals()} determines how many non-zero decimal places are
+needed to print a number.
 
 \code{is_round()} checks if values in \code{x} are round (i.e. equal to
 integers).

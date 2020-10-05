@@ -10,7 +10,7 @@ get_unit(n)
 
 de_unit(unit)
 
-convert_unit(x, unit, append_unit = TRUE, ndigit = 3)
+convert_unit(x, unit, append_unit = TRUE, ndigits = 3, sep = " ")
 }
 \description{
 \code{get_unit()} determines the appropriate unit of memory for the

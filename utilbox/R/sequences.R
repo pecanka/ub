@@ -2,9 +2,11 @@
 #'
 #' @description
 #'
-#' `shift()` shifts (rotate) the elements in a vector in `x` by `lag` 
-#' spaces. With `rotate=FALSE` the rotated elements are replaced with 
-#' `value_rotated` (`NA` by default).
+#' `shift()` shifts the elements in a vector in `x` by `lag` spaces.
+#' With `rotate=TRUE` (default), the elements are rotated, meaning 
+#' those at the end move to the beginning (for `lag>0`) or those at 
+#' the beginning move to the end (for `lag<0`). With `rotate=FALSE` 
+#' the rotated elements are replaced with `value_rotated` (`NA` by default).
 #'
 #' `frac` gives sequential fractions. It is similar to `base::diff` 
 #' except that it returns lagged ratios instead of lagged differences.
@@ -30,11 +32,13 @@ shift = function(x, lag=1, rotate=TRUE, value_rotated=NA) {
   
   lag = sign(lag) * (abs(lag) %% n)
   
-  if(n==0 || n %in% c(0,lag)) return(x)
+  if(n %in% c(0,lag)) {
+    return(x)
+  }
   
   if(rotate) {
     append(tail(x, lag), head(x, -lag))
-  } else if(lag>0) {
+  } else if(lag > 0) {
     append(rep(value_rotated, lag), head(x, -lag))
   } else {
     append(tail(x, lag), rep(value_rotated, -lag))
