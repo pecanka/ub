@@ -116,7 +116,6 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
   if(missing(unit)) unit = get_unit(x)
 
   s = rsignif(x / sapply(unit, de_unit), ndigits)
-  print(s)
   
   if(append_unit) paste(format(s), unit, sep=sep) else s
 
@@ -178,6 +177,11 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   
   names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
   
+  if(length(names)==0) {
+    catn("No (matching) objects found in ",print2var(envir),".")
+    return(invisible(NULL))
+  }
+  
   obj_class = napply(names, function(y) as.character(class(y))[1])
   obj_mode = napply(names, mode)
   obj_type = ifelse(is.na(obj_class), obj_mode, obj_class)
@@ -196,8 +200,8 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   
   name_envir = if(length(obj_class)==0) NULL else print2var(envir)
 
-  out = data.frame(obj_type, obj_size_byte, obj_size, obj_len, obj_dim, name_envir)
-  names(out) = c("Type", "Size in bytes", "Size", "Length", "Dimensions", "Environment")
+  out = data.frame(`Type`=obj_type, obj_size_byte, obj_size, obj_len, obj_dim, name_envir)
+  names(out) = c("Type", "Size in bytes", "Size", "Length", "Dimensions", "Location")
   
   if(!missing(order_by))
     out = out[order(out[[order_by]], decreasing=decreasing),]
