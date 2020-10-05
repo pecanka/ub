@@ -161,7 +161,7 @@ notepad_pckg_keys = function(pckgs, pattern, exclude=TRUE, what=c('all','exporte
 
   what = match.arg(what)
   
-  exports = nlapply(pckgs, list_package, pattern, all.names, exclude, what)
+  exports = nlapply(pckgs, list_package_objects, pattern, all.names, exclude, what)
   exports = list_clean(exports, function(x) ncol(x)>1)
   nams = do.call(rbind, exports)$object
   

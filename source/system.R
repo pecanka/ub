@@ -72,30 +72,28 @@ set_envir_var = function(name) {
 }
 
 #' @title
-#' System search paths
+#' Modify system search path
 #'
 #' @description
 #'
-#' `get_system_PATH()` reads and returns the system search paths.
+#' `get_system_path()` reads and returns the system search path variables.
 #'
-#' `append_system_PATH()` adds the supplied path among the system 
-#' search paths.
+#' `append_system_path()` adds the supplied path into the system 
+#' search path variables.
 #'
 #' @examples
-#' get_system_PATH()
+#' get_system_path()
 #'
+#' @name system_path
 #' @family system-related functions provided by utilbox
 #' @export
-get_system_PATH = function(path) {
+get_system_path = function(path) {
   data.frame(PATH=unlist(strsplit(Sys.getenv("PATH"), ';')))
 }
 
-#' @title
-#' Add to the system search paths
-#'
-#' @family system-related functions provided by utilbox
+#' @rdname system_path
 #' @export
-append_system_PATH = function(path) {
+append_system_path = function(path) {
 
   PATH = Sys.getenv("PATH")
   
@@ -110,7 +108,7 @@ append_system_PATH = function(path) {
     Sys.setenv('PATH'=paste0(PATH,";",path))
     
     if(grepl(str_patternize(path), PATH)) {
-      catn("Success. The path '",path,"' appended to the system PATH.")
+      catn("Success. The path '",path,"' has been appended to the system PATH.")
     } else {
       catn("Something went wrong. The path '",path,"' does not seem",
            " to have been appended to the system PATH.")

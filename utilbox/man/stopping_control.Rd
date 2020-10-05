@@ -30,11 +30,10 @@ Other system-related functions provided by utilbox:
 \code{\link{R_defaults}},
 \code{\link{R_gui_adjust}()},
 \code{\link{R_session_info}()},
-\code{\link{append_system_PATH}()},
 \code{\link{environment_variables}},
-\code{\link{get_system_PATH}()},
 \code{\link{is_win}()},
 \code{\link{pause}},
+\code{\link{system_path}},
 \code{\link{timest}()}
 }
 \concept{system-related functions provided by utilbox}

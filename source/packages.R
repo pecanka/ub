@@ -201,7 +201,7 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' `list_package_all()` lists all objects defined in a package 
 #' (including non-exported objects).
 #'
-#' `object_table()` puts the objects and their main characteristics into 
+#' `as_object_table()` puts the objects and their main characteristics into 
 #' a single table (class `data.frame`).
 #'
 #' @examples
@@ -214,7 +214,7 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 #'
 #' @export
-list_package = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL) {
+list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL) {
 
   what = match.arg(what)
   
@@ -234,25 +234,25 @@ list_package = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('al
     filter_out(getNamespaceExports(pckg), ifelse(all.names, '^$', '^[.]'))
   }
   
-  object_table(objs, pckg, pattern, exclude, mode)
+  as_object_table(objs, pckg, pattern, exclude, mode)
   
 }
 
-#' @rdname list_package
+#' @rdname list_package_objects
 #' @export
 list_package_exported = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package, pattern=pattern, all.names=all.names, exclude=exclude, what='exported', mode=mode)
+  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, exclude=exclude, what='exported', mode=mode)
 }
 
-#' @rdname list_package
+#' @rdname list_package_objects
 #' @export
 list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package, pattern=pattern, all.names=all.names, exclude=exclude, what='all', mode=mode)
+  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, exclude=exclude, what='all', mode=mode)
 }
 
-#' @rdname list_package
+#' @rdname list_package_objects
 #' @export
-object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
+as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
 
   if(!is.character(pckg) && !is.environment(pckg))
     error("Supply either a package name (character) or an environment.")
@@ -314,7 +314,7 @@ object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
 #'
 #' This function is useful for applying a function `f` (e.g. 
 #' [`base::class`]) to exported and/or non-exported objects inside a 
-#' package as done for example by [`object_table`].
+#' package as done for example by [`as_object_table`].
 #'
 #' @examples
 #' apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'

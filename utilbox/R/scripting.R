@@ -209,6 +209,6 @@ list_created_by_sourcing = function(file, ..., all.names=TRUE) {
   sys.source(file, ..., envir=env)
   objs = ls(all.names=all.names, envir=env)
   
-  object_table(objs, env)
+  as_object_table(objs, env)
 
 }

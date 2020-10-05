@@ -1,4 +1,4 @@
-#while("package:utilbox"%in%search()) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/make_install_utilbox.R"); require(utilbox)
+#while("package:utilbox"%in%search()) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/install_utilbox.R"); require(utilbox)
 
 ####################################################################################
 

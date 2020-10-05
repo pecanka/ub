@@ -16,7 +16,7 @@ as it accepts are supplied to it (as determined via \code{\link{nformals}}).
 
 This function is useful for applying a function \code{f} (e.g.
 \code{\link[base:class]{base::class}}) to exported and/or non-exported objects inside a
-package as done for example by \code{\link{object_table}}.
+package as done for example by \code{\link{as_object_table}}.
 }
 \examples{
 apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
