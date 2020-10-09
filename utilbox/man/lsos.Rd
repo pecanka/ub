@@ -3,21 +3,25 @@
 \name{lsos}
 \alias{lsos}
 \alias{object_size}
-\alias{.ls.objects}
+\alias{object_sizes}
+\alias{list_object_sizes}
 \title{List all objects and their sizes}
 \usage{
-lsos(..., envir = parent.frame(), n = 10)
+lsos(..., envir = parent.frame(), n = 10, ndigits = 2, horse = NULL)
 
-object_size(
+object_size(name, envir = parent.frame(), horse = object.size)
+
+object_sizes(
   ...,
   list = character(),
   unit = "B",
   with_unit = TRUE,
   envir = parent.frame(),
-  ndigits = 2
+  ndigits = 2,
+  horse = NULL
 )
 
-.ls.objects(
+list_object_sizes(
   pos = 1,
   pattern,
   envir = parent.frame(),
@@ -25,13 +29,16 @@ object_size(
   decreasing = FALSE,
   head = FALSE,
   n = 5,
-  all.names = TRUE
+  all.names = TRUE,
+  ndigits = 2,
+  horse = NULL
 )
 }
 \description{
 \code{lsos()} lists objects in the given environment and returns their
-names and sizes.
+names and sizes. It does so via \code{list_object_sizes()}, which has
+a few more optional arguments and can also be called directly.
 
-\code{object_size()} returns the sizes of supplied objects (in memory unit
+\code{object_sizes()} returns the sizes of supplied objects (in memory unit
 given in 'unit').
 }

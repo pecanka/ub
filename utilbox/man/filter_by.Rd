@@ -10,7 +10,7 @@
 \alias{filter_out}
 \title{Filter an object based}
 \usage{
-filter_by_value(x, pattern, fixed = TRUE, exclude = FALSE)
+filter_by_value(x, pattern, fixed = TRUE, exclude = FALSE, ignore.case = FALSE)
 
 filter_by_pattern(
   x,

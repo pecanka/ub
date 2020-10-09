@@ -115,7 +115,7 @@ append_system_path = function(path) {
     }
     
   }
-  
-  invisible(get_PATH())
+ 
+  invisible(get_system_path())
   
 }

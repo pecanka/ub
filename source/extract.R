@@ -456,8 +456,8 @@ nonpositive = function(x) {
 #' @name filter_by
 #' @family sequence-related functions provided by utilbox
 #' @export
-filter_by_value = function(x, pattern, fixed=TRUE, exclude=FALSE) {
-  keep = not_if(`%m_any%`(pattern, x, fixed=fixed), exclude)
+filter_by_value = function(x, pattern, fixed=TRUE, exclude=FALSE, ignore.case=FALSE) {
+  keep = not_if(`%m_any%`(pattern, x, fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   

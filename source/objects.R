@@ -115,7 +115,7 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
 
   if(missing(unit)) unit = get_unit(x)
 
-  s = rsignif(x / sapply(unit, de_unit), ndigits)
+  s = round(x / sapply(unit, de_unit), ndigits)
   
   if(append_unit) paste(format(s), unit, sep=sep) else s
 
@@ -127,19 +127,46 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
 #' @description
 #'
 #' `lsos()` lists objects in the given environment and returns their 
-#' names and sizes.
+#' names and sizes. It does so via `list_object_sizes()`, which has
+#' a few more optional arguments and can also be called directly.
 #'
-#' `object_size()` returns the sizes of supplied objects (in memory unit 
+#' `object_sizes()` returns the sizes of supplied objects (in memory unit 
 #' given in 'unit').
 #'
 #' @export
-lsos = function(..., envir=parent.frame(), n=10) {
-  .ls.objects(..., envir=envir, order_by="Size in bytes", decreasing=TRUE, head=TRUE, n=n)
+lsos = function(..., envir=parent.frame(), n=10, ndigits=2, horse=NULL) {
+  list_object_sizes(..., envir=envir, order_by="Size in bytes", decreasing=TRUE, 
+                    head=TRUE, n=n, ndigits=ndigits, horse=horse)
 }
 
 #' @rdname lsos
 #' @export
-object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=parent.frame(), ndigits=2) {
+object_size = function(name, envir=parent.frame(), horse=object.size) {
+
+  if(missing(horse) || is.null(horse))
+    horse = object.size
+
+  if(!is.function(horse))
+    error("The value supplied to object_size via 'horse' must be a function.")
+    
+  mem = try(horse(get(name, envir=envir)), silent=package_is_installed('pryr'))
+  
+  if(is_error(mem) && package_is_installed('pryr')) {
+      mem = try(pryr::object_size(get(name, envir=envir)))
+  }
+  
+  if(is_error(mem))
+    error("A memory query on the object '",name,"' failed.")
+    
+  as.numeric(mem) 
+   
+}
+
+#' @rdname lsos
+#' @export
+object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=parent.frame(), 
+  ndigits=2, horse=NULL) {
+  
   dots = match.call(expand.dots = FALSE)$`...`
   
   if (length(dots) && !all(sapply(dots, function(x) is.symbol(x) || is.character(x)))) 
@@ -148,20 +175,25 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   names = c(list, sapply(dots, as.character))
   
   # Get object sizes
-  s = try(sapply(names, function(x) if(exists(x, envir=envir)) object.size(get(x, envir=envir)) else NA))
+  s = try(sapply(names, function(x) 
+                          if(exists(x, envir=envir)) {
+                            object_size(x, envir=envir, horse=horse) 
+                          } else NA))
   
   # Convert the sizes in bytes to different units (unless error occured)
-  if(class(s)=="try-error") {
+  if(is_error(s)) {
   
     s = rep(NA, length(names))
     
   } else if(length(s)>0) {
     
     # Determine suitable unit
-    if(missing(unit) && with_unit) unit = get_unit(s)
+    if(missing(unit) && with_unit) {
+      unit = get_unit(s)
+    }
     
     # Convert units
-    s = convert_unit(s, unit, append_unit=with_unit, ndigits=ndigits)
+    s = data.frame(bytesize=s, size=convert_unit(s, unit, append_unit=with_unit, ndigits=ndigits))
     
   }
   
@@ -170,8 +202,8 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
 
 #' @rdname lsos
 #' @export
-.ls.objects = function(pos=1, pattern, envir=parent.frame(), order_by, decreasing=FALSE, 
-  head=FALSE, n=5, all.names=TRUE) {
+list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, decreasing=FALSE, 
+  head=FALSE, n=5, all.names=TRUE, ndigits=2, horse=NULL) {
   
   napply = function(names, fn) sapply(names, function(x) fn(try(get(x, envir=envir))))
   
@@ -187,8 +219,9 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   obj_type = ifelse(is.na(obj_class), obj_mode, obj_class)
   
   #obj_size = napply(names, function(y) object.size(get(y, envir=envir)))
-  obj_size_byte = napply(names, function(y) object.size(y))
-  obj_size = object_size(list=names, with_unit=TRUE, ndigits=1)
+  #obj_size_byte = napply(names, function(y) object_size(y, horse=horse))
+  #obj_size_byte = sapply(names, function(y) object_size(y, horse=horse))
+  obj_size = object_sizes(list=names, with_unit=TRUE, ndigits=ndigits, horse=horse)
   
   #obj_dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
   #obj_dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
@@ -200,7 +233,7 @@ object_size = function(..., list=character(), unit="B", with_unit=TRUE, envir=pa
   
   name_envir = if(length(obj_class)==0) NULL else print2var(envir)
 
-  out = data.frame(`Type`=obj_type, obj_size_byte, obj_size, obj_len, obj_dim, name_envir)
+  out = data.frame(obj_type, obj_size, obj_len, obj_dim, name_envir)
   names(out) = c("Type", "Size in bytes", "Size", "Length", "Dimensions", "Location")
   
   if(!missing(order_by))
@@ -269,7 +302,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
   # List new objects loaded from the file
   if(list_new) {
     catn("Getting sizes of loaded objects ...")
-    sizes = object_size(list=loaded, with_unit=TRUE, envir=envir)
+    sizes = object_sizes(list=loaded, with_unit=TRUE, envir=envir)
     catn("Loaded objects: ",paste(loaded," (",sizes,")",sep="",collapse=", "))
   } else 
     sizes = rep(NA, length(loaded))

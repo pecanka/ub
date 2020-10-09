@@ -147,3 +147,95 @@ add_col = function(.data, ...) {
 rep_df = function(x, n, fun_bind=rbind) {
   do.call(fun_bind, lapply(seq2(1,n,1), function(i) x))
 }
+
+#' @title Find a column by name
+#'
+#' @description
+#' `find_column()` searches all data frames in the given environment (the parent
+#' frame by default) for a column with the name specified in `name`. The matching
+#' of the column name is done exactly (when `fixed=TRUE`) or as a regular pattern
+#' (when `fixed=FALSE`). The search can be limited to a subset of data frames by
+#' specifying a regular pattern for the name of the data frame via `df_pattern`.
+#'
+#' `find_column_in_file()` performs the same search as `find_column()` except in
+#' files specified either explicitely (via `files`) or via a pattern (`file_pattern`).
+#' Case sensitivity of the file search is controlled by `file_ignore_case`.
+#' The search can be interrupted after the first match is found when 
+#' `stop_when_found=TRUE`. The first `nskip` files are skipped.
+#'
+#' @export
+find_column = function(name, df_pattern='.*', fixed=TRUE, ignore_case=FALSE, envir=parent.frame(1)) {
+
+  dfs = ls(pattern=df_pattern, envir=envir)
+  
+  wdfs = sapply(dfs, function(x) 'data.frame' %in% class(get(x, envir=envir)))
+  dfs = dfs[wdfs]
+  
+  cns = lapply(dfs, function(d) names(get(d, envir=envir)))
+  cns = lapply(cns, filter_by_value, name, fixed=fixed, ignore.case=ignore_case)
+  names(cns) = dfs
+  
+  list_clean(cns)
+
+}
+
+#' @rdname find_column
+#' @export
+find_column_in_file = function(name, df_pattern='.*', files, dir='.', file_pattern='.*', 
+  fixed=TRUE, ignore_case=FALSE, file_ignore_case=TRUE, stop_when_found=FALSE, 
+  nskip=0) {
+
+  if(missing(files)) {
+    if(missing(file_pattern)) {
+      file_pattern = '.*[.](Rdata|rda)$'
+    }
+    files = list.files(path=dir, pattern=file_pattern, full.names=FALSE, 
+                       ignore.case=file_ignore_case)
+  }
+  
+  catn("Looking for column '",name,"' (case ",ifelse(ignore_case, 'insensitive', 'sensitive'),
+       ") in R data files (",length(files)," files in total) in the path '",dir,"' ...")
+       
+  if(nskip>0) {
+    catn("Skipping the first ",nskip," files ...")
+  }
+  
+  cols = list()
+  for(i in seq_along(files)) {
+  
+    if(i <= nskip) next
+  
+    f = files[i]
+    env=new.env()
+    
+    cat0("... loading file '",f,"' (",i,") ... ")
+    res = try(load(base::file.path(dir,f), envir=env))
+    
+    if(is_error(res)) {
+      warn("File '",f,"' could not be loaded.")
+      next
+    }
+
+    cat0("searching data frames for matching columns ... ")
+    col = find_column(name, pattern=df_pattern, fixed=fixed, ignore_case=ignore_case, envir=env)
+    
+    rm(env)
+    
+    nfound = length(col)
+    catn("total of ",nfound," matching columns found.")
+    
+    col = list(col)
+    names(col) = f
+    cols = append(cols, col)
+    
+    if(stop_when_found && nfound>0 && i<length(files)) {
+      catn("... stopping the search after at least 1 matching column found (stop_when_found is TRUE).")
+      break
+    }
+
+  }
+  
+  list_clean(cols)
+
+}
+
