@@ -7,9 +7,9 @@
 \alias{list_object_sizes}
 \title{List all objects and their sizes}
 \usage{
-lsos(..., envir = parent.frame(), n = 10, ndigits = 2, horse = NULL)
+lsos(..., envir = parent.frame(), n = 10, ndigits = 2, size_fun = NULL)
 
-object_size(name, envir = parent.frame(), horse = object.size)
+object_size(name, envir = parent.frame(), size_fun = object.size)
 
 object_sizes(
   ...,
@@ -18,7 +18,7 @@ object_sizes(
   with_unit = TRUE,
   envir = parent.frame(),
   ndigits = 2,
-  horse = NULL
+  size_fun = NULL
 )
 
 list_object_sizes(
@@ -31,7 +31,7 @@ list_object_sizes(
   n = 5,
   all.names = TRUE,
   ndigits = 2,
-  horse = NULL
+  size_fun = NULL
 )
 }
 \description{

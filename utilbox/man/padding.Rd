@@ -26,12 +26,13 @@ num_pad(x, min_nint, min_ndig = 6, fmt = "f", format)
 spaces(n, char = " ")
 }
 \description{
-\code{str_pad2} pads to input to a given width (\code{width}).  It formats
-the contents of \code{x} to a minimum width (character count) or other
+\code{str_pad2} pads the input to a given width (\code{width}).  It formats
+the contents of \code{x} to a minimum width (i.e. character count) or other
 specified format (via \code{format}). The minimum length is easiest
 controlled via \code{min_width}. Non-character values are converted to
-character using \code{base::as.character}. \code{str_lengthen()} is an alias
-for \code{str_pad2()}.
+character using \code{base::as.character()}.
+
+\code{str_lengthen()} is an alias for \code{str_pad2()}.
 
 \code{int_pad} pads an integer with leading zeros.
 

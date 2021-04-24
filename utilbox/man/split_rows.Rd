@@ -30,6 +30,7 @@ details.
 \seealso{
 Other matrix/data-frame functions provided by utilbox: 
 \code{\link{add_col}()},
+\code{\link{anti_join_sym}()},
 \code{\link{identical_cols}()},
 \code{\link{join_recurse}()},
 \code{\link{rep_df}()},

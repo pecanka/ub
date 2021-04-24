@@ -7,6 +7,7 @@
 \alias{list_installed_packages}
 \alias{list_loaded_packages}
 \alias{package_is_installed}
+\alias{is_lib_installed}
 \title{Library operations}
 \usage{
 llibrary(
@@ -28,6 +29,8 @@ list_installed_packages()
 list_loaded_packages()
 
 package_is_installed(pckgs, character.only = FALSE)
+
+is_lib_installed(pckgs, character.only = FALSE)
 }
 \description{
 \code{llibrary()} loads specified libraries. On input, \code{pckgs} must
@@ -45,11 +48,16 @@ where name is the package name and src is the package source
 \code{list_loaded_packages()}) list all loaded packages.
 
 \code{package_is_installed()} checks if a package is installed.
+
+\code{is_lib_installed()} is an alias for \code{package_is_installed()}.
 }
 \examples{
 list_installed_packages()
 list_loaded_packages()
 package_is_installed('utilbox')
+package_is_installed(utilbox)
+lib = 'utilbox'; package_is_installed(lib)
+lib = 'utilbox'; package_is_installed(lib, character.only=TRUE)
 
 }
 \seealso{

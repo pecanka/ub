@@ -9,6 +9,9 @@
 #' `ndecimals()` determines how many non-zero decimal places are
 #' needed to print a number.
 #'
+#' `nsignif()` calculates how many significant digits the supplied 
+#' numbers are rounded to.
+#'
 #' `is_round()` checks if values in `x` are round (i.e. equal to 
 #' integers).
 #'
@@ -45,6 +48,12 @@ ndigits = function(x) {
 #' @export
 ndecimals = function(x) {
   pmax(0, nchar(format(abs(x-as.integer(x))))-2)
+}
+
+#' @name rounding
+#' @export
+nsignif = function(x) {
+  nchar(sub('0+$', '', sub('[.]', '', sub('^0+','', sprintf('%.14f', x)))))
 }
 
 #' @rdname rounding

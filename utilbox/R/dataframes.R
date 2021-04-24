@@ -217,7 +217,7 @@ find_column_in_file = function(name, df_pattern='.*', files, dir='.', file_patte
     }
 
     cat0("searching data frames for matching columns ... ")
-    col = find_column(name, pattern=df_pattern, fixed=fixed, ignore_case=ignore_case, envir=env)
+    col = find_column(name, df_pattern=df_pattern, fixed=fixed, ignore_case=ignore_case, envir=env)
     
     rm(env)
     

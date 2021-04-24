@@ -4,6 +4,7 @@
 \alias{rounding}
 \alias{ndigits}
 \alias{ndecimals}
+\alias{nsignif}
 \alias{is_round}
 \alias{int_part}
 \alias{frac_part}
@@ -17,6 +18,8 @@
 ndigits(x)
 
 ndecimals(x)
+
+nsignif(x)
 
 is_round(x, eps = .Machine$double.eps)
 
@@ -40,6 +43,9 @@ real (for which the output reflects only the integer part).
 
 \code{ndecimals()} determines how many non-zero decimal places are
 needed to print a number.
+
+\code{nsignif()} calculates how many significant digits the supplied
+numbers are rounded to.
 
 \code{is_round()} checks if values in \code{x} are round (i.e. equal to
 integers).

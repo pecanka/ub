@@ -4,6 +4,7 @@
 \alias{cat0}
 \alias{catn}
 \alias{catnn}
+\alias{message}
 \alias{msg}
 \alias{warn}
 \alias{note}
@@ -38,6 +39,8 @@ catn(
 )
 
 catnn(..., sep = "\\n", fill = TRUE)
+
+message(..., flush = TRUE)
 
 msg(
   t,
@@ -81,6 +84,9 @@ depending on arguments.
 \"WARNING\" to the printed message.
 
 \code{note()} prints a note and a request to wait (optional).
+
+\code{message()} is simply a slight alteration of \code{base::message()} which
+flushes the output by default.
 
 \code{.fc()} is an alias for \code{\link[utils:flush.console]{utils::flush.console()}}.
 

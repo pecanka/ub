@@ -134,22 +134,25 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
 #' given in 'unit').
 #'
 #' @export
-lsos = function(..., envir=parent.frame(), n=10, ndigits=2, horse=NULL) {
+lsos = function(..., envir=parent.frame(), n=10, ndigits=2, size_fun=NULL) {
   list_object_sizes(..., envir=envir, order_by="Size in bytes", decreasing=TRUE, 
-                    head=TRUE, n=n, ndigits=ndigits, horse=horse)
+                    head=TRUE, n=n, ndigits=ndigits, size_fun=size_fun)
 }
 
 #' @rdname lsos
 #' @export
-object_size = function(name, envir=parent.frame(), horse=object.size) {
+object_size = function(name, envir=parent.frame(), size_fun=object.size) {
 
-  if(missing(horse) || is.null(horse))
-    horse = object.size
-
-  if(!is.function(horse))
-    error("The value supplied to object_size via 'horse' must be a function.")
+  if(!is.character(name))
+    error("The argument 'name' of 'object_size' must be of class character.")
     
-  mem = try(horse(get(name, envir=envir)), silent=package_is_installed('pryr'))
+  if(missing(size_fun) || is.null(size_fun))
+    size_fun = object.size
+
+  if(!is.function(size_fun))
+    error("The value supplied to 'object_size' via 'size_fun' must be a function.")
+    
+  mem = try(size_fun(get(name, envir=envir)), silent=package_is_installed('pryr'))
   
   if(is_error(mem) && package_is_installed('pryr')) {
       mem = try(pryr::object_size(get(name, envir=envir)))
@@ -165,7 +168,7 @@ object_size = function(name, envir=parent.frame(), horse=object.size) {
 #' @rdname lsos
 #' @export
 object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=parent.frame(), 
-  ndigits=2, horse=NULL) {
+  ndigits=2, size_fun=NULL) {
   
   dots = match.call(expand.dots = FALSE)$`...`
   
@@ -177,7 +180,7 @@ object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=p
   # Get object sizes
   s = try(sapply(names, function(x) 
                           if(exists(x, envir=envir)) {
-                            object_size(x, envir=envir, horse=horse) 
+                            object_size(x, envir=envir, size_fun=size_fun) 
                           } else NA))
   
   # Convert the sizes in bytes to different units (unless error occured)
@@ -203,7 +206,7 @@ object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=p
 #' @rdname lsos
 #' @export
 list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, decreasing=FALSE, 
-  head=FALSE, n=5, all.names=TRUE, ndigits=2, horse=NULL) {
+  head=FALSE, n=5, all.names=TRUE, ndigits=2, size_fun=NULL) {
   
   napply = function(names, fn) sapply(names, function(x) fn(try(get(x, envir=envir))))
   
@@ -219,9 +222,9 @@ list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, dec
   obj_type = ifelse(is.na(obj_class), obj_mode, obj_class)
   
   #obj_size = napply(names, function(y) object.size(get(y, envir=envir)))
-  #obj_size_byte = napply(names, function(y) object_size(y, horse=horse))
-  #obj_size_byte = sapply(names, function(y) object_size(y, horse=horse))
-  obj_size = object_sizes(list=names, with_unit=TRUE, ndigits=ndigits, horse=horse)
+  #obj_size_byte = napply(names, function(y) object_size(y, size_fun=size_fun))
+  #obj_size_byte = sapply(names, function(y) object_size(y, size_fun=size_fun))
+  obj_size = object_sizes(list=names, with_unit=TRUE, ndigits=ndigits, size_fun=size_fun)
   
   #obj_dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
   #obj_dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))

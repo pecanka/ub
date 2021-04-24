@@ -22,6 +22,7 @@ add_col(x, name=c('John','Jeff'), age=c(20,40))
 }
 \seealso{
 Other matrix/data-frame functions provided by utilbox: 
+\code{\link{anti_join_sym}()},
 \code{\link{identical_cols}()},
 \code{\link{join_recurse}()},
 \code{\link{rep_df}()},

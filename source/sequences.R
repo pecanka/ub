@@ -8,11 +8,15 @@
 #' the beginning move to the end (for `lag<0`). With `rotate=FALSE` 
 #' the rotated elements are replaced with `value_rotated` (`NA` by default).
 #'
-#' `frac` gives sequential fractions. It is similar to `base::diff` 
+#' `frac()` gives sequential fractions. It is similar to `base::diff()` 
 #' except that it returns lagged ratios instead of lagged differences.
 #'
-#' `midpoints` find the midpoints between individual elements of a 
+#' `midpoints()` finds the midpoints between individual elements of a 
 #' sequence given in `x`.
+#'
+#' `range_sym()` returns a symmetric range around the given point determined
+#' via `around`. Useful for instance for determining axis range for producing
+#' plots that are symmetric around a given value.
 #'
 #' `nunique()` counts the number of unique values in the supplied 
 #' argument. Simply an alias for `length(unique(x))`.
@@ -22,6 +26,10 @@
 #'
 #' midpoints(1:10)
 #' midpoints(c(1:5,3*1:5))
+#'
+#' range_sym((-3):5)
+#' range_sym((-3):5, around=1)
+#' range_sym((-3):5, around=4)
 #'
 #' @name sequences
 #' @family numeric functions provided by utilbox
@@ -64,6 +72,14 @@ midpoints = function(x) {
   0.5*(head(x, -1) + tail(x, -1))
 }
 
+#' @rdname sequences
+#' @export
+range_sym = function(..., around=0) {
+  rng = range(...)
+  lft = abs(around - rng[1])
+  rgh = abs(rng[2] - around)
+  around + c(-1,1) * max(lft, rgh)
+}
 
 ### OLD CODE BELOW ###
 

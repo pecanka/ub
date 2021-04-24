@@ -370,12 +370,13 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #'
 #' @description
 #'
-#' `str_pad2` pads to input to a given width (`width`).  It formats 
-#' the contents of `x` to a minimum width (character count) or other 
+#' `str_pad2` pads the input to a given width (`width`).  It formats 
+#' the contents of `x` to a minimum width (i.e. character count) or other 
 #' specified format (via `format`). The minimum length is easiest 
 #' controlled via `min_width`. Non-character values are converted to 
-#' character using `base::as.character`. `str_lengthen()` is an alias
-#' for `str_pad2()`.
+#' character using `base::as.character()`. 
+#'
+#' `str_lengthen()` is an alias for `str_pad2()`.
 #'
 #' `int_pad` pads an integer with leading zeros.
 #'

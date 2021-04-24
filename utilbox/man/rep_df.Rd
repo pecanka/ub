@@ -24,6 +24,7 @@ rep_df(t(t(1:3)), 3)       # row-binds as a column vector
 \seealso{
 Other matrix/data-frame functions provided by utilbox: 
 \code{\link{add_col}()},
+\code{\link{anti_join_sym}()},
 \code{\link{identical_cols}()},
 \code{\link{join_recurse}()},
 \code{\link{rev_rows}()},

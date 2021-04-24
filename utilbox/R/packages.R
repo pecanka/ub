@@ -63,10 +63,15 @@ check_namespace = function(pckg, envir=parent.frame()) {
 #'
 #' `package_is_installed()` checks if a package is installed.
 #'
+#' `is_lib_installed()` is an alias for `package_is_installed()`.
+#'
 #' @examples
 #' list_installed_packages()
 #' list_loaded_packages()
 #' package_is_installed('utilbox')
+#' package_is_installed(utilbox)
+#' lib = 'utilbox'; package_is_installed(lib)
+#' lib = 'utilbox'; package_is_installed(lib, character.only=TRUE)
 #'
 #' @name llibrary
 #'
@@ -182,12 +187,16 @@ list_loaded_packages = function() {
 #' @rdname llibrary
 #' @export
 package_is_installed = function(pckgs, character.only=FALSE) {
-  
-  if(!character.only) pckg = as.character(substitute(pckg))
+
+  if(!character.only) pckgs = as.character(substitute(pckgs))
   
   `names<-`(sapply(pckgs, requireNamespace, quietly=TRUE), pckgs)
   
 }
+
+#' @rdname llibrary
+#' @export
+is_lib_installed = package_is_installed
 
 #' @title
 #' List objects in a package

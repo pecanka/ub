@@ -39,6 +39,9 @@ print2var = function(fun, file=NULL) {
 #'
 #' `note()` prints a note and a request to wait (optional).
 #'
+#' `message()` is simply a slight alteration of `base::message()` which
+#' flushes the output by default.
+#'
 #' `.fc()` is an alias for [`utils::flush.console()`].
 #'
 #' `flush_console()` is a more flexible way of flushing the console. 
@@ -50,6 +53,9 @@ print2var = function(fun, file=NULL) {
 cat0 = function(..., file="", sep="", fill=FALSE, pad=FALSE, padding=' ', pad_side='right', 
   labels=NULL, append=FALSE, flush=TRUE, flush_cycle=1, envir=utilbox_environment(), 
   fill_using_options=FALSE) {
+  
+  # define isFALSE which is not found in older versions of package base 
+  isFALSE = function(x) is.logical(x) && length(x) == 1L && !is.na(x) && !x
   
   if(isFALSE(pad) && (isFALSE(fill) || fill_using_options)) {
     
@@ -89,6 +95,13 @@ catn = function(..., file="", sep="", fill=FALSE, labels=NULL, append=FALSE, eol
 #' @export
 catnn = function(..., sep='\n', fill=TRUE) {
   catn(..., sep=sep, fill=fill)
+}
+
+#' @rdname cat0
+#' @export
+message = function(..., flush=TRUE) {
+  base::message(...)
+  if(flush) utils::flush.console()
 }
 
 #' @rdname cat0

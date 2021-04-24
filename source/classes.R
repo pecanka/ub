@@ -58,7 +58,12 @@ drop_class = function(x, class) {
 #'
 #' @export
 set_class = function(x, class) {
-  do.call('as.'%p%class, list(x))
+  fun_name = 'as.'%p%class
+  if(exists(fun_name, mode='function')) {
+    do.call(fun_name, list(x))
+  } else {
+    `class<-`(x, class)
+  }
 }
 
 #' @rdname set_class
