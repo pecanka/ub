@@ -11,14 +11,14 @@ combine_pvalues = function(P, lam, method=c("jelle","jakub","fisher","stouffer")
   if(is.vector(P)) P = matrix(P, nrow=1, ncol=length(P))
 
   if(summarize) {
-    catn("Smallest raw p-value: ",min(P))
+    message("Smallest raw p-value: ",min(P))
     w = which.min(apply(log10(P), 1, mean))
-    catn("Row with the smallest average p-values (on log scale): ",w)
+    message("Row with the smallest average p-values (on log scale): ",w)
     print(P[w,])
     c1 = do_pval_comb(P[w,], method="fisher")
-    catn("Fisher combination of these p-values: ",c1)
+    message("Fisher combination of these p-values: ",c1)
     c2 = do_pval_comb(P[w,], method="jelle")
-    catn("Jelle combination of these p-values: ",c2)
+    message("Jelle combination of these p-values: ",c2)
   }
   
   do_pval_comb(P, lam, method, ...)
@@ -130,7 +130,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     error("Unknown combination method '",method,"'.")
   
   # Replace non-sensical p-values with NA
-  if(trace>0) catn("Checking for NA values ...")
+  if(trace>0) message("Checking for NA values ...")
   P[P<0. | P>1.] = NA
 
   # Make sure P is a matrix
@@ -184,7 +184,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     X0 = apply(mat_lam*chi2, 1, sum, na.rm=na.rm)
     
     if(trace>0) 
-      catn("Combining p-values (",nrow(chi2)," sets) via Box's method (with weighing, ",method,"'s code) ...")
+      message("Combining p-values (",nrow(chi2)," sets) via Box's method (with weighing, ",method,"'s code) ...")
      
     # Use Jelle's general implementation (slow)
     if(tolower(method)=="jelle") {
@@ -199,7 +199,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
       mdif = apply(mat_lam, 1, min_dif)
       #print(summary(mdif))
       if(any(mdif <= mindif)) {
-        if(trace>0) catn("Randomizing weights ...")
+        if(trace>0) message("Randomizing weights ...")
         if(same_lam) {
           rlam = randomize(lam, mindif=mindif)
           mat_lam = matrix(lam, nrow=np, ncol=nres, byrow=TRUE)      
@@ -277,19 +277,19 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
   }
 
   # Announce the smallest combined p-value
-  if(trace>0) catn("Smallest combined p-value: ",min(PP, na.rm=TRUE))
+  if(trace>0) message("Smallest combined p-value: ",min(PP, na.rm=TRUE))
   
   # Compare the output of Jakub's and Jelle's codes for small p-values
   eps = 1e-6
   if(FALSE && any(PP<eps, na.rm=TRUE)) {
-    catn("Checking results for small p-values (",sum(PP<eps)," p-values below ",eps,") ...")
+    message("Checking results for small p-values (",sum(PP<eps)," p-values below ",eps,") ...")
     ws = which(PP<eps)
     PP2 = sapply(X0[ws], .pAsymptotic, lams=rep(lam, t=2), accuracy=1e-100)
-    catn("Smallest p-value found after re-check: ",min(PP2),"\n")
+    message("Smallest p-value found after re-check: ",min(PP2),"\n")
     md = max(abs(PP[ws]-PP2))
-    catn("Maximum difference between Jakub's and Jelle's code: ",md)
+    message("Maximum difference between Jakub's and Jelle's code: ",md)
     mrd = max(abs((PP[ws]-PP2)/unzero(PP[ws]+PP2)*2-1))
-    catn("Maximum relative difference between Jakub's and Jelle's code: ",mrd)
+    message("Maximum relative difference between Jakub's and Jelle's code: ",mrd)
     PP[ws] = PP2
   }
 

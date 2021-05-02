@@ -193,11 +193,11 @@ find_column_in_file = function(name, df_pattern='.*', files, dir='.', file_patte
                        ignore.case=file_ignore_case)
   }
   
-  catn("Looking for column '",name,"' (case ",ifelse(ignore_case, 'insensitive', 'sensitive'),
+  message("Looking for column '",name,"' (case ",ifelse(ignore_case, 'insensitive', 'sensitive'),
        ") in R data files (",length(files)," files in total) in the path '",dir,"' ...")
        
   if(nskip>0) {
-    catn("Skipping the first ",nskip," files ...")
+    message("Skipping the first ",nskip," files ...")
   }
   
   cols = list()
@@ -222,14 +222,14 @@ find_column_in_file = function(name, df_pattern='.*', files, dir='.', file_patte
     rm(env)
     
     nfound = length(col)
-    catn("total of ",nfound," matching columns found.")
+    message("total of ",nfound," matching columns found.")
     
     col = list(col)
     names(col) = f
     cols = append(cols, col)
     
     if(stop_when_found && nfound>0 && i<length(files)) {
-      catn("... stopping the search after at least 1 matching column found (stop_when_found is TRUE).")
+      message("... stopping the search after at least 1 matching column found (stop_when_found is TRUE).")
       break
     }
 

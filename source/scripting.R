@@ -162,7 +162,7 @@ source_files = function(files, path='.', announce=TRUE, normalize=FALSE,
     
     transfer_objects(env, envir)
     
-    if(announce) catn(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
+    if(announce) message(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
     
   }
   
@@ -198,7 +198,7 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
 #'
 #' @examples
 #' tmp = '.~temp.R'
-#' catn('test_function = function() NULL', file=tmp_file)
+#' cat('test_function = function() NULL\n', file=tmp_file)
 #' list_created_by_sourcing(tmp)
 #' unlink(tmp)
 #'

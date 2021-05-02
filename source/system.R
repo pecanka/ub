@@ -101,17 +101,17 @@ append_system_path = function(path) {
   
   if(grepl(str_patternize(path), PATH)) {
     
-    catn("Path '",path,"' already present in the system PATH.")
+    message("Path '",path,"' already present in the system PATH.")
     
   } else {
     
     Sys.setenv('PATH'=paste0(PATH,";",path))
     
     if(grepl(str_patternize(path), Sys.getenv("PATH"))) {
-      catn("Success. The path '",path,"' has been appended to the system PATH.")
+      message("Success. The path '",path,"' has been appended to the system PATH.")
     } else {
-      catn("Something went wrong. The path '",path,"' does not seem",
-           " to have been appended to the system PATH.")
+      message("Something went wrong. The path '",path,"' does not seem",
+              " to have been appended to the system PATH.")
     }
     
   }

@@ -213,7 +213,7 @@ list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, dec
   names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
   
   if(length(names)==0) {
-    catn("No (matching) objects found in ",print2var(envir),".")
+    message("No (matching) objects found in ",print2var(envir),".")
     return(invisible(NULL))
   }
   
@@ -284,7 +284,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
   
   # Announce loading and file name
   if(announce) 
-    catn("All objects from file '",file,"' will be loaded ...")
+    message("All objects from file '",file,"' will be loaded ...")
   
   # Check for missing file
   if(!file.exists(file)) 
@@ -304,9 +304,9 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
   
   # List new objects loaded from the file
   if(list_new) {
-    catn("Getting sizes of loaded objects ...")
+    message("Getting sizes of loaded objects ...")
     sizes = object_sizes(list=loaded, with_unit=TRUE, envir=envir)
-    catn("Loaded objects: ",paste(loaded," (",sizes,")",sep="",collapse=", "))
+    message("Loaded objects: ",paste(loaded," (",sizes,")",sep="",collapse=", "))
   } else 
     sizes = rep(NA, length(loaded))
   
@@ -317,7 +317,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
       msg = paste0("The following expected objects were not loaded: '",paste(miss,collapse="' '"),"'")
       if(quit_on_miss) error(msg) else warn(msg)
     } else {
-      catn("All expected objects were successfully loaded.")
+      message("All expected objects were successfully loaded.")
     }
   }
 
@@ -392,11 +392,11 @@ find_object = function(object_name, files=NULL, dir=".", pattern="^.*[.]RData$",
   
   if(announce) {
     if(!length(identified_files)) {
-      catn("Unfortunately the object '",object_name,"' could not be find in any of the files.")
+      message("Unfortunately the object '",object_name,"' could not be find in any of the files.")
     } else if(stop_on_found) {
-      catn("Object '",object_name,"' found in file '",identified_files,"'. Search stopped.")  
+      message("Object '",object_name,"' found in file '",identified_files,"'. Search stopped.")  
     } else {
-      catn("Object '",object_name,"' found in ",length(identified_files)," files.")  
+      message("Object '",object_name,"' found in ",length(identified_files)," files.")  
     }
   }
   

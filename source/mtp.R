@@ -331,7 +331,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
   if(!any(names(getLoadedDLLs())=="mtc")) {
   
     if(trace>0) 
-      catn("Loading library file '",dll_lib,"' ...")
+      message("Loading library file '",dll_lib,"' ...")
     
     if(!file.exists(dll_lib)) 
       error("Library file '",dll_lib,"' does not exist!")
@@ -524,7 +524,7 @@ mtp_errors_slow = function(p, methods, n1=0, k, alpha=0.05, lamSFG=0.5, lam, sca
     L1 = Filter(length, list(fwer=fwer, fdr=fdr, power=power))
     L = append(L, structure(list(L1), names=method))
     
-    if(trace>0) catn()
+    if(trace>0) cat('\n')
     
   }
   

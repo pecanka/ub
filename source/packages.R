@@ -100,18 +100,18 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     # Check if package already loaded
     if(any(lib$name==loaded_packages)) {
       if(!detach_first) next
-      catn("Detaching package ",lib$name," ...")
+      message("Detaching package ",lib$name," ...")
       detach('package:'%p%lib$name, character.only=TRUE)
     }
     
     # Announce loading of the current package
-    if(!quietly) catn("Loading package ",lib$name," ...")
+    if(!quietly) message("Loading package ",lib$name," ...")
 
     # Check if current package is installed
     if(all(lib$name!=installed.packages()[,"Package"])) {
     
-      catn("Library '",lib$name,"' is not installed. Installing it from '",lib$src,"' ...")
-      if(!is.null(lib$note)) catn(lib$note)
+      message("Library '",lib$name,"' is not installed. Installing it from '",lib$src,"' ...")
+      if(!is.null(lib$note)) message(lib$note)
 
       # Check for location information
       if(is.null(lib$src) || is.na(lib$src)) {
@@ -138,7 +138,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     }
 
     # If this point reached without errors, it is installed, so the package is loaded
-    if(!quietly) catn("Loading package '",lib$name,"' ...")
+    if(!quietly) message("Loading package '",lib$name,"' ...")
     require(lib$name, character.only=TRUE, quietly=quietly)
   
   } # for(lib in pckgs)
@@ -236,7 +236,7 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
   }
 
   detail = ifelse(what=='all', ifelse(all.names, "visible","existing"), 'exported')
-  catn("Listing all ",detail," objects in the package '",pckg,"' ...")
+  message("Listing all ",detail," objects in the package '",pckg,"' ...")
   objs = if(what=='all') {
     ls(envir=getNamespace(pckg), all.names=all.names)
   } else {
@@ -399,13 +399,11 @@ lib_dependencies = function(pckg, ...) {
 #' @export
 install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FALSE) {
   
-  catn = function(...) base::cat(...,'\n')
-  
-  catn('Listing all package dependencies ...')
+  message('Listing all package dependencies ...')
   pckgs = unlist(lib_dependencies(pckg))
   
   if(length(pckgs)==0) {
-    catn('The supplied packages have no dependencies.')
+    message('The supplied packages have no dependencies.')
     return(invisible(NULL))
   }
   
@@ -414,7 +412,7 @@ install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FA
   }
   
   if(length(pckgs)==0) {
-    catn('All dependencies are already installed.')
+    message('All dependencies are already installed.')
   }
   
   for(p in pckgs) {

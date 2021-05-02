@@ -33,7 +33,7 @@ sleep = function(time, announce=TRUE) {
   Sys.sleep(time)
   
   if(announce) {
-    catn("done.")
+    message("done.")
   }
   
   invisible(NULL)
@@ -45,11 +45,11 @@ sleep = function(time, announce=TRUE) {
 wait = function(...) {
 
   if(!is_empty(list(...))) {
-    do.call(catn, list(...))
+    do.call(message, list(...))
   }
   
   if(interactive()) {
-    catn("Press ENTER to continue or ESC to quit ...")
+    message("Press ENTER to continue or ESC to quit ...")
     input = scan("", what = "character", nmax=1, quiet=TRUE)
   }
   
@@ -59,10 +59,10 @@ wait = function(...) {
 #' @export
 ask = function(question, answers=c('Y','N'), affirmative='Y', nmax=1, case_sensitive=FALSE) {
 
-  catn(question)
+  message(question)
   
   if(interactive()) {
-    catn(paste(answers, collapse="/"),":")
+    message(paste(answers, collapse="/"),":")
     input = scan("", what = "character", nmax=nmax, quiet=TRUE)
   }
   

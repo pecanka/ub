@@ -278,7 +278,7 @@ default_trunc_info = function() {
 
 print_trunc_info = function(n_hidden) {
   if(n_hidden>0) {
-    catn("# ... with ",n_hidden," more elements")
+    message("# ... with ",n_hidden," more elements")
     update_utilbox("trunc_n_hidden", n_hidden)
   }
 }
@@ -290,7 +290,7 @@ print_trunc_note = function() {
   if(any_hidden>0) {
     msg = "Note: For objects of class 'huge' only the first " %p% n_limit %p% 
           " elements were printed. Use print(n=...) to change this limit."
-    catn('\n',msg)
+    message('\n',msg)
     invisible(msg)
   }
 }

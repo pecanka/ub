@@ -96,7 +96,7 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
   }
 
   # Update the bibliography and save it to a file
-  catn("Saving bibliography to file '",outfile,"' ...")
+  message("Saving bibliography to file '",outfile,"' ...")
   catn(collapse0n(x), file=outfile)
   
 }
