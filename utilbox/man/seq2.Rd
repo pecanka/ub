@@ -41,7 +41,7 @@ to = 0; seq2(to=to,l=5); seq(to=to,l=5)      # different beharior
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{every_nth}()},
+\code{\link{every_kth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},

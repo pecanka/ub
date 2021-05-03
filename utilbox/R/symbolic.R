@@ -42,9 +42,9 @@ process_symbolic_call = function(call, narg) {
 #'
 #' @export
 symbolic_call_names = function(n) {
-  #h1('.' %p% shift(base::letters, 3), n, stop_on_greedy=TRUE)
+  #h1('.' %p% rotate(base::letters, 3), n, stop_on_greedy=TRUE)
   nl = length(letters)
-  h1('.' %p% shift(base::letters, 3), n) %p% h1(rep(c("",1:ceiling(n/nl)), e=nl), n)
+  h1('.' %p% rotate(base::letters, 3), n) %p% h1(rep(c("",1:ceiling(n/nl)), e=nl), n)
 }
 
 #' These functions are useful when processing `tidyverse`-style

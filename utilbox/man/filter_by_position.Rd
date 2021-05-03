@@ -2,63 +2,63 @@
 % Please edit documentation in R/extract.R
 \name{filter_by_position}
 \alias{filter_by_position}
-\alias{nth}
-\alias{nthm}
-\alias{nthr}
-\alias{nthmr}
-\alias{nth<-}
-\alias{nthm<-}
-\alias{nthr<-}
-\alias{nthmr<-}
+\alias{kth}
+\alias{kthm}
+\alias{kthr}
+\alias{kthmr}
+\alias{kth<-}
+\alias{kthm<-}
+\alias{kthr<-}
+\alias{kthmr<-}
 \title{Get every n-th element of an object}
 \usage{
-nth(x, n)
+kth(x, k)
 
-nthm(x, n)
+kthm(x, k)
 
-nthr(x, n)
+kthr(x, k)
 
-nthmr(x, n)
+kthmr(x, k)
 
-nth(x, n) <- value
+kth(x, k) <- value
 
-nthm(x, n) <- value
+kthm(x, k) <- value
 
-nthr(x, n) <- value
+kthr(x, k) <- value
 
-nthmr(x, n) <- value
+kthmr(x, k) <- value
 }
 \description{
-\code{nth} extracts the n-th element (single value) of an object \code{x}
+\code{kth} extracts the n-th element (single value) of an object \code{x}
 (vector, list, etc.). It relies on \verb{\\}[[\`` for the extraction.
 
-\code{nthm} allows for multivariate input in \code{n}. It relies on \verb{\\}[\``
+\code{kthm} allows for multivariate input in \code{n}. It relies on \verb{\\}[\``
 for the extraction.
 
-\code{nthr} and \verb{nthmr are the analogue of }nth\code{and}nthm` which
+\code{kthr} and \verb{kthmr are the analogue of }kth\code{and}kthm` which
 determine index the position in reversed order.
 }
 \examples{
 # extaction of value
-nth(1:10, 2)             # second
-nthm(1:10, 3:4)          # third and fourth
-nthr(1:10, 2)            # second from the end
-nthmr(1:10, 3:4)         # third and fourth from the end
+kth(1:10, 2)             # second
+kthm(1:10, 3:4)          # third and fourth
+kthr(1:10, 2)            # second from the end
+kthmr(1:10, 3:4)         # third and fourth from the end
 
 # extaction and assignment of value
 y = as.list(1:10)
-nth(y, 2) = Inf       # second
-nthm(y, 3:5) = Inf    # third thru fifth
-nthr(y, 2) = Inf      # second from the end
-nthmr(y, 3:5) = Inf   # third thru fifth from the end
+kth(y, 2) = Inf       # second
+kthm(y, 3:5) = Inf    # third thru fifth
+kthr(y, 2) = Inf      # second from the end
+kthmr(y, 3:5) = Inf   # third thru fifth from the end
 
 # extract via logicals
-nthm(y, sapply(y, is.finite))
+kthm(y, sapply(y, is.finite))
 
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{every_nth}()},
+\code{\link{every_kth}()},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},

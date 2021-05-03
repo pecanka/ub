@@ -114,6 +114,8 @@ utilbox_inits = function(x) {
 #' @export
 source_utilbox = function(..., path, normalize=FALSE, envir=.GlobalEnv,
   report_new=TRUE) {
+  
+  message("Sourcing utilbox source files ...")
 
   files = dots_to_nlist()
 
@@ -125,9 +127,9 @@ source_utilbox = function(..., path, normalize=FALSE, envir=.GlobalEnv,
   # file names were given (i.e. when `...` is empty)
   if(is_empty(files)) {
 
-    catn("Listing files ...")
+    message("No file list given to `source_utilbox`, all files will be sourced.")
+    message("Listing utilbox files to source ...")
     files = list.files(path, pattern='[.]R$')
-    catn("No input, sourcing all files.")
 
   } else {
 

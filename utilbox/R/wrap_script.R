@@ -27,7 +27,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
   
   # read the file
   if(!missing(file)) {
-    if(verbose) catn("Adding wrapping to file '",file,"' ...")
+    if(verbose) message("Adding wrapping to file '",file,"' ...")
     code = readLines(file)
   } else if(split_code) {
     code = unlist(str_cut(code, split))
@@ -54,7 +54,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
   # save the results to file
   if(!missing(file)) {
     writeLines(Code, file2 <- file%p%'.wrapped') 
-    if(verbose) catn("Output saved to file '",file2,"'.")
+    if(verbose) message("Output saved to file '",file2,"'.")
   } else {
     file = file2 = NULL
   }  
@@ -72,8 +72,8 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
   # identify help explanation lines
   is_help = grepl(pattern_help_line, code)
   is_help_empty = grepl("^[#]?\\s*$",code) & 
-    de_na(shift(is_help, 1, rotate=FALSE), FALSE) & 
-    de_na(shift(is_help, -1, rotate=FALSE), FALSE)
+    de_na(rotate(is_help, 1, value=NA), FALSE) & 
+    de_na(rotate(is_help, -1, value=NA), FALSE)
   if(any(is_help_empty)) is_help = is_help | is_help_empty
   
   # replace the empty lines within help with lines signifying help
@@ -101,7 +101,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
   
   # find the second non-empty line in each block (i.e. the first description line)
   hbD_begs_rel = lapply(hb_code, function(b) 
-    if(any("@description" %m_ic% b)) NULL else w_nth_nonzero(!is_empty_line(b),2))
+    if(any("@description" %m_ic% b)) NULL else w_kth_nonzero(!is_empty_line(b),2))
   hbD_begs = lapply(seq(nblocks), function(i) hbD_begs_rel[[i]] + hb_begs[i] - 1)
   #rm(hbD_begs_rel)
 
@@ -215,7 +215,8 @@ script_help_clean_and_wrap = function(Help, RDs, max_width=70, eol="\n#' ", punc
   
   # get rid of multiple consecutive spaces
   if(scrub_multiple_spaces)
-    Help = str_scrub_space(Help, pattern="([^#]')[ ]+", s="\\1 ")
+    #Help = str_scrub_space(Help, pattern="([^#]')[ ]+", s="\\1 ")
+    Help = gsub("([^#]')[ ]+", "\\1 ", Help, fixed=FALSE)
 
   ## and add full stops but only in the descriptions
   ##Help[focus2] = str_add_punct(Help[focus2], punct=punctuation)

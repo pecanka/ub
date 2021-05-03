@@ -54,7 +54,7 @@ matrix, data frame, 2D array, 3D array).
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{every_nth}()},
+\code{\link{every_kth}()},
 \code{\link{filter_by_position}},
 \code{\link{filter_by}},
 \code{\link{groups_of_unique}()},

@@ -101,7 +101,7 @@ clock = function(announce=TRUE, lead="", digs=3) {
   d1 = paste0(Sys.time())
   options(digits.secs=odigs)
   
-  if(announce) catn(lead, d1)
+  if(announce) message(lead, d1)
   
   invisible(c("time"=d1))
   
@@ -114,7 +114,7 @@ start_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what
   d1 = clock(FALSE)
   
   if(announce) {
-    catn(lead,toupperfirst(what %p% "started at "), paste0(d1),out,".")
+    message(lead, toupperfirst(what %p% "started at "), paste0(d1), out, ".")
   }
 
   v_start = '._start_time_variable'
@@ -161,9 +161,9 @@ stop_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what=
   d12 = difftime(d2, d1, unit="secs")
 
   if(announce) {
-    catn(lead,toupperfirst(what %p% "started at "), paste0(d1), out, ".")
-    catn(lead,toupperfirst(what %p% "finished at "), paste0(d2), out, ".")
-    catn(lead,"Total ", tolower(what), "runtime of ", format_time(as.numeric(d12)), out,".")
+    message(lead, toupperfirst(what %p% "started at "), paste0(d1), out, ".")
+    message(lead, toupperfirst(what %p% "finished at "), paste0(d2), out, ".")
+    message(lead, "Total ", tolower(what), "runtime of ", format_time(as.numeric(d12)), out,".")
   }
 
   invisible(c("runtime"=d12))

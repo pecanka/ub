@@ -44,7 +44,7 @@
 #' force_as_real(1:10)
 #'
 #' # an example of a custom error function
-#' err = function(x) {catn("Problem converting the values:\n"); print(x[!is_number(x,I)]); stop()}
+#' err = function(msg) { x <- get('x', envir=parent.frame()); message('Error: ', msg); message('See variable `x` for input.'); browser() }
 #' make_numeric(c('1','a'), on_error=err)
 #'
 #' # remove all numbers
@@ -70,7 +70,9 @@ make_numeric = function(x, convert=as.numeric, on_error=stop) {
     x 
   } else if(is_number(x)) {
     as.numeric(x)
-  } else on_error("Cannot convert x to class 'numeric'.")
+  } else {
+    on_error("Cannot convert x to class 'numeric'.")
+  }
 }
 
 #' @rdname as_numeric

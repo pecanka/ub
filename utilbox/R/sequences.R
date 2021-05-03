@@ -2,11 +2,11 @@
 #'
 #' @description
 #'
-#' `shift()` shifts the elements in a vector in `x` by `lag` spaces.
-#' With `rotate=TRUE` (default), the elements are rotated, meaning 
+#' `rotate()` shifts the elements in a vector in `x` by `lag` spaces.
+#' With `value=NULL` (default), the elements are rotated, meaning 
 #' those at the end move to the beginning (for `lag>0`) or those at 
-#' the beginning move to the end (for `lag<0`). With `rotate=FALSE` 
-#' the rotated elements are replaced with `value_rotated` (`NA` by default).
+#' the beginning move to the end (for `lag<0`). With a non-NULL value 
+#' in `value` the rotated elements are replaced with `value`.
 #'
 #' `frac()` gives sequential fractions. It is similar to `base::diff()` 
 #' except that it returns lagged ratios instead of lagged differences.
@@ -22,6 +22,10 @@
 #' argument. Simply an alias for `length(unique(x))`.
 #'
 #' @examples
+#' rotate(1:10)
+#' rotate(1:10, 3)
+#' rotate(1:10, 3, value=NA)
+#'
 #' frac(1:10)
 #'
 #' midpoints(1:10)
@@ -34,22 +38,20 @@
 #' @name sequences
 #' @family numeric functions provided by utilbox
 #' @export
-shift = function(x, lag=1, rotate=TRUE, value_rotated=NA) {
+rotate = function(x, lag=1, value=NULL) {
   
   n = if(is_dimtwoplus(x)) nrow(x) else length(x)
   
   lag = sign(lag) * (abs(lag) %% n)
   
   if(n %in% c(0,lag)) {
-    return(x)
-  }
-  
-  if(rotate) {
+    x
+  } else if(is.null(value)) {
     append(tail(x, lag), head(x, -lag))
   } else if(lag > 0) {
-    append(rep(value_rotated, lag), head(x, -lag))
+    append(rep(value, lag), head(x, -lag))
   } else {
-    append(tail(x, lag), rep(value_rotated, -lag))
+    append(tail(x, lag), rep(value, -lag))
   }
   
 }

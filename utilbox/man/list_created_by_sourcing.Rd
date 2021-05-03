@@ -12,7 +12,7 @@ Find out what objects would be created if a file was sourced (via
 }
 \examples{
 tmp = '.~temp.R'
-catn('test_function = function() NULL', file=tmp_file)
+cat('test_function = function() NULL\n', file=tmp_file)
 list_created_by_sourcing(tmp)
 unlink(tmp)
 

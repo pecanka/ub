@@ -2,14 +2,14 @@
 % Please edit documentation in R/sequences.R
 \name{sequences}
 \alias{sequences}
-\alias{shift}
+\alias{rotate}
 \alias{nunique}
 \alias{frac}
 \alias{midpoints}
 \alias{range_sym}
 \title{Points in a sequence}
 \usage{
-shift(x, lag = 1, rotate = TRUE, value_rotated = NA)
+rotate(x, lag = 1, value = NULL)
 
 nunique(x)
 
@@ -20,11 +20,11 @@ midpoints(x)
 range_sym(..., around = 0)
 }
 \description{
-\code{shift()} shifts the elements in a vector in \code{x} by \code{lag} spaces.
-With \code{rotate=TRUE} (default), the elements are rotated, meaning
+\code{rotate()} shifts the elements in a vector in \code{x} by \code{lag} spaces.
+With \code{value=NULL} (default), the elements are rotated, meaning
 those at the end move to the beginning (for \code{lag>0}) or those at
-the beginning move to the end (for \code{lag<0}). With \code{rotate=FALSE}
-the rotated elements are replaced with \code{value_rotated} (\code{NA} by default).
+the beginning move to the end (for \code{lag<0}). With a non-NULL value
+in \code{value} the rotated elements are replaced with \code{value}.
 
 \code{frac()} gives sequential fractions. It is similar to \code{base::diff()}
 except that it returns lagged ratios instead of lagged differences.
@@ -40,6 +40,10 @@ plots that are symmetric around a given value.
 argument. Simply an alias for \code{length(unique(x))}.
 }
 \examples{
+rotate(1:10)
+rotate(1:10, 3)
+rotate(1:10, 3, value=NA)
+
 frac(1:10)
 
 midpoints(1:10)

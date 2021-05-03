@@ -76,7 +76,7 @@ f = function() { x = 2; d = data.frame(z=1:10); filter_by_call(d, ~z>x) }; print
 }
 \seealso{
 Other sequence-related functions provided by utilbox: 
-\code{\link{every_nth}()},
+\code{\link{every_kth}()},
 \code{\link{filter_by_position}},
 \code{\link{groups_of_unique}()},
 \code{\link{h1}()},

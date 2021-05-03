@@ -74,13 +74,13 @@ halt = function(error="") {
   
   if(interactive()) {
   
-    if(!str_is_empty(error)) catn()
+    if(!str_is_empty(error)) base::cat('\n')
     stop(error %p% "\nExecution halted.\n", call.=FALSE)
     
   } else {
   
     if(!str_is_empty(error)) base::cat(error)
-    catn("\nExecution halted.")
+    message("\nExecution halted.")
     q("no", status=1, runLast=FALSE)
     
   }

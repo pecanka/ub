@@ -150,13 +150,13 @@ str2vector = function(x, split='', ..., unlist_for_scalar=TRUE) {
 
 #' Remove empty substrings
 #'
-#' `str_deempty()` drops all elements in `x` that have only spaces in them.
+#' `str_drop_empty()` drops all elements in `x` that have only spaces in them.
 #
 #' @examples
-#' str_deempty(c('a','',' ','   '))
+#' str_drop_empty(c('a','',' ','   '))
 #'
 #' @export
-str_deempty = function(x) {
+str_drop_empty = function(x) {
   filter_out(x, '^[ ]*$')
 }
 
@@ -169,7 +169,8 @@ str_deempty = function(x) {
 #' the end of a string.
 #'
 #' `str_scrub_space()` replaces multiple consecutive white spaces with 
-#' a single one.
+#' a single one. With `newline_is_space=TRUE` it treats the new line 
+#' symbol `\\n` as a white space (and replaces it with a space).
 #'
 #' `str_add_punct()` adds a punctuation mark (given in `p`) to the ends 
 #' of all elements in a character vector that do not end in one of the 
@@ -192,8 +193,9 @@ str_trim_space = function(x, side=c('both','left','right')) {
 
 #' @rdname str_trim_space
 #' @export
-str_scrub_space = function(x, pattern='[ ]+', s=' ', fixed=FALSE) {
-  gsub(pattern, s, x, fixed=fixed)
+str_scrub_space = function(x, newline_is_space=FALSE) {
+  if(newline_is_space) x = gsub('\\n', ' ', x, fixed=FALSE)
+  gsub('[ ]+', ' ', x, fixed=FALSE)
 }
 
 #' @rdname str_trim_space
@@ -480,10 +482,10 @@ spaces = function(n, char=' ') {
 #' string = collapse0(rep(collapse0(letters[1:8]),10), sep=" ")
 #'
 #' # insert line breaks at given width
-#' catn(str_break(string, max_width=20))
+#' message(str_break(string, max_width=20))
 #'
 #' # insert only at spaces
-#' catn(str_break(string, max_width=20, break_only_at_space=TRUE))
+#' message(str_break(string, max_width=20, break_only_at_space=TRUE))
 #'
 #' @export
 str_break = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {

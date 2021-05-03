@@ -18,9 +18,9 @@ it only places the breaks between words.
 string = collapse0(rep(collapse0(letters[1:8]),10), sep=" ")
 
 # insert line breaks at given width
-catn(str_break(string, max_width=20))
+message(str_break(string, max_width=20))
 
 # insert only at spaces
-catn(str_break(string, max_width=20, break_only_at_space=TRUE))
+message(str_break(string, max_width=20, break_only_at_space=TRUE))
 
 }

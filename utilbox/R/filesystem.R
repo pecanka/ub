@@ -162,7 +162,7 @@ dir_create1 = function(dir, ask=interactive(), verbose=FALSE) {
   
     res = FALSE
     if(verbose) {
-      catn("No need to create, directory '",dir,"' already exists.")
+      message("No need to create, directory '",dir,"' already exists.")
     }
     
   }
@@ -604,7 +604,7 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
   }
   
   if(announce) 
-    catn("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+    message("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
     
   file.copy(file, file_bak)
   

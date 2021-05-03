@@ -208,7 +208,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
     if(announce) note("No files found using mask '",mask,"' (after possible exclusion via 'mask_exclude').")
     return(list(ios=1))
   } else {
-    if(announce) catn("Total of ",length(files)," found using mask '",mask,"'.\nZipping up ...")
+    if(announce) message("Total of ",length(files)," found using mask '",mask,"'.\nZipping up ...")
   }
   
   ## Zip them up into a single archive (if single_archive is TRUE) or each individually (otherwise)
@@ -313,7 +313,7 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
     
   }
   
-  catn("Finished.")
+  message("Finished.")
   
   invisible(nlist(files, zipfiles, ios=Ios))
   
@@ -440,14 +440,14 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
       
       if(solve_long_name) {
       
-        if(trace>0) catn("Shortening the zip file name by ",long_action,"ing ...")
+        if(trace>0) message("Shortening the zip file name by ",long_action,"ing ...")
         fn = paste0(random_filename(),".zip")
         if(nchar(fn) > maxnchar) {
           root = sub("/.*","/",getwd())
           fn = paste0(root,fn)
         }
         
-        catn(toupperfirst(ifelse(long_action=="rename", "renam", long_action)),"ing file '",
+        message(toupperfirst(ifelse(long_action=="rename", "renam", long_action)),"ing file '",
              zipfile,"' to file '",fn,"' (in path '",getwd(),"') ...")
         
         fun_action(zipfile, fn)
@@ -468,7 +468,7 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
         
     # Remove the extra copy
     if(restore_file) {
-      catn("Restoring original file names (by ",ifelse(long_action=="rename","renaming","deletion"),") ...")
+      message("Restoring original file names (by ",ifelse(long_action=="rename","renaming","deletion"),") ...")
       ios = try(if(long_action=="rename") file_rename(zipfile, zipfile_orig) else file_remove(zipfile), silent=TRUE)
     }
           
@@ -536,7 +536,7 @@ read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_
   active_connection = setdiff(getAllConnections(), list_connections)
 
   # Read the file using function 'fun_read'
-  if(trace>0) catn("Reading file ",file," from inside ",zipfile," ...")
+  if(trace>0) message("Reading file ",file," from inside ",zipfile," ...")
   res = list(fun_read(infile, ...))
   names(res) = nam
   

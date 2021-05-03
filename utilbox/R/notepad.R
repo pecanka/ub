@@ -9,8 +9,7 @@
 #' @export
 notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_langs, backup=TRUE) {
 
-  catn("Notepad++ R highlighting settings will be modified so that all utilbox,
-        functions are highlighted.")
+  message("Notepad++ highlighting settings will be modified so that all utilbox functions are highlighted.")
         
   # default locations of Notepad++ instalation and the name of the 'langs' file
   if(missing(npp_path)) 
@@ -41,7 +40,7 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   # backup the current settings
   if(backup) file_backup(file)
 
-  catn("Processing keywords ...")
+  message("Processing keywords ...")
 
   # update the keywords
   #kw_extra = if(field=='type1') {
@@ -52,16 +51,16 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   #  futils = list_package_exported(utils, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
   #  c(fbase, fstats, futils)
   #} else {
-  #  catn("No names added with field '",field,"'.")
+  #  message("No names added with field '",field,"'.")
   #}
 
   # read the file
-  catn("Reading file '",file,"' ...")
+  message("Reading file '",file,"' ...")
   code = readLines(file)
 
   differences = list_empty(fields)
   for(field in fields) {
-    catn("Updating field '",field,"' ...")
+    message("Updating field '",field,"' ...")
     kw = notepad_keywords(field)[[field]]
     if(!is.null(keywords)) {
       kw = union(kw, keywords[[field]])
@@ -75,11 +74,11 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   n_removed = nlapply(differences, function(x) length(x$removed))
 
   # save the results back to the file
-  catn("Saving changes to file '", file,"' ...")
+  message("Saving changes to file '",file,"' ...")
   writeLines(code, file)
 
-  catn("Finished.")
-  catn("Summary:")
+  message("Finished.")
+  message("Summary:")
   print(`rownames<-`(rbind(as.data.frame(n_added), as.data.frame(n_removed)), c('Added','Removed')))
   
 }
@@ -145,7 +144,7 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   # determine what changes were made
   old_words = strsplit(substr(old_kw,2,nchar(old_kw)-1), ' ')[[1]]
   old_words = de_na(old_words, NULL)
-  difference = setdiffsym(str_deempty(keywords), str_deempty(old_words))
+  difference = setdiffsym(str_drop_empty(keywords), str_drop_empty(old_words))
 
   # return the new code with changes attaches as attribute 'diff'
   structure(code, difference=`names<-`(difference, c('added','removed')))

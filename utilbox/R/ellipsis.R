@@ -71,7 +71,7 @@ argvars_to_nlist = function(envir=parent.frame()) {
 
 #args_to_nlist2 = function(envir=parent.frame()) {
 #  lapply(call[-1], eval, envir=envir)
-#  #call = as.list(nthr(sys.calls(),2))
+#  #call = as.list(kthr(sys.calls(),2))
 #  #h1(as.list(args(get(as.character(call[[1]])))),-1)
 #}
 

@@ -3,7 +3,7 @@
 \name{extract_by_value}
 \alias{extract_by_value}
 \alias{first_nonzero}
-\alias{nth_nonzero}
+\alias{kth_nonzero}
 \alias{last_nonzero}
 \alias{first_positive}
 \alias{last_positive}
@@ -20,7 +20,7 @@
 \usage{
 first_nonzero(x)
 
-nth_nonzero(x, n)
+kth_nonzero(x)
 
 last_nonzero(x)
 
@@ -50,7 +50,7 @@ first_nonempty(x)
 \code{first_nonzero} finds the value of the last non-zero element in
 \code{x}.
 
-\code{nth_nonzero} finds the value of the n-th non-zero element in \code{x}.
+\code{kth_nonzero} finds the value of the n-th non-zero element in \code{x}.
 
 \code{last_nonzero} finds the value of the last non-zero element in \code{x}.
 

@@ -3,88 +3,108 @@
 #'
 #' @description
 #'
-#' `nth` extracts the n-th element (single value) of an object `x` 
+#' `kth` extracts the n-th element (single value) of an object `x` 
 #' (vector, list, etc.). It relies on `\`[[\`` for the extraction.
 #'
-#' `nthm` allows for multivariate input in `n`. It relies on `\`[\`` 
+#' `kthm` allows for multivariate input in `n`. It relies on `\`[\`` 
 #' for the extraction.
 #'
-#' `nthr` and `nthmr are the analogue of `nth` and `nthm` which 
+#' `kthr` and `kthmr are the analogue of `kth` and `kthm` which 
 #' determine index the position in reversed order.
 #'
 #' @examples
 #' # extaction of value
-#' nth(1:10, 2)             # second
-#' nthm(1:10, 3:4)          # third and fourth
-#' nthr(1:10, 2)            # second from the end
-#' nthmr(1:10, 3:4)         # third and fourth from the end
+#' kth(1:10, 2)             # second
+#' kthm(1:10, 3:4)          # third and fourth
+#' kthr(1:10, 2)            # second from the end
+#' kthmr(1:10, 3:4)         # third and fourth from the end
 #'
 #' # extaction and assignment of value
 #' y = as.list(1:10)
-#' nth(y, 2) = Inf       # second
-#' nthm(y, 3:5) = Inf    # third thru fifth
-#' nthr(y, 2) = Inf      # second from the end
-#' nthmr(y, 3:5) = Inf   # third thru fifth from the end
+#' kth(y, 2) = Inf       # second
+#' kthm(y, 3:5) = Inf    # third thru fifth
+#' kthr(y, 2) = Inf      # second from the end
+#' kthmr(y, 3:5) = Inf   # third thru fifth from the end
 #'
 #' # extract via logicals
-#' nthm(y, sapply(y, is.finite))
+#' kthm(y, sapply(y, is.finite))
 #'
 #' @name filter_by_position
 #' @family sequence-related functions provided by utilbox
 #' @export
-nth = function(x, n) {
-  x[[n]]
+kth = function(x, k) {
+  x[[k]]
 }
 
 #' @rdname filter_by_position
 #' @export
-nthm = function(x, n) {
-  x[n]
+kthm = function(x, k) {
+  x[k]
 }
 
 #' @rdname filter_by_position
 #' @export
-nthr = function(x, n) {
-  x[[n_nth_rev(n, x)]]
+kthr = function(x, k) {
+  x[[n_kth_rev(k, x)]]
 }
 
 #' @rdname filter_by_position
 #' @export
-nthmr = function(x, n) {
-  x[n_nth_rev(n, x)]
+kthmr = function(x, k) {
+  x[n_kth_rev(k, x)]
 }
 
 #' @rdname filter_by_position
 #' @export
-`nth<-` = function(x, n, value) {
-  `[[<-`(x, n, value)
+`kth<-` = function(x, k, value) {
+  `[[<-`(x, k, value)
 }
 
 #' @rdname filter_by_position
 #' @export
-`nthm<-` = function(x, n, value) {
-  `[<-`(x, n, value)
+`kthm<-` = function(x, k, value) {
+  `[<-`(x, k, value)
 }
 
 #' @rdname filter_by_position
 #' @export
-`nthr<-` = function(x, n, value) {
-  `[[<-`(x, n_nth_rev(n, x), value)
+`kthr<-` = function(x, k, value) {
+  `[[<-`(x, n_kth_rev(k, x), value)
 }
 
 #' @rdname filter_by_position
 #' @export
-`nthmr<-` = function(x, n, value) {
-  `[<-`(x, n_nth_rev(n, x), value)
+`kthmr<-` = function(x, k, value) {
+  `[<-`(x, n_kth_rev(k, x), value)
 }
 
-# process indexes for reversed extraction/assignment
-n_nth_rev = function(n, x) {
-  if(is.logical(n)) {
-    rev(n)
-  } else {
-    ifelse(n>0, length(x)+1-n, -(length(x) + 1 - abs(n)))
-  }
+#' @ title
+#' Get elements for filtering in reverse order.
+#'
+#' @description
+#' For logical input in the first argument (`k`), `n_kth_rev` simply reverses
+#' the elements of the vector while ignoring its second argument (`x`).
+#' For numeric input in `k` that is positive, it returns the indices of the k-th
+#' elements from the end in `x`. For negative numeric input in `k`, it returns
+#' the same as for `k=abs(k)` except with a negative sign. For values 0 in `k`
+#' it returns `NA`.
+#'
+#' @examples
+#' n_kth_rev(c(TRUE,FALSE,TRUE))
+#' n_kth_rev(c(1:3,10),letters)
+#' n_kth_rev(-5,letters)
+#'
+#' @export
+n_kth_rev = function(k, x) {
+
+  if(is.logical(k)) {
+    return(rev(k))
+  } 
+  
+  k = as.integer(k)
+  #ifelse(k>0L, length(x)+1-k, -(length(x) + 1 - abs(k)))
+  ifelse(k==0L, NA_real_, sign(k) * (length(x)+1-abs(k)))
+  
 }
 
 #' @title
@@ -96,13 +116,13 @@ n_nth_rev = function(n, x) {
 #' starting from 'start'.
 #'
 #' @examples
-#' every_nth(1:10, 2)
-#' every_nth(1:10, 2, 2)
+#' every_kth(1:10, 2)
+#' every_kth(1:10, 2, 2)
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export
-every_nth = function(x, n, start=1L) {
-  x[seq.int(as.integer(start), length(x), as.integer(n))]
+every_kth = function(x, k, start=1L) {
+  x[seq.int(as.integer(start), length(x), as.integer(k))]
 }
 
 #' @title
@@ -126,7 +146,7 @@ last_element = function(x) {
 #' `first_nonzero` finds the value of the last non-zero element in 
 #' `x`.
 #'
-#' `nth_nonzero` finds the value of the n-th non-zero element in `x`.
+#' `kth_nonzero` finds the value of the n-th non-zero element in `x`.
 #'
 #' `last_nonzero` finds the value of the last non-zero element in `x`.
 #'
@@ -158,8 +178,8 @@ first_nonzero = function(x) {
 
 #' @rdname extract_by_value
 #' @export
-nth_nonzero = function(x, n) {
-  x[w_nth_nonzero(x)]
+kth_nonzero = function(x) {
+  x[w_kth_nonzero(x)]
 }
 
 #' @rdname extract_by_value
@@ -243,7 +263,7 @@ first_nonempty = function(x) {
 #' `w_first_nonzero` finds the position of the last non-zero element 
 #' in `x`.
 #'
-#' `w_nth_nonzero` finds the position of the n-th non-zero element in 
+#' `w_kth_nonzero` finds the position of the n-th non-zero element in 
 #' `x`.
 #'
 #' `w_last_nonzero` finds the position of the last non-zero element 
@@ -281,7 +301,7 @@ w_first_nonzero = function(x) {
 
 #' @rdname locate_position_of_value
 #' @export
-w_nth_nonzero = function(x, n) {
+w_kth_nonzero = function(x, n) {
   stopifnot(n>=1)
   if(n==1) {
     h1(which(x!=0))
@@ -492,8 +512,8 @@ filter_by_call = function(...) {
   if(length(args)<2) 
     error('Supply both the vector to filter and the call to filter it with.')
   
-  call = nthr(args, 1)
-  args = nthmr(args, -1)
+  call = kthr(args, 1)
+  args = kthmr(args, -1)
   
   ##lazy_dots_to_args_and_call(...)     
   ##nargs = length(args)
@@ -531,6 +551,6 @@ filter_out = function(x, pattern, fixed=FALSE, ignore.case=FALSE) {
 #lazy_dots_to_args_and_call = function(..., envir=parent.frame()) {
 #  args = list(...)
 #  if(is_empty(args)) error('Supply a call.')
-#  assign('call', nthr(args,1), envir=envir)
-#  assign('args', nthmr(args, -1), envir=envir)
+#  assign('call', kthr(args,1), envir=envir)
+#  assign('args', kthmr(args, -1), envir=envir)
 #}

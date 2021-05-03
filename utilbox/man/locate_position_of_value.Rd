@@ -3,7 +3,7 @@
 \name{locate_position_of_value}
 \alias{locate_position_of_value}
 \alias{w_first_nonzero}
-\alias{w_nth_nonzero}
+\alias{w_kth_nonzero}
 \alias{w_last_nonzero}
 \alias{w_first_positive}
 \alias{w_last_positive}
@@ -19,7 +19,7 @@
 \usage{
 w_first_nonzero(x)
 
-w_nth_nonzero(x, n)
+w_kth_nonzero(x, n)
 
 w_last_nonzero(x)
 
@@ -47,7 +47,7 @@ w_last_below_soft(x, y)
 \code{w_first_nonzero} finds the position of the last non-zero element
 in \code{x}.
 
-\code{w_nth_nonzero} finds the position of the n-th non-zero element in
+\code{w_kth_nonzero} finds the position of the n-th non-zero element in
 \code{x}.
 
 \code{w_last_nonzero} finds the position of the last non-zero element

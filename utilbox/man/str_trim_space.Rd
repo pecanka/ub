@@ -8,7 +8,7 @@
 \usage{
 str_trim_space(x, side = c("both", "left", "right"))
 
-str_scrub_space(x, pattern = "[ ]+", s = " ", fixed = FALSE)
+str_scrub_space(x, newline_is_space = FALSE)
 
 str_add_punct(x, p = ".", punct = ".!?", trim = TRUE, split_punct = TRUE)
 }
@@ -17,7 +17,8 @@ str_add_punct(x, p = ".", punct = ".!?", trim = TRUE, split_punct = TRUE)
 the end of a string.
 
 \code{str_scrub_space()} replaces multiple consecutive white spaces with
-a single one.
+a single one. With \code{newline_is_space=TRUE} it treats the new line
+symbol \verb{\\\\n} as a white space (and replaces it with a space).
 
 \code{str_add_punct()} adds a punctuation mark (given in \code{p}) to the ends
 of all elements in a character vector that do not end in one of the
