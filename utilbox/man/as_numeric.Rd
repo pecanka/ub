@@ -10,9 +10,9 @@
 \usage{
 as_numeric(x)
 
-make_numeric(x, convert = as.numeric, on_error = stop)
+make_numeric(x, convert = as.numeric, fun_error = stop)
 
-force_as_integer(x, ignore_sign = TRUE, na_val)
+force_as_integer(x, ignore_sign = TRUE, na_val = NA, keep_character = FALSE)
 
 force_as_real(x, ignore_sign = TRUE, dec = ".", dec_fixed = TRUE, na_val)
 
@@ -25,7 +25,7 @@ less verbose version of \code{base::as.numeric}.
 
 \code{make_numeric()} changes the type of \code{x} to \code{numeric} whenever all elements can be
 converted (using \code{base::as.numeric}. Otherwise, calls the
-function supplied in \code{on_error}. This allows a direct control of what
+function supplied in \code{fun_error}. This allows a direct control of what
 happens on the conversion via supplying the error function.
 Basically, a more flexible (but by default a more stringent) version
 of \code{base::as.numeric()}.
@@ -58,10 +58,11 @@ force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'))
 force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'), ignore_signFALSE)
 force_as_real(c('1','x'))
 force_as_real(1:10)
+force_as_real("0.0084")
 
 # an example of a custom error function
 err = function(msg) { x <- get('x', envir=parent.frame()); message('Error: ', msg); message('See variable `x` for input.'); browser() }
-make_numeric(c('1','a'), on_error=err)
+make_numeric(c('1','a'), fun_error=err)
 
 # remove all numbers
 unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))

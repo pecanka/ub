@@ -29,7 +29,7 @@ gsubm(c('a','b'), paste0('|',c('a','b'),'|'), 'abracadabra')
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{collapse}()},
+\code{\link{collapse}},
 \code{\link{cumpaste0}()},
 \code{\link{padding}},
 \code{\link{patternize}()},

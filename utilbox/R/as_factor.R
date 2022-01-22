@@ -29,9 +29,7 @@ un_factor = function(x, to=c('character','numeric')) {
   if(to=='character') {
     as.character(x)
   } else {
-    levels(x) = 1:nlevels(x)
+    #levels(x) = 1:nlevels(x)
     as.numeric(x)
   }
 }
-
-

@@ -48,7 +48,7 @@ str_first_occurence('hello world!', 'e')
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{collapse}()},
+\code{\link{collapse}},
 \code{\link{cumpaste0}()},
 \code{\link{multi_sub}()},
 \code{\link{padding}},

@@ -126,3 +126,18 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
   Sigma
   
 }
+
+#' @export
+r_squared = function(y, yh, na.rm=TRUE, adjust=FALSE, k) {
+  c_adj = if(adjust) {
+    if(missing(k)) stop("With adjust=TRUE a value for k (number of regressors) must be supplied.")
+    n = length(y)
+    (n - 1) / (n - 1 - k)
+  } else 1
+  1.0 - c_adj * sum((y - yh)^2, na.rm=na.rm) / sum((y - mean(y, na.rm=na.rm))^2, na.rm=na.rm)
+}
+
+#' @export
+compare_models = function(m1, m2, df=1) {
+  pchisq(2 * abs(logLik(m1) - logLik(m2)), df = df, lower.tail = FALSE)
+}

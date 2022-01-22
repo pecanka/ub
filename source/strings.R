@@ -372,13 +372,15 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #'
 #' @description
 #'
-#' `str_pad2` pads the input to a given width (`width`).  It formats 
+#' `str_pad1` pads the input to a given width (`width`).  It formats 
 #' the contents of `x` to a minimum width (i.e. character count) or other 
-#' specified format (via `format`). The minimum length is easiest 
-#' controlled via `min_width`. Non-character values are converted to 
-#' character using `base::as.character()`. 
+#' specified format (via `format`). The minimum length is controlled via 
+#' `min_width` and `nextra`. Non-character values are converted to 
+#' character using `as.character()`. 
 #'
-#' `str_lengthen()` is an alias for `str_pad2()`.
+#' `str_pad0()` pads with '0' (by default at least one '0' is padded)
+#'
+#' `str_lengthen()` is an alias for `str_pad1()`.
 #'
 #' `int_pad` pads an integer with leading zeros.
 #'
@@ -390,21 +392,31 @@ str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
 #' formats numbers.
 #'
 #' @examples
-#' str_pad2('hello', 20)
-#' str_pad2('hello', 20, '.')
-#' str_pad2('hello', 20, 'right')
+#' str_pad0('21')
+#' str_pad0(c('21','1'))
+#' str_pad0(c('21','1'), 3)
+#'
+#' str_pad1('hello', 20)
+#' str_pad1('hello', 20, '.')
+#' str_pad1('hello', 20, side='right')
+#'
+#' str_pad1('hello', 20)
+#' str_pad1('hello', 20, '.')
+#' str_pad1('hello', 20, side='right')
+#' str_pad1(c('hello','prague'), 8, '.')
+#' str_pad1(c('hello','prague'), 4, '.')
+#' str_pad1(c('hello','prague'), 4, '.', 1)
 #'
 #' @name padding
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_pad2 = function(x, min_width, side=c('left','right'), padding=' ', nextra=0) {
+str_pad0 = function(x, min_width=max(nchar(x))+1, padding='0', nextra=0, side=c('left','right')) {
 
   if(is_empty(x)) return(x)
   
   side = match.arg(side)
 
   if(!is.character(x)) x = as.character(x)
-  if(missing(min_width)) min_width = max(nchar(x))
   min_width = min_width + nextra
   
   npd = ceiling((min_width - nchar(x))/max(1,nchar(padding)))
@@ -420,7 +432,13 @@ str_pad2 = function(x, min_width, side=c('left','right'), padding=' ', nextra=0)
 
 #' @rdname padding
 #' @export
-str_lengthen = str_pad2
+str_pad1 = function(x, min_width=nchar(x), padding=' ', nextra=1, side=c('left','right')) {
+  str_pad0(x, min_width, padding=padding, nextra=nextra, side=side)
+}
+
+#' @rdname padding
+#' @export
+str_lengthen = str_pad1
 
 #' @rdname padding
 #' @export

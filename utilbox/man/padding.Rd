@@ -2,21 +2,36 @@
 % Please edit documentation in R/strings.R
 \name{padding}
 \alias{padding}
-\alias{str_pad2}
+\alias{str_pad0}
+\alias{str_pad1}
 \alias{str_lengthen}
 \alias{int_pad}
 \alias{num_pad}
 \alias{spaces}
 \title{Format string}
 \usage{
-str_pad2(x, min_width, side = c("left", "right"), padding = " ", nextra = 0)
+str_pad0(
+  x,
+  min_width = max(nchar(x)) + 1,
+  padding = "0",
+  nextra = 0,
+  side = c("left", "right")
+)
+
+str_pad1(
+  x,
+  min_width = nchar(x),
+  padding = " ",
+  nextra = 1,
+  side = c("left", "right")
+)
 
 str_lengthen(
   x,
-  min_width,
-  side = c("left", "right"),
+  min_width = nchar(x),
   padding = " ",
-  nextra = 0
+  nextra = 1,
+  side = c("left", "right")
 )
 
 int_pad(x, min_width, format, fmt = "d")
@@ -26,13 +41,15 @@ num_pad(x, min_nint, min_ndig = 6, fmt = "f", format)
 spaces(n, char = " ")
 }
 \description{
-\code{str_pad2} pads the input to a given width (\code{width}).  It formats
+\code{str_pad1} pads the input to a given width (\code{width}).  It formats
 the contents of \code{x} to a minimum width (i.e. character count) or other
-specified format (via \code{format}). The minimum length is easiest
-controlled via \code{min_width}. Non-character values are converted to
-character using \code{base::as.character()}.
+specified format (via \code{format}). The minimum length is controlled via
+\code{min_width} and \code{nextra}. Non-character values are converted to
+character using \code{as.character()}.
 
-\code{str_lengthen()} is an alias for \code{str_pad2()}.
+\code{str_pad0()} pads with '0' (by default at least one '0' is padded)
+
+\code{str_lengthen()} is an alias for \code{str_pad1()}.
 
 \code{int_pad} pads an integer with leading zeros.
 
@@ -44,15 +61,26 @@ Check the function in \code{options()$str$formatNum} to see how R
 formats numbers.
 }
 \examples{
-str_pad2('hello', 20)
-str_pad2('hello', 20, '.')
-str_pad2('hello', 20, 'right')
+str_pad0('21')
+str_pad0(c('21','1'))
+str_pad0(c('21','1'), 3)
+
+str_pad1('hello', 20)
+str_pad1('hello', 20, '.')
+str_pad1('hello', 20, side='right')
+
+str_pad1('hello', 20)
+str_pad1('hello', 20, '.')
+str_pad1('hello', 20, side='right')
+str_pad1(c('hello','prague'), 8, '.')
+str_pad1(c('hello','prague'), 4, '.')
+str_pad1(c('hello','prague'), 4, '.', 1)
 
 }
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{collapse}()},
+\code{\link{collapse}},
 \code{\link{cumpaste0}()},
 \code{\link{multi_sub}()},
 \code{\link{patternize}()},

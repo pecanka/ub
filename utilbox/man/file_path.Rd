@@ -16,9 +16,9 @@ Windows, absolute means that it begins with '\<drive letter\>:/', on
 Linux/Unix it checks for '/' at the beginning of the path.
 
 \code{file_path()} binds the supplied path (\code{path}) with the supplied
-file name (\code{file}). If \code{file} contains absolute path or if path is an
-an empty string, it ignores path. Otherwise, it concatenates them
-using \code{fsep} as separator.
+file name (\code{file}). If \code{file} contains an absolute path, or if
+\code{path} is an an empty string, the argument \code{path} is ignored.
+Otherwise, it concatenates the two using \code{fsep} as separator.
 }
 \examples{
 file_path('home','text.txt')

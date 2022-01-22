@@ -9,7 +9,7 @@
 #'
 #' `make_numeric()` changes the type of `x` to `numeric` whenever all elements can be 
 #' converted (using \code{base::as.numeric}. Otherwise, calls the 
-#' function supplied in `on_error`. This allows a direct control of what 
+#' function supplied in `fun_error`. This allows a direct control of what 
 #' happens on the conversion via supplying the error function. 
 #' Basically, a more flexible (but by default a more stringent) version 
 #' of \code{base::as.numeric()}.
@@ -42,10 +42,11 @@
 #' force_as_real(c('1','2.0','a3','-17.x','not-17.2','not-17.2-'), ignore_signFALSE)
 #' force_as_real(c('1','x'))
 #' force_as_real(1:10)
+#' force_as_real("0.0084")
 #'
 #' # an example of a custom error function
 #' err = function(msg) { x <- get('x', envir=parent.frame()); message('Error: ', msg); message('See variable `x` for input.'); browser() }
-#' make_numeric(c('1','a'), on_error=err)
+#' make_numeric(c('1','a'), fun_error=err)
 #'
 #' # remove all numbers
 #' unnumber('x: '%p%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
@@ -65,19 +66,19 @@ as_numeric = function(x) {
 
 #' @rdname as_numeric
 #' @export
-make_numeric = function(x, convert=as.numeric, on_error=stop) {
+make_numeric = function(x, convert=as.numeric, fun_error=stop) {
   if(is.numeric(x)) {
     x 
   } else if(is_number(x)) {
     as.numeric(x)
   } else {
-    on_error("Cannot convert x to class 'numeric'.")
+    fun_error("Cannot convert x to class 'numeric'.")
   }
 }
 
 #' @rdname as_numeric
 #' @export
-force_as_integer = function(x, ignore_sign=TRUE, na_val) {
+force_as_integer = function(x, ignore_sign=TRUE, na_val=NA, keep_character=FALSE) {
 
   w = if(ignore_sign) {
     rep(FALSE, length(x)) 
@@ -85,10 +86,13 @@ force_as_integer = function(x, ignore_sign=TRUE, na_val) {
     grepl(paste0('[-][0-9]'), x)
   }
   
+  sgn = ifelse(!w, 1, -1)
   y = ifelse(!w, 
              gsub('[^0-9]*','',x),
              '-' %p% gsub('[^0-9]*','',substr(x,w+1,nchar(x))))
-                  
+             
+  if(keep_character) return(y)
+  
   y = as.integer(y)
   
   if(!missing(na_val)) {
@@ -106,12 +110,13 @@ force_as_real = function(x, ignore_sign=TRUE, dec='.', dec_fixed=TRUE, na_val) {
   x = as.character(x)
   w = regexpr(dec, x, fixed=dec_fixed)
   
-  lp = ifelse(w<=0, force_as_integer(x, ignore_sign=ignore_sign, na_val='0'), 
-                    force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, na_val='0'))
-                   
+  lp = ifelse(w<=0, force_as_integer(x, ignore_sign=ignore_sign, keep_character=TRUE), 
+                    force_as_integer(substr(x,1,w-1), ignore_sign=ignore_sign, keep_character=TRUE))
+                    
   rp = ifelse(w<=0, 0, 
-                    force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0'))
-              
+                    #force_as_integer(substr(x,w+1,nchar(x)), ignore_sign=TRUE, na_val='0')
+                    gsub('[^0-9]*','',substr(x,w+1,nchar(x))))
+
   y = as.numeric(lp %p% '.' %p% rp)
   
   if(!missing(na_val)) {

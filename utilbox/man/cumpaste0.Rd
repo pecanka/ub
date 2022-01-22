@@ -16,7 +16,7 @@ cumpaste0(c(0,1,1,1,0,1,0,0))
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{collapse}()},
+\code{\link{collapse}},
 \code{\link{multi_sub}()},
 \code{\link{padding}},
 \code{\link{patternize}()},

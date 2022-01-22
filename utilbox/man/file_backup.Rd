@@ -7,7 +7,9 @@
 file_backup(file, path, path_backup, pid = FALSE, announce = TRUE)
 }
 \description{
-\code{file_backup()} creates a backup of the given file by creating a copy.
+\code{file_backup()} creates a backup of the given file by creating a copy
+in the path specified in \code{path_backup}. The original file is preserved.
+Return code 1 means success, 0 means 'no file to backup', -1 means failure.
 }
 \seealso{
 Other file system function provided by utilbox: 

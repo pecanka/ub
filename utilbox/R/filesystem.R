@@ -58,9 +58,9 @@ list_files_biggest = function(...) {
 #' Linux/Unix it checks for '/' at the beginning of the path.
 #'
 #' `file_path()` binds the supplied path (`path`) with the supplied 
-#' file name (`file`). If `file` contains absolute path or if path is an 
-#' an empty string, it ignores path. Otherwise, it concatenates them 
-#' using `fsep` as separator.
+#' file name (`file`). If `file` contains an absolute path, or if 
+#' `path` is an an empty string, the argument `path` is ignored. 
+#' Otherwise, it concatenates the two using `fsep` as separator.
 #'
 #' @examples
 #' file_path('home','text.txt')
@@ -585,7 +585,9 @@ random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-
 #'
 #' @description
 #'
-#' `file_backup()` creates a backup of the given file by creating a copy.
+#' `file_backup()` creates a backup of the given file by creating a copy
+#' in the path specified in `path_backup`. The original file is preserved.
+#' Return code 1 means success, 0 means 'no file to backup', -1 means failure.
 #'
 #' @family file system function provided by utilbox
 #' @export
@@ -603,9 +605,26 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
     file_bak = file_path(path, file_bak)
   }
   
-  if(announce) 
-    message("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+  if(announce) {
+    if(file.exists(file)) {
+      message("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+    } else {
+      message("File '",file,"' does not exist and therefore cannot be backed up.")
+    }
+  }
+  
+  res = if(!file.exists(file)) {
+    0
+  } else {
     
-  file.copy(file, file_bak)
+    st = file.copy(file, file_bak)
+  
+    if(announce && !st) message("Back-up failed.")
+    
+    ifelse(st, 1, -1)
+    
+  }
+  
+  invisible(res)
   
 }

@@ -13,12 +13,13 @@ min_dif = function(x) {
 }
 
 #' @title
-#' Maximum/minimum
+#' Identifying of minimums and maximums
 #'
 #' @description
 #'
-#' More versatile versions of `base:which.max` and 
-#' `base::which.min`.
+#' `which_max()` is a more versatile versions of `base:which.max`
+#'
+#' `which_min()` is `base::which.min`.
 #'
 #' Essentially, the functions `which_max` and `which_min` behave just 
 #' like their base equivalents except they can return the position of 
@@ -28,6 +29,12 @@ min_dif = function(x) {
 #' the extreme in a vector stripped of `NA`s is returned, or they are 
 #' ignored (default) and the position of a extreme within the entire 
 #' original vector is returned.
+#'
+#' `is_max()` indicates which elements of a vector are equal to the 
+#' maximum in a vector (equality up to the tolerance specified via `eps`).
+#'
+#' `is_min()` indicates which elements of a vector are equal to the 
+#' minimum in a vector (equality up to the tolerance specified via `eps`).
 #'
 #' `max0()` is a wrapper for `base::max` which does not produce warnings.
 #'
@@ -58,8 +65,9 @@ which_min = function(x, last=TRUE, first=FALSE, all=FALSE, na.rm=FALSE,
   if(na.rm) x = x[!is.na(x)]
   if(na.ignore) x[is.na(x)] = Inf
   
-  is_min = which(abs(x-min(x))<=eps)
-  w = if(all) is_min else c(if(last) t1(is_min) else NULL, if(first) h1(is_min) else NULL)
+  #is_minim = which(abs(x-min(x))<=eps)
+  is_minim = which(is_min(x, na.rm=FALSE, eps=eps))
+  w = if(all) is_minim else c(if(last) t1(is_minim) else NULL, if(first) h1(is_minim) else NULL)
   
   #w = if(last) length(x) + 1 - which.min(rev(x)) else which.min(x)
   
@@ -69,6 +77,18 @@ which_min = function(x, last=TRUE, first=FALSE, all=FALSE, na.rm=FALSE,
   
   w
   
+}
+
+#' @rdname which_max
+#' @export
+is_min = function(x, na.rm=TRUE, eps=.Machine$double.eps) {
+  abs(x - min(x, na.rm=na.rm)) <= eps
+}
+
+#' @rdname which_max
+#' @export
+is_max = function(x, na.rm=TRUE, eps=.Machine$double.eps) {
+  abs(x - max(x, na.rm=na.rm)) <= eps
 }
 
 #' @rdname which_max

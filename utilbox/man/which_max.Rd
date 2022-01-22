@@ -3,8 +3,10 @@
 \name{which_max}
 \alias{which_max}
 \alias{which_min}
+\alias{is_min}
+\alias{is_max}
 \alias{max0}
-\title{Maximum/minimum}
+\title{Identifying of minimums and maximums}
 \usage{
 which_max(
   x,
@@ -27,11 +29,16 @@ which_min(
   eps = 0
 )
 
+is_min(x, na.rm = TRUE, eps = .Machine$double.eps)
+
+is_max(x, na.rm = TRUE, eps = .Machine$double.eps)
+
 max0(..., na.rm = FALSE, val0 = -Inf)
 }
 \description{
-More versatile versions of \code{base:which.max} and
-\code{base::which.min}.
+\code{which_max()} is a more versatile versions of \code{base:which.max}
+
+\code{which_min()} is \code{base::which.min}.
 
 Essentially, the functions \code{which_max} and \code{which_min} behave just
 like their base equivalents except they can return the position of
@@ -41,6 +48,12 @@ be done in two ways, they are either removed and then the position of
 the extreme in a vector stripped of \code{NA}s is returned, or they are
 ignored (default) and the position of a extreme within the entire
 original vector is returned.
+
+\code{is_max()} indicates which elements of a vector are equal to the
+maximum in a vector (equality up to the tolerance specified via \code{eps}).
+
+\code{is_min()} indicates which elements of a vector are equal to the
+minimum in a vector (equality up to the tolerance specified via \code{eps}).
 
 \code{max0()} is a wrapper for \code{base::max} which does not produce warnings.
 }

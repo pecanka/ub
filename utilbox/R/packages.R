@@ -336,7 +336,7 @@ apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, value_error=NA) {
   
   fun_to_apply = function(n) {
     args = h1(list(get(n, envir=pckg), n, ...), nformals(f))
-    try(do.call(f, args), silent=TRUE) %ERR% value_error
+    try(do.call(f, args), silent=TRUE) %ERRCLS% value_error
   }
 
   workhorse(objs, fun_to_apply)

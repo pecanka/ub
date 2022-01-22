@@ -296,3 +296,38 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
   
   return(invisible(NULL))
 }
+
+
+#' @title
+#' Extract legend from a ggplot 
+#'
+#' For usage see for instance the following link or the example below.
+#' https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+#'
+#'
+#' @examples
+#' # Example usage:
+#' require(ggplot)
+#' require(dplyr)
+#' p = tibble(x=1:100, y=rnorm(100), z=rep(letters[1:10], e=10)) %>% ggplot(aes(x=x, y=y, color=z)) + geom_point()
+#' leg = get_legend(p, direction='horizontal', nrow_color=1)
+#' p = p + theme(legend.position='none')
+#' gridExtra::grid.arrange(arrangeGrob(p), arrangeGrob(leg), nrow=2, heights=c(4.5,0.5))
+#'
+#' @export
+get_legend <- function(p, direction=NULL, nrow_color=NULL) {
+ 
+  if(!is.null(direction)) p = p + theme(legend.direction=direction, legend.box = direction)
+  if(!is.null(nrow_color)) p = p + guides(color = guide_legend(nrow = nrow_color))
+
+  tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(p))
+  wleg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+ 
+  if(length(wleg)==0) {
+    zeroGrob()
+  } else {
+    tmp$grobs[[wleg]]
+  }
+ 
+}
+

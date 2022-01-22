@@ -27,7 +27,7 @@ str_cut(c('a-b','a-c','a-d','','c-d','c-e'),'-')
 \seealso{
 Other string-manipulation functions provided by utilbox: 
 \code{\link{ascii}()},
-\code{\link{collapse}()},
+\code{\link{collapse}},
 \code{\link{cumpaste0}()},
 \code{\link{multi_sub}()},
 \code{\link{padding}},

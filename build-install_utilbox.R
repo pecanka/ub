@@ -1,14 +1,19 @@
-#while("package:utilbox"%in%search()) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/install_utilbox.R"); require(utilbox)
+#while("package:utilbox"%in%search()) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/build-install_utilbox.R"); require(utilbox)
 
 ####################################################################################
 
 ## Set the 'utilbox' package name, its directory and the location of source files ##
-package = list(name="utilbox", dir="utilbox", filedir="source")
+package = list(name="utilbox", dir="utilbox", filedir="source", version='0.1.0.1')
 
 do_update_documentation = TRUE
 do_quick_install = FALSE
 
 ####################################################################################
+
+message = function(...) {
+  base::message(...)
+  flush.console()
+}
 
 ## Function that returns the path to the script file from which it is called
 find_script_dir = function() {
@@ -24,30 +29,29 @@ find_script_dir = function() {
 avail_pckg = installed.packages()[,"Package"]
 for(p in c('devtools','roxygen2')) {
   if(! p %in% avail_pckg) {
-    cat("Installing '",p,"' ...\n"); install.packages(p)
+    message("Installing '",p,"' ..."); install.packages(p)
   }
   library(p, character.only=TRUE)
 }
 
 path = find_script_dir() 	# e.g. 'd:/Dropbox/Projects/R/utilbox/'
 
-cat("Working path:",path,"\n")
-if(path=='.')
-  stop("Something is probably wrong with the identification of the path. I better stop here.")
+message("Working path:",path,"")
+if(path=='.') stop("Something is probably wrong with the identification of the path. I better stop here.")
 setwd(path)
 
 if(do_quick_install) {
-  cat("\nRUNNING A QUICK INSTALLATION...\n\n"); flush.console()
+  message("RUNNING A QUICK INSTALLATION..."); flush.console()
 }
 
 #file.remove(package$dir)
 
 ## Make sure the package directory exists
-cat("Creating basic directory structure for the package...\n")
+message("Creating basic directory structure for the package...")
 if(!dir.exists(package$dir)) create(package$dir)
 
 ## Delete all existing files in the package
-cat("Deleting any old files that might be present...\n")
+message("Deleting any old files that might be present...")
 files = list.files(package$dir, full.names=TRUE, recursive=TRUE)
 files = files[!file.info(files)$isdir]                                  # keep directories
 if(!do_update_documentation) files = files[!grepl('/man/',files)]       # keep man files if documentation is not to be updated
@@ -55,7 +59,7 @@ if(do_quick_install) files = files[!grepl('NAMESPACE',files)]           # keep t
 if(length(files)>0) sapply(files, file.remove)                          # remove what's left in 'files'
 
 ## Copy all of the source files to the package directory
-cat("Copying source files to the package R directory...\n")
+message("Copying source files to the package R directory...")
 files = list.files(pattern='^.*[.]R$', path=package$filedir, full.names=TRUE)
 dir = paste0(package$dir,"/R/")
 if(!dir.exists(dir)) dir.create(dir)
@@ -63,27 +67,38 @@ for(f in files) {
   stopifnot(file.copy(f, paste0(dir,sub('.*/','',f)), overwrite=TRUE))
 }
 
-cat("Placing the description file into the package directory...\n")
+message("Placing the description file into the package directory ...")
 stopifnot(file.copy('DESCRIPTION', package$dir, overwrite=TRUE))
+
+message("Updating version info in the DESCRIPTION file ...")
+file_DESC = file.path(package$dir,'DESCRIPTION')
+DESC = readLines(file_DESC)
+DESC[grep('Version:',DESC)] = paste('Version:',package$version)
+writeLines(DESC, file_DESC)
 
 ## Create documentation
 if(do_update_documentation) {
-  cat("Creating documentation...\n")
+  message("Creating documentation...")
   setwd(package$dir)
   document()
   setwd("..")
 } else {
-  cat("\nUPDATING OF DOCUMENTATION SKIPPED!\n\n"); flush.console()
+  message("UPDATING OF DOCUMENTATION SKIPPED!"); flush.console()
 }
 
-cat("Package created.\n")
+message("Package created.")
 
 ## Build the package
-cat("Building the package...\n")
+message("Building the package ...")
 build(package$name, path='build')
 
+message("Updating the 'latest' package file ...")
+files = file.info(list.files('build', full.names=TRUE))
+file_latest = rownames(files)[which.max(files$mtime)]
+file.copy(file_latest, sub(package$version, 'latest', file_latest, fixed=TRUE), overwrite=TRUE)
+
 ## Install the package
-cat("Installing the package...\n")
+message("Installing the package...")
 install(package$name, quick=do_quick_install)
 
 # Copy the newly created NAMESPACE file 
@@ -91,18 +106,18 @@ if(!do_quick_install) {
   file.copy(file.path(package$dir,'NAMESPACE'), '.', overwrite=TRUE)
 }
 
-cat("Adding the package's source path variable to .GlobalEnv and to .Rprofile so that it is set at R startup ...\n")
+message("Adding the package's source path variable to .GlobalEnv and to .Rprofile so that it is set at R startup ...")
 package_complete_path = file.path(path, package$filedir)
 startup_code = paste0("assign('.",package$name,"_source_path', '", package_complete_path, "', envir=.GlobalEnv)")
 assign('.utilbox_source_path', package_complete_path, envir=.GlobalEnv)
 utilbox::R_del_code_startup(substr(startup_code, 1, 30))
 utilbox::R_add_code_startup(startup_code)
 
-cat("Cleaning up...\n")
+message("Cleaning up...")
 rm(package, path, files)
-cat("Finished.\n")
+message("Finished.")
 
 if(!do_update_documentation) 
-  cat("\nWARNING: DOCUMENTATION NOT UPDATED.\n\n")
+  message("WARNING: DOCUMENTATION NOT UPDATED.")
   
  

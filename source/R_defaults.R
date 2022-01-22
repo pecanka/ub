@@ -128,6 +128,11 @@ R_del_code_startup = function(code, Rprof_file, exact_match=FALSE, remove_all_ma
   } else {
     function(code) which(`%m%`(code, lines, fixed=TRUE))
   }
+  
+  if(!file.exists(Rprof_file)) {
+    catn("Nothing to remove since file '",Rprof_file,"' does not exist.")
+    return(invisible(list(lines_dropped=NULL)))
+  }
 
   catn("Reading file '",Rprof_file,"' ...")
   lines = readLines(Rprof_file)

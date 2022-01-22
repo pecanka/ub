@@ -31,7 +31,7 @@
 #' @family utilbox-internal functions provided by utilbox
 #' @export
 utilbox_namespace = function() {
-  get_package_namespace("utilbox") %ERR% utilbox_environment()
+  get_package_namespace("utilbox") %ERRCLS% utilbox_environment()
 }
 
 #' @export
