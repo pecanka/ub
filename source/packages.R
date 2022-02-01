@@ -78,7 +78,8 @@ check_namespace = function(pckg, envir=parent.frame()) {
 #' @family package-related functions provided by utilbox
 #' @export
 llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn, 
-  detach_first=FALSE, default_src="CRAN", url_CRAN="https://cloud.r-project.org/") {
+  detach_first=FALSE, remove_first=FALSE, default_src="CRAN", lib_fun=base::library,
+  url_CRAN="https://cloud.r-project.org/", ...) {
 
   ## If symbol names expected, make them into strings
   if(!character.only) pckgs = as.character(substitute(pckgs))
@@ -89,7 +90,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
   ## Get the currently loaded libraries
   loaded_packages = list_loaded_packages()
   
-  ## Make sure pckgs is a list (use CRAN as default source)
+  ## Make sure pckgs is a list (use the default source)
   if(is.vector(pckgs)) {
     pckgs = lapply(pckgs, function(x) list(name=x, src=default_src))
   }
@@ -99,9 +100,15 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
   
     # Check if package already loaded
     if(any(lib$name==loaded_packages)) {
-      if(!detach_first) next
+      if(!detach_first && !remove_first) next
       message("Detaching package ",lib$name," ...")
       detach('package:'%p%lib$name, character.only=TRUE)
+    }
+    
+    # Remove the package prior to loading
+    if(remove_first) {
+      message("Uninstalling package ",lib$name," ...")
+      remove.packages(lib$name)
     }
     
     # Announce loading of the current package
@@ -139,7 +146,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
 
     # If this point reached without errors, it is installed, so the package is loaded
     if(!quietly) message("Loading package '",lib$name,"' ...")
-    require(lib$name, character.only=TRUE, quietly=quietly)
+    lib_fun(lib$name, character.only=TRUE, quietly=quietly, ...)
   
   } # for(lib in pckgs)
 
@@ -147,9 +154,9 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
 
 #' @rdname llibrary
 #' @export
-llib = function(..., detach_first=FALSE) {
+llib = function(..., detach_first=FALSE, remove_first=FALSE) {
   pckgs = as.character(dots_to_nlist(keep_symbolic=TRUE))
-  llibrary(pckgs, character.only=TRUE, detach_first=detach_first)
+  llibrary(pckgs, character.only=TRUE, detach_first=detach_first, remove_first=remove_first)
 }
 
 #' @rdname llibrary

@@ -16,11 +16,14 @@ llibrary(
   character.only = FALSE,
   fail = warn,
   detach_first = FALSE,
+  remove_first = FALSE,
   default_src = "CRAN",
-  url_CRAN = "https://cloud.r-project.org/"
+  lib_fun = base::library,
+  url_CRAN = "https://cloud.r-project.org/",
+  ...
 )
 
-llib(..., detach_first = FALSE)
+llib(..., detach_first = FALSE, remove_first = FALSE)
 
 unload_library(pckgs = NULL, character.only = FALSE)
 
