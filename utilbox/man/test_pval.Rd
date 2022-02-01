@@ -67,7 +67,7 @@ Storey-Fincher-Goncharuk test.
 \section{Harmonic mean p-value test}{
 
 
-\code{test_pval_hmean()} simply calls \code{\link[harmonicmeanp:p.hmp]{harmonicmeanp::p.hmp()}}, which
+\code{test_pval_hmean()} simply calls \code{harmonicmeanp::p.hmp()}, which
 implements the global test based on the harmonic mean p-value, which
 is a combination p-value that is insensitive to dependence among the
 combined p-values.

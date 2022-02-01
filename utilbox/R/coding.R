@@ -1,7 +1,8 @@
-#' A caller
+#' Evaluate an expression given as a string
 #'
-#' Takes expression in a character vector and evaluates it in the 
-#' calling frame.
+#' Takes an expression in a character vector, pastes it 
+#' into a single string and evaluates it in the `envir` 
+#' environment (the parent frame by default).
 #'
 #' @examples
 #' x = NULL
@@ -10,8 +11,8 @@
 #' print(x)
 #'
 #' @export
-cc = function(...) {
-  eval(base::str2lang(paste0(...)), envir=parent.frame())
+cc = function(..., envir=parent.frame()) {
+  eval(base::str2lang(paste0(...)), envir=envir)
 }
 
 ###

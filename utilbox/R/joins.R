@@ -124,15 +124,21 @@ inner_join_recurse = function(list, ..., join_fun='inner_join') {
 #' @name anti_join_sym
 #' @family matrix/data-frame functions provided by utilbox
 #' @export
-anti_join_sym = function(x, y, ..., join_fun='anti_join') {
+anti_join_sym = function(x, y, by, ..., join_fun='anti_join') {
 
   if(!is.function(join_fun) && !exists(join_fun, mode='function'))
     error("The function '",join_fun,"' supplied in 'join_fun' to 'anti_join_sym' does not exist.",
           " If you are using the defaults, remember that the package",
           " 'dplyr' needs to be installed.")
-          
-  A1 = do.call(join_fun, list(x, y, ...))
-  A2 = do.call(join_fun, list(y, x, ...))
+  
+  # reverse values and names in `by`
+  by2 = setNames(names(by), by)
+  miss = !nzchar(by2)
+  by2[miss] = by[miss]
+  
+  # do the two joins
+  A1 = do.call(join_fun, list(x, y, by=by, ...))
+  A2 = do.call(join_fun, list(y, x, by=by2, ...))
   
   list(x_antijoin_y=A1, y_antijoin_x=A2)
 

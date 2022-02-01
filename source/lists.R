@@ -1,4 +1,23 @@
 #' @title
+#' Checks whether the object is of class "list"
+#'
+#' @description
+#'
+#' `is_list_class()` checks whether the object is of class "list" 
+#' more strictly than `base::is.list()`, which returns `TRUE` not 
+#' only for objects of class `"list"` but also for data frames.
+#'
+#' @examples
+#' is_list_class(list(1))
+#' is_list_class(data.frame(1))
+#' 
+#' @family list utilities provided by utilbox
+#' @export
+is_list_class = function(x) {
+  'list' %in% class(x)
+}
+
+#' @title
 #' Flattens a list
 #'
 #' @description

@@ -2,7 +2,7 @@
 #' Checks for an error
 #'
 #' @description
-#' Checks whether an object is a result of a failer (error throwing) 
+#' Checks whether an object is a result of a failed (i.e. error throwing) 
 #' call by checking whether it is of class `try-error` (which is 
 #' produced by [`base::try()`]). The argument `ok_value` allows the user 
 #' to require that `x` has certain value (the value in `ok_value`) in 

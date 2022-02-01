@@ -18,7 +18,7 @@ is_error(
 Logical indicating whether \code{x} was classified as an error.
 }
 \description{
-Checks whether an object is a result of a failer (error throwing)
+Checks whether an object is a result of a failed (i.e. error throwing)
 call by checking whether it is of class \code{try-error} (which is
 produced by \code{\link[base:try]{base::try()}}). The argument \code{ok_value} allows the user
 to require that \code{x} has certain value (the value in \code{ok_value}) in

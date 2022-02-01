@@ -17,6 +17,7 @@ list_clean(list(1:10, NULL, 'a'))
 \seealso{
 Other list utilities provided by utilbox: 
 \code{\link{is_all_character}()},
+\code{\link{is_list_class}()},
 \code{\link{list_empty}()},
 \code{\link{list_flatten}()},
 \code{\link{list_mirror}()},

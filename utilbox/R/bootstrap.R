@@ -1,5 +1,5 @@
 #' @title
-#' Simple bootstrap
+#' Perform simple bootstrap
 #'
 #' @description
 #'

@@ -4,7 +4,7 @@
 \alias{anti_join_sym}
 \title{Symmetric anti-join}
 \usage{
-anti_join_sym(x, y, ..., join_fun = "anti_join")
+anti_join_sym(x, y, by, ..., join_fun = "anti_join")
 }
 \description{
 \code{anti_join_sym()} performs two anti-joins on the two data frames (or

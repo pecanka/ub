@@ -1,3 +1,4 @@
+#source('d:/Dropbox/Projects/R/utilbox/source/plotting.R')
 #' @title
 #' List/close graphical devices
 #'
@@ -69,13 +70,13 @@
 palette_ub = function(n) {
 
   palette = c(
-    '#df64df','#12c909','#dbcb35','#6c44a1','#4bbb5d',
-    '#0357a7','#862d20','#ffa703','#2fe996','#754343',
-    '#fa499b','#34b454','#d4af37','#7b1a28','#9a3aca',
-    '#3f8126','#0f6567','#a32a1d','#6a3631','#d655ba',
-    '#f90f0b','#f7ab4d','#fdfc0d','#0564b2','#30a316',
-    '#c24d5b','#46f600','#d2f449','#6ab5fb','#082470',
-    '#97c134','#e4da44','#3db2de','#9f74a4','#ff8c3c',
+    '#df64df','#12c909','#dbcb35','#6c44a1','#6ab5fb',
+    '#0357a7','#862d20','#ffa703','#2fe996','#f90f0b',
+    '#f7ab4d','#9a3aca','#023911','#ffff44','#991100',
+    '#3f8126','#0a3567','#a32a1d','#6a3631','#d655ba',
+    '#e5a383','#9a599b','#fdfc0d','#0564b2','#30a316',
+    '#c24d5b','#f6a630','#d2f449','#92da34','#082470',
+    '#971134','#e4da44','#3db2de','#9f74a4','#ff8c3c',
     '#274263','#5ba394','#3d85c6','#6bc82e','#6d9eeb',
     '#1fe2f3','#1b3f90','#65200c','#a61c00','#cc4125',
     '#dd7e6b','#86b8af','#58cbad','#f4cccc','#974e13',
@@ -314,6 +315,7 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
 #' p = p + theme(legend.position='none')
 #' gridExtra::grid.arrange(arrangeGrob(p), arrangeGrob(leg), nrow=2, heights=c(4.5,0.5))
 #'
+#' @family plotting-related functions provided by utilbox
 #' @export
 get_legend <- function(p, direction=NULL, nrow_color=NULL) {
  
@@ -331,3 +333,25 @@ get_legend <- function(p, direction=NULL, nrow_color=NULL) {
  
 }
 
+#' @title
+#'
+#' Plot and scatterplot
+#'
+#' `p16` and `pt16` are synonyms for `graphics::plot` and `graphics::points` 
+#' with different defaults for size (`cex`), character (`pch`) and color (`col`).
+#'
+#' @examples
+#' p16(rnorm(100))
+#' pt16(rnorm(100), col='deeppink1')
+#'
+#' @family plotting-related functions provided by utilbox
+#' @export
+p16 = function(..., col='royalblue3', cex=0.6, pch=16) {
+  graphics::plot(..., cex=cex, pch=pch, col=col)
+}
+
+#' @rdname p16
+#' @export
+pt16 = function(..., col='royalblue3', cex=0.6, pch=16) {
+  graphics::points(..., cex=cex, pch=pch, col=col)
+}

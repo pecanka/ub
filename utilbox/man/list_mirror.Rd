@@ -14,6 +14,7 @@ only mirroring up to depth 1 is implemented.
 \seealso{
 Other list utilities provided by utilbox: 
 \code{\link{is_all_character}()},
+\code{\link{is_list_class}()},
 \code{\link{list_clean}()},
 \code{\link{list_empty}()},
 \code{\link{list_flatten}()},

@@ -1,11 +1,11 @@
 #' @title
-#' Mode of a sample
+#' Get the modal value of a vector 
 #'
 #' @description
 #'
-#' `Mode()` finds the model of a sample `x`, which is the value that 
-#' occurs with highest frequency in `x`. The function works for both 
-#' numeric and character/factor data.
+#' `Mode()` finds the modal value, or mode, of the vector `x`. 
+#' Mode is the value that occurs with highest frequency in `x`.
+#' Works for both numeric and character/factor `x`.
 #'
 #' @examples
 #' Mode(c(1:7,7))    # the highest frequency value is '7'

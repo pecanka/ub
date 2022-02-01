@@ -2,7 +2,7 @@
 % Please edit documentation in R/bootstrap.R
 \name{Bootstrap}
 \alias{Bootstrap}
-\title{Simple bootstrap}
+\title{Perform simple bootstrap}
 \usage{
 Bootstrap(x, statistic, B = 100, ..., portion = 1e+08)
 }

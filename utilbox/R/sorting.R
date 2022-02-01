@@ -168,7 +168,7 @@ sort_by_pattern = function(x, pattern, by_names=FALSE, invert=FALSE, get_order=F
   # choose what the sort will be based on (values or names)
   y = if(by_names) names(x) else x
   
-  res = order_by_pattern(y, seq_along(x), pattern, invert, keep_order_in_groups)
+  res = order_by_pattern2(y, seq_along(x), pattern, invert, keep_order_in_groups)
   
   if(get_order) res$ord else x[res$ord]
   
@@ -186,7 +186,50 @@ sort_by_names = function(x, get_order=FALSE) {
   
 }
 
-order_by_pattern = function(x, ord, pattern, invert=FALSE, keep_order=FALSE, ...) {
+#'
+#' Ordering by multiple variables and regular pattern matching
+#'
+#' `order_by_pattern` returns the order when sorting by multiple variables supplied
+#' via `...`. The sorting by the variables in `...` (all but the last) is done in a
+#' standard way (i.e. equivalently to a call to `base::order`), while the sorting by
+#' the last variable in `...` is done based on regualar pattern matching of `x` against
+#' the pattern(s) supplied in `pattern`. Multiple patterns can be supplied to `pattern` and the
+#' matching is done in a cascading way, meaning that the elements that match the first
+#' element in `pattern` are returned first, then those matching the second element in `pattern`,
+#' and so on. Optionally, arguments to the internal call to `grepl` and `order` can be
+#' supplied (as lists) via `args_grepl` and `args_order`, respectively.
+#'
+#' @examples
+#' # define data
+#' people = c('Jake','John','Mark','Rogen','Mary','David','Betty')
+#' sex = c('m','m','m','m','f','m','f')
+#' pattern = c('a','b','r','o')
+#'
+#' # order by an all-matching pattern (i.e. no reordering)
+#' people[order_by_pattern(people)]
+#'
+#' # order by the patterns
+#' people[order_by_pattern(people, pattern=pattern)]
+#'
+#' # order first by sex and then by the patterns
+#' people[order_by_pattern(sex, people, pattern=pattern)]
+#'
+#' # order first by sex and then by the patterns (case-insensitive)
+#' people[order_by_pattern(sex, people, pattern=pattern, args_grepl=list(ignore.case=TRUE))]
+#'
+#' @export
+order_by_pattern = function(..., pattern='.', args_grepl=list(), args_order=list()) {
+  cols = list(...)
+  colp = tail(cols, 1)[[1]]
+  cols = head(cols, -1)
+  is_match = lapply(c(pattern, '.'), function(patrn) -do.call(grepl, append(list(patrn, colp), args_grepl)))
+  by = append(append(cols, is_match), args_order)
+  do.call(order, by)
+}
+
+#' @rdname order_by_pattern
+#' @export
+order_by_pattern2 = function(x, ord, pattern, invert=FALSE, keep_order=FALSE, ...) {
   
   if(is_empty(x)) {
     return(nlist(y=x, ord=seq_along(x)))

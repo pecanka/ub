@@ -2,13 +2,14 @@
 % Please edit documentation in R/coding.R
 \name{cc}
 \alias{cc}
-\title{A caller}
+\title{Evaluate an expression given as a string}
 \usage{
-cc(...)
+cc(..., envir = parent.frame())
 }
 \description{
-Takes expression in a character vector and evaluates it in the
-calling frame.
+Takes an expression in a character vector, pastes it
+into a single string and evaluates it in the \code{envir}
+environment (the parent frame by default).
 }
 \examples{
 x = NULL

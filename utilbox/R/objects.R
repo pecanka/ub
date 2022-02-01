@@ -295,7 +295,7 @@ load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=N
     envir = environment()
 
   ## Remove the objects that are in the file from environment 'envir'
-  rme(expected_objects, envir=envir)
+  .rme(expected_objects, envir=envir)
   
   # Load the file
   if(announce) cat0("Loading file (size ",file_size(file),") ... ")

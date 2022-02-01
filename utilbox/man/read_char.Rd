@@ -2,12 +2,16 @@
 % Please edit documentation in R/io.R
 \name{read_char}
 \alias{read_char}
-\title{Reads file}
+\title{Read text from file}
 \usage{
 read_char(file, encoding)
 }
 \description{
 Reads a text from a file as a single string. By default, reads the
 entire file.
+}
+\seealso{
+Other file-reading functions provided by utilbox: 
+\code{\link{saveRDSlazy}()}
 }
 \concept{file-reading functions provided by utilbox}

@@ -1,4 +1,33 @@
 #' @title
+#' Stop execution without the error message produced by `base::stop`.
+#'
+#' @description
+#'
+#' Stops the execution of code without an error message such as the 
+#' one produced by `base::stop`. By default, prints a message about 
+#' stopping quietly with the calling sequence. To stop completely 
+#' silently, use `stop_quietly(NULL)`.
+#'
+#' @export
+stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
+
+  msg_call = if(show_sequence) call_info()$message else call_info()$fun
+  
+  if(!is.null(msg)) {
+    message(paste(c(msg, msg_call), collapse=' '))
+  }
+  
+  opt <- options(show.error.messages = FALSE)
+  on.exit(options(opt))
+  stop()
+
+}
+
+#' @name stop2
+#' @export
+stop_quietly <- stop2
+
+#' @title
 #' Throw an error and stop
 #'
 #' @description
@@ -62,14 +91,13 @@ error = base::stop
 }
 
 #' @title
-#' Print error and stop execution
+#' Print an error message and stop the execution
 #'
 #' @description
 #'
-#' Prints an error message and stops. The actual way of stopping, 
-#' however, depends on whether the code is run in interactive or 
-#' non-interactive modes
-#'
+#' Prints an error message and stops the execution of code. 
+#' The actual way of stopping, however, depends on whether 
+#' the code is run in interactive or non-interactive modes.
 halt = function(error="") {
   
   if(interactive()) {
@@ -84,5 +112,90 @@ halt = function(error="") {
     q("no", status=1, runLast=FALSE)
     
   }
+  
+}
+
+# returns a list, unless fmtstring is specified
+# level: 1 - caller of the caller of this function; 
+#        2 - its parent, 
+#        3 - its grand-parent etc.
+# fmtstring: return format string: %f (function), %s (source file), %l (line)
+#
+# example: str <- caller_info("Called from %f at %s#%l\n")
+# !!! it won't work with e.g. cat(caller_info("Called from %f at %s#%l\n"))
+# or cat(paste0(caller_info("Called from %f at %s#%l\n"))) !!!
+# https://stackoverflow.com/q/59537482/684229
+caller_info <- function (fmtstring = NULL, level = 1) {
+    
+    x <- .traceback(x = level + 1)
+
+    i <- 1
+    repeat { # loop for subexpressions case; find the first one with source reference
+        srcref <- getSrcref(x[[i]])
+        if (is.null(srcref)) {
+            if (i < length(x)) {
+                i <- i + 1
+                next;
+            } else {
+                warning("caller_info(): not found\n")
+                return (NULL)
+            }
+        }
+        srcloc <- list(fun = getSrcref(x[[i+1]]), file = getSrcFilename(x[[i]]), line = getSrcLocation(x[[i]]))
+        break;
+    }
+
+    if (is.null(fmtstring))
+        return (srcloc)
+
+    fmtstring <- sub("%f", paste0(srcloc$fun, collapse = ""), fmtstring)
+    fmtstring <- sub("%s", srcloc$file, fmtstring)
+    fmtstring <- sub("%l", srcloc$line, fmtstring)
+    fmtstring
+}
+
+#' Get the details about where a call came from
+#'
+#' `call_info()` returns a list with information about the calling sequence.
+#' Optionally, a message with the information is directly printed.
+#'
+#' @returns A list with the following elements:
+#' `fun` ... calling function
+#' `dir` ... path to the script file
+#' `file` ... name of the script file
+#' `line` ... line in the script where called
+#' `msg` ... message with the sequence
+#'
+#' @family halting utilities provided by utilbox
+#' @export
+call_info <- function(print_msg=FALSE, level = 1) {
+
+  K <- .traceback(x = level + 1)
+
+  refs = sapply(K, getSrcref)
+  w = which(!sapply(refs, is.null))
+
+  if(length(K)==0) {
+    warning("caller_info(): No suitable reference found.")
+    return(NULL)
+  }
+  
+  K = rev(K[w])
+  
+  cals = sapply(K, function(x) as.character(getSrcref(x)))
+  dirs = sapply(K, getSrcDirectory)
+  fils = sapply(K, getSrcFilename)
+  lins = sapply(K, getSrcLocation)
+  locs = paste0(file.path(dirs, fils),':',lins)
+
+  msg1 = paste0('Invocation sequence: ',paste0(paste0(cals,'@',locs), collapse=' -> '))
+  msg2 = paste0('Invocation sequence:\n    -> ',paste0(paste0(cals,'@',locs), collapse='\n    -> '))
+  
+  srcloc = list(calls=cals, dir=dirs, file=fils, line=lins, loc=locs, message=msg1)
+ 
+  if(print_msg) message(msg2)
+ 
+  return(invisible(srcloc))
+ 
 }
 

@@ -31,7 +31,7 @@ round_nearest(x, b = 1)
 
 round_nearest_power(x, base = 10)
 
-rsignif(x, ndigits = 0)
+rsignif(x, ndig = 0)
 
 round2(x, nd = 0)
 

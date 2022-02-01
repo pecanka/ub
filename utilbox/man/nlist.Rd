@@ -35,6 +35,7 @@ nlist2(1:10, sin(30))
 \seealso{
 Other list utilities provided by utilbox: 
 \code{\link{is_all_character}()},
+\code{\link{is_list_class}()},
 \code{\link{list_clean}()},
 \code{\link{list_empty}()},
 \code{\link{list_flatten}()},

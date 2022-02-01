@@ -2,12 +2,12 @@
 % Please edit documentation in R/halting.R
 \name{halt}
 \alias{halt}
-\title{Print error and stop execution}
+\title{Print an error message and stop the execution}
 \usage{
 halt(error = "")
 }
 \description{
-Prints an error message and stops. The actual way of stopping,
-however, depends on whether the code is run in interactive or
-non-interactive modes
+Prints an error message and stops the execution of code.
+The actual way of stopping, however, depends on whether
+the code is run in interactive or non-interactive modes.
 }

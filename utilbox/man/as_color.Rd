@@ -20,7 +20,9 @@ Other plotting-related functions provided by utilbox:
 \code{\link{add_box_above}()},
 \code{\link{add_tight_axes}()},
 \code{\link{all_devs}},
+\code{\link{get_legend}()},
 \code{\link{hist2}()},
+\code{\link{p16}()},
 \code{\link{palette_ub}()},
 \code{\link{show_Colors}()}
 }

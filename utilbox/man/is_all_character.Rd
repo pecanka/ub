@@ -20,6 +20,7 @@ is_all_character(list(letters, 1:10))      # returns FALSE
 }
 \seealso{
 Other list utilities provided by utilbox: 
+\code{\link{is_list_class}()},
 \code{\link{list_clean}()},
 \code{\link{list_empty}()},
 \code{\link{list_flatten}()},

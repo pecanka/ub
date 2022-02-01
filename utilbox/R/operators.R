@@ -285,12 +285,19 @@
 #' `try-error`. If its first argument is of class `try-error` it returns 
 #' its second argument (`y`). Otherwise it returns the first (`x`).
 #'
+#' `\%NEXISTS\%` works analogously except that it avoids an error due to
+#' the non-existence of the first argument by returning the second argument
+#' instead.
+#'
 #' @name operator_NULL
 #' @examples
-#' 1 %|||% 2
-#' NULL %|||% 2
-#' NULL %||||% 2
-#' numeric(0) %||||% 2
+#' 1 %|||% 2                                  # returns 2
+#' NULL %|||% 2                               # returns 2
+#' NULL %||||% 2                              # returns 2
+#' numeric(0) %||||% 2                        # returns 2
+#' round('a') %ERR% 0                         # returns 0
+#' try(round('a'), silent=TRUE) %ERRCLS% 0    # returns 0
+#' .name.of.a.nonexisting.object %NEXISTS% 0  # returns 0
 #'
 #' @family operators provided by utilbox
 #' @export
@@ -318,8 +325,14 @@
 
 #' @rdname operator_NULL
 #' @export
-`%ERR%` = function (x, y) {
+`%ERRCLS%` = function (x, y) {
   if(is_error(x)) y else x
+}
+
+#' @rdname operator_NULL
+#' @export
+`%ERR%` = function (x, y) {
+  if(is_error(suppressWarnings(try(eval(x), silent=TRUE)))) y else x
 }
 
 #' @title

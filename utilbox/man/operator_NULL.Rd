@@ -6,6 +6,7 @@
 \alias{\%||||\%}
 \alias{\%|||||\%}
 \alias{\%NA\%}
+\alias{\%ERRCLS\%}
 \alias{\%ERR\%}
 \title{Default value for NULL and zero-length objects}
 \usage{
@@ -16,6 +17,8 @@ x \%||||\% y
 x \%|||||\% y
 
 x \%NA\% y
+
+x \%ERRCLS\% y
 
 x \%ERR\% y
 }
@@ -33,12 +36,19 @@ allows input of various types (vectors, lists, closures, etc.).
 \verb{\\\%ERR\\\%} works analogously except that it checks for class
 \code{try-error}. If its first argument is of class \code{try-error} it returns
 its second argument (\code{y}). Otherwise it returns the first (\code{x}).
+
+\verb{\\\%NEXISTS\\\%} works analogously except that it avoids an error due to
+the non-existence of the first argument by returning the second argument
+instead.
 }
 \examples{
-1 \%|||\% 2
-NULL \%|||\% 2
-NULL \%||||\% 2
-numeric(0) \%||||\% 2
+1 \%|||\% 2                                  # returns 2
+NULL \%|||\% 2                               # returns 2
+NULL \%||||\% 2                              # returns 2
+numeric(0) \%||||\% 2                        # returns 2
+round('a') \%ERR\% 0                         # returns 0
+try(round('a'), silent=TRUE) \%ERRCLS\% 0    # returns 0
+.name.of.a.nonexisting.object \%NEXISTS\% 0  # returns 0
 
 }
 \seealso{

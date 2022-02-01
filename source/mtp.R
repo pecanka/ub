@@ -21,7 +21,7 @@
 #'
 #' @section Harmonic mean p-value test:
 #'
-#' `test_pval_hmean()` simply calls [`harmonicmeanp::p.hmp()`], which 
+#' `test_pval_hmean()` simply calls `harmonicmeanp::p.hmp()`, which 
 #' implements the global test based on the harmonic mean p-value, which 
 #' is a combination p-value that is insensitive to dependence among the 
 #' combined p-values.

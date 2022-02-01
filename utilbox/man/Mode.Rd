@@ -2,14 +2,14 @@
 % Please edit documentation in R/stats.R
 \name{Mode}
 \alias{Mode}
-\title{Mode of a sample}
+\title{Get the modal value of a vector}
 \usage{
 Mode(x, all_modes = FALSE, exclude.na = TRUE)
 }
 \description{
-\code{Mode()} finds the model of a sample \code{x}, which is the value that
-occurs with highest frequency in \code{x}. The function works for both
-numeric and character/factor data.
+\code{Mode()} finds the modal value, or mode, of the vector \code{x}.
+Mode is the value that occurs with highest frequency in \code{x}.
+Works for both numeric and character/factor \code{x}.
 }
 \examples{
 Mode(c(1:7,7))    # the highest frequency value is '7'

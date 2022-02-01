@@ -23,7 +23,9 @@ Other plotting-related functions provided by utilbox:
 \code{\link{add_tight_axes}()},
 \code{\link{all_devs}},
 \code{\link{as_color}()},
+\code{\link{get_legend}()},
 \code{\link{hist2}()},
+\code{\link{p16}()},
 \code{\link{show_Colors}()}
 }
 \concept{plotting-related functions provided by utilbox}

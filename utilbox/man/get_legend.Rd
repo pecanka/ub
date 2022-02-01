@@ -25,3 +25,16 @@ p = p + theme(legend.position='none')
 gridExtra::grid.arrange(arrangeGrob(p), arrangeGrob(leg), nrow=2, heights=c(4.5,0.5))
 
 }
+\seealso{
+Other plotting-related functions provided by utilbox: 
+\code{\link{Colors}()},
+\code{\link{add_box_above}()},
+\code{\link{add_tight_axes}()},
+\code{\link{all_devs}},
+\code{\link{as_color}()},
+\code{\link{hist2}()},
+\code{\link{p16}()},
+\code{\link{palette_ub}()},
+\code{\link{show_Colors}()}
+}
+\concept{plotting-related functions provided by utilbox}
