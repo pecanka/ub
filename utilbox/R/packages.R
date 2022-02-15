@@ -79,7 +79,9 @@ check_namespace = function(pckg, envir=parent.frame()) {
 #' @export
 llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn, 
   detach_first=FALSE, remove_first=FALSE, default_src="CRAN", lib_fun=base::library,
-  url_CRAN="https://cloud.r-project.org/", ...) {
+  url_CRAN="https://cloud.r-project.org/", suppress_startup_msgs=FALSE, ...) {
+
+  echo = if(quietly) null else message
 
   ## If symbol names expected, make them into strings
   if(!character.only) pckgs = as.character(substitute(pckgs))
@@ -101,24 +103,24 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     # Check if package already loaded
     if(any(lib$name==loaded_packages)) {
       if(!detach_first && !remove_first) next
-      message("Detaching package ",lib$name," ...")
+      echo("Detaching package ",lib$name," ...")
       detach('package:'%p%lib$name, character.only=TRUE)
     }
     
     # Remove the package prior to loading
     if(remove_first) {
-      message("Uninstalling package ",lib$name," ...")
+      echo("Uninstalling package ",lib$name," ...")
       remove.packages(lib$name)
     }
     
     # Announce loading of the current package
-    if(!quietly) message("Loading package ",lib$name," ...")
+    echo("Loading package ",lib$name," ...")
 
     # Check if current package is installed
     if(all(lib$name!=installed.packages()[,"Package"])) {
     
-      message("Library '",lib$name,"' is not installed. Installing it from '",lib$src,"' ...")
-      if(!is.null(lib$note)) message(lib$note)
+      echo("Library '",lib$name,"' is not installed. Installing it from '",lib$src,"' ...")
+      if(!is.null(lib$note)) echo(lib$note)
 
       # Check for location information
       if(is.null(lib$src) || is.na(lib$src)) {
@@ -138,15 +140,15 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     
     # Check if installed now
     if(all(lib$name!=installed.packages()[,"Package"])) {
-      fail("Package '",lib$name,"' was not available at '",
-           if(lib$src=="CRAN") url_CRAN else lib$src,"'.", 
-           " Please install it manually and try again.")
+      src = if(lib$src=="CRAN") url_CRAN else lib$src
+      fail("Package '",lib$name,"' was not found at '",src,"'. Please install it manually and try again.")
       next
     }
 
     # If this point reached without errors, it is installed, so the package is loaded
-    if(!quietly) message("Loading package '",lib$name,"' ...")
-    lib_fun(lib$name, character.only=TRUE, quietly=quietly, ...)
+    echo("Loading package '",lib$name,"' ...")
+    wrapper = if(suppress_startup_msgs) base::suppressPackageStartupMessages else base::identity
+    wrapper(lib_fun(lib$name, character.only=TRUE, quietly=quietly, ...))
   
   } # for(lib in pckgs)
 
@@ -154,9 +156,13 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
 
 #' @rdname llibrary
 #' @export
-llib = function(..., detach_first=FALSE, remove_first=FALSE) {
+llib = function(..., detach_first=FALSE, remove_first=FALSE, suppress_startup_msgs=FALSE) {
+
   pckgs = as.character(dots_to_nlist(keep_symbolic=TRUE))
-  llibrary(pckgs, character.only=TRUE, detach_first=detach_first, remove_first=remove_first)
+  
+  llibrary(pckgs, character.only=TRUE, detach_first=detach_first, 
+           remove_first=remove_first, suppress_startup_msgs=suppress_startup_msgs)
+           
 }
 
 #' @rdname llibrary
@@ -166,10 +172,10 @@ unload_library = function(pckgs=NULL, character.only=FALSE) {
   if(!character.only) pckgs = as.character(substitute(pckgs))
   
   for(pckg in pckgs) {
-    ps = c(utilbox::`%.^%`("package:", pckg), pckg)
+    ps = c("package:" %.^% pckg, pckg)
     res1 = try(detach(ps[1], character.only=TRUE, unload=TRUE), silent=TRUE)
     res2 = try(detach(ps[2], character.only=TRUE, unload=TRUE), silent=TRUE)
-    if(utilbox::is_error(res1) && utilbox::is_error(res2)) {
+    if(is_error(res1) && is_error(res2)) {
       warning("Unloading of package '", pckg,"' failed.")
     }
   }
@@ -181,14 +187,19 @@ unload_library = function(pckgs=NULL, character.only=FALSE) {
 #' @rdname llibrary
 #' @export
 list_installed_packages = function() {
+
   x = try(installed.packages()[,"Package"])
+  
   if(class(x)=="try-error") "" else x
+  
 }
   
 #' @rdname llibrary
 #' @export
 list_loaded_packages = function() {
+
   c(sessionInfo()$basePkgs, names(sessionInfo()$otherPkgs))
+  
 }
 
 #' @rdname llibrary

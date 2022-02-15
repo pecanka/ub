@@ -77,8 +77,9 @@ for \code{sep}.
 
 All of these allow a smart way of flushing the console.
 
-\code{msg()} prints a message and either stops execution or waits
-depending on arguments.
+\code{msg()} prints a message with more control by user. Optionally, it can
+stop the execution (when \code{quit=TRUE}) or wait for user interaction
+(when \code{wait=TRUE}).
 
 \code{warn()} is an alias for \code{msg()} which appends the string
 \"WARNING\" to the printed message.

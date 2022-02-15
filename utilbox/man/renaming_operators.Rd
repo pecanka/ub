@@ -33,6 +33,7 @@ Other operators provided by utilbox:
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},
 \code{\link{operator_c}},
-\code{\link{operator_match}}
+\code{\link{operator_match}},
+\code{\link{operator_try}}
 }
 \concept{operators provided by utilbox}

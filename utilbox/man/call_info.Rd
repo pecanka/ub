@@ -2,9 +2,12 @@
 % Please edit documentation in R/halting.R
 \name{call_info}
 \alias{call_info}
+\alias{get_call_info}
 \title{Get the details about where a call came from}
 \usage{
-call_info(print_msg = FALSE, level = 1)
+call_info(print_msg = TRUE, level = 1)
+
+get_call_info(print_msg = FALSE, level = 1)
 }
 \value{
 A list with the following elements:
@@ -15,7 +18,11 @@ A list with the following elements:
 \code{msg} ... message with the sequence
 }
 \description{
-\code{call_info()} returns a list with information about the calling sequence.
+\code{get_call_info()} returns a list with information about the calling sequence.
 Optionally, a message with the information is directly printed.
+}
+\details{
+\code{call_info()} prints and returns the information about the calling sequence
+(obtained using \code{get_call_info()}.
 }
 \concept{halting utilities provided by utilbox}

@@ -65,13 +65,26 @@
 #' `sep='_'` and which takes symbols as arguments (see the examples 
 #' below).
 #'
+#' \code{%.^%} is a conditional concatenatation operator, which
+#' appends the left-hand side (LHS) onto the right-hand side (RHS)
+#' but only if the right-hand argument does not 
+#' already start with the string on the left-hand side. 
+#'
+#' \code(%^.%} is similar to \code{%.^%} except it appends the
+#' RHS onto the LHS but only if the LHS does not end with the
+#' string inside the RHS.
+#'
 #' @name concatenate
 #' @examples
 #' a = 'multi'; b = 'tasking'
-#' a %p% b            # yields 'multitasking'
-#' a %..% b           # yields 'multi tasking'
-#' a %_% b            # yields 'multi_tasking'
-#' a %__% b           # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+#' a %p% b                    # yields 'multitasking'
+#' a %..% b                   # yields 'multi tasking'
+#' a %_% b                    # yields 'multi_tasking'
+#' a %__% b                   # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+#' 'name:' %.^% 'james'        # yields 'name:james'
+#' 'name:' %.^% 'name:james'   # also yields 'name:james'
+#' 'name:' %^.% 'james'        # yields 'name:james'
+#' 'name:james' %^.% 'james'   # also yields 'name:james'
 #'
 #' @family operators provided by utilbox
 #' @export
@@ -105,7 +118,15 @@
 #' @rdname concatenate
 #' @export
 `%.^%` = function(x, y) {
-  ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
+  #ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
+  ifelse(base::startsWith(y, x), y, x%p%y)
+}
+
+#' @rdname concatenate
+#' @export
+`%^.%` = function(x, y) {
+  #ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
+  ifelse(base::endsWith(x, y), x, x%p%y)
 }
 
 #' @title
@@ -447,3 +468,79 @@
   modifyList(left, right)
 }
 
+#' @title
+#' Operators for trying calls and recovering from failures
+#'
+#' @description
+#'
+#' `%try%` attempts to execute a block of code on the right-hand
+#' side (RHS) using `base::tryCatch`. The left-hand side (LHS)
+#' is ignored.
+#'
+#' `%otherwise%` looks for an error result on the LHS and if one
+#' is found, it executes the RHS code.
+#'
+#' `%finally%` executes the RHS code and returns the outcome whenever
+#' the LHS was an error, otherwise it returns the LHS.
+#'
+#' After the execution of %otherwise% or %finally% the latest error 
+#' is found in `.e` in the parent frame.
+#'
+#' `%recover%` attempts to execute the LHS and on failure it executes 
+#' the RHS. It is similar to `%ERR%`, which works a little differently.
+#'
+#' @examples
+#' . %try% print(fsdafsdaf) %otherwise% message('the printing did not work')
+#' print(fsdafsdaf) %recover% message('the printing did not work')
+#'
+#' @family operators provided by utilbox
+#' @name operator_try
+#' @export
+`%try%` = function(., ...) {
+  tryCatch(
+    with(parent.frame(), ...),
+    error = function(e) e
+  )
+}
+
+#' @rdname operator_try
+#' @export
+`%otherwise%` = function(e, ...) {
+  if ('error' %in% class(e)) {
+    assign('.e', e, envir = parent.frame())
+    with(parent.frame(), ...)
+  }
+  else
+    e
+}
+
+#' @rdname operator_try
+#' @export
+`%finally%` = function (x, ...) {
+  if ('error' %in% class(x)) {
+    assign('.e', x, envir = parent.frame())
+    assign('.result', NULL, envir = parent.frame())
+   
+    with(parent.frame(), ...)
+  } else {
+    assign('.e', NULL, envir = parent.frame())
+    assign('.result', x, envir = parent.frame())
+   
+    with(parent.frame(), ...)
+    x
+  }
+}
+
+#' @rdname operator_try
+#' @export
+`%recover%` = function(lhs, ...) {
+  res_lhs = tryCatch(
+    with(parent.frame(), lhs),
+    error = function(e) e
+  )
+  if ('error' %in% class(res_lhs)) {
+    with(parent.frame(), ...)
+  } else {
+    e
+  }
+}

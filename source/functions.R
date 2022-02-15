@@ -320,3 +320,12 @@ sub_lang = function(...) {
 #  }
 #  unquote(substitute(expr))
 #}
+
+#' Null function (function that does nothing)
+#'
+#' `null()` is a function that takes arbitrary arguments and does nothing.
+#'
+#' @export
+null = function(...) {
+  return()
+}

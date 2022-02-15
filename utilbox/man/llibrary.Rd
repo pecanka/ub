@@ -20,10 +20,16 @@ llibrary(
   default_src = "CRAN",
   lib_fun = base::library,
   url_CRAN = "https://cloud.r-project.org/",
+  suppress_startup_msgs = FALSE,
   ...
 )
 
-llib(..., detach_first = FALSE, remove_first = FALSE)
+llib(
+  ...,
+  detach_first = FALSE,
+  remove_first = FALSE,
+  suppress_startup_msgs = FALSE
+)
 
 unload_library(pckgs = NULL, character.only = FALSE)
 

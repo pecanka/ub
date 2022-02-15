@@ -31,8 +31,9 @@ print2var = function(fun, file=NULL) {
 #'
 #' All of these allow a smart way of flushing the console.
 #'
-#' `msg()` prints a message and either stops execution or waits 
-#' depending on arguments.
+#' `msg()` prints a message with more control by user. Optionally, it can 
+#' stop the execution (when `quit=TRUE`) or wait for user interaction 
+#' (when `wait=TRUE`).
 #'
 #' `warn()` is an alias for `msg()` which appends the string 
 #' \"WARNING\" to the printed message.

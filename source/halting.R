@@ -11,7 +11,7 @@
 #' @export
 stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
 
-  msg_call = if(show_sequence) call_info()$message else call_info()$fun
+  msg_call = if(show_sequence) get_call_info()$message else get_call_info()$fun
   
   if(!is.null(msg)) {
     message(paste(c(msg, msg_call), collapse=' '))
@@ -156,8 +156,11 @@ caller_info <- function (fmtstring = NULL, level = 1) {
 
 #' Get the details about where a call came from
 #'
-#' `call_info()` returns a list with information about the calling sequence.
+#' `get_call_info()` returns a list with information about the calling sequence.
 #' Optionally, a message with the information is directly printed.
+#'
+#' `call_info()` prints and returns the information about the calling sequence
+#' (obtained using `get_call_info()`.
 #'
 #' @returns A list with the following elements:
 #' `fun` ... calling function
@@ -168,13 +171,25 @@ caller_info <- function (fmtstring = NULL, level = 1) {
 #'
 #' @family halting utilities provided by utilbox
 #' @export
-call_info <- function(print_msg=FALSE, level = 1) {
+call_info <- function(print_msg=TRUE, level = 1) {
+
+  info = get_call_info(FALSE, level)
+  
+  if(print_msg) message(info$message2)
+ 
+  return(invisible(info))
+ 
+}
+
+#' @rdname call_info
+#' @export
+get_call_info <- function(print_msg=FALSE, level = 1) {
 
   K <- .traceback(x = level + 1)
-
+  
   refs = sapply(K, getSrcref)
   w = which(!sapply(refs, is.null))
-
+  
   if(length(K)==0) {
     warning("caller_info(): No suitable reference found.")
     return(NULL)
@@ -191,7 +206,7 @@ call_info <- function(print_msg=FALSE, level = 1) {
   msg1 = paste0('Invocation sequence: ',paste0(paste0(cals,'@',locs), collapse=' -> '))
   msg2 = paste0('Invocation sequence:\n    -> ',paste0(paste0(cals,'@',locs), collapse='\n    -> '))
   
-  srcloc = list(calls=cals, dir=dirs, file=fils, line=lins, loc=locs, message=msg1)
+  srcloc = list(calls=cals, wdir=getwd(), srcdir=dirs, srcfile=fils, srcline=lins, srcloc=locs, message=msg1, message2=msg2)
  
   if(print_msg) message(msg2)
  

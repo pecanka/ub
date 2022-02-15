@@ -3,10 +3,11 @@
 ####################################################################################
 
 ## Set the 'utilbox' package name, its directory and the location of source files ##
-package = list(name="utilbox", dir="utilbox", filedir="source", version='0.1.0.1')
+package = list(name="utilbox", dir="utilbox", filedir="source")
 
 do_update_documentation = TRUE
 do_quick_install = FALSE
+which_version_increase = 'minor3'   # select one one major / minor1 / minor2 / minor3
 
 ####################################################################################
 
@@ -33,6 +34,16 @@ for(p in c('devtools','roxygen2')) {
   }
   library(p, character.only=TRUE)
 }
+
+version_increase = function(version) {
+  version_next = as.numeric(unlist(strsplit(version, '[.]')))
+  w = switch(which_version_increase, 'major'=1, 'minor1'=2, 'minor2'=3, 'minor3'=4)
+  version_next[w] = version_next[w] + 1
+  if(w<4) version_next[(w+1):4] = 0
+  paste(version_next, collapse='.')
+}
+
+####################################################################################
 
 path = find_script_dir() 	# e.g. 'd:/Dropbox/Projects/R/utilbox/'
 
@@ -73,8 +84,13 @@ stopifnot(file.copy('DESCRIPTION', package$dir, overwrite=TRUE))
 show_msg("Updating version info in the DESCRIPTION file ...")
 file_DESC = file.path(package$dir,'DESCRIPTION')
 DESC = readLines(file_DESC)
-DESC[grep('Version:',DESC)] = paste('Version:',package$version)
+is_version = grep('Version: ',DESC)
+version_prev = sub('.*[ ]','',DESC[is_version])
+version_next = version_increase(version_prev)
+DESC[is_version] = sub('[ ].*',paste0(' ',version_next),DESC[is_version])
+show_msg('... from version ',version_prev,' to ',version_next)
 writeLines(DESC, file_DESC)
+file.copy(file.path(package$dir,'DESCRIPTION'), '.', overwrite=TRUE)
 
 ## Create documentation
 if(do_update_documentation) {
@@ -95,7 +111,7 @@ build(package$name, path='build')
 show_msg("Updating the 'latest' package file ...")
 files = file.info(list.files('build', full.names=TRUE))
 file_latest = rownames(files)[which.max(files$mtime)]
-file.copy(file_latest, sub(package$version, 'latest', file_latest, fixed=TRUE), overwrite=TRUE)
+file.copy(file_latest, sub(version_next, 'latest', file_latest, fixed=TRUE), overwrite=TRUE)
 
 ## Install the package
 show_msg("Installing the package...")

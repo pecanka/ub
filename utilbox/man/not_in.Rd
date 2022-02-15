@@ -31,6 +31,7 @@ Other operators provided by utilbox:
 \code{\link{operator_append}},
 \code{\link{operator_c}},
 \code{\link{operator_match}},
+\code{\link{operator_try}},
 \code{\link{renaming_operators}}
 }
 \concept{operators provided by utilbox}

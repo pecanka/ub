@@ -1,6 +1,6 @@
 Package: utilbox
 Title: Utility Box
-Version: 0.1.0.1
+Version: 0.1.0.5
 Authors@R: 
     person(given = "Jakub",
            family = "Pecanka",

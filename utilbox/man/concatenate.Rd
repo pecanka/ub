@@ -7,6 +7,7 @@
 \alias{\%_\%}
 \alias{\%__\%}
 \alias{\%.^\%}
+\alias{\%^.\%}
 \title{Concatenation operators}
 \usage{
 x \%p\% y
@@ -18,27 +19,22 @@ x \%_\% y
 ... \%__\% sep
 
 x \%.^\% y
+
+x \%^.\% y
 }
 \description{
-Concatenation operators, which are aliases for \code{base::paste}.
 
-\code{\%.\%} is an operator versions of \code{base::paste0}.
-
-\code{\%..\%} is an operator versions of \code{base::paste}.
-
-\code{\%_\%} is an operator versions of \code{base::paste} with
-\code{sep='_'}.
-
-\code{\%__\%} is an operator versions of \code{base::paste} with
-\code{sep='_'} and which takes symbols as arguments (see the examples
-below).
 }
 \examples{
 a = 'multi'; b = 'tasking'
-a \%p\% b            # yields 'multitasking'
-a \%..\% b           # yields 'multi tasking'
-a \%_\% b            # yields 'multi_tasking'
-a \%__\% b           # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+a \%p\% b                    # yields 'multitasking'
+a \%..\% b                   # yields 'multi tasking'
+a \%_\% b                    # yields 'multi_tasking'
+a \%__\% b                   # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+'name:' \%.^\% 'james'        # yields 'name:james'
+'name:' \%.^\% 'name:james'   # also yields 'name:james'
+'name:' \%^.\% 'james'        # yields 'name:james'
+'name:james' \%^.\% 'james'   # also yields 'name:james'
 
 }
 \seealso{
@@ -50,6 +46,7 @@ Other operators provided by utilbox:
 \code{\link{operator_append}},
 \code{\link{operator_c}},
 \code{\link{operator_match}},
+\code{\link{operator_try}},
 \code{\link{renaming_operators}}
 }
 \concept{operators provided by utilbox}
