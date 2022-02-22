@@ -5,10 +5,10 @@
 \alias{is_empty}
 \alias{is_empty.default}
 \alias{is_empty.data.frame}
-\alias{is_any_empty}
-\alias{is_nonempty}
+\alias{has_empty}
+\alias{is_not_empty}
 \alias{is_scalar}
-\alias{is_vector}
+\alias{is_dimone}
 \alias{is_dimtwo}
 \alias{is_dimtwoplus}
 \title{Size checks}
@@ -19,35 +19,36 @@ is_empty(...)
 
 \method{is_empty}{data.frame}(x)
 
-is_any_empty(x)
+has_empty(x)
 
-is_nonempty(...)
+is_not_empty(...)
 
 is_scalar(x)
 
-is_vector(x)
+is_dimone(x)
 
 is_dimtwo(x)
 
 is_dimtwoplus(x)
 }
 \description{
-\code{is_empty()} checks whether the supplied object has zero no
-elements. It is similar to \code{rlang::is_empty()}, except applicable
-also to data frames, for which it derives length from the production
-of the dimension (obtained via \code{dim}).
+\code{isempty()} checks whether the supplied object has zero elements.
+It is similar to \code{rlang::is_empty()}, except that it assesses
+zero-row and/or zero-column data frames as empty by looking at
+the product of the its dimensions instead of its length.
 
-\code{is_any_empty()} is a element-wise check for emptiness. It applies
+\code{has_empty()} is an element-wise check for emptiness. It applies
 \code{is_empty()} to the elements of its argument via \code{base::sapply}. Useful
-for checking emptiness within a \code{list}-class object.
+for checking emptiness within a \code{list}-class object (e.g., list, data frame).
 
-\code{is_nonempty()} is a negation of \code{is_empty()}.
+\code{is_not_empty()} is a negation of \code{is_empty()}.
 
-\code{is_scalar()} checks whether the supplied is a scalar (vector, list,
-etc.).
+\code{is_scalar()} checks whether the supplied is a scalar, i.e.
+unidimensional of size 1 (e.g., length-one vector, length-one list, etc.).
 
-\code{is_dimtwo()} checks for two-dimensionality (e.g. matrix, data
-frame).
+\code{is_dimone()} checks for unidimensionality (e.g. vector, list, etc.).
+
+\code{is_dimtwo()} checks for bidimensionality (e.g. matrix, data frame).
 
 \code{is_dimtwoplus()} checks whether the dimensionality is at least 2 (e.g.
 matrix, data frame, 2D array, 3D array).

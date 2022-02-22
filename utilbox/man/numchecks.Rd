@@ -7,7 +7,7 @@
 \alias{is_all_same}
 \alias{is_decreasing}
 \alias{is_increasing}
-\alias{is_integer}
+\alias{equals_integer}
 \alias{is_odd}
 \alias{is_even}
 \title{Check}
@@ -22,7 +22,7 @@ is_decreasing(x, strictly = FALSE)
 
 is_increasing(x, strictly = FALSE)
 
-is_integer(x, tol = .Machine$double.eps)
+equals_integer(x, tol = .Machine$double.eps)
 
 is_odd(x, tol = .Machine$double.eps)
 
@@ -44,7 +44,7 @@ elements.
 
 \code{is_increasing()} checks if a sequence in 'x' is increasing.
 
-\code{is_integer()} checks if elements in 'x' are effectively integers
+\code{equals_integer()} checks if elements in 'x' are effectively integers
 (i.e. close enough to one).
 
 \code{is_odd()} checks if elements of 'x' are odd

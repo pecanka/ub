@@ -3,22 +3,23 @@
 #'
 #' @description
 #'
-#' `is_empty()` checks whether the supplied object has zero no 
-#' elements. It is similar to `rlang::is_empty()`, except applicable 
-#' also to data frames, for which it derives length from the production 
-#' of the dimension (obtained via `dim`). 
+#' `isempty()` checks whether the supplied object has zero elements.
+#' It is similar to `rlang::is_empty()`, except that it assesses
+#' zero-row and/or zero-column data frames as empty by looking at 
+#' the product of the its dimensions instead of its length. 
 #'
-#' `is_any_empty()` is a element-wise check for emptiness. It applies
+#' `has_empty()` is an element-wise check for emptiness. It applies
 #' `is_empty()` to the elements of its argument via `base::sapply`. Useful
-#' for checking emptiness within a `list`-class object.
+#' for checking emptiness within a `list`-class object (e.g., list, data frame).
 #'
-#' `is_nonempty()` is a negation of `is_empty()`.
+#' `is_not_empty()` is a negation of `is_empty()`.
 #'
-#' `is_scalar()` checks whether the supplied is a scalar (vector, list, 
-#' etc.).
+#' `is_scalar()` checks whether the supplied is a scalar, i.e. 
+#' unidimensional of size 1 (e.g., length-one vector, length-one list, etc.).
 #'
-#' `is_dimtwo()` checks for two-dimensionality (e.g. matrix, data 
-#' frame).
+#' `is_dimone()` checks for unidimensionality (e.g. vector, list, etc.).
+#'
+#' `is_dimtwo()` checks for bidimensionality (e.g. matrix, data frame).
 #'
 #' `is_dimtwoplus()` checks whether the dimensionality is at least 2 (e.g. 
 #' matrix, data frame, 2D array, 3D array).
@@ -44,13 +45,13 @@ is_empty.data.frame = function(x) {
 
 #' @rdname sizechecks
 #' @export
-is_any_empty = function(x) {
+has_empty = function(x) {
   any(sapply(x, is_empty))
 }
 
 #' @rdname sizechecks
 #' @export
-is_nonempty = function(...) {
+is_not_empty = function(...) {
   !is_empty(...)
 }
 
@@ -62,7 +63,7 @@ is_scalar = function(x) {
 
 #' @rdname sizechecks
 #' @export
-is_vector = function(x) {
+is_dimone = function(x) {
   is.null(dim(x))
 }
 

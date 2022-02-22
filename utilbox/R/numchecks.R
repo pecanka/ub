@@ -40,7 +40,7 @@ anyNonNA = function(x, rowwise=TRUE) {
 #'
 #' `is_increasing()` checks if a sequence in 'x' is increasing.
 #'
-#' `is_integer()` checks if elements in 'x' are effectively integers 
+#' `equals_integer()` checks if elements in 'x' are effectively integers 
 #' (i.e. close enough to one).
 #'
 #' `is_odd()` checks if elements of 'x' are odd
@@ -80,7 +80,7 @@ is_increasing = function(x, strictly=FALSE) {
 
 #' @rdname numchecks
 #' @export
-is_integer = function(x, tol=.Machine$double.eps) {
+equals_integer = function(x, tol=.Machine$double.eps) {
   abs(x - round(x)) < 2*tol
   #x==floor(x+2*tol)
 }

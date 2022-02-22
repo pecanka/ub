@@ -302,8 +302,11 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
 #' @title
 #' Extract legend from a ggplot 
 #'
+#' @description
+#'
 #' For usage see for instance the following link or the example below.
-#' https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+#'
+#' See also https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs.
 #'
 #'
 #' @examples

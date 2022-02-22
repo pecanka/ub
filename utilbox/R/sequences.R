@@ -157,18 +157,21 @@ seq2 = function(from=1, to=1, ...) {
 #' done via  `add_a=TRUE` and/or `add_b=TRUE`, althought then the equi-distance
 #' of all points might no longer be true.
 #'
+#' @examples
+#' seq_around(0, 10, 7, len=20)
+#'
 #' @family sequence-related functions provided by utilbox
 #' @export
 seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   
   if(missing(a))
-    error("Supply 'a'.")
+    error("Supply 'a' in seq_around.")
   
   if(length(a)>1) {
   
     b = max(a)
     a = min(a)
-    if(missing(len) && is_integer(a) && is_integer(b)) 
+    if(missing(len) && equals_integer(a) && equals_integer(b)) 
       len = b - a + 1
     
   } else stopifnot(!missing(b))

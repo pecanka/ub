@@ -13,6 +13,10 @@ border points \code{a} and \code{b}. Enforcing their presence in the sequence ca
 done via  \code{add_a=TRUE} and/or \code{add_b=TRUE}, althought then the equi-distance
 of all points might no longer be true.
 }
+\examples{
+seq_around(0, 10, 7, len=20)
+
+}
 \seealso{
 Other sequence-related functions provided by utilbox: 
 \code{\link{every_kth}()},

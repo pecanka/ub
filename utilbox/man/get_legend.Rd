@@ -2,18 +2,14 @@
 % Please edit documentation in R/plotting.R
 \name{get_legend}
 \alias{get_legend}
-\title{Extract legend from a ggplot
-
-For usage see for instance the following link or the example below.
-https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs}
+\title{Extract legend from a ggplot}
 \usage{
 get_legend(p, direction = NULL, nrow_color = NULL)
 }
 \description{
-Extract legend from a ggplot
-
 For usage see for instance the following link or the example below.
-https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs
+
+See also https://github.com/hadley/ggplot2/wiki/Share-a-legend-between-two-ggplot2-graphs.
 }
 \examples{
 # Example usage:

@@ -383,7 +383,7 @@ w_first_nonempty = function(...) {
 
 #' @export
 w_first_nonempty.list = function(x) {
-  h1(which(sapply(x, is_nonempty)))
+  h1(which(sapply(x, is_not_empty)))
 }
 
 #' @title
