@@ -43,7 +43,7 @@ check_namespace = function(pckg, envir=parent.frame()) {
 }
 
 #' @title
-#' Library operations
+#' Library loading and unloading operations
 #'
 #' @description
 #'
@@ -57,17 +57,17 @@ check_namespace = function(pckg, envir=parent.frame()) {
 #'
 #' `unload_library()` unloads/detaches a loaded library.
 #'
-#' `list_installed_packages()` lists all installed packages.
-#'
-#' `list_loaded_packages()`) list all loaded packages.
-#'
 #' `package_is_installed()` checks if a package is installed.
 #'
 #' `is_lib_installed()` is an alias for `package_is_installed()`.
 #'
+#' `unload_all_libraries()` unloads all non-base libraries in the 
+#' search path (i.e. those returned by `base::search()`).
+#'
+#' `reload_unloaded_libraries()` attempts to reverse the action by
+#' `unload_all_libraries()`.
+#'
 #' @examples
-#' list_installed_packages()
-#' list_loaded_packages()
 #' package_is_installed('utilbox')
 #' package_is_installed(utilbox)
 #' lib = 'utilbox'; package_is_installed(lib)
@@ -167,39 +167,62 @@ llib = function(..., detach_first=FALSE, remove_first=FALSE, suppress_startup_ms
 
 #' @rdname llibrary
 #' @export
-unload_library = function(pckgs=NULL, character.only=FALSE) {
+unload_library = function(pckgs=NULL, character.only=FALSE, warn=TRUE) {
 
   if(!character.only) pckgs = as.character(substitute(pckgs))
   
+  unloaded = rep(FALSE, length(pckgs))
+  names(unloaded) = pckgs
   for(pckg in pckgs) {
     ps = c("package:" %.^% pckg, pckg)
     res1 = try(detach(ps[1], character.only=TRUE, unload=TRUE), silent=TRUE)
     res2 = try(detach(ps[2], character.only=TRUE, unload=TRUE), silent=TRUE)
-    if(is_error(res1) && is_error(res2)) {
+    if(is_error(res1) && is_error(res2) && warn) {
       warning("Unloading of package '", pckg,"' failed.")
+    } else {
+      unloaded[pckg] = TRUE
     }
   }
   
-  return(invisible(TRUE))
+  return(invisible(unloaded))
   
 }
 
 #' @rdname llibrary
 #' @export
-list_installed_packages = function() {
+unload_attached_library = function(pckgs) {
 
-  x = try(installed.packages()[,"Package"])
-  
-  if(class(x)=="try-error") "" else x
-  
+  if(length(pckgs)>0) {
+    detach(pckgs, character.only=TRUE, unload=TRUE)
+  }
+
 }
-  
+
 #' @rdname llibrary
 #' @export
-list_loaded_packages = function() {
+unload_all_libraries = function() {
 
-  c(sessionInfo()$basePkgs, names(sessionInfo()$otherPkgs))
+  pckg_loaded = list_attached_packages(only_name=FALSE)
+  pckg_base = list_loaded_packages(other=FALSE)
+  pckg_loaded = setdiff(pckg_loaded, pckg_base)
+  pckg_loaded = setdiff(pckg_loaded, paste0('package:',pckg_base))
+  unloaded = unload_attached_library(pckg_loaded)
   
+  assign('.utilbox_unloaded_libraries', unloaded, envir=.GlobalEnv)
+
+  invisible(unloaded)
+
+}
+
+#' @rdname llibrary
+#' @export
+reload_unloaded_libraries = function(pckgs) {
+
+  if(missing(pckgs)) pckgs = rev(get('.utilbox_unloaded_libraries', envir=.GlobalEnv))
+  for(pckg in names(pckgs)) {
+    if(pckgs[pckg]) library(sub('package[:]','',pckg), character.only=TRUE)
+  }
+
 }
 
 #' @rdname llibrary
@@ -215,6 +238,54 @@ package_is_installed = function(pckgs, character.only=FALSE) {
 #' @rdname llibrary
 #' @export
 is_lib_installed = package_is_installed
+
+#' @title
+#' Listing of installed and/or loaded packages
+#'
+#' @description
+#'
+#' `list_installed_packages()` lists all installed packages.
+#'
+#' `list_loaded_packages()` and `list_attached_packages()` 
+#' both list all loaded packages. The former using 
+#' `utils::sessionInfo()`, the latter based on `base::search()`.
+#'
+#' @examples
+#' list_installed_packages()
+#' list_loaded_packages()
+#' list_attached_packages()
+#'
+#' @family package-related functions provided by utilbox
+#' @export
+list_installed_packages = function() {
+
+  x = try(installed.packages()[,"Package"])
+  
+  if(class(x)=="try-error") "" else x
+  
+}
+  
+#' @rdname list_installed_packages
+#' @export
+list_loaded_packages = function(base=TRUE, other=TRUE) {
+
+  c(if(base) sessionInfo()$basePkgs, if(other) names(sessionInfo()$otherPkgs))
+  
+}
+
+#' @rdname list_installed_packages
+#' @export
+list_attached_packages = function(only_name=TRUE, list_ignore=c('.GlobalEnv','Autoloads')) {
+
+  plist = base::search()
+  #plist = plist[grepl('^package[:]',plist)]
+  #plist = sub('^package[:]', '', plist)
+  plist = setdiff(plist, list_ignore)
+  if(only_name) plist = sub('^package[:]', '', plist)  
+  
+  plist
+
+}
 
 #' @title
 #' List objects in a package
@@ -241,7 +312,7 @@ is_lib_installed = package_is_installed
 #' # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 #'
 #' @export
-list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL) {
+list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL, warn=TRUE, quietly=FALSE) {
 
   what = match.arg(what)
   
@@ -249,12 +320,13 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
     error("Supply package name as character.")
     
   if(!namespace_exists(pckg)) {
-    warning("Namespace '",pckg,"' does not exist and thus its objects cannot be obtained.")
+    if(warn) warning("Namespace '",pckg,"' does not exist and thus its objects cannot be obtained.")
     return(NULL)
   }
 
   detail = ifelse(what=='all', ifelse(all.names, "visible","existing"), 'exported')
-  message("Listing all ",detail," objects in the package '",pckg,"' ...")
+  if(!quietly) message("Listing all ",detail," objects in the package '",pckg,"' ...")
+  
   objs = if(what=='all') {
     ls(envir=getNamespace(pckg), all.names=all.names)
   } else {
@@ -267,14 +339,45 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
 
 #' @rdname list_package_objects
 #' @export
-list_package_exported = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, exclude=exclude, what='exported', mode=mode)
+list_package_exported = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL, warn=TRUE, quietly=FALSE) {
+  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, 
+          exclude=exclude, what='exported', mode=mode, warn=warn, quietly=quietly)
 }
 
 #' @rdname list_package_objects
 #' @export
-list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL) {
-  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, exclude=exclude, what='all', mode=mode)
+list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL, warn=TRUE, quietly=FALSE) {
+  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, 
+          exclude=exclude, what='all', mode=mode, warn=warn, quietly=quietly)
+}
+
+#' @rdname list_package_objects
+#' @export
+list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
+
+  if(!quietly) {
+    message('Identifying functions found in multiple packages ...')
+  }
+
+  if(missing(pckgs)) {
+    pckgs = list_installed_packages()
+  }
+  
+  x = do.call(base::rbind, list_package_exported(pckgs, warn=FALSE, quietly=quietly))
+  rownames(x) = NULL
+  z = x['function' %in% z$all_classes,c('package','object')]
+  cnts = tapply(z$package, z$object, length)
+  pckg_nams = tapply(z$package, z$object, paste, collapse=sep)
+  
+  res = data.frame(object=names(cnts), count=cnts, packages=pckg_nams)[cnts>1]
+  
+  if(!quietly) {
+    message('List of functions exported by multiple packages:')
+    print(res)
+  }
+  
+  invisible(res)
+
 }
 
 #' @rdname list_package_objects
@@ -301,15 +404,21 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   namespace = ifelse(namespace==env_pckg, '', namespace)
 
   #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%p%str_patternize(nam)%p%'[(, ]') %m% fun_code_to_text(x)))
-  
+
+  # put the information into a list
   tbl = list(package=pckg,
-             object=objs, 
-             exported=ifelse(is_exported, 'YES', 'no'), 
-             primary_class=class1, 
+             object=objs %|||% NA_character_, 
+             exported=ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
+             primary_class=class1 %|||% NA_character_, 
              all_classes=classes, 
              original_namespace=namespace)
   
+  # make sure the list is not completely empty and convert it to a data frame
+  tbl = lapply(tbl, `%||||%`, NA_character_)
   tbl = as.data.frame(list_clean(tbl), stringsAsFactors=FALSE)
+  
+  # drop the rows that were artificially added
+  tbl = tbl[!is.na(tbl$object),]
 
   if('object' %nin% colnames(tbl)) 
     return(tbl) 
@@ -323,7 +432,11 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
     tbl = tbl[mode_fits,]
   }
   
-  `rownames<-`(sort_df(tbl, primary_class, object), 1:nrow(tbl))
+  if(nrow(tbl)>0) {
+    tbl = `rownames<-`(sort_df(tbl, primary_class, object), 1:nrow(tbl))
+  }
+  
+  tbl
 
 }
 
