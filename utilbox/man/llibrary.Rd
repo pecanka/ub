@@ -4,11 +4,12 @@
 \alias{llibrary}
 \alias{llib}
 \alias{unload_library}
-\alias{list_installed_packages}
-\alias{list_loaded_packages}
+\alias{unload_attached_library}
+\alias{unload_all_libraries}
+\alias{reload_unloaded_libraries}
 \alias{package_is_installed}
 \alias{is_lib_installed}
-\title{Library operations}
+\title{Library loading and unloading operations}
 \usage{
 llibrary(
   pckgs = NULL,
@@ -31,11 +32,13 @@ llib(
   suppress_startup_msgs = FALSE
 )
 
-unload_library(pckgs = NULL, character.only = FALSE)
+unload_library(pckgs = NULL, character.only = FALSE, warn = TRUE)
 
-list_installed_packages()
+unload_attached_library(pckgs)
 
-list_loaded_packages()
+unload_all_libraries()
+
+reload_unloaded_libraries(pckgs)
 
 package_is_installed(pckgs, character.only = FALSE)
 
@@ -52,17 +55,17 @@ where name is the package name and src is the package source
 
 \code{unload_library()} unloads/detaches a loaded library.
 
-\code{list_installed_packages()} lists all installed packages.
-
-\code{list_loaded_packages()}) list all loaded packages.
-
 \code{package_is_installed()} checks if a package is installed.
 
 \code{is_lib_installed()} is an alias for \code{package_is_installed()}.
+
+\code{unload_all_libraries()} unloads all non-base libraries in the
+search path (i.e. those returned by \code{base::search()}).
+
+\code{reload_unloaded_libraries()} attempts to reverse the action by
+\code{unload_all_libraries()}.
 }
 \examples{
-list_installed_packages()
-list_loaded_packages()
 package_is_installed('utilbox')
 package_is_installed(utilbox)
 lib = 'utilbox'; package_is_installed(lib)
@@ -73,6 +76,7 @@ lib = 'utilbox'; package_is_installed(lib, character.only=TRUE)
 Other package-related functions provided by utilbox: 
 \code{\link{apply_pckg}()},
 \code{\link{lib_dependencies}()},
+\code{\link{list_installed_packages}()},
 \code{\link{set_pkglib}()}
 }
 \concept{package-related functions provided by utilbox}

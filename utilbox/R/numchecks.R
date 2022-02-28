@@ -1,5 +1,5 @@
 #' @title
-#' Non-NA value check
+#' Check for non-NA values
 #'
 #' @description
 #'
@@ -25,33 +25,41 @@ anyNonNA = function(x, rowwise=TRUE) {
 #'
 #' @description
 #'
-#' `is_na()` checks if a reduction of elements of `x` is `NA`. The 
+#' `is_na(x)` checks if a reduction of elements of `x` is `NA`. The 
 #' default reduction function is `all`, which returns `TRUE` whenever 
 #' all elements of its argument are `NA` or `x` is 0-length. A useful 
 #' alternative reduction function is `any` supplied via the argument 
 #' `freduce`.
 #'
-#' `is_unique()` checks whether a sequence in 'x' has only unique 
+#' `n_na(x)` counts the number of NA elements in `x`.
+#'
+#' `is_unique(x)` checks whether a sequence in 'x' has only unique 
 #' elements.
 #'
-#' `is_all_same()` checks if all elements in 'x' have the same value.
+#' `is_all_same(x)` checks if all elements in 'x' have the same value.
 #'
-#' `is_decreasing()` checks if a sequence in 'x' is decreasing.
+#' `is_decreasing(x)` checks if a sequence in 'x' is decreasing.
 #'
-#' `is_increasing()` checks if a sequence in 'x' is increasing.
+#' `is_increasing(x)` checks if a sequence in 'x' is increasing.
 #'
-#' `equals_integer()` checks if elements in 'x' are effectively integers 
+#' `equals_integer(x)` checks if elements in 'x' are effectively integers 
 #' (i.e. close enough to one).
 #'
-#' `is_odd()` checks if elements of 'x' are odd
+#' `is_odd(x)` checks if elements of 'x' are odd
 #'
-#' `is_even()` checks if elements of 'x' are even
+#' `is_even(x)` checks if elements of 'x' are even
 #'
 #' @name numchecks
 #' @family check-performing functions provided by utilbox
 #' @export
 is_na = function(x, freduce=all) {
   freduce(is.na(x))
+}
+
+#' @name numchecks
+#' @export
+n_na = function(x) {
+  sum(is.na(x))
 }
 
 #' @rdname numchecks

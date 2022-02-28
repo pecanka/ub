@@ -4,6 +4,7 @@
 \alias{list_package_objects}
 \alias{list_package_exported}
 \alias{list_package_all}
+\alias{list_package_duplicates}
 \alias{as_object_table}
 \title{List objects in a package}
 \usage{
@@ -13,7 +14,9 @@ list_package_objects(
   all.names = TRUE,
   exclude = FALSE,
   what = c("all", "exported"),
-  mode = NULL
+  mode = NULL,
+  warn = TRUE,
+  quietly = FALSE
 )
 
 list_package_exported(
@@ -21,10 +24,22 @@ list_package_exported(
   pattern,
   all.names = TRUE,
   exclude = FALSE,
-  mode = NULL
+  mode = NULL,
+  warn = TRUE,
+  quietly = FALSE
 )
 
-list_package_all(pckg, pattern, all.names = TRUE, exclude = FALSE, mode = NULL)
+list_package_all(
+  pckg,
+  pattern,
+  all.names = TRUE,
+  exclude = FALSE,
+  mode = NULL,
+  warn = TRUE,
+  quietly = FALSE
+)
+
+list_package_duplicates(pckgs, quietly = FALSE, sep = "|")
 
 as_object_table(objs, pckg, pattern, exclude = FALSE, mode)
 }

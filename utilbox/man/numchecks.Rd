@@ -3,6 +3,7 @@
 \name{numchecks}
 \alias{numchecks}
 \alias{is_na}
+\alias{n_na}
 \alias{is_unique}
 \alias{is_all_same}
 \alias{is_decreasing}
@@ -13,6 +14,8 @@
 \title{Check}
 \usage{
 is_na(x, freduce = all)
+
+n_na(x)
 
 is_unique(x)
 
@@ -29,27 +32,29 @@ is_odd(x, tol = .Machine$double.eps)
 is_even(x, tol = .Machine$double.eps)
 }
 \description{
-\code{is_na()} checks if a reduction of elements of \code{x} is \code{NA}. The
+\code{is_na(x)} checks if a reduction of elements of \code{x} is \code{NA}. The
 default reduction function is \code{all}, which returns \code{TRUE} whenever
 all elements of its argument are \code{NA} or \code{x} is 0-length. A useful
 alternative reduction function is \code{any} supplied via the argument
 \code{freduce}.
 
-\code{is_unique()} checks whether a sequence in 'x' has only unique
+\code{n_na(x)} counts the number of NA elements in \code{x}.
+
+\code{is_unique(x)} checks whether a sequence in 'x' has only unique
 elements.
 
-\code{is_all_same()} checks if all elements in 'x' have the same value.
+\code{is_all_same(x)} checks if all elements in 'x' have the same value.
 
-\code{is_decreasing()} checks if a sequence in 'x' is decreasing.
+\code{is_decreasing(x)} checks if a sequence in 'x' is decreasing.
 
-\code{is_increasing()} checks if a sequence in 'x' is increasing.
+\code{is_increasing(x)} checks if a sequence in 'x' is increasing.
 
-\code{equals_integer()} checks if elements in 'x' are effectively integers
+\code{equals_integer(x)} checks if elements in 'x' are effectively integers
 (i.e. close enough to one).
 
-\code{is_odd()} checks if elements of 'x' are odd
+\code{is_odd(x)} checks if elements of 'x' are odd
 
-\code{is_even()} checks if elements of 'x' are even
+\code{is_even(x)} checks if elements of 'x' are even
 }
 \seealso{
 Other check-performing functions provided by utilbox: 

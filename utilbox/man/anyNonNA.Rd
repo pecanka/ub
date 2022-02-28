@@ -2,7 +2,7 @@
 % Please edit documentation in R/numchecks.R
 \name{anyNonNA}
 \alias{anyNonNA}
-\title{Non-NA value check}
+\title{Check for non-NA values}
 \usage{
 anyNonNA(x, rowwise = TRUE)
 }

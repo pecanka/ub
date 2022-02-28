@@ -21,6 +21,7 @@ package installation and some packages were not installed.
 \seealso{
 Other package-related functions provided by utilbox: 
 \code{\link{apply_pckg}()},
+\code{\link{list_installed_packages}()},
 \code{\link{llibrary}()},
 \code{\link{set_pkglib}()}
 }
