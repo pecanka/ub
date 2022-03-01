@@ -162,7 +162,7 @@ source_files = function(files, path='.', announce=TRUE, normalize=FALSE,
     
     transfer_objects(env, envir)
     
-    if(announce) message(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
+    if(announce) msgf(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
     
   }
   

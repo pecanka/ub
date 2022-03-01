@@ -14,10 +14,10 @@
 #'
 #' @export
 get_my_ip = function(server = "https://api.ipify.org", trace=1) {
-  if(trace>0) message("Checking your IP address via ",server," ...")
+  if(trace>0) msgf("Checking your IP address via ",server," ...")
   ip = scan(con <- url(server), what = 'character', quiet = TRUE)
   if(exists("con", envir=environment())) close(con)
-  if(trace>0) message("Your IP address is ",ip,".")
+  if(trace>0) msgf("Your IP address is ",ip,".")
   invisible(ip)
 }
 

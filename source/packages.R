@@ -81,7 +81,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
   detach_first=FALSE, remove_first=FALSE, default_src="CRAN", lib_fun=base::library,
   url_CRAN="https://cloud.r-project.org/", suppress_startup_msgs=FALSE, ...) {
 
-  echo = if(quietly) null else message
+  echo = if(quietly) null else msgf
 
   ## If symbol names expected, make them into strings
   if(!character.only) pckgs = as.character(substitute(pckgs))
@@ -325,7 +325,7 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
   }
 
   detail = ifelse(what=='all', ifelse(all.names, "visible","existing"), 'exported')
-  if(!quietly) message("Listing all ",detail," objects in the package '",pckg,"' ...")
+  if(!quietly) msgf("Listing all ",detail," objects in the package '",pckg,"' ...")
   
   objs = if(what=='all') {
     ls(envir=getNamespace(pckg), all.names=all.names)
@@ -356,7 +356,7 @@ list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=N
 list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
 
   if(!quietly) {
-    message('Identifying functions found in multiple packages ...')
+    msgf('Identifying functions found in multiple packages ...')
   }
 
   if(missing(pckgs)) {
@@ -372,7 +372,7 @@ list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
   res = data.frame(object=names(cnts), count=cnts, packages=pckg_nams)[cnts>1]
   
   if(!quietly) {
-    message('List of functions exported by multiple packages:')
+    msgf('List of functions exported by multiple packages:')
     print(res)
   }
   
@@ -530,11 +530,11 @@ lib_dependencies = function(pckg, ...) {
 #' @export
 install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FALSE) {
   
-  message('Listing all package dependencies ...')
+  msgf('Listing all package dependencies ...')
   pckgs = unlist(lib_dependencies(pckg))
   
   if(length(pckgs)==0) {
-    message('The supplied packages have no dependencies.')
+    msgf('The supplied packages have no dependencies.')
     return(invisible(NULL))
   }
   
@@ -543,7 +543,7 @@ install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FA
   }
   
   if(length(pckgs)==0) {
-    message('All dependencies are already installed.')
+    msgf('All dependencies are already installed.')
   }
   
   for(p in pckgs) {

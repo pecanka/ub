@@ -34,7 +34,7 @@ saveRDSlazy = function(object, file="", backup=TRUE, check_for_sameness=TRUE, an
     x = readRDS(file)
     if(identical(x, object)) {
       if(announce) {
-        message('The file ', file,' already exists and has the same content as the new file. Saving skipped.')
+        msgf('The file ', file,' already exists and has the same content as the new file. Saving skipped.')
       }
       return
     }

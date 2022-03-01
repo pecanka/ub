@@ -20,7 +20,7 @@
 #' @family plotting-related functions provided by utilbox
 #' @export
 .all_devs = function(silent=TRUE) {
-  if(!silent) message("Found ",length(dev.list())," open devices.") 
+  if(!silent) msgf("Found ",length(dev.list())," open devices.") 
   dev.list()
 }
 
@@ -33,7 +33,7 @@
   
   if(is.null(devs)) return(invisible(0))
 
-  if(!silent) message("Closing all open devices ...")
+  if(!silent) msgf("Closing all open devices ...")
   
   for(dev in devs) dev.off(dev)
 
