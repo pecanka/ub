@@ -3,20 +3,20 @@
 #'
 #' @description
 #'
-#' `get_utilbox` retrieves a value of a variabled named in `x` from 
+#' `get_in_utilbox_env` retrieves a value of a variabled named in `x` from 
 #' the utilbox's package namespace or the hidden environment created in 
 #' `.GlobalEnv` by a call to `utilbox_environment()`.
 #'
-#' `assign_utilbox` is an analogue which assigns a supplied value 
+#' `assign_in_utilbox_env` is an analogue which assigns a supplied value 
 #' (`val`) to a variable (`x`).
 #'
-#' `update_utilbox` updates the existing variable by applying a 
+#' `update_in_utilbox_env` updates the existing variable by applying a 
 #' function (`operation`) with the variable `x` and `val` supplied to it 
 #' as the first two arguments.
 #'
-#' `init_utilbox` initializes a given variable to its default value 
-#' (defined in and obtained via `utilbox_inits`). If not variable name 
-#' is supplied, all variables defined in `utilbox_inits` are initialized.
+#' `init_in_utilbox_env` initializes a given variable to its default value 
+#' (defined in and obtained via `get_utilbox_var_inits`). If not variable name 
+#' is supplied, all variables defined in `get_utilbox_var_inits` are initialized.
 #'
 #' `utilbox_namespace()` returns the environment which is the 
 #' namespace of the utilbox package. If it failed for some reason, it 
@@ -47,9 +47,9 @@ utilbox_environment = function(envir=.GlobalEnv) {
 
 #' @export
 #' @rdname utilbox_internals
-get_utilbox = function(x, envir=utilbox_namespace()) {
-  if(exists(x, envir=envir)) {
-    get(x, envir=envir)
+get_in_utilbox_env = function(nam, envir=utilbox_namespace()) {
+  if(exists(nam, envir=envir)) {
+    get(nam, envir=envir)
   } else {
     structure(NA, class='utilbox:variable_not_found')
   }
@@ -57,46 +57,54 @@ get_utilbox = function(x, envir=utilbox_namespace()) {
 
 #' @export
 #' @rdname utilbox_internals
-assign_utilbox = function(x, val, envir=utilbox_namespace()) {
-  assign(x, val, envir=envir)
+assign_in_utilbox_env = function(nam, val, envir=utilbox_namespace()) {
+  assign(nam, val, envir=envir)
 }
 
 #' @export
 #' @rdname utilbox_internals
-update_utilbox = function(x, val, operation=`+`, envir=utilbox_namespace()) {
-  oldvalue = get(x, envir=envir)
+update_in_utilbox_env = function(nam, val, operation=`+`, envir=utilbox_namespace()) {
+  oldvalue = get(nam, envir=envir)
   newvalue = do.call(operation, list(oldvalue, val))
-  assign(x, newvalue, envir=envir)
+  assign(nam, newvalue, envir=envir)
 }
 
 #' @export
 #' @rdname utilbox_internals
-init_utilbox = function(x, envir=utilbox_namespace()) {
-  if(missing(x)) x = names(utilbox_inits())
-  for(x1 in x) init1_utilbox(x1)
-}
-
-#' @export
-#' @rdname utilbox_internals
-init1_utilbox = function(x, envir=utilbox_namespace()) {
-  if(!exists(x, envir=envir)) {
-    assign_utilbox(x, utilbox_inits(x))
+init_in_utilbox_env = function(nams, envir=utilbox_namespace()) {
+  if(missing(nams)) nams = names(get_utilbox_var_inits())
+  for(nam in nams) {
+    #init1_in_utilbox_env(nam, envir=envir)
+    if(!exists(nam, envir=envir)) {
+      assign_in_utilbox_env(nam, get_utilbox_var_inits(x1))
+    }
   }
 }
 
+##' @export
+##' @rdname utilbox_internals
+#init1_in_utilbox_env = function(nam, envir=utilbox_namespace()) {
+#  if(!exists(nam, envir=envir)) {
+#    assign_in_utilbox_env(nam, get_utilbox_var_inits(x))
+#  }
+#}
+
 #' @export
 #' @rdname utilbox_internals
-utilbox_inits = function(x) {
+get_utilbox_var_inits = function(nam) {
+  
   inits = list(
     trunc_n_hidden = 0,
     trunc_n_limit = 20,
     abbrev_len_limit = 30
   )
-  if(missing(x)) {
+  
+  if(missing(nam)) {
     inits
   } else {
-    inits[[x]] %|||% stop(x, " not found in 'inits'.")
+    inits[[nam]] %|||% stop("Name '",nam,"' not found in 'inits'.")
   }
+  
 }
 
 #' @title
@@ -115,7 +123,7 @@ utilbox_inits = function(x) {
 source_utilbox = function(..., path, normalize=FALSE, envir=.GlobalEnv,
   report_new=TRUE) {
   
-  message("Sourcing utilbox source files ...")
+  msgf("Sourcing utilbox source files ...")
 
   files = dots_to_nlist()
 
@@ -127,8 +135,8 @@ source_utilbox = function(..., path, normalize=FALSE, envir=.GlobalEnv,
   # file names were given (i.e. when `...` is empty)
   if(is_empty(files)) {
 
-    message("No file list given to `source_utilbox`, all files will be sourced.")
-    message("Listing utilbox files to source ...")
+    msgf("No file list given to `source_utilbox`, all files will be sourced.")
+    msgf("Listing utilbox files to source ...")
     files = list.files(path, pattern='[.]R$')
 
   } else {

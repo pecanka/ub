@@ -4,45 +4,42 @@
 \alias{utilbox_internals}
 \alias{utilbox_namespace}
 \alias{utilbox_environment}
-\alias{get_utilbox}
-\alias{assign_utilbox}
-\alias{update_utilbox}
-\alias{init_utilbox}
-\alias{init1_utilbox}
-\alias{utilbox_inits}
+\alias{get_in_utilbox_env}
+\alias{assign_in_utilbox_env}
+\alias{update_in_utilbox_env}
+\alias{init_in_utilbox_env}
+\alias{get_utilbox_var_inits}
 \title{Utilbox internals}
 \usage{
 utilbox_namespace()
 
 utilbox_environment(envir = .GlobalEnv)
 
-get_utilbox(x, envir = utilbox_namespace())
+get_in_utilbox_env(nam, envir = utilbox_namespace())
 
-assign_utilbox(x, val, envir = utilbox_namespace())
+assign_in_utilbox_env(nam, val, envir = utilbox_namespace())
 
-update_utilbox(x, val, operation = `+`, envir = utilbox_namespace())
+update_in_utilbox_env(nam, val, operation = `+`, envir = utilbox_namespace())
 
-init_utilbox(x, envir = utilbox_namespace())
+init_in_utilbox_env(nams, envir = utilbox_namespace())
 
-init1_utilbox(x, envir = utilbox_namespace())
-
-utilbox_inits(x)
+get_utilbox_var_inits(nam)
 }
 \description{
-\code{get_utilbox} retrieves a value of a variabled named in \code{x} from
+\code{get_in_utilbox_env} retrieves a value of a variabled named in \code{x} from
 the utilbox's package namespace or the hidden environment created in
 \code{.GlobalEnv} by a call to \code{utilbox_environment()}.
 
-\code{assign_utilbox} is an analogue which assigns a supplied value
+\code{assign_in_utilbox_env} is an analogue which assigns a supplied value
 (\code{val}) to a variable (\code{x}).
 
-\code{update_utilbox} updates the existing variable by applying a
+\code{update_in_utilbox_env} updates the existing variable by applying a
 function (\code{operation}) with the variable \code{x} and \code{val} supplied to it
 as the first two arguments.
 
-\code{init_utilbox} initializes a given variable to its default value
-(defined in and obtained via \code{utilbox_inits}). If not variable name
-is supplied, all variables defined in \code{utilbox_inits} are initialized.
+\code{init_in_utilbox_env} initializes a given variable to its default value
+(defined in and obtained via \code{get_utilbox_var_inits}). If not variable name
+is supplied, all variables defined in \code{get_utilbox_var_inits} are initialized.
 
 \code{utilbox_namespace()} returns the environment which is the
 namespace of the utilbox package. If it failed for some reason, it

@@ -33,7 +33,7 @@ sleep = function(time, announce=TRUE) {
   Sys.sleep(time)
   
   if(announce) {
-    message("done.")
+    msgf("done.")
   }
   
   invisible(NULL)
@@ -45,11 +45,11 @@ sleep = function(time, announce=TRUE) {
 wait = function(...) {
 
   if(!is_empty(list(...))) {
-    do.call(message, list(...))
+    do.call(msgf, list(...))
   }
   
   if(interactive()) {
-    message("Press ENTER to continue or ESC to quit ...")
+    msgf("Press ENTER to continue or ESC to quit ...")
     input = scan("", what = "character", nmax=1, quiet=TRUE)
   }
   
@@ -59,10 +59,10 @@ wait = function(...) {
 #' @export
 ask = function(question, answers=c('Y','N'), affirmative='Y', nmax=1, case_sensitive=FALSE) {
 
-  message(question)
+  msgf(question)
   
   if(interactive()) {
-    message(paste(answers, collapse="/"),":")
+    msgf(paste(answers, collapse="/"),":")
     input = scan("", what = "character", nmax=nmax, quiet=TRUE)
   }
   

@@ -33,11 +33,11 @@ R_system_call_args = function(trailingOnly=TRUE) {
 #' @export
 R_session_info = function() {
 
-  message("R version information:")
+  msgf("R version information:")
   print(R.version)
-  message("\nProgram call: '",paste(commandArgs(trailingOnly=FALSE), collapse=" "),"'")
-  message("User home path: '",getwd(),"'")
-  message("Working path: '",Sys.getenv('R_USER'),"'")
+  msgf("\nProgram call: '",paste(commandArgs(trailingOnly=FALSE), collapse=" "),"'")
+  msgf("User home path: '",getwd(),"'")
+  msgf("Working path: '",Sys.getenv('R_USER'),"'")
   
 }
 

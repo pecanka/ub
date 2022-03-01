@@ -331,7 +331,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
   if(!any(names(getLoadedDLLs())=="mtc")) {
   
     if(trace>0) 
-      message("Loading library file '",dll_lib,"' ...")
+      msgf("Loading library file '",dll_lib,"' ...")
     
     if(!file.exists(dll_lib)) 
       error("Library file '",dll_lib,"' does not exist!")

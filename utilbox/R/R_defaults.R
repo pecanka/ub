@@ -59,7 +59,7 @@ R_append_default_pckgs = function(..., system_var_name='R_DEFAULT_PACKAGES') {
 R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   
   if(missing(pckg) || is_empty(pckg)) {
-    message('Specify a library to add to startup.')
+    msgf('Specify a library to add to startup.')
     return(invisible(NULL))
   }
   
@@ -67,8 +67,8 @@ R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
     Rprof_file = R_default_Rprofile_file()
   }
   
-  message('Modifying the file ',Rprof_file,' ...')
-  message('Packages to be added among those that load at startup: ',collapse0(pckg, sep=", "))
+  msgf('Modifying the file ',Rprof_file,' ...')
+  msgf('Packages to be added among those that load at startup: ',collapse0(pckg, sep=", "))
   
   all_pckgs = union(getOption('defaultPackages'), pckg)
 
@@ -84,8 +84,8 @@ R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   wrt2fil("rm(.defs, .inst, .defs_avail, .defs_miss)")
 
   
-  message("File ",Rprof_file," modified.")
-  message("You must reload the R session for any changes to take effect.")
+  msgf("File ",Rprof_file," modified.")
+  msgf("You must reload the R session for any changes to take effect.")
   
   return(invisible(NULL))
   
@@ -137,7 +137,7 @@ R_del_code_startup = function(code, Rprof_file, exact_match=FALSE, remove_all_ma
   catn("Reading file '",Rprof_file,"' ...")
   lines = readLines(Rprof_file)
   
-  message("Matching the lines in the file against the supplied code (",
+  msgf("Matching the lines in the file against the supplied code (",
        if(remove_all_matches) "all matches" else "only the first match for each supplied line",
        " will be removed) ...")
        
@@ -145,11 +145,11 @@ R_del_code_startup = function(code, Rprof_file, exact_match=FALSE, remove_all_ma
   to_drop = unique(unlist(if(remove_all_matches) is_match else lapply(is_match, h1)))
   
   if(is_empty(to_drop)) {
-    message("No lines matched the supplied code. The file has not been modified.")
+    msgf("No lines matched the supplied code. The file has not been modified.")
   } else {
-    message("Removing the matching code from the file ...")
+    msgf("Removing the matching code from the file ...")
     writeLines(lines[-to_drop], Rprof_file)
-    message('Total of ',length(to_drop),' lines of matching code were removed from the file.')
+    msgf('Total of ',length(to_drop),' lines of matching code were removed from the file.')
   }
   
   invisible(list(lines_dropped=lines[to_drop]))

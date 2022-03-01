@@ -4,7 +4,14 @@
 \alias{file_backup}
 \title{Backup a file}
 \usage{
-file_backup(file, path, path_backup, pid = FALSE, announce = TRUE)
+file_backup(
+  file,
+  path,
+  path_backup,
+  pid = FALSE,
+  announce = TRUE,
+  fun_msg = msgf
+)
 }
 \description{
 \code{file_backup()} creates a backup of the given file by creating a copy

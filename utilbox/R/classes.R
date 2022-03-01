@@ -131,8 +131,8 @@ as.huge.default = function(x) {
 #' @rdname class_huge
 #' @export
 print.huge = function(...) {
-  init_utilbox('trunc_n_hidden')
-  init_utilbox('trunc_n_limit')
+  init_in_utilbox_env('trunc_n_hidden')
+  init_in_utilbox_env('trunc_n_limit')
   UseMethod("print.huge")
 }
 
@@ -140,8 +140,8 @@ print.huge = function(...) {
 #' @export
 print.huge.character = function(x, n, len, show_note=TRUE) {
 
-  if(missing(n)) n = get_utilbox('trunc_n_limit')
-  if(missing(n)) len = get_utilbox('abbrev_len_limit')
+  if(missing(n)) n = get_in_utilbox_env('trunc_n_limit')
+  if(missing(n)) len = get_in_utilbox_env('abbrev_len_limit')
 
   y = truncate_huge(x, n)
   y = str_abbreviate(y, len)
@@ -169,8 +169,8 @@ print.huge.character = function(x, n, len, show_note=TRUE) {
 #' @export
 print.huge.default = function(x, n, len, show_note=TRUE) {
   
-  if(missing(n)) n = get_utilbox('trunc_n_limit')
-  if(missing(n)) len = get_utilbox('abbrev_len_limit')
+  if(missing(n)) n = get_in_utilbox_env('trunc_n_limit')
+  if(missing(n)) len = get_in_utilbox_env('abbrev_len_limit')
   
   y = truncate_huge(x, n)
   print(y)
@@ -278,19 +278,19 @@ default_trunc_info = function() {
 
 print_trunc_info = function(n_hidden) {
   if(n_hidden>0) {
-    message("# ... with ",n_hidden," more elements")
-    update_utilbox("trunc_n_hidden", n_hidden)
+    msgf("# ... with ",n_hidden," more elements")
+    update_in_utilbox_env("trunc_n_hidden", n_hidden)
   }
 }
 
 print_trunc_note = function() {
-  n_limit = get_utilbox("trunc_n_limit")
-  any_hidden = get_utilbox("trunc_n_hidden")
+  n_limit = get_in_utilbox_env("trunc_n_limit")
+  any_hidden = get_in_utilbox_env("trunc_n_hidden")
   #print(any_hidden)
   if(any_hidden>0) {
     msg = "Note: For objects of class 'huge' only the first " %p% n_limit %p% 
           " elements were printed. Use print(n=...) to change this limit."
-    message('\n',msg)
+    msgf('\n',msg)
     invisible(msg)
   }
 }

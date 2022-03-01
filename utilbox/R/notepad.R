@@ -9,7 +9,7 @@
 #' @export
 notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_langs, backup=TRUE) {
 
-  message("Notepad++ highlighting settings will be modified so that all utilbox functions are highlighted.")
+  msgf("Notepad++ highlighting settings will be modified so that all utilbox functions are highlighted.")
         
   # default locations of Notepad++ instalation and the name of the 'langs' file
   if(missing(npp_path)) 
@@ -40,7 +40,7 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   # backup the current settings
   if(backup) file_backup(file)
 
-  message("Processing keywords ...")
+  msgf("Processing keywords ...")
 
   # update the keywords
   #kw_extra = if(field=='type1') {
@@ -51,16 +51,16 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   #  futils = list_package_exported(utils, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
   #  c(fbase, fstats, futils)
   #} else {
-  #  message("No names added with field '",field,"'.")
+  #  msgf("No names added with field '",field,"'.")
   #}
 
   # read the file
-  message("Reading file '",file,"' ...")
+  msgf("Reading file '",file,"' ...")
   code = readLines(file)
 
   differences = list_empty(fields)
   for(field in fields) {
-    message("Updating field '",field,"' ...")
+    msgf("Updating field '",field,"' ...")
     kw = notepad_keywords(field)[[field]]
     if(!is.null(keywords)) {
       kw = union(kw, keywords[[field]])
@@ -74,11 +74,10 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   n_removed = nlapply(differences, function(x) length(x$removed))
 
   # save the results back to the file
-  message("Saving changes to file '",file,"' ...")
+  msgf("Saving changes to file '",file,"' ...")
   writeLines(code, file)
 
-  message("Finished.")
-  message("Summary:")
+  msgf("Finished.\nSummary:")
   print(`rownames<-`(rbind(as.data.frame(n_added), as.data.frame(n_removed)), c('Added','Removed')))
   
 }

@@ -27,7 +27,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
   
   # read the file
   if(!missing(file)) {
-    if(verbose) message("Adding wrapping to file '",file,"' ...")
+    if(verbose) msgf("Adding wrapping to file '",file,"' ...")
     code = readLines(file)
   } else if(split_code) {
     code = unlist(str_cut(code, split))
@@ -54,7 +54,7 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
   # save the results to file
   if(!missing(file)) {
     writeLines(Code, file2 <- file%p%'.wrapped') 
-    if(verbose) message("Output saved to file '",file2,"'.")
+    if(verbose) msgf("Output saved to file '",file2,"'.")
   } else {
     file = file2 = NULL
   }  

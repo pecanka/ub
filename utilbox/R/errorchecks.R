@@ -63,9 +63,9 @@ is_error = function(x, ok_value, ok_set, compare_via=identical,
 #'
 #' @description
 #'
-#' `hide()` is a simple funciton which takes input and returns it back invisibly. It is useful for instance for 
-#' hiding errors and warning messages within `base::tryCatch` (see the 
-#' examples).
+#' `hide()` is a simple funciton which takes input and returns it back invisibly. 
+#' It is useful for instance for hiding errors and warnings within `base::tryCatch` 
+#' (see the examples).
 #'
 #' @examples
 #' tryCatch(as.numeric('a'), warning=hide)

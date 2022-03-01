@@ -4,7 +4,7 @@
 \alias{cat0}
 \alias{catn}
 \alias{catnn}
-\alias{message}
+\alias{msgf}
 \alias{msg}
 \alias{warn}
 \alias{note}
@@ -40,7 +40,7 @@ catn(
 
 catnn(..., sep = "\\n", fill = TRUE)
 
-message(..., flush = TRUE)
+msgf(..., flush = interactive())
 
 msg(
   t,
@@ -86,12 +86,12 @@ stop the execution (when \code{quit=TRUE}) or wait for user interaction
 
 \code{note()} prints a note and a request to wait (optional).
 
-\code{message()} is simply a slight alteration of \code{base::message()} which
-flushes the output by default.
+\code{msgf()} is a wrapper around \code{base::message()} which flushes the output
+by default (for interactive sessions).
 
 \code{.fc()} is an alias for \code{\link[utils:flush.console]{utils::flush.console()}}.
 
-\code{flush_console()} is a more flexible way of flushing the console.
+\code{flush_console()} is a more adjustable way of flushing the console.
 It allows to flush only on every n-th print, where n is set by the
 value in \code{flush_cycle}.
 }

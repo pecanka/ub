@@ -7,9 +7,9 @@
 hide(x, ...)
 }
 \description{
-\code{hide()} is a simple funciton which takes input and returns it back invisibly. It is useful for instance for
-hiding errors and warning messages within \code{base::tryCatch} (see the
-examples).
+\code{hide()} is a simple funciton which takes input and returns it back invisibly.
+It is useful for instance for hiding errors and warnings within \code{base::tryCatch}
+(see the examples).
 }
 \examples{
 tryCatch(as.numeric('a'), warning=hide)

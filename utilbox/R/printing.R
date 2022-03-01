@@ -40,12 +40,12 @@ print2var = function(fun, file=NULL) {
 #'
 #' `note()` prints a note and a request to wait (optional).
 #'
-#' `message()` is simply a slight alteration of `base::message()` which
-#' flushes the output by default.
+#' `msgf()` is a wrapper around `base::message()` which flushes the output 
+#' by default (for interactive sessions).
 #'
 #' `.fc()` is an alias for [`utils::flush.console()`].
 #'
-#' `flush_console()` is a more flexible way of flushing the console. 
+#' `flush_console()` is a more adjustable way of flushing the console. 
 #' It allows to flush only on every n-th print, where n is set by the 
 #' value in `flush_cycle`.
 #'
@@ -100,7 +100,7 @@ catnn = function(..., sep='\n', fill=TRUE) {
 
 #' @rdname cat0
 #' @export
-message = function(..., flush=TRUE) {
+msgf = function(..., flush=interactive()) {
   base::message(...)
   if(flush) utils::flush.console()
 }

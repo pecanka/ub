@@ -162,7 +162,7 @@ dir_create1 = function(dir, ask=interactive(), verbose=FALSE) {
   
     res = FALSE
     if(verbose) {
-      message("No need to create, directory '",dir,"' already exists.")
+      msgf("No need to create, directory '",dir,"' already exists.")
     }
     
   }
@@ -591,7 +591,7 @@ random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-
 #'
 #' @family file system function provided by utilbox
 #' @export
-file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
+file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_msg=msgf) {
   
   file_bak = file %p% '_' %p% timest(add_pid=pid) %p% '.bak'
   
@@ -607,9 +607,9 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
   
   if(announce) {
     if(file.exists(file)) {
-      message("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+      msgf("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
     } else {
-      message("File '",file,"' does not exist and therefore cannot be backed up.")
+      msgf("File '",file,"' does not exist and therefore cannot be backed up.")
     }
   }
   
@@ -619,7 +619,7 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE) {
     
     st = file.copy(file, file_bak)
   
-    if(announce && !st) message("Back-up failed.")
+    if(!st && announce) fun_msg("File backup failed.")
     
     ifelse(st, 1, -1)
     

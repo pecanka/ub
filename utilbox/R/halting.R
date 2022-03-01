@@ -14,7 +14,7 @@ stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
   msg_call = if(show_sequence) get_call_info()$message else get_call_info()$fun
   
   if(!is.null(msg)) {
-    message(paste(c(msg, msg_call), collapse=' '))
+    msgf(paste(c(msg, msg_call), collapse=' '))
   }
   
   opt <- options(show.error.messages = FALSE)
@@ -56,7 +56,7 @@ error = function(..., sep="", quit=TRUE, Q, browser=interactive(), nskip1=0, env
 
   cat0(spaces(nskip1, "\n"))
   err = ifelse(str_is_empty(fparent), "", "occured in function `"%p%
-        fparent%p%"()` with message: ") %p%
+        fparent%p%"()` with the message: ") %p%
         ifelse(str_is_empty(msg), "(no message)", msg) %p% '\n'
   
   if(quit) {
@@ -108,7 +108,7 @@ halt = function(error="") {
   } else {
   
     if(!str_is_empty(error)) base::cat(error)
-    message("\nExecution halted.")
+    msgf("\nExecution halted.")
     q("no", status=1, runLast=FALSE)
     
   }
@@ -175,7 +175,7 @@ call_info <- function(print_msg=TRUE, level = 1) {
 
   info = get_call_info(FALSE, level)
   
-  if(print_msg) message(info$message2)
+  if(print_msg) msgf(info$message2)
  
   return(invisible(info))
  
@@ -208,7 +208,7 @@ get_call_info <- function(print_msg=FALSE, level = 1) {
   
   srcloc = list(calls=cals, wdir=getwd(), srcdir=dirs, srcfile=fils, srcline=lins, srcloc=locs, message=msg1, message2=msg2)
  
-  if(print_msg) message(msg2)
+  if(print_msg) msgf(msg2)
  
   return(invisible(srcloc))
  
