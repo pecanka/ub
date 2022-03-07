@@ -115,8 +115,9 @@ identical_cols = function(x, w) {
 #' @export
 add_col = function(.data, ...) {
   
-  if(!is.data.frame(.data)) 
-    error("object '.data' must be a data frame")
+  if(!is.data.frame(.data)) {
+    stop2("Object '.data' must be a data frame.")
+  }
   
   args = dots_to_nlist()
   

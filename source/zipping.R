@@ -18,7 +18,7 @@
 #' @return A character vector or list depending on whether the input 
 #' in `zipfiles` was of type `list`.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
 
@@ -66,7 +66,7 @@ list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
 #' @return List of file names of the created archive and the 
 #' corresponding status codes returned by the archiver.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 # Old name: zipupf
 zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, check_status=TRUE) {
@@ -117,7 +117,7 @@ zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, ch
 #' @return List of file names of the created archive and the 
 #' corresponding status codes returned by the archiver.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 zip_files = function(files, path=".", zipfile, extras="-m") {
 
@@ -173,7 +173,7 @@ zip_files = function(files, path=".", zipfile, extras="-m") {
 #' @return List of file names of the created archive and the 
 #' corresponding status codes returned by the archiver.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 # Old name: zipup
 zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendix=".zip", 
@@ -281,7 +281,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
 #' @return List of names of archived files, list of the created 
 #' archives and the corresponding status codes returned by the archiver.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_warning=FALSE) {
 
@@ -341,7 +341,7 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
 #' @return List of file names of the decompressed files and the 
 #' corresponding status codes returned by the archiver.
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
 # Old name: un_zip
 unzip_files = function(zipfiles, mask=".*", mask_exclude=FALSE, patternize=TRUE) {
@@ -377,15 +377,27 @@ unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, patternize
 #'
 #' @description
 #'
-#' `read_table_zip()` reads a table from within a zip file 
-#' (equivalent to read.table except the input file is expected to be a 
-#' zip archive)
+#' `read_zip()` reads file from within a zip archive. The contents
+#' are read using the function in `fun_read` (`utils::read.table` 
+#' by default). Specific files to read from the zip archive can be
+#' supplied via `files`. Use other arguments to control which files
+#' get read such as `pattern` (only file matching the pattern are 
+#' read from the archive), `maxnfiles` (to limit the number of files 
+#' to read), `skipnfiles` (to skip reading some files). The contents
+#' are returned as a named list (unless `nonames=TRUE`, when the list
+#' is unnamed) sorted by name (unless `sort_by_name=FALSE`). Attempts
+#' are made to deal with excessively long file names (unless
+#' `solve_long_name=FALSE`), while `maxnchar` sets the cut-off for 
+#' what is considered a long file name and `long_action` determines
+#' whether this happens via renaming (when `long_action='rename'`)
+#' or by copying (when `long_action='copy'`).
 #'
-#' @family archiving utilities provided by utilbox
+#' @family compression-related utilities provided by utilbox
 #' @export
-read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE, 
-  maxnfiles=Inf, skipnfiles=0, trace=0, maxnchar=128, solve_long_name=TRUE, sort_by_name=TRUE,
-  long_action=c("copy","rename"), attempt_read_plain=FALSE, fun_read=read.table, ...) {
+read_zip = function(zipfiles, files=NULL, pattern=NULL, maxnfiles=Inf, skipnfiles=0, 
+  nonames=FALSE, sort_by_name=TRUE, solve_long_name=TRUE, maxnchar=128, 
+  long_action=c("copy","rename"), attempt_read_plain=FALSE, trace=0, 
+  fun_read=read.table, ...) {
   
   # Process what to do to avoid long file name problems
   long_action = match.arg(long_action)
@@ -461,9 +473,9 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
       
     }
     
-    # Loop over file names in 'file'
+    # Loop over file names in the file list inside the archive
     for(file in file_list) {
-      RES = append(RES, read_table_zip_single(file, zipfile, zip_type, list_connections, fun_read, trace, ...))
+      RES = append(RES, read_zip_single(file, zipfile, zip_type, list_connections, fun_read, trace, ...))
     }
         
     # Remove the extra copy
@@ -478,27 +490,23 @@ read_table_zip = function(zipfiles, files=NULL, pattern=NULL, nonames=FALSE,
   if(sort_by_name && length(RES)>0) {
     RES = sort_by_names(RES)
   }
-  #if(sort_by_name && length(RES)>0) {
-  #  ord = order(names(RES))
-  #  RES = RES[ord]
-  #}
   
   # Assign names to the elements in the result list
   if(nonames) names(RES) = NULL
   
   return(RES)
 
-} # read_table_zip
+} # read_zip
 
 #' @title
 #' Read a table from a single zip archive
-read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, trace=0, ...) {
+read_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, trace=0, ...) {
   
   if(missing(file) || length(file)!=1) 
     error('Supply exactly one file name to read from the zip archive.')
   
   if(missing(zipfile) || length(zipfile)!=1) 
-    error('Supply exactly one file name of the zip archive.')
+    error('Supply exactly one zip archive file name.')
 
   if(missing(fun_read))
     error('Supply a value for the argument fun_read (e.g. read_char or read_table)')
@@ -537,6 +545,7 @@ read_table_zip_single = function(file, zipfile, zip_type, list_connections, fun_
 
   # Read the file using function 'fun_read'
   if(trace>0) msgf("Reading file ",file," from inside ",zipfile," ...")
+  
   res = list(fun_read(infile, ...))
   names(res) = nam
   

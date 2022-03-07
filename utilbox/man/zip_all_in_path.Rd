@@ -32,12 +32,12 @@ archives and the corresponding status codes returned by the archiver.
 (\code{path}) each into its own archive
 }
 \seealso{
-Other archiving utilities provided by utilbox: 
+Other compression-related utilities provided by utilbox: 
 \code{\link{list_zip}()},
-\code{\link{read_table_zip}()},
+\code{\link{read_zip}()},
 \code{\link{unzip_files}()},
 \code{\link{zip_files_pattern}()},
 \code{\link{zip_files}()},
 \code{\link{zip_file}()}
 }
-\concept{archiving utilities provided by utilbox}
+\concept{compression-related utilities provided by utilbox}

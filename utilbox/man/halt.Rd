@@ -4,7 +4,7 @@
 \alias{halt}
 \title{Print an error message and stop the execution}
 \usage{
-halt(error = "")
+halt(msg = "")
 }
 \description{
 Prints an error message and stops the execution of code.

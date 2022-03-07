@@ -10,9 +10,9 @@ mb = function(...) {
 
   check_namespace('microbenchmark')
 
-  do.call(microbenchmark::microbenchmark, list(...))
+  microbenchmark::microbenchmark(...)
   
-  #bench = try(do.call(microbenchmark::microbenchmark, list(...)))
+  #bench = try(microbenchmark::microbenchmark(...))
   #if(is_error(bench))
   #  stop("A call to 'microbenchmark::microbenchmark' failed.",
   #       " Looks like the 'microbenchmark' package is not installed.")

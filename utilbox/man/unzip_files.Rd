@@ -31,12 +31,12 @@ in \code{mask}, or those that do not match it if \code{mask_exclude} is
 \code{FALSE}.
 }
 \seealso{
-Other archiving utilities provided by utilbox: 
+Other compression-related utilities provided by utilbox: 
 \code{\link{list_zip}()},
-\code{\link{read_table_zip}()},
+\code{\link{read_zip}()},
 \code{\link{zip_all_in_path}()},
 \code{\link{zip_files_pattern}()},
 \code{\link{zip_files}()},
 \code{\link{zip_file}()}
 }
-\concept{archiving utilities provided by utilbox}
+\concept{compression-related utilities provided by utilbox}
