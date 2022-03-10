@@ -130,15 +130,32 @@ anti_join_sym = function(x, y, by, ..., join_fun='anti_join') {
     error("The function '",join_fun,"' supplied in 'join_fun' to 'anti_join_sym' does not exist.",
           " If you are using the defaults, remember that the package",
           " 'dplyr' needs to be installed.")
+          
+  if(!is.function(join_fun)) 
+    join_fun = get(join_fun, mode='function')
   
-  # reverse values and names in `by`
-  by2 = setNames(names(by), by)
-  miss = !nzchar(by2)
-  by2[miss] = by[miss]
+  if(missing(by)) {
   
-  # do the two joins
-  A1 = do.call(join_fun, list(x, y, by=by, ...))
-  A2 = do.call(join_fun, list(y, x, by=by2, ...))
+    # do the two joins
+    #A1 = do.call(join_fun, list(x, y, ...))
+    #A2 = do.call(join_fun, list(y, x, ...))
+    A1 = join_fun(x, y, ...)
+    A2 = join_fun(y, x, ...)
+  
+  } else {
+  
+    # reverse values and names in `by`
+    by2 = setNames(names(by), by)
+    miss = !nzchar(by2)
+    by2[miss] = by[miss]
+    
+    # do the two joins
+    #A1 = do.call(join_fun, list(x, y, by=by, ...))
+    #A2 = do.call(join_fun, list(y, x, by=by2, ...))
+    A1 = join_fun(x, y, by=by, ...)
+    A2 = join_fun(y, x, by=by2, ...)
+    
+  }
   
   list(x_antijoin_y=A1, y_antijoin_x=A2)
 

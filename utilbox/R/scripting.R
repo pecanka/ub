@@ -23,7 +23,7 @@ script_dir = function() {
 #' the argument `dir2` whose value is appended to the path being set.
 #'
 #' @export
-setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
+setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="", announce=FALSE) {
 
   no_input = missing(dir) || is.null(dir)
   
@@ -59,6 +59,8 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="") {
   }
   
   setwd(dir)
+  
+  if(announce) msgf('Working directory set to: ',getwd())
   
   invisible(getwd())
   

@@ -4,7 +4,7 @@
 \alias{setwd2}
 \title{Set working directory}
 \usage{
-setwd2(dir, create = TRUE, ask = TRUE, dir2 = "")
+setwd2(dir, create = TRUE, ask = TRUE, dir2 = "", announce = FALSE)
 }
 \description{
 A version of \code{setwd} which attempts to create the given path when

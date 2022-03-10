@@ -35,6 +35,7 @@ is_scientific('1e2')
 Other check-performing functions provided by utilbox: 
 \code{\link{anyNonNA}()},
 \code{\link{extract_by_positiveness_negativeness}},
+\code{\link{is_same_value}()},
 \code{\link{numchecks}},
 \code{\link{rounding}}
 }

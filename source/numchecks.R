@@ -106,6 +106,26 @@ is_even = function(x, tol=.Machine$double.eps) {
 }
 
 #' @title
+#' Check if two objects have equal values (simultaneous NAs are considered equal)
+#'
+#' @description
+#'
+#' `is_same_value()` checks if the elements of two equally sizes objects are either 
+#' simultaneously `NA` or have equal non-`NA` values.
+#'
+#' @examples
+#' is_same_value(1:5, 1:5)               # TRUE
+#' is_same_value(c(NA,2:5), c(NA,2:5)    # also TRUE
+#' is_same_value(1:5, c(NA,2:5)          # FALSE
+#' is_same_value(0:4, 1:5)               # FALSE
+#'
+#' @family check-performing functions provided by utilbox
+#' @export
+is_same_value = function(x, y) {
+  (is.na(x) & is.na(y)) | (!is.na(x) & !is.na(y) & equals(x,y))
+}
+
+#' @title
 #' Check if a string contains a number
 #'
 #' @description

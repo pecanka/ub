@@ -61,6 +61,7 @@ Other check-performing functions provided by utilbox:
 \code{\link{anyNonNA}()},
 \code{\link{extract_by_positiveness_negativeness}},
 \code{\link{is_number}()},
+\code{\link{is_same_value}()},
 \code{\link{rounding}}
 }
 \concept{check-performing functions provided by utilbox}

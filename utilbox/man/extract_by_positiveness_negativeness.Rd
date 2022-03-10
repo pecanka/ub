@@ -29,6 +29,7 @@ nonpositive(x)
 Other check-performing functions provided by utilbox: 
 \code{\link{anyNonNA}()},
 \code{\link{is_number}()},
+\code{\link{is_same_value}()},
 \code{\link{numchecks}},
 \code{\link{rounding}}
 }

@@ -18,6 +18,7 @@ x = rbind(c(1,NA),c(NA,NA)); anyNonNA(x)
 Other check-performing functions provided by utilbox: 
 \code{\link{extract_by_positiveness_negativeness}},
 \code{\link{is_number}()},
+\code{\link{is_same_value}()},
 \code{\link{numchecks}},
 \code{\link{rounding}}
 }
