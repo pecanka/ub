@@ -13,6 +13,8 @@
 \alias{rsignif}
 \alias{round2}
 \alias{signif2}
+\alias{print_full}
+\alias{format_full}
 \title{Number of digits}
 \usage{
 ndigits(x)
@@ -36,6 +38,10 @@ rsignif(x, ndig = 0)
 round2(x, nd = 0)
 
 signif2(x, ...)
+
+print_full(x, digits = 20)
+
+format_full(x, digits = 20)
 }
 \description{
 \code{ndigits()} determines the number of digits for an integer or a
@@ -71,6 +77,10 @@ without losing precision to the left of the decimal point.
 \code{signif2()} round numbers by leveraging \code{base::signif} except
 with a wrapper which it allows a non-numeric input without throwing
 an error.
+
+\code{print_full()} prints with options()$ndigits maximized.
+
+\code{format_full()} formats numbers in maximum precision.
 }
 \seealso{
 Other check-performing functions provided by utilbox: 

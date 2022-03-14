@@ -151,4 +151,3 @@ flush_console = function(flush=TRUE, flush_cycle=1, envir=utilbox_environment())
   }
   
 }
-

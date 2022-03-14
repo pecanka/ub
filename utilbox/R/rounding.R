@@ -37,6 +37,10 @@
 #' with a wrapper which it allows a non-numeric input without throwing 
 #' an error.
 #'
+#' `print_full()` prints with options()$ndigits maximized.
+#'
+#' `format_full()` formats numbers in maximum precision.
+#'
 #' @name rounding
 #' @family check-performing functions provided by utilbox
 #' @export
@@ -113,4 +117,20 @@ round2 = function(x, nd=0) {
 #' @export
 signif2 = function(x, ...) {
   if(is.numeric(x)) signif(x, ...) else x
+}
+
+#' @rdname rounding
+#' @export
+print_full = function(x, digits=20) {
+  ndig = getOption('digits')
+  on.exit(options(digits=ndig))
+  options(digits=digits)
+  print(x)
+  return(invisible(x))
+}
+
+#' @rdname rounding
+#' @export
+format_full = function(x, digits=20) {
+  sprintf(paste0('%.',digits,'f'), x)
 }

@@ -45,7 +45,7 @@ sleep = function(time, announce=TRUE) {
 wait = function(...) {
 
   if(!is_empty(list(...))) {
-    do.call(msgf, list(...))
+    msgf(...)
   }
   
   if(interactive()) {
