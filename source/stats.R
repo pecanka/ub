@@ -127,17 +127,58 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
   
 }
 
+#' @title
+#' Coefficient of determination
+#'
+#' @description
+#'
+#' Calculates the coefficient of determination (the so-called "R squared")
+#' for linear regression. With `adjusted=TRUE` the adjusted R squared is
+#' calculated (adjusted for `k` parameters). Supply the observed values
+#' of the response in `y` and the fitted values in `yh`, where the latter
+#' can also be a model obtained via `stats::lm` or `stats::glm`.
+#'
+#' @examples
+#' x = rnorm(100)
+#' y = 3*x + rnorm(100)
+#' model = lm(y~x)
+#' summary(model)[c('r.squared','adj.r.squared')]
+#' r_squared(y, model$fitted)
+#' r_squared(y, model$fitted, adjusted=TRUE, k=1)
+#' r_squared(y, model)
+#' r_squared(y, model, adjusted=TRUE)
+#'
 #' @export
-r_squared = function(y, yh, na.rm=TRUE, adjust=FALSE, k) {
-  c_adj = if(adjust) {
-    if(missing(k)) stop("With adjust=TRUE a value for k (number of regressors) must be supplied.")
+r_squared = function(y, yh, na.rm=TRUE, adjusted=FALSE, k=NULL) {
+
+  if('lm' %in% class(yh)) {
+    m = yh
+    yh = m$fitted
+    k = max(length(m$coefficients) - 1, 1)
+  }
+  
+  c_adj = 1
+  
+  if(adjusted) {
+    if(is.null(k)) stop("With adjusted=TRUE a value for k (number of regressors) must be supplied.")
     n = length(y)
-    (n - 1) / (n - 1 - k)
-  } else 1
+    c_adj = (n - 1) / (n - 1 - k)
+  }
+  
   1.0 - c_adj * sum((y - yh)^2, na.rm=na.rm) / sum((y - mean(y, na.rm=na.rm))^2, na.rm=na.rm)
+  
 }
 
+#' @title
+#' Test models for difference
+#'
+#' @description
+#'
+#' Calculates the p-value of a chisquare test of difference between
+#' the log-likelihoods of two models (`m1` and `m2`) at `df` degrees
+#' of freedom.
+#'
 #' @export
-compare_models = function(m1, m2, df=1) {
+test_compare_models = function(m1, m2, df=1) {
   pchisq(2 * abs(logLik(m1) - logLik(m2)), df = df, lower.tail = FALSE)
 }
