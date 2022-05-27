@@ -7,9 +7,8 @@
 cc(..., envir = parent.frame())
 }
 \description{
-Takes an expression in a character vector, pastes it
-into a single string and evaluates it in the \code{envir}
-environment (the parent frame by default).
+Takes an expression in a character vector, pastes it into a single
+string and evaluates it in the \code{envir} environment (the parent frame by default).
 }
 \examples{
 x = NULL

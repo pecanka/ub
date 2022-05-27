@@ -3,18 +3,24 @@
 \name{system_path}
 \alias{system_path}
 \alias{get_system_path}
+\alias{is_in_path}
 \alias{append_system_path}
 \title{Modify system search path}
 \usage{
 get_system_path(path)
 
-append_system_path(path)
+is_in_path(path, PATH = Sys.getenv("PATH"), ignore_case = is_win())
+
+append_system_path(path, check_presence = TRUE, check_success = TRUE)
 }
 \description{
 \code{get_system_path()} reads and returns the system search path variables.
 
 \code{append_system_path()} adds the supplied path into the system
 search path variables.
+\code{is_in_path()} checks the presence of a given path (\code{path}) in the given set
+of paths (\code{PATH}) supplied as semi-colon separate string (the system path
+by default).
 }
 \examples{
 get_system_path()

@@ -24,9 +24,11 @@ apply_pckg('rev_cols', 'utilbox', class)    # returns 'function'
 }
 \seealso{
 Other package-related functions provided by utilbox: 
+\code{\link{auto_install_packages}},
 \code{\link{lib_dependencies}()},
 \code{\link{list_installed_packages}()},
 \code{\link{llibrary}()},
-\code{\link{set_pkglib}()}
+\code{\link{set_pkglib}()},
+\code{\link{which_package}()}
 }
 \concept{package-related functions provided by utilbox}

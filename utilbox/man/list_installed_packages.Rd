@@ -31,8 +31,10 @@ list_attached_packages()
 \seealso{
 Other package-related functions provided by utilbox: 
 \code{\link{apply_pckg}()},
+\code{\link{auto_install_packages}},
 \code{\link{lib_dependencies}()},
 \code{\link{llibrary}()},
-\code{\link{set_pkglib}()}
+\code{\link{set_pkglib}()},
+\code{\link{which_package}()}
 }
 \concept{package-related functions provided by utilbox}

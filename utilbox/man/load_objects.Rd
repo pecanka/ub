@@ -4,7 +4,7 @@
 \alias{load_objects}
 \alias{loadAs}
 \alias{get_all_objects}
-\alias{find_object}
+\alias{find_object_in_files}
 \title{List and load objects from a file}
 \usage{
 load_objects(
@@ -20,7 +20,7 @@ loadAs(file, as, what, envir = parent.frame())
 
 get_all_objects(files = NULL, dir = ".", pattern = "^.*[.]RData$")
 
-find_object(
+find_object_in_files(
   object_name,
   files = NULL,
   dir = ".",
@@ -43,7 +43,7 @@ contents into variables listed in \code{as} inside the environment in
 inside files that match pattern in \code{pattern} relative to the path in
 \code{dir}.
 
-\code{find_object()} searches for an object with name in \code{object_name}
+\code{find_object_in_files()} searches for an object with name in \code{object_name}
 inside files in \code{files} relative to the path supplied in \code{dir}. If a
 pattern is given (via \code{pattern}) instead of a list of file names,
 then all files that match the pattern are searched through looking

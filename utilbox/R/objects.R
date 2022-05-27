@@ -268,7 +268,7 @@ list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, dec
 #' inside files that match pattern in `pattern` relative to the path in 
 #' `dir`.
 #'
-#' `find_object()` searches for an object with name in `object_name` 
+#' `find_object_in_files()` searches for an object with name in `object_name` 
 #' inside files in `files` relative to the path supplied in `dir`. If a 
 #' pattern is given (via `pattern`) instead of a list of file names, 
 #' then all files that match the pattern are searched through looking 
@@ -368,8 +368,8 @@ get_all_objects = function(files=NULL, dir=".", pattern="^.*[.]RData$") {
 
 #' @rdname load_objects
 #' @export
-find_object = function(object_name, files=NULL, dir=".", pattern="^.*[.]RData$", 
-                       stop_on_found=TRUE, announce=TRUE) {
+find_object_in_files = function(object_name, files=NULL, dir=".", pattern="^.*[.]RData$", 
+  stop_on_found=TRUE, announce=TRUE) {
                        
   odir = getwd()
   on.exit(setwd(odir))

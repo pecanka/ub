@@ -199,18 +199,18 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
 #' [`base::sys.source`]) and return the list.
 #'
 #' @examples
-#' tmp = '.~temp.R'
+#' tmp_file = '.~temp.R'
 #' cat('test_function = function() NULL\n', file=tmp_file)
-#' list_created_by_sourcing(tmp)
-#' unlink(tmp)
+#' list_created_by_sourcing(tmp_file)
+#' unlink(tmp_file)
 #'
 #' @export
-list_created_by_sourcing = function(file, ..., all.names=TRUE) {
+list_created_by_sourcing = function(file, ..., all.names=TRUE, format_fun=as_object_table) {
 
   env = new.env()
   sys.source(file, ..., envir=env)
   objs = ls(all.names=all.names, envir=env)
   
-  as_object_table(objs, env)
+  if(is.null(format_fun)) return(objs) else format_fun(objs, env)
 
 }

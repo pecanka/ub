@@ -406,7 +406,7 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%p%str_patternize(nam)%p%'[(, ]') %m% fun_code_to_text(x)))
 
   # put the information into a list
-  tbl = list(package=pckg,
+  tbl = list(location=if(is.environment(pckg)) print2var(pckg) else pckg,
              object=objs %|||% NA_character_, 
              exported=ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
              primary_class=class1 %|||% NA_character_, 
@@ -551,3 +551,59 @@ install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FA
   }
   
 }
+
+#' Identify object's package
+#'
+#' `which_package` tries to identity the package in which the
+#' supplied object is located or from which it came from.
+#'
+#' @family package-related functions provided by utilbox
+#' @export
+which_package = function(object) {
+  sub('>','',sub('.*[:][ ]?','',print2var(environment(object))))
+}
+
+#' Enable/disable auto-installation of packages
+#'
+#' `enable_auto_install()` enables auto-installation of packages by placing
+#' functions `library()` and/or `require()` into the global environment
+#' (i.e., `.GlobalEnv`), which then supperseed the calls to `base::library()`
+#' and/or `base::require()`.
+#'
+#' `disable_auto_install()` deletes any functions by those names in the global 
+#' environment, thereby disabling the auto-installation.
+#'
+#' `.eai()` and `.dai()` are aliases for `enable_auto_install()` and 
+#' `disable_auto_install()`, respectively.
+#'
+#' @family package-related functions provided by utilbox
+#' @name auto_install_packages
+#' @export
+.eai = function(call_type=c('library','require')) {
+  message('Enabling auto-installation of packages on load via "bare" (without explicit reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
+  for(f in call_type) {
+    if(exists(f, envir=.GlobalEnv, inherits=FALSE)) next    
+    assign(f, utilbox::llib, envir=.GlobalEnv)
+  }
+ 
+  return(invisible(NULL))
+}
+
+#' @rdname auto_install_packages
+#' @export
+.dai = function(call_type=c('library','require')) {
+  message('Disabling auto-installation of packages on load via "bare" (without explicit reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
+  for(f in call_type) {
+    if(!exists(f, envir=.GlobalEnv, inherits=FALSE)) next
+    rm(list=f, envir=.GlobalEnv)
+  }
+  return(invisible(NULL))
+}
+
+#' @rdname auto_install_packages
+#' @export
+enable_auto_install = .eai
+
+#' @rdname auto_install_packages
+#' @export
+disable_auto_install = .dai

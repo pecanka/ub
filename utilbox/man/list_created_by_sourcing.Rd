@@ -4,16 +4,21 @@
 \alias{list_created_by_sourcing}
 \title{Get the list of objects created by sourcing a file}
 \usage{
-list_created_by_sourcing(file, ..., all.names = TRUE)
+list_created_by_sourcing(
+  file,
+  ...,
+  all.names = TRUE,
+  format_fun = as_object_table
+)
 }
 \description{
 Find out what objects would be created if a file was sourced (via
 \code{\link[base:sys.source]{base::sys.source}}) and return the list.
 }
 \examples{
-tmp = '.~temp.R'
+tmp_file = '.~temp.R'
 cat('test_function = function() NULL\n', file=tmp_file)
-list_created_by_sourcing(tmp)
-unlink(tmp)
+list_created_by_sourcing(tmp_file)
+unlink(tmp_file)
 
 }

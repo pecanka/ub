@@ -1,8 +1,7 @@
 #' Evaluate an expression given as a string
 #'
-#' Takes an expression in a character vector, pastes it 
-#' into a single string and evaluates it in the `envir` 
-#' environment (the parent frame by default).
+#' Takes an expression in a character vector, pastes it into a single
+#' string and evaluates it in the `envir` environment (the parent frame by default).
 #'
 #' @examples
 #' x = NULL
@@ -14,6 +13,25 @@
 cc = function(..., envir=parent.frame()) {
   eval(base::str2lang(paste0(...)), envir=envir)
 }
+
+#' Insert a browser into a pipe
+#'
+#' A function that is intended to be inserted as a step
+#' in a pipe sequence during debugging to explore the state
+#' of the input object. It only calls the function `base::browser()`
+#' and returns the input object unmodified. Exit the browser
+#' with the call `cont` (or `c` for short). See `?browser` for more
+#' information.
+#'
+#' @examples
+#' data.frame(x=1) %>% browse() %>% print()
+#'
+#' @export
+browse = function(x) {
+  base::browser()
+  x
+}
+
 
 ###
 # Example of the usage of the trace function
@@ -44,7 +62,7 @@ cc = function(..., envir=parent.frame()) {
 # utils::argsAnywhere returns the arguments of objects that are functions.
 #
 # envnames::environment_name() returns the name of the variable that stores the
-#   environment (input example: “< environment: 0x00000000147499b0>”)
+#   environment (input example: "< environment: 0x00000000147499b0>")
 # envnames::obj_find() looks up objects in all packages and environments including
 #   the call's function cascade of frames
 #
