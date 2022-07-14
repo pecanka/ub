@@ -45,3 +45,17 @@ saveRDSlazy = function(object, file="", backup=TRUE, check_for_sameness=TRUE, an
 
 
 }
+
+#' Read data table from an RDS file
+#'
+#' Function for reading data.table objects, which avoids losing its "identity"
+#' (i.e., where the external pointer points) when being read from the disk,
+#' which can be diagnosed by looking at whether the output of `data.table::truelength()`
+#' on the data.table object is 0 or not (with 0 indicating that there is an issue).
+#'
+#' @export
+readDT = function(file) {
+  x = readRDS(file)
+  setDT(x)
+  x
+}

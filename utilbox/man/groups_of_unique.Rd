@@ -16,7 +16,7 @@ This is basically an alias for \code{replace3} with \code{new_values} equal
 to \code{1:nunique(x)}.
 }
 \examples{
-groups_of_unique(c('b','b','aa' 'a','b','c','a'))
+groups_of_unique(c('b','b','aa', 'a','b','c','a'))
 
 }
 \seealso{

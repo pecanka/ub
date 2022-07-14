@@ -55,3 +55,33 @@ void_general = function(...) {
   list2env(args, envir=environment())
   lapply(args, function(a) if(is.data.frame(a)) list2env(as.list(a), envir=parent.frame(2)))
 }
+
+#' Split expressions into terms
+#'
+#' `split_expression()` takes one or more expressions (optionally as strings)
+#' and splits them up into language elements (via `expr2terms()`).
+#'
+#' @examples
+#' split_expression(c("I(A/B/1000/(D*G))", 'I(Wealth - Health)*Age'))
+#' lapply(as.list(body(optimize)), FUN=split_expression, assume_language=TRUE) %>% unlist()
+#'
+#' @export
+split_expression = function(..., assume_language=FALSE, only_names=FALSE) {
+  x = unlist(list(...), recursive=TRUE)
+  x = lapply(x, FUN=expr2terms, assume_language=assume_language, only_names=only_names)
+}
+
+#' @rdname split_expression
+#' @export
+expr2terms = function(x, assume_language=FALSE, only_names=FALSE) {
+  if(!assume_language && is.character(x)) x = str2lang(x)
+  if(length(x)==1) return(as.character(x))
+  x = as.list(x)
+  x = unlist(lapply(x, function(y) expr2terms(y, assume_language=assume_language)))
+  x = unlist(lapply(unique(append(x, names(x))), as.character))
+  if(only_names) {
+    is_name = sapply(x, FUN=grepl, pattern='^[a-zA-Z.]')
+    x = x[is_name]
+  }
+  x
+}

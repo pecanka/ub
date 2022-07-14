@@ -580,7 +580,8 @@ which_package = function(object) {
 #' @name auto_install_packages
 #' @export
 .eai = function(call_type=c('library','require')) {
-  message('Enabling auto-installation of packages on load via "bare" (without explicit reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
+  message('Enabling auto-installation of packages on load via "bare" (i.e., without an explicit',
+          ' reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
   for(f in call_type) {
     if(exists(f, envir=.GlobalEnv, inherits=FALSE)) next    
     assign(f, utilbox::llib, envir=.GlobalEnv)
@@ -592,7 +593,8 @@ which_package = function(object) {
 #' @rdname auto_install_packages
 #' @export
 .dai = function(call_type=c('library','require')) {
-  message('Disabling auto-installation of packages on load via "bare" (without explicit reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
+  message('Disabling auto-installation of packages on load via "bare" (i.e., without an explicit',
+          ' reference to a package) calls to `',paste(call_type, collapse='()`, `'),'()` ...')
   for(f in call_type) {
     if(!exists(f, envir=.GlobalEnv, inherits=FALSE)) next
     rm(list=f, envir=.GlobalEnv)

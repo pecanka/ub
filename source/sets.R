@@ -53,3 +53,16 @@ setdiffsym = function(x, y, labels, report_counts=TRUE) {
 is_subset = function(x, y) {
   all(x %in% y)
 }
+
+#' Generate all subsets
+#'
+#'
+#'
+#' @export
+all_subsets = function(set, use_varnames_in_status=TRUE, stringsAsFactors=FALSE) {
+  n = length(set)
+  status = expand.grid(rep(list(c(FALSE, TRUE)), n), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=stringsAsFactors)
+  if(use_varnames_in_status) names(status) = set
+  subsets = apply(status, 1, function(x) names(x)[x])
+  list(set=set, subsets=subsets, status=status)
+}

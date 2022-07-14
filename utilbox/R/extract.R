@@ -4,9 +4,9 @@
 #' @description
 #'
 #' `kth` extracts the n-th element (single value) of an object `x` 
-#' (vector, list, etc.). It relies on `\`[[\`` for the extraction.
+#' (vector, list, etc.). It relies on `[[` for the extraction.
 #'
-#' `kthm` allows for multivariate input in `n`. It relies on `\`[\`` 
+#' `kthm` allows for multivariate input in `n`. It relies on `[` 
 #' for the extraction.
 #'
 #' `kthr` and `kthmr are the analogue of `kth` and `kthm` which 

@@ -1,4 +1,3 @@
-
 #' @title
 #' Not-in-set operator
 #'
@@ -51,7 +50,6 @@
 #' Concatenation operators
 #'
 #' @description
-#'
 #' Concatenation operators, which are aliases for `base::paste`.
 #'
 #' \code{\%.\%} is an operator versions of \code{base::paste0}.

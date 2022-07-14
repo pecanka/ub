@@ -607,9 +607,9 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_ms
   
   if(announce) {
     if(file.exists(file)) {
-      msgf("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
+      fun_msg("Creating backup of file '",file,"' (backed up as '",file_bak,"')")
     } else {
-      msgf("File '",file,"' does not exist and therefore cannot be backed up.")
+      fun_msg("File '",file,"' does not exist and therefore cannot be backed up.")
     }
   }
   

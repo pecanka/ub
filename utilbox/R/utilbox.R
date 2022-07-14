@@ -81,16 +81,16 @@ init_in_utilbox_env = function(nams, envir=utilbox_namespace()) {
   }
 }
 
-##' @export
-##' @rdname utilbox_internals
+## @export
+## @rdname utilbox_internals
 #init1_in_utilbox_env = function(nam, envir=utilbox_namespace()) {
 #  if(!exists(nam, envir=envir)) {
 #    assign_in_utilbox_env(nam, get_utilbox_var_inits(x))
 #  }
 #}
 
-#' @export
 #' @rdname utilbox_internals
+#' @export
 get_utilbox_var_inits = function(nam) {
   
   inits = list(

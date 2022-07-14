@@ -6,6 +6,7 @@
 \alias{amean}
 \alias{hmean}
 \alias{gmean}
+\alias{gmmean}
 \alias{gmeanw}
 \alias{lmean}
 \title{Various means}
@@ -17,6 +18,8 @@ amean(x, na.rm = TRUE)
 hmean(..., na.rm = TRUE)
 
 gmean(x, na.rm = TRUE)
+
+gmmean(x, na.rm = TRUE, zero_propagate = FALSE)
 
 gmeanw(x, w, na.rm = TRUE, ...)
 
@@ -32,7 +35,10 @@ non-\code{NA} values.
 \code{amean()} gives the arithmetic mean of \code{x}.
 
 \code{gmean()} and \code{gmeanw} calculate the geometric mean of \code{x}, while
-the latter permits weighing.
+the latter permits weighing. \code{gmmean()} is a version that processes
+inputs with negative values without warnings as well as drops zeros
+(unless \code{zero_propagate=TRUE}). \code{gmmean()} inspired by this:
+https://stackoverflow.com/a/25555105
 
 \code{hmean()} calculates the harmonic mean (single value) of a single
 vector created as a combination of all its input arguments.

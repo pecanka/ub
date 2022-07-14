@@ -30,9 +30,9 @@ kthmr(x, k) <- value
 }
 \description{
 \code{kth} extracts the n-th element (single value) of an object \code{x}
-(vector, list, etc.). It relies on \verb{\\}[[\`` for the extraction.
+(vector, list, etc.). It relies on \code{[[} for the extraction.
 
-\code{kthm} allows for multivariate input in \code{n}. It relies on \verb{\\}[\``
+\code{kthm} allows for multivariate input in \code{n}. It relies on \code{[}
 for the extraction.
 
 \code{kthr} and \verb{kthmr are the analogue of }kth\code{and}kthm` which

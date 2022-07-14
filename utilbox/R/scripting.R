@@ -7,7 +7,17 @@
 #' it is called (via `source`).
 #'
 #' @export
-script_dir = function() {
+script_dir = function(n=0) {
+  files = lapply(sys.frames(), function(x) x$ofile)
+  files = Filter(Negate(is.null), files)
+  if(length(files)==0) {
+    '.'
+  } else {
+    dirname(files[[pmax(1,length(files)-n)]])
+  }
+}
+
+script_dir_old = function() {
   ifelse("ofile" %in% names(sys.frame(1)), dirname(sys.frame(1)$ofile), '.')
 }
 
@@ -196,16 +206,21 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
 #' @description
 #'
 #' Find out what objects would be created if a file was sourced (via 
-#' [`base::sys.source`]) and return the list.
+#' [`base::sys.source`]). 
 #'
 #' @examples
+#' # create a toy script file
 #' tmp_file = '.~temp.R'
 #' cat('test_function = function() NULL\n', file=tmp_file)
-#' list_created_by_sourcing(tmp_file)
+#' # list the objects (as a table with details)
+#' list_objects_created_by_sourcing(tmp_file)
+#' # list the objects (just a vector of object names)
+#' list_objects_created_by_sourcing(tmp_file, format_fun=function(x, ...) x)
+#' # delete the toy file
 #' unlink(tmp_file)
 #'
 #' @export
-list_created_by_sourcing = function(file, ..., all.names=TRUE, format_fun=as_object_table) {
+list_objects_created_by_sourcing = function(file, ..., all.names=TRUE, format_fun=as_object_table) {
 
   env = new.env()
   sys.source(file, ..., envir=env)
