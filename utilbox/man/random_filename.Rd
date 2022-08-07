@@ -23,6 +23,7 @@ Other file system function provided by utilbox:
 \code{\link{file_empty}()},
 \code{\link{file_size}()},
 \code{\link{file_sort}()},
+\code{\link{map_drives}},
 \code{\link{separate_path}()}
 }
 \concept{file system function provided by utilbox}

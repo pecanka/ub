@@ -23,7 +23,27 @@ x \%.^\% y
 x \%^.\% y
 }
 \description{
+Concatenation operators, which are aliases for \code{base::paste}.
 
+\code{\%.\%} is an operator versions of \code{base::paste0}.
+
+\code{\%..\%} is an operator versions of \code{base::paste}.
+
+\code{\%_\%} is an operator versions of \code{base::paste} with
+\code{sep='_'}.
+
+\code{\%__\%} is an operator versions of \code{base::paste} with
+\code{sep='_'} and which takes symbols as arguments (see the examples
+below).
+
+\code{\%.^\%} is a conditional concatenatation operator, which
+appends the left-hand side (LHS) onto the right-hand side (RHS)
+but only if the right-hand argument does not
+already start with the string on the left-hand side.
+
+\code(\\%^.\\%} is similar to \code{\%.^\%} except it appends the
+RHS onto the LHS but only if the LHS does not end with the
+string inside the RHS.
 }
 \examples{
 a = 'multi'; b = 'tasking'

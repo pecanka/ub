@@ -32,17 +32,16 @@ file_exists_must(files, path, stop_on_missing = TRUE, warn_on_missing = TRUE)
 \code{dir_exist_check()} checks if directory \code{dir} exists (relative to
 the current working directory) and if not it tries to create it. On
 success the value supplied in \code{dir} is returned. If directory
-creation fails, then an error is thrown unless
-\code{stop_if_fail=FALSE} was supplied, in which case the value
-\verb{./} is returned. Verboseness is controled via \code{trace} being set
-to 0 (no message) or otherwise.
+creation fails, then an error is thrown, unless \code{stop_if_fail=FALSE}
+was supplied, in which case the value \verb{./} is returned. Verboseness
+of the function is controled via \code{trace} (with 0 being least verbose).
 
 \code{file_exists()} checks if a file or multiple files exist(s) relative to
 the path in \code{path}. If the existence check returns any \code{FALSE}, the
 behaviour depends on \code{stop_on_missing} and \code{warn_on_missing}. If the
 former is \code{TRUE}, an error is printed and the execution halts. If only
 the former is \code{TRUE}, a warning is shown but the execution continues.
-When both are \code{FALSE} no message is shown and a logical indicating
+When both are \code{FALSE}, no message is shown and a logical indicating
 each file's existence is returned.
 
 To achieve a clear distinction in code between what is expected in
@@ -55,8 +54,8 @@ logicals.
 \code{file_exists_should()} warns on any files missing but proceeds and
 returns the logicals.
 
-\code{file_exists_must()} is a strict checker that halts on any files
-missing.
+\code{file_exists_must()} is a strict checker that halts on non-existence
+of any of the files.
 }
 \seealso{
 Other file system functions provided by utilbox: 

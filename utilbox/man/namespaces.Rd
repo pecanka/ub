@@ -8,7 +8,7 @@
 \usage{
 get_package_namespace(pckg, character.only = FALSE, stop_on_error = FALSE)
 
-check_namespace(pckg, envir = parent.frame())
+check_namespace(pckg, envir = parent.frame(), severity = 2)
 }
 \description{
 \code{get_package_namespace()} returns the namespace of the package

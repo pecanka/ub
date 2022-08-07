@@ -33,12 +33,23 @@ get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE
 
 #' @rdname namespaces
 #' @export
-check_namespace = function(pckg, envir=parent.frame()) {
+check_namespace = function(pckg, envir=parent.frame(), severity=2) {
   
-  fun_name = eval(parse(text='this_fun_name()'), envir=envir)
+  #fun_name = eval(parse(text='this_fun_name()'), envir=envir)
+  fun_name = evalq(this_fun_name(), envir=envir)
   
-  if(!requireNamespace(pckg)) 
-    stop("Package '",pckg,"' needs to be installed to use function '",fun_name,"'.")
+  res = requireNamespace(pckg)
+  
+  if(res || severity==0) return(res)
+  
+  fun = if(severity==1) warning else stop
+  
+  msg = "Package '" %p% pckg %p% "' not found."
+  
+  if(nzchar(fun_name)) 
+    msg = msg %p% " It must be installed to use the function `" %p% fun_name %p% "()`."
+  
+  fun(msg)
     
 }
 

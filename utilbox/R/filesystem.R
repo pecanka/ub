@@ -8,7 +8,7 @@
 #' returned. Optionally, files can be sorted according to attribute in 
 #' `attrib`.
 #'
-#' `list_files_latest()` and `list_files_biggest()` are shortcuts to 
+#' `list_files_by_date()` and `list_files_by_size()` are shortcuts to 
 #' sorting according to attributes "modification time" and "size", 
 #' respectively.
 #'
@@ -37,13 +37,13 @@ list_files = function(pattern=NULL, path=".", full.names=FALSE, ..., sort=FALSE,
 
 #' @rdname list_files
 #' @export
-list_files_latest = function(...) {
+list_files_by_date = function(...) {
   list_files(..., sort=TRUE, attrib='mtime', decreasing=TRUE)
 }
 
 #' @rdname list_files
 #' @export
-list_files_biggest = function(...) {
+list_files_by_size = function(...) {
   list_files(..., sort=TRUE, attrib='size', decreasing=TRUE)
 }
 
@@ -112,9 +112,9 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
   
   type = type %|||% c('exact','partial','free')
 
-  p = list(exact='^'%p%str_patternize(p)%p%'$', 
-           partial='^'%p%str_patternize(p), 
-           free=str_patternize(p))
+  p = list(exact = '^' %p% str_patternize(p) %p% '$', 
+           partial = '^' %p% str_patternize(p), 
+           free = str_patternize(p))
 
   lf = hijack(list.files, path=path, full.names=full.names)
   
@@ -139,35 +139,38 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
 #' @export
 dir_create = function(dir, ask=interactive(), verbose=FALSE) {
 
-  invisible(sapply(dir, dir_create1, ask, verbose))
+  if(length(dir)>1) {
   
-}
-
-dir_create1 = function(dir, ask=interactive(), verbose=FALSE) {
-
-  if(!dir.exists(dir)) {
+    res = sapply(dir, dir_create, ask, verbose)
     
-    if(ask) {
-      wait("The directory '",dir,"' does not exist relative to the current path ('",
-           getwd(),"') and will be created ...")
-    }
-    
-    res = dir.create(dir, showWarnings=FALSE, recursive=TRUE)
-    
-    if(!dir.exists(dir) && verbose) {
-      warn("Directory '",dir,"' could not be created.")
-    }
-      
   } else {
   
-    res = FALSE
-    if(verbose) {
-      msgf("No need to create, directory '",dir,"' already exists.")
+    if(!dir.exists(dir)) {
+      
+      if(ask) {
+        wait("The directory '",dir,"' does not exist relative to the current path ('",
+             getwd(),"') and will be created ...")
+      }
+      
+      res = dir.create(dir, showWarnings=FALSE, recursive=TRUE)
+      
+      if(!dir.exists(dir) && verbose) {
+        warn("Directory '",dir,"' could not be created.")
+      }
+        
+    } else {
+    
+      res = FALSE
+      
+      if(verbose) {
+        msgf("No need to create, directory '",dir,"' already exists.")
+      }
+      
     }
-    
+      
   }
-    
-  res
+  
+  invisible(res)
     
 } 
 
@@ -188,21 +191,19 @@ dir_slash_check = function(dir, fsep=.Platform$file.sep) {
 #'
 #' @description
 #'
-#'
 #' `dir_exist_check()` checks if directory `dir` exists (relative to 
 #' the current working directory) and if not it tries to create it. On 
 #' success the value supplied in `dir` is returned. If directory 
-#' creation fails, then an error is thrown unless 
-#' `stop_if_fail=FALSE` was supplied, in which case the value 
-#' `./` is returned. Verboseness is controled via `trace` being set 
-#' to 0 (no message) or otherwise.
+#' creation fails, then an error is thrown, unless `stop_if_fail=FALSE`
+#' was supplied, in which case the value `./` is returned. Verboseness 
+#' of the function is controled via `trace` (with 0 being least verbose).
 #'
 #' `file_exists()` checks if a file or multiple files exist(s) relative to 
 #' the path in `path`. If the existence check returns any `FALSE`, the 
 #' behaviour depends on `stop_on_missing` and `warn_on_missing`. If the 
 #' former is `TRUE`, an error is printed and the execution halts. If only  
 #' the former is `TRUE`, a warning is shown but the execution continues. 
-#' When both are `FALSE` no message is shown and a logical indicating 
+#' When both are `FALSE`, no message is shown and a logical indicating 
 #' each file's existence is returned.
 #'
 #' To achieve a clear distinction in code between what is expected in 
@@ -215,8 +216,8 @@ dir_slash_check = function(dir, fsep=.Platform$file.sep) {
 #' `file_exists_should()` warns on any files missing but proceeds and 
 #' returns the logicals.
 #'
-#' `file_exists_must()` is a strict checker that halts on any files 
-#' missing.
+#' `file_exists_must()` is a strict checker that halts on non-existence
+#' of any of the files.
 #'
 #' @family file system functions provided by utilbox
 #' @export
@@ -292,10 +293,17 @@ file_exists_must = function(files, path, stop_on_missing=TRUE, warn_on_missing=T
 #'
 #' `file_rename()` renames one or multiple files.
 #'
+#' `file_rename_via_drive()` also renames file except it does it by
+#' mapping the destination folder as a drive ('T' by default). This
+#' is useful primarily when dealing with very long file names and
+#' paths on Windows (with their file length limit of 259 characters),
+#' where replacing the long path with a short one (e.g., 'T:/') 
+#' can help avoiding the file name length errors.
+#'
 #' `file_remove()` removes one or multiple files.
 #'
-#' `file_move()` moves the file to the supplied path (`destination`). It is a wrapper
-#' around `fine_rename()`.
+#' `file_move()` moves the file to the supplied path (`destination`). 
+#' It is a wrapper around `fine_rename()`.
 #'
 #' `file_rename_timestamp()` renames a single file by adding a time 
 #' stamp based on the file's modification time.
@@ -303,7 +311,7 @@ file_exists_must = function(files, path, stop_on_missing=TRUE, warn_on_missing=T
 #' `file_timestamp()` produces a time stamp based on attributes of 
 #' the supplied file.
 #'
-#' In case of a failure, the copy/rename/move functions re-attempt up to `nretry` 
+#' In case of a failure, these functions re-attempt up to `nretry` 
 #' times.
 #'
 #' @name file_rename
@@ -328,6 +336,40 @@ file_rename = function(from, to, nretry=1, time_to_sleep_prior=0) {
   }
 
   invisible(msg)
+  
+}
+
+#' @rdname file_rename
+#' @export
+file_rename_via_drive = function(from, to, drive='T', unmap=TRUE, nretry=2, time_to_sleep_prior=0.01) {
+
+  if(!is_win()) {
+    warnings('`file_rename_via_drive()` works only on Windows. No drives will be mapped for file renaming.')
+    msg = file_rename(file_from, to, nretry=nretry, time_to_sleep_prior=time_to_sleep_prior)
+    return(invisible(msg))
+  }
+
+  wdir_init = getwd()
+
+  file_from = basename(from)
+  file_to = basename(to)
+  dir_from = dirname(from)
+  dir_to = dirname(to)
+
+  to = normalizePath(paste0(drive,':/', file_to), mustWork=FALSE)
+
+  setwd(dir_to)
+
+  map_drive(drive=drive, change_wdir=FALSE, delete_existing=TRUE, silent=TRUE)
+
+  setwd(wdir_init)
+  setwd(dir_from)
+
+  file_rename(file_from, to, nretry=nretry, time_to_sleep_prior=time_to_sleep_prior)
+
+  setwd(wdir_init)
+
+  if(unmap) unmap_drive(drive, silent=TRUE)
   
 }
 
@@ -627,4 +669,193 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_ms
   
   invisible(res)
   
+}
+
+#' @title
+#' Work with drives on Windows
+#'
+#' @description
+#'
+#' `map_drive()` maps a path to the specified drive.
+#'
+#' `unmap_drive()` unmaps the specified drive.
+#'
+#' `convert_to_network_path()` converts a path from the regular
+#' regular format (e.g., 'c:\Windows') to the network path format 
+#' (e.g., '\\localhost\\c$\Windows'), which can be used to map
+#' any path to a drive.
+#'
+#' `list_all_drives()` returns a list of all existing drives
+#' together with their mapped location in the network path format.
+#'
+#' `list_all_network_drives()` lists drives that are mappings
+#' of network-storage devices (which can include local paths
+#' mapped as drives by relying on the network format of paths
+#' (e.g., '\\localhost\\c$\Windows').
+#'
+#' All of these functions work on Windows only and rely on the 
+#' Windows system utilities such as `net` and/or `wmic` (which
+#' has been deprecated in Windows 10, version 21H1, see here
+#' https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmic)
+#'
+#' @family file system function provided by utilbox
+#' @name map_drives
+#' @export
+map_drive = function(drive='t', path='.', persistent=FALSE, delete_existing=FALSE, 
+  force_delete=FALSE, change_wdir=FALSE, normalize=FALSE, silent=FALSE) {
+  
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+   
+  call_delete = paste0('net use ',drive,': /Delete /',ifelse(force_delete, 'y', 'n'))
+ 
+  if(dir.exists(paste0(drive,':/'))) {
+    if(delete_existing) {
+      if(!silent) message("Unmapping existing connection to drive '",drive,"' ...")
+      answer = shell(call_delete, intern=TRUE)
+      if(!silent) message("Message by shell: ",answer)
+    } else {
+      warning("Drive '",drive,"' already in use. To unmap first use `delete_existing=TRUE`.")
+      return(FALSE)
+    }
+  }
+ 
+  if(path=='.') path = getwd()
+ 
+  path_full = convert_to_network_path(path, normalize=normalize)
+
+  if(!silent) message("Mapping drive '",drive,"' to path '",path_full,"' ...")
+  call_map = paste0('net use ',drive,': ',path_full,' /persistent:', ifelse(persistent, 'yes', 'no'))
+  answer = shell(call_map, intern=TRUE)
+  if(!silent) message("Message by shell: ", answer)
+ 
+  result = dir.exists(paste0(drive,':/'))
+ 
+  if(result)
+    if(!silent) message('Mapping successful.')
+ 
+  if(change_wdir) {
+    setwd(paste0(drive,':/'))
+    if(!silent) message("Working directory changed to '",getwd(),"'.")
+  }
+ 
+  invisible(result)
+ 
+}
+
+#' @rdname map_drives
+#' @export
+unmap_drive = function(drive, force=FALSE, silent=FALSE) {
+
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+
+  if(dir.exists(paste0(drive,':/'))) {
+ 
+    if(!silent) message("Unmapping existing connection to drive '",drive,"' ...")
+    call_delete = paste0('net use ',drive,': /Delete /',ifelse(force, 'y', 'n'))
+    answer = shell(call_delete, intern=TRUE, wait=FALSE)
+    if(!silent) message("Message by shell: ",answer)
+   
+  } else {
+    if(!silent) message("Drive '",drive,"' not mapped.")
+  }
+ 
+  result = !dir.exists(paste0(drive,':/'))
+ 
+  invisible(result)
+
+}
+
+#' @rdname map_drives
+#' @export
+list_all_drives = function(path) {
+
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+
+  answer = shell('wmic logicaldisk get caption,providername,drivetype', intern=TRUE)
+  drives = gsub("\\s+", ",", gsub("^\\s+|\\s+$", "", answer))
+  drives = strsplit(drives, ',')
+  drives = Filter(length, drives)
+  drives = lapply(drives, `[`, 1:3)
+  
+  if(!identical(drives[[1]], c('Caption','DriveType','ProviderName')))
+    warning("Unexpected format returned by the shell call to 'wmic'.")
+   
+  drives = as.data.frame(do.call(rbind, drives[-1]))
+  drives = setNames(drives, c('Drive','Type','NetworkPath'))
+  
+  w = drives$Type=='3' & is.na(drives$NetworkPath)
+  drives$NetworkPath[w] = paste0('\\\\localhost\\',substr(drives$Drive[w],1,1),'$')
+ 
+  drives
+ 
+}
+
+#' @rdname map_drives
+#' @export
+list_all_network_drives = function(path) {
+
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+  
+  drives = list_all_drives()
+  
+  drives[drives$Type != 3,]
+  
+}
+
+#' @rdname map_drives
+#' @export
+list_all_network_drives2 = function(path) {
+
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+
+  answer = shell('wmic path win32_mappedlogicaldisk get deviceid, providername', intern=TRUE)
+ 
+  drives = gsub("\\s+", ",", gsub("^\\s+|\\s+$", "", answer))
+  drives = strsplit(drives, ',')
+  drives = Filter(length, drives)
+  
+  if(!identical(drives[[1]], c('DeviceID','ProviderName')))
+    warning("Unexpected format returned by the shell call to 'wmic'.")
+
+  drives = as.data.frame(do.call(rbind, drives[-1]))
+  drives = setNames(drives, c('Drive','NetworkPath'))
+ 
+  drives
+
+}
+
+#' @rdname map_drives
+#' @export
+convert_to_network_path = function(path, normalize=FALSE) {
+
+  if(normalize) path = normalizePath(path)
+ 
+  drives = list_all_drives()
+ 
+  for(i in seq_along(drives$Drive)) {
+    if(grepl(paste0('^',drives$Drive[i]), path, ignore.case=TRUE)) {
+      path = paste0(drives$NetworkPath[i], substring(path, 3))
+      break
+    }
+  }
+ 
+  if(normalize) path = normalizePath(path)
+ 
+  path
+ 
 }

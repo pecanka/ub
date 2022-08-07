@@ -63,12 +63,12 @@
 #' `sep='_'` and which takes symbols as arguments (see the examples 
 #' below).
 #'
-#' \code{%.^%} is a conditional concatenatation operator, which
+#' \code{\%.^\%} is a conditional concatenatation operator, which
 #' appends the left-hand side (LHS) onto the right-hand side (RHS)
 #' but only if the right-hand argument does not 
 #' already start with the string on the left-hand side. 
 #'
-#' \code(%^.%} is similar to \code{%.^%} except it appends the
+#' \code(\%^.\%} is similar to \code{\%.^\%} except it appends the
 #' RHS onto the LHS but only if the LHS does not end with the
 #' string inside the RHS.
 #'

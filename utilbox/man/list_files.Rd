@@ -2,8 +2,8 @@
 % Please edit documentation in R/filesystem.R
 \name{list_files}
 \alias{list_files}
-\alias{list_files_latest}
-\alias{list_files_biggest}
+\alias{list_files_by_date}
+\alias{list_files_by_size}
 \title{List files matching regular pattern}
 \usage{
 list_files(
@@ -17,9 +17,9 @@ list_files(
   append_path = FALSE
 )
 
-list_files_latest(...)
+list_files_by_date(...)
 
-list_files_biggest(...)
+list_files_by_size(...)
 }
 \description{
 A wrapper for \code{\link[base:list.files]{base::list.files()}} that allows multiple patterns
@@ -27,7 +27,7 @@ at once and files that match at least on of the patterns are
 returned. Optionally, files can be sorted according to attribute in
 \code{attrib}.
 
-\code{list_files_latest()} and \code{list_files_biggest()} are shortcuts to
+\code{list_files_by_date()} and \code{list_files_by_size()} are shortcuts to
 sorting according to attributes "modification time" and "size",
 respectively.
 }

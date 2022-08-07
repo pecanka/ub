@@ -6,16 +6,33 @@
 #' Simply a short-named alias for `microbenchmark::microbenchmark`.
 #'
 #' @export
-mb = function(...) {
+mb = function(..., list = NULL, times = 100L, unit = NULL, check = NULL, control = list(), envir=base::parent.frame()) {
 
-  check_namespace('microbenchmark')
-
-  microbenchmark::microbenchmark(...)
+  check_namespace("microbenchmark")
   
-  #bench = try(microbenchmark::microbenchmark(...))
-  #if(is_error(bench))
-  #  stop("A call to 'microbenchmark::microbenchmark' failed.",
-  #       " Looks like the 'microbenchmark' package is not installed.")
-
+  exprs = c(as.list(match.call(expand.dots = FALSE)$...), list)
+  
+  args = list(list=exprs, times=times, unit=unit, check=check, control=control)
+  do.call('microbenchmark', args = args, envir=asNamespace('microbenchmark'))
 
 }
+
+## Another version which works by adding arguments `envir` and `parent.frame`
+## into `microbenchmark::microbenchmark`.
+#mb = function(..., list = NULL, times = 100L, unit = NULL, check = NULL, control = list(), 
+#  envir=base::parent.frame()) {
+#
+#  check_namespace("microbenchmark")
+#  
+#  exprs = c(as.list(match.call(expand.dots = FALSE)$...), list)
+# 
+#  unlockBinding('microbenchmark', asNamespace('microbenchmark'))
+#  fun = microbenchmark::microbenchmark
+#  formals(fun)$envir = function() base::parent.frame()
+#  formals(fun)$parent.frame = function() get('envir', envir=base::parent.frame())
+#  assign('microbenchmark', fun, envir=asNamespace('microbenchmark'))
+#  lockBinding('microbenchmark', asNamespace('microbenchmark'))
+#  
+#  microbenchmark::microbenchmark(list=exprs, times=times, unit=unit, check=check, control=control, envir=envir)
+#  
+#}

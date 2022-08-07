@@ -4,7 +4,15 @@
 \alias{mb}
 \title{Benchmarking}
 \usage{
-mb(...)
+mb(
+  ...,
+  list = NULL,
+  times = 100L,
+  unit = NULL,
+  check = NULL,
+  control = list(),
+  envir = base::parent.frame()
+)
 }
 \description{
 Simply a short-named alias for \code{microbenchmark::microbenchmark}.

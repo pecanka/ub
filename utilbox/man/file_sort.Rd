@@ -31,6 +31,7 @@ Other file system function provided by utilbox:
 \code{\link{file_can_open_check}()},
 \code{\link{file_empty}()},
 \code{\link{file_size}()},
+\code{\link{map_drives}},
 \code{\link{random_filename}()},
 \code{\link{separate_path}()}
 }
