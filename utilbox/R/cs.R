@@ -1,13 +1,12 @@
 ConnectRiskServer = function(database='_adhoc_04', driver='SQL Server Native Client 11.0', 
-    server='risk191l.csin.cz,1437', only_get_call=FALSE) {
+    server, only_get_call=FALSE) {
  
   cstring = paste0("driver={",driver,"}; server=",server,"; database=",database,"; trusted_connection=yes")
  
-  if(only_get_call) {
-    con = paste0('RODBC::odbcDriverConnect(',cstring,')')
+  con = if(only_get_call) {
+    paste0('RODBC::odbcDriverConnect(',cstring,')')
   } else {
-    con = RODBC::odbcDriverConnect(cstring)
-    #attr(con, 'timestamp') = Sys.time()
+    RODBC::odbcDriverConnect(cstring)
   }
  
   return(con)
