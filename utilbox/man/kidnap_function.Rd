@@ -22,7 +22,7 @@ function_kidnap(
   envir = parent.frame(),
   msg_argument,
   restore_call,
-  modify_only_unmodified = TRUE,
+  remodify = TRUE,
   quietly = FALSE
 )
 }

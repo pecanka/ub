@@ -24,7 +24,7 @@ below).
 which appends the string in \code{LHS} onto \code{RHS} from the left but
 only if \code{RHS} does not already start with the string in \code{LHS}.
 
-\code(\\%pasteend\\%} appends the string in \code{LHS} onto \code{RHS} from
+\code{\%pasteend\%} appends the string in \code{LHS} onto \code{RHS} from
 the right (i.e., onto the end) but only if \code{RHS} does not already
 end with the string inside the \code{LHS}.
 }

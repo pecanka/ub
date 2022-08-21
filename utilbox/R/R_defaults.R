@@ -107,7 +107,7 @@ R_add_code_startup = function(calls, Rprof_file) {
   catn(paste(calls, collapse='\n'), file=Rprof_file, append=TRUE)
   catn('Total of ',length(calls),' line(s) of code appended to the file.')
   
-  invisible(list(added_code=code))
+  invisible(list(added_code=calls))
 
 }
 

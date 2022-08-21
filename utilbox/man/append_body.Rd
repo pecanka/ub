@@ -58,16 +58,4 @@ f = append_body(f, c("cat(\"And the symmetric set difference is...\n\")", "x"), 
 f(1:5, 3:10)
 
 }
-\seealso{
-Other coding-related functions provided by utilbox: 
-\code{\link{call_to_list}},
-\code{\link{compare_functions}()},
-\code{\link{fun_name}},
-\code{\link{function_code_to_text}()},
-\code{\link{function_dump_code}()},
-\code{\link{hide}()},
-\code{\link{hijack}()},
-\code{\link{is_error}()},
-\code{\link{namespaces}}
-}
-\concept{coding-related functions provided by utilbox}
+\concept{function-modification functions provided by utilbox}

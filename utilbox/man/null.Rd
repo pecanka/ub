@@ -9,3 +9,20 @@ null(...)
 \description{
 \code{null()} is a function that takes arbitrary arguments and does nothing.
 }
+\seealso{
+Other coding-related functions provided by utilbox: 
+\code{\link{call_to_list}},
+\code{\link{compare_functions}()},
+\code{\link{fun_name}},
+\code{\link{function_code_to_text}()},
+\code{\link{function_dump_code}()},
+\code{\link{function_find_dependencies}()},
+\code{\link{function_modify}},
+\code{\link{function_separate_code}()},
+\code{\link{hide}()},
+\code{\link{hijack}()},
+\code{\link{is_error}()},
+\code{\link{namespaces}},
+\code{\link{nformals}()}
+}
+\concept{coding-related functions provided by utilbox}

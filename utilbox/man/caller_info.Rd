@@ -9,17 +9,8 @@ caller_info(fmtstring = NULL, level = 1)
 \description{
 \code{caller_info()} is a function that prints the caller information,
 i.e. the sequence of calling fuctions and the invocation locations.
-It returns a list, unless fmtstring is specified
-level: 1 - caller of the caller of this function;
-2 - its parent,
-3 - its grand-parent etc.
-fmtstring: return format string: \%f (function), \%s (source file), \%l (line)
 }
 \details{
-example: str <- caller_info("Called from \%f at \%s#\%l\n")
-!!! it won't work with e.g. cat(caller_info("Called from \%f at \%s#\%l\n"))
-or cat(paste0(caller_info("Called from \%f at \%s#\%l\n"))) !!!
-
 Taken from: https://stackoverflow.com/q/59537482/684229
 
 Serves as inspiration for the function \code{get_call_info()}.

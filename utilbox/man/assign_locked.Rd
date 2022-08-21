@@ -4,12 +4,12 @@
 \alias{assign_locked}
 \title{Assign for locked environments}
 \usage{
-assign_locked(x, value, envir, namespace, keep_unlocked = FALSE)
+assign_locked(x, value, envir)
 }
 \description{
-\code{assign_locked()} assigns the supplied value in \code{value} to an object named in \code{x}
-inside the namespace named in \code{namespace} (as character). If the object named in \code{x}
-is locked, the binding is first unlocked and, depending on the value in \code{keep_unlocked}
-is relocked afterwards. In locked environments only existing objects can be
-modified by \code{assign_locked()}.
+\code{assign_locked()} assigns the supplied value in \code{value} to an
+object named in \code{x} inside the namespace named in \code{namespace}
+(supplied as character). If the object named in \code{x} is locked,
+the binding is first unlocked and relocked afterwards. In locked
+environments only existing objects can be modified by \code{assign_locked()}.
 }

@@ -126,7 +126,7 @@ remove_pid_from_pause_list = function(pid=Sys.getpid(), file=file.path('~','.Rgu
     if(pid %in% PIDs) {
       PIDs = if(remove_all) PIDs[PIDs %nin% pid] else PIDs[PIDs %nin% pid | duplicated(PIDs)]
       if(length(PIDs)>0) {
-        writeLines(PIDs, file=file)
+        writeLines(PIDs, file)
       } else if(delete_empty) {
         file.remove(file)
       } else {

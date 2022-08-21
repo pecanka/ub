@@ -60,11 +60,10 @@
 #' which appends the string in `LHS` onto `RHS` from the left but 
 #' only if `RHS` does not already start with the string in `LHS`. 
 #'
-#' \code(\%pasteend\%} appends the string in `LHS` onto `RHS` from
+#' \code{\%pasteend\%} appends the string in `LHS` onto `RHS` from
 #' the right (i.e., onto the end) but only if `RHS` does not already
 #' end with the string inside the `LHS`.
 #'
-#' @name concatenate
 #' @examples
 #' a = 'multi'; b = 'tasking'
 #' a %_% b                    # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
@@ -73,8 +72,7 @@
 #' 'james' %pasteend% 'name:'          # yields 'name:james'
 #' 'james' %pasteend% 'name:james'     # yields 'name:james'
 #'
-
-#' @rdname concatenate
+#' @name concatenate
 #' @export
 `%_%` = function(..., sep="_") {
   dots = as.character(dots_to_nlist()) #match.call(expand.dots = FALSE)$`...`

@@ -703,8 +703,8 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_ms
 #' `unmap_drive()` unmaps the specified drive.
 #'
 #' `convert_to_network_path()` converts a path from the regular
-#' regular format (e.g., 'c:\Windows') to the network path format 
-#' (e.g., '\\localhost\\c$\Windows'), which can be used to map
+#' regular format (e.g., 'c:\\Windows') to the network path format 
+#' (e.g., '\\\\localhost\\c$\\Windows'), which can be used to map
 #' any path to a drive.
 #'
 #' `list_all_drives()` returns a list of all existing drives
@@ -713,7 +713,7 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_ms
 #' `list_all_network_drives()` lists drives that are mappings
 #' of network-storage devices (which can include local paths
 #' mapped as drives by relying on the network format of paths
-#' (e.g., '\\localhost\\c$\Windows').
+#' (e.g., '\\\\localhost\\c$\\Windows').
 #'
 #' All of these functions work on Windows only and rely on the 
 #' Windows system utilities such as `net` and/or `wmic` (which

@@ -37,8 +37,8 @@ convert_to_network_path(path, normalize = FALSE)
 \code{unmap_drive()} unmaps the specified drive.
 
 \code{convert_to_network_path()} converts a path from the regular
-regular format (e.g., 'c:\Windows') to the network path format
-(e.g., '\\localhost\\c$\Windows'), which can be used to map
+regular format (e.g., 'c:\\Windows') to the network path format
+(e.g., '\\\\localhost\\c$\\Windows'), which can be used to map
 any path to a drive.
 
 \code{list_all_drives()} returns a list of all existing drives
@@ -47,7 +47,7 @@ together with their mapped location in the network path format.
 \code{list_all_network_drives()} lists drives that are mappings
 of network-storage devices (which can include local paths
 mapped as drives by relying on the network format of paths
-(e.g., '\\localhost\\c$\Windows').
+(e.g., '\\\\localhost\\c$\\Windows').
 
 All of these functions work on Windows only and rely on the
 Windows system utilities such as \code{net} and/or \code{wmic} (which

@@ -12,3 +12,20 @@ where each element in the list corresponds to a block of code (often a
 line). This is used when altering the code for instance via \code{append_body()}
 below or via \code{base::trace()}.
 }
+\seealso{
+Other coding-related functions provided by utilbox: 
+\code{\link{call_to_list}},
+\code{\link{compare_functions}()},
+\code{\link{fun_name}},
+\code{\link{function_code_to_text}()},
+\code{\link{function_dump_code}()},
+\code{\link{function_find_dependencies}()},
+\code{\link{function_modify}},
+\code{\link{hide}()},
+\code{\link{hijack}()},
+\code{\link{is_error}()},
+\code{\link{namespaces}},
+\code{\link{nformals}()},
+\code{\link{null}()}
+}
+\concept{coding-related functions provided by utilbox}

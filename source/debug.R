@@ -54,7 +54,7 @@ restore_warning_function = function(quietly=FALSE) {
 
 #' @rdname kidnap_function
 #' @export
-function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore_call, modify_only_unmodified=TRUE, 
+function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore_call, remodify=TRUE, 
     quietly=FALSE) {
 
   calls = c(
@@ -87,8 +87,7 @@ function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore
   )
 
   function_modify_in_place(fun_name, calls=calls, envir=envir, where='first', 
-      restore_call=restore_call, modify_only_unmodified=modify_only_unmodified, 
-      quietly=quietly)
+      restore_call=restore_call, remodify=remodify, quietly=quietly)
   
 }
 

@@ -15,14 +15,28 @@ cc = function(..., envir=parent.frame()) {
   eval(base::str2lang(paste0(...)), envir=envir)
 }
 
+#' Convert a function to a call
+#'
+#' Takes a function and returns an object of class `call` with the
+#' code of the function.
+#'
+#' @examples
+#' # compare with the output of print(sample)
+#' code = fun2call(sample)
+#'
+#' @export
+fun2call = function(fun) {
+  str2lang(deparse1(fun, collapse='\n'))
+}
+
 #' Split expressions into terms
 #'
 #' `split_expression()` takes one or more expressions (optionally as 
 #' strings, unless `is_lang=TRUE`) and splits them up into 
 #' individual language elements (via `expr2terms_string()` or 
 #' `expr2terms()`). With `only_names=TRUE`, only elements that 
-#' correspond to standard object names (i.e., those starting with a 
-#' letter or dot) are returned.
+#' have syntactic names (i.e., those starting with a letter or dot) 
+#' are returned.
 #'
 #' `expr2terms()` splits up a single expression. `expr2terms_string()`
 #' takes string input and converts it to language first before calling
@@ -32,6 +46,9 @@ cc = function(..., envir=parent.frame()) {
 #'
 #' `fun2funcalls()` splits up an entire function into constituent parts
 #' and returns those parts that correspond to function calls.
+#'
+#' `fun2funcalls2()` is an alternative implementation of `fun2funcalls()`
+#' with slightly different results.
 #'
 #' @examples
 #' split_expression(c("I(A/B/1000/(D*G))", 'I(Wealth - Health)*Age'))
@@ -43,6 +60,7 @@ cc = function(..., envir=parent.frame()) {
 #' # extract calls to functions from a function
 #' print(fun2funcalls(mean.default))
 #' 
+#' @name expressions
 #' @export
 split_expression = function(..., is_lang=FALSE, only_names=FALSE) {
 
@@ -56,7 +74,7 @@ split_expression = function(..., is_lang=FALSE, only_names=FALSE) {
   
 }
 
-#' @rdname split_expression
+#' @rdname expressions
 #' @export
 expr2terms = function(x, only_names=FALSE) {
 
@@ -75,7 +93,7 @@ expr2terms = function(x, only_names=FALSE) {
   x
 }
 
-#' @rdname split_expression
+#' @rdname expressions
 #' @export
 expr2terms_string = function(x, only_names=FALSE) {
 
@@ -87,7 +105,7 @@ expr2terms_string = function(x, only_names=FALSE) {
     
 }
 
-#' @rdname split_expression
+#' @rdname expressions
 #' @export
 fun2terms = function(fun) {
 
@@ -101,7 +119,7 @@ fun2terms = function(fun) {
   parts
 }
 
-#' @rdname split_expression
+#' @rdname expressions
 #' @export
 fun2terms_drop_assignments = function(fun) {
 
@@ -122,13 +140,33 @@ fun2terms_drop_assignments = function(fun) {
   parts
 }
 
-#' @rdname split_expression
+#' @rdname expressions
 #' @export
 fun2funcalls = function(fun) {
 
   stopifnot(is.function(fun))
   
-  tree = unlist(lapply(fun, lobstr:::ast_tree))
+  tree = unname(unlist(lapply(fun, lobstr:::ast_tree)))
+
+  w_calls = unlist(lapply(tree, grepl, pattern='o-'))
+  
+  calls = tree[w_calls]
+  
+  calls = sub('.*o-','', calls)
+  
+}
+
+#' @rdname expressions
+#' @export
+fun2funcalls2 = function(fun) {
+
+  stopifnot(is.function(fun))
+  
+  call = fun2call(fun)
+  tree = lobstr::ast(!!rlang::enquo(call))
+
+  tree = unlist(as.list(tree))
+
   w_calls = unlist(lapply(tree, grepl, pattern='o-'))
   
   calls = tree[w_calls]
@@ -139,7 +177,7 @@ fun2funcalls = function(fun) {
 
 #' @title Empty symbols
 #'
-#' @desctiption
+#' @description
 #' Some operations in R can result in a special object: the empty symbol.
 #' The symbol can be obtained directly (e.g., via `quote(expr=)` as in
 #' `empty_symbol()`) or indirectly (e.g., when applying `as.list()` to
@@ -170,7 +208,7 @@ is_empty_symbol = function(x) {
 #' Checks whether an expression has an assignement form, namely
 #' that it is a call to the `<-` or other such functions.
 #'
-#' @example
+#' @examples
 #' is_assign_call(expression(x <- 1))    # TRUE
 #' is_assign_call(expression(x = 1))    # TRUE
 #' is_assign_call(expression(2*x))       # FALSE

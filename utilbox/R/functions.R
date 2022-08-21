@@ -68,6 +68,7 @@ hijack = function(fun, ...) {
 #' nformals(mode)
 #' nformals(mean)
 #'
+#' @family coding-related functions provided by utilbox
 #' @export 
 nformals = function(fun, envir=parent.frame()) {
 
@@ -139,6 +140,7 @@ function_dump_code = function(fun, file=stdout()) {
 #' line). This is used when altering the code for instance via `append_body()`
 #' below or via `base::trace()`.
 #'
+#' @family coding-related functions provided by utilbox
 #' @export
 function_separate_code = function(fun) {
   b = as.list(body(fun))
@@ -194,7 +196,7 @@ function_separate_code = function(fun) {
 #' f = append_body(f, c("cat(\"And the symmetric set difference is...\n\")", "x"), where='last')
 #' f(1:5, 3:10)
 #'
-#' @family coding-related functions provided by utilbox
+#' @family function-modification functions provided by utilbox
 #' @export
 append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replace_at=TRUE) {
   
@@ -293,6 +295,7 @@ append_body_old = function(fun, calls, where=c('first','last','at'), at=NULL, re
 #'
 #' `null()` is a function that takes arbitrary arguments and does nothing.
 #'
+#' @family coding-related functions provided by utilbox
 #' @export
 null = function(...) {
   return(invisible())
@@ -321,9 +324,12 @@ null = function(...) {
 #' up in the attribute `original_function` of the kidnapped function.
 #' The modification is done also **in place**.
 #'
+#' @name function_modify
+#' @family coding-related functions provided by utilbox
 #' @export
-function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), where=c('first','last','at'), 
-    at = NULL, restore_call, modify_only_unmodified=FALSE, quietly=FALSE) {
+function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), 
+    where=c('first','last','at'), at = NULL, restore_call, remodify=FALSE, 
+    quietly=FALSE) {
 
   if(quietly)
     message = function(...) {}
@@ -359,9 +365,9 @@ function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), wh
 
   fun = get(fun_name, envir=envir)
 
-  if(!is.null(attr(fun, 'original_function')) && modify_only_unmodified) {
+  if(!is.null(attr(fun, 'original_function')) && remodify) {
     message("The function '",fun_name,"' had already been modified. To modify it",
-            " further, set the argument 'modify_only_unmodified=FALSE'.")
+            " further, set the argument 'remodify=FALSE'.")
     return(FALSE)
   }
 
@@ -374,9 +380,10 @@ function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), wh
 
   message('Modifying the function `',fun_name,'` (',envir_name,') ...')
   
-  unlockBinding(fun_name, env=envir)
-  assign(fun_name, fun_modified, envir=envir)
-  lockBinding(fun_name, env=envir)
+  #unlockBinding(fun_name, env=envir)
+  #assign(fun_name, fun_modified, envir=envir)
+  #lockBinding(fun_name, env=envir)
+  assign_locked(fun_name, fun_modified, envir)
  
   if(identical(get(fun_name, envir=envir), fun_modified)) {
   
@@ -399,7 +406,7 @@ function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), wh
 }
 
 
-#' @rdname kidnap_modify
+#' @rdname function_modify
 #' @export
 function_restore = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 
@@ -424,9 +431,10 @@ function_restore = function(fun_name, envir=parent.frame(), quietly=FALSE) {
   
   fun_original = attr(get(fun_name, envir=envir), 'original_function')
   
-  unlockBinding(fun_name, env=envir)
-  assign(fun_name, fun_original, envir=envir)
-  lockBinding(fun_name, env=envir)
+  #unlockBinding(fun_name, env=envir)
+  #assign(fun_name, fun_original, envir=envir)
+  #lockBinding(fun_name, env=envir)
+  assign_locked(fun_name, fun_original, envir)
  
   if(identical(get(fun_name, envir=envir), fun_original)) {
     message('The original version of the function `',fun_name,'` has been restored.')
@@ -440,7 +448,7 @@ function_restore = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 
 }
 
-#' @rdname function_modify_in_place
+#' @rdname function_modify
 #' @export
 function_disable = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 
@@ -487,6 +495,7 @@ function_disable = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 #' ff = function() { x = xxxx(); a = sin(1); g() }
 #' function_find_dependencies(ff)
 #'
+#' @family coding-related functions provided by utilbox
 #' @export
 function_find_dependencies = function(fun, dep_envir, fun_envir=parent.frame(), get_status=TRUE) {
 

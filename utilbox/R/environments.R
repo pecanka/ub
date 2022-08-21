@@ -206,25 +206,25 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
 
 #' Assign for locked environments
 #'
-#' `assign_locked()` assigns the supplied value in `value` to an object named in `x`
-#' inside the namespace named in `namespace` (as character). If the object named in `x`
-#' is locked, the binding is first unlocked and, depending on the value in `keep_unlocked`
-#' is relocked afterwards. In locked environments only existing objects can be 
-#' modified by `assign_locked()`.
+#' `assign_locked()` assigns the supplied value in `value` to an 
+#' object named in `x` inside the namespace named in `namespace` 
+#' (supplied as character). If the object named in `x` is locked, 
+#' the binding is first unlocked and relocked afterwards. In locked 
+#' environments only existing objects can be modified by `assign_locked()`.
 #'
 #' @export
-assign_locked = function(x, value, envir, namespace, keep_unlocked=FALSE) {
+assign_locked = function(x, value, envir) {
 
   if(!is.character(x))
     stop("Supply name of an object as character.")
   
-  if(missing(envir)) {
-    envir = if(is.character(namespace)) asNamespace(namespace) else namespace
+  if(is.character(envir)) {
+    envir = asNamespace(envir)
   }
   
   if(!exists(x, envir=envir))
-    stop("Object '",x,"' not found in ",print2var(envir),
-         ". The object must exist in order to be overwritten.")
+    stop("Object '",x,"' not found in the specified environment",
+         " and therefore cannot be overwritten.")
  
   is_locked = base::environmentIsLocked(envir)
   
@@ -234,7 +234,7 @@ assign_locked = function(x, value, envir, namespace, keep_unlocked=FALSE) {
   
   assign(x = x, value = value, envir = envir)
   
-  if(is_locked && !keep_unlocked) {
+  if(is_locked) {
     lockBinding(sym = x, envir)
   }
   

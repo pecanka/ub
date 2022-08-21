@@ -15,3 +15,9 @@ Guess whether an expression is an assignment
 Checks whether an expression has an assignement form, namely
 that it is a call to the \verb{<-} or other such functions.
 }
+\examples{
+is_assign_call(expression(x <- 1))    # TRUE
+is_assign_call(expression(x = 1))    # TRUE
+is_assign_call(expression(2*x))       # FALSE
+
+}

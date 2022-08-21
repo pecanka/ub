@@ -22,12 +22,14 @@ mb = function(..., list = NULL, times = 100L, unit = NULL, check = NULL, control
 #  
 #  exprs = c(as.list(match.call(expand.dots = FALSE)$...), list)
 # 
-#  unlockBinding('microbenchmark', asNamespace('microbenchmark'))
 #  fun = microbenchmark::microbenchmark
 #  formals(fun)$envir = function() base::parent.frame()
 #  formals(fun)$parent.frame = function() get('envir', envir=base::parent.frame())
-#  assign('microbenchmark', fun, envir=asNamespace('microbenchmark'))
-#  lockBinding('microbenchmark', asNamespace('microbenchmark'))
+#
+#  #unlockBinding('microbenchmark', asNamespace('microbenchmark'))
+#  #assign('microbenchmark', fun, envir=asNamespace('microbenchmark'))
+#  #lockBinding('microbenchmark', asNamespace('microbenchmark'))
+#  assign_locked('microbenchmark', fun, 'microbenchmark')
 #  
 #  microbenchmark::microbenchmark(list=exprs, times=times, unit=unit, check=check, control=control, envir=envir)
 #  
