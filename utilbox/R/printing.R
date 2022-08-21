@@ -62,11 +62,11 @@ cat0 = function(..., file="", sep="", fill=FALSE, pad=FALSE, padding=' ', pad_si
     
     base::cat(..., file=file, sep=sep, fill=as.numeric(fill)>0, labels=labels, append=append)
     
-    x = collapse0(..., sep=sep)
+    x = paste(..., collapse=sep)
     
   } else {
 
-    x = do.call(collapse0, list(list(...), sep=sep))
+    x = do.call(paste, list(list(...), collapse=sep))
     if(!isFALSE(pad)) {
       x = str_lengthen(x, pad, side=pad_side, padding=padding)
     }

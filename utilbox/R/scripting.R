@@ -8,6 +8,21 @@
 #'
 #' @export
 script_dir = function(n=0) {
+  wglobal = which(sapply(sys.frames(), identical, .GlobalEnv))
+  frames = head(sys.frames(), max(0, wglobal-1))
+  files1 = lapply(frames, getElement, 'ofile')
+  files2 = lapply(frames, getElement, 'file')
+  files = append(files1, files2)
+  files = Filter(is.character, files)
+  files = Filter(file.exists, files)
+  if(length(files)==0) {
+    '.'
+  } else {
+    dirname(files[[pmax(1,length(files)-n)]])
+  }
+}
+
+script_dir_old2 = function(n=0) {
   files = lapply(sys.frames(), function(x) x$ofile)
   files = Filter(Negate(is.null), files)
   if(length(files)==0) {
@@ -55,15 +70,10 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="", announce=FALSE) {
       
       dir_create(dir, ask=ask)
       
-      #if(ask) {
-      #  wait("Directory '",dir,"' does not exist and it will be created ...")
-      #}
-      #dir.create(dir)
-      
     } else {
-      error("Cannot change working directory to '",dir,"' since it",
-            " does not exist and 'create' is FALSE. Use 'create=TRUE'",
-            " to enable the creation of non-existing directories.")
+      stop("Cannot change working directory to '",dir,"' since it",
+           " does not exist and `create` is FALSE. Use `create=TRUE`",
+           " to enable the creation of non-existing directories.")
     }
     
   }
@@ -91,7 +101,7 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="", announce=FALSE) {
       # }
       # dir.create(dir)
     # } else {
-      # error("Cannot change working directory to '",dir,"' since it",
+      # stop("Cannot change working directory to '",dir,"' since it",
             # " does not exist. Use 'create=TRUE' for missing directories",
             # " to be created.")
     # }
@@ -131,23 +141,29 @@ setwd2 = function(dir, create=TRUE, ask=TRUE, dir2="", announce=FALSE) {
 #' @name sourcing
 #' @export
 is_sourced = function(level=1, exact_level = TRUE) {
-  if(exact_level) source_level() == level else source_level() >= level
+
+  fun_compare = if(exact_level) `==` else `>=`
+
+  fun_compare(source_depth(), level)
+
 }
 
 #' @rdname sourcing
 #' @export
 source_depth = function() {
 
-  check_for = list("source" = c("ofile", "keep.source", "deparseCtrl", 
-                                "echo", "prompt.echo", "spaced"),
-                   "sys.source" = c("i", "exprs", "oop", "file", "envir", 
-                                    "chdir", "keep.source", "toplevel.env"))
+  check_for = list(`source` = c('ofile', 'keep.source', 'deparseCtrl', 
+                                'echo', 'prompt.echo', 'spaced'),
+                   `sys.source` = c('i', 'exprs', 'oop', 'file', 'envir', 
+                                    'chdir', 'keep.source', 'toplevel.env'))
  
-  is_source = function(i) all(check_for$"source" %in% names(sys.frame(i)))
+  is_source_call = function(i) 
+    all(check_for$`source` %in% names(sys.frame(i)))
   
-  is_sys_source = function(i) all(check_for$"sys.source" %in% names(sys.frame(i)))
+  is_sys_source_call = function(i) 
+    all(check_for$`sys.source` %in% names(sys.frame(i)))
   
-  which_sourced = sapply(0:sys.nframe(), function(i) is_source(i) | is_sys_source(i))
+  which_sourced = sapply(0:sys.nframe(), function(i) is_source_call(i) | is_sys_source_call(i))
   
   sum(which_sourced)
   
@@ -155,16 +171,17 @@ source_depth = function() {
 
 #' @rdname sourcing
 #' @export
-source_files = function(files, path='.', announce=TRUE, normalize=FALSE, 
-  envir=.GlobalEnv, report_new=TRUE) {
+source_files = function(files, path='.', announce=TRUE, normalize=FALSE, envir=.GlobalEnv, 
+    report_new=TRUE) {
 
   ff = file_path(path, files, normalize=normalize)
-  msgs = "Sourcing file '" %p% ff %p% "' ... "
+  msgs = paste0("Sourcing file '", ff, "' ... ")
   
   new = list()
   for(i in seq_along(ff)) {
   
-    if(announce) cat0(msgs[i])
+    if(announce) 
+      cat0(msgs[i])
     
     sys.source(ff[i], envir=env <- new.env())
     
@@ -174,7 +191,8 @@ source_files = function(files, path='.', announce=TRUE, normalize=FALSE,
     
     transfer_objects(env, envir)
     
-    if(announce) msgf(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
+    if(announce) 
+      msgf(spaces(max(nchar(msgs)) - nchar(msgs[i])),"done.")
     
   }
   
@@ -190,8 +208,7 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
   files = list.files(path, pattern)
   
   if(is_empty(files))
-    error("No files matched the pattern '",pattern,
-          "' relative to path '",path,"'.")
+    stop("No files matched the pattern '",pattern,"' relative to path '",path,"'.")
   
   files = source_files(files, path, announce=announce, normalize=normalize, 
                        envir=envir, report_new=report_new)
@@ -220,12 +237,16 @@ source_pattern = function(pattern, path='.', announce=TRUE, normalize=FALSE,
 #' unlink(tmp_file)
 #'
 #' @export
-list_objects_created_by_sourcing = function(file, ..., all.names=TRUE, format_fun=as_object_table) {
+list_objects_created_by_sourcing = function(file, ..., all.names=TRUE, do_format=TRUE) {
 
   env = new.env()
   sys.source(file, ..., envir=env)
   objs = ls(all.names=all.names, envir=env)
   
-  if(is.null(format_fun)) return(objs) else format_fun(objs, env)
+  if(do_format) {
+    as_object_table(objs, env)
+  } else {
+    objs
+  }
 
 }

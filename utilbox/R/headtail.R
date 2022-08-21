@@ -42,7 +42,7 @@ h1 = function(x, ...) {
 #' @export
 h1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else if(n<=0) {
     utils::head(x, n=n, ...) 
   } else {
@@ -54,7 +54,7 @@ h1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
 #' @export
 h1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -nrow(x) || n > nrow(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else if(n<=0) {
     utils::head(x, n=n, ...) 
   } else {
@@ -66,7 +66,7 @@ h1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
 #' @export
 h1.default = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else {
     utils::head(x, n=n, ...)
   }
@@ -118,7 +118,7 @@ t1 = function(x, ...) {
 #' @export
 t1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else if(n<=0) {
     utils::tail(x, n=n, ...) 
   } else {
@@ -130,7 +130,7 @@ t1.vector = function(x, n=1, ..., stop_on_greedy=FALSE) {
 #' @export
 t1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -nrow(x) || n > nrow(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else if(n<=0) {
     utils::tail(x, n=n, ...) 
   } else {
@@ -142,7 +142,7 @@ t1.data.frame = function(x, n=1, ..., stop_on_greedy=FALSE) {
 #' @export
 t1.default = function(x, n=1, ..., stop_on_greedy=FALSE) {
   if(stop_on_greedy && (n < -length(x) || n > length(x))) {
-    error("Asking for non-existing elements.")
+    stop("Asking for non-existing elements.")
   } else {
     utils::tail(x, n=n, ...)
   }

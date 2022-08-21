@@ -53,7 +53,7 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
   if(do_cond) {
     
     if(missing(lam)) 
-      error("Missing argument 'lam'.")
+      stop("Missing argument 'lam'.")
       
     wk = p < lam
     pp = p[wk] / ifelse(scale_up, lam, 1)
@@ -90,7 +90,7 @@ test_pval = function(p, method="cbonf", alpha=0.05, lamSFG=0.5, lam, scale_up=TR
   
     if(any(wk)) rej[wk] = p.adjust(pp, method=meth) < alpha
   
-  } else error("Unknown method '",method,"'.")
+  } else stop("Unknown method '",method,"'.")
   
   rej
 
@@ -222,7 +222,7 @@ test_pval_hartung = function(p, alpha=0.05, kappa=0.2, what="ns") {
   
   non_signif = punitroots::Hartung(p, kappa=kappa)$p.value >= alpha
   
-  switch(what, "ns"=non_signif, error("Unknown value in 'what'."))
+  switch(what, "ns"=non_signif, stop("Unknown value in 'what'."))
   
 }
 
@@ -320,7 +320,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
                           "BH"=, "fdr"=5, 
                           "BY"=6,
                           "SFG"=7,
-                          error("Unknown method '",method,"'."))
+                          stop("Unknown method '",method,"'."))
                   
   if(is.vector(p)) p = matrix(p, ncol=1)
                         
@@ -334,7 +334,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
       msgf("Loading library file '",dll_lib,"' ...")
     
     if(!file.exists(dll_lib)) 
-      error("Library file '",dll_lib,"' does not exist!")
+      stop("Library file '",dll_lib,"' does not exist!")
       
     loaded = dyn.load(dll_lib)
     
@@ -369,7 +369,7 @@ mtctestFast = function(p, alpha=0.05, method=c("bonferroni","hommel","holm","hoc
   if(trace>0) cat("done.\n")
   
   if(OUT$ierr!=0) 
-    error("Non-zero return code '",OUT$ierr,"' returned by '",ffun,"'.")
+    stop("Non-zero return code '",OUT$ierr,"' returned by '",ffun,"'.")
   
   if(unload && any(names(getLoadedDLLs())=="mtc")) dyn.unload(dll_lib)
   
@@ -396,7 +396,7 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
   do_cond = method %in% cmethods
   
   if(do_cond && missing(lam)) 
-    error("Missing argument 'lam'.")
+    stop("Missing argument 'lam'.")
   
   if(is.vector(p)) p = matrix(p, ncol=1)
   n = nrow(p)
@@ -451,7 +451,7 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
         !test_pval_sfg(pp, alpha=alpha, lamSFG=lamSFG)
       } else if(any(meth==adj_methods)) {
         p.adjust(pp, method=meth) < alpha
-      } else error("Unknown method '",method,"' in test_pval.")
+      } else stop("Unknown method '",method,"' in test_pval.")
       
     } # for(i in 1:M)
     
@@ -476,7 +476,7 @@ mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5
   do_cond = method %in% cmethods
   
   if(do_cond && missing(lam)) 
-    error("Missing argument 'lam'.")
+    stop("Missing argument 'lam'.")
   
   X = mtctestFast(p, alpha=alpha, method=if(do_cond) sub("^c","",method) else method, 
                   n1=max(n1, 0), lam=ifelse(do_cond, lam, 2), what=what)

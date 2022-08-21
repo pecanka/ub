@@ -67,7 +67,7 @@ which_min = function(x, last=TRUE, first=FALSE, all=FALSE, na.rm=FALSE,
   
   #is_minim = which(abs(x-min(x))<=eps)
   is_minim = which(is_min(x, na.rm=FALSE, eps=eps))
-  w = if(all) is_minim else c(if(last) t1(is_minim) else NULL, if(first) h1(is_minim) else NULL)
+  w = if(all) is_minim else c(if(last) tail(is_minim,1) else NULL, if(first) head(is_minim,1) else NULL)
   
   #w = if(last) length(x) + 1 - which.min(rev(x)) else which.min(x)
   

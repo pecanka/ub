@@ -50,6 +50,6 @@ snippet1 = "#' Simple printing function\n#'\n#' "
 snippet2 = paste0(rep('Printing function.', t=30), collapse=' ')
 snippet3 = "\n#'\n#' @example\n#' f('Hello world!')\n#'\n#' @export\n"
 snippet4 = "f = function(x) {\n  print(x)\n}"
-script_help_fix(code=snippet1 \%p\% snippet2 \%p\% snippet3 \%p\% snippet4)
+script_help_fix(code=paste0(snippet1, snippet2, snippet3, snippet4))
 
 }

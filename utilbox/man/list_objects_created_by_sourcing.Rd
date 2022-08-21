@@ -4,12 +4,7 @@
 \alias{list_objects_created_by_sourcing}
 \title{Get the list of objects created by sourcing a file}
 \usage{
-list_objects_created_by_sourcing(
-  file,
-  ...,
-  all.names = TRUE,
-  format_fun = as_object_table
-)
+list_objects_created_by_sourcing(file, ..., all.names = TRUE, do_format = TRUE)
 }
 \description{
 Find out what objects would be created if a file was sourced (via

@@ -10,4 +10,8 @@ halt(msg = "")
 Prints an error message and stops the execution of code.
 The actual way of stopping, however, depends on whether
 the code is run in interactive or non-interactive modes.
+
+\code{.halt()} is a different way of stopping the execution. Intended to be
+called by \code{halt()} but the behavior was not as hoped/expected. Abandoned
+for now.
 }

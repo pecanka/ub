@@ -52,62 +52,31 @@
 #' @description
 #' Concatenation operators, which are aliases for `base::paste`.
 #'
-#' \code{\%.\%} is an operator versions of \code{base::paste0}.
-#'
-#' \code{\%..\%} is an operator versions of \code{base::paste}.
-#'
 #' \code{\%_\%} is an operator versions of \code{base::paste} with 
-#' `sep='_'`.
-#'
-#' \code{\%__\%} is an operator versions of \code{base::paste} with 
 #' `sep='_'` and which takes symbols as arguments (see the examples 
 #' below).
 #'
-#' \code{\%.^\%} is a conditional concatenatation operator, which
-#' appends the left-hand side (LHS) onto the right-hand side (RHS)
-#' but only if the right-hand argument does not 
-#' already start with the string on the left-hand side. 
+#' \code{\%pastefront\%} is a conditional concatenatation operator, 
+#' which appends the string in `LHS` onto `RHS` from the left but 
+#' only if `RHS` does not already start with the string in `LHS`. 
 #'
-#' \code(\%^.\%} is similar to \code{\%.^\%} except it appends the
-#' RHS onto the LHS but only if the LHS does not end with the
-#' string inside the RHS.
+#' \code(\%pasteend\%} appends the string in `LHS` onto `RHS` from
+#' the right (i.e., onto the end) but only if `RHS` does not already
+#' end with the string inside the `LHS`.
 #'
 #' @name concatenate
 #' @examples
 #' a = 'multi'; b = 'tasking'
-#' a %p% b                    # yields 'multitasking'
-#' a %..% b                   # yields 'multi tasking'
-#' a %_% b                    # yields 'multi_tasking'
-#' a %__% b                   # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
-#' 'name:' %.^% 'james'        # yields 'name:james'
-#' 'name:' %.^% 'name:james'   # also yields 'name:james'
-#' 'name:' %^.% 'james'        # yields 'name:james'
-#' 'name:james' %^.% 'james'   # also yields 'name:james'
+#' a %_% b                    # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+#' 'name:' %pastefront% 'james'        # yields 'name:james'
+#' 'name:' %pastefront% 'name:james'   # yields 'name:james'
+#' 'james' %pasteend% 'name:'          # yields 'name:james'
+#' 'james' %pasteend% 'name:james'     # yields 'name:james'
 #'
-#' @family operators provided by utilbox
-#' @export
-`%p%` = function(x, y) {
-  paste0(x, y)
-  #do.call("paste0", list(...))
-}
 
 #' @rdname concatenate
 #' @export
-`%..%` = function(x, y) {
-  paste(x, y)
-  #do.call("paste", list(...))
-}
-
-#' @rdname concatenate
-#' @export
-`%_%` = function(x, y) {
-  paste(x, y, sep="_")
-  #do.call("paste", list(..., sep='_'))
-}
-
-#' @rdname concatenate
-#' @export
-`%__%` = function(..., sep="_") {
+`%_%` = function(..., sep="_") {
   dots = as.character(dots_to_nlist()) #match.call(expand.dots = FALSE)$`...`
   strings = as.list(as.character(dots))
   do.call("paste", append(strings, list(sep=sep)))
@@ -115,16 +84,14 @@
   
 #' @rdname concatenate
 #' @export
-`%.^%` = function(x, y) {
-  #ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
-  ifelse(base::startsWith(y, x), y, x%p%y)
+`%pastefront%` = function(LHS, RHS) {
+  ifelse(base::startsWith(RHS, LHS), RHS, paste0(LHS, RHS))
 }
 
 #' @rdname concatenate
 #' @export
-`%^.%` = function(x, y) {
-  #ifelse(greplm('^('%p%x%p%')', y), y, x%p%y)
-  ifelse(base::endsWith(x, y), x, x%p%y)
+`%pasteend%` = function(LHS, RHS) {
+  ifelse(base::endsWith(RHS, LHS), RHS, paste0(RHS, LHS))
 }
 
 #' @title
@@ -132,157 +99,178 @@
 #'
 #' @description
 #'
-#' `\%match\%` (alias `\%m\%`) is an operator version of 
-#' `base::grepl`. It uses the left-hand side argument as the `pattern` 
-#' and the right-hand side argument as the `text` arguments of a call to 
-#' `base::grepl`. The call to `base::grepl` is vectorized, 
-#' which means that the operator also takes vector arguments (on either 
-#' side).
+#' `\%m\%` is an operator version of `base::grepl`. It uses the left-hand 
+#' side argument (`LHS`) as the pattern and the right-hand side argument
+#' (`RHS`) as the string that is compared with the pattern using a vectorized
+#' version of `base::grepl`. The vectorization means that the operator can 
+#' take non-scalar arguments (on either side). It is required that the two 
+#' arguments have the same length or that at least one of them has length 1. 
+#' The return value has length of the longer argument.
 #'
-#' `\%m_ic\%` is a version of `\%m\%` which ignores case by default.
+#' \code{\%like\%} does the same except with the roles of the two 
+#' arguments are reversed, i.e., `LHS` is the string and `RHS` is the 
+#' pattern (analogous to the keyword 'LIKE' in SQL).
 #'
-#' \code{\%matches\%} does the same except with the roles of the two 
-#' arguments reversed.
+#' `\%nm%` and `\%notlike%` are the negations of the two operators. 
+#' `\%mi\%`, `\%likei\%`, `\%nmi\%`, `\%notlikei\%` are case-insensitive 
+#' versions of the four operators above.
 #'
-#' `\%notmatch%` (alias `\%nm\%`) and `\%notmatches%` (alias 
-#' `\%nmes\%`) are the negations of the two operators.
+#' `\%likeany\%` is an \"any pattern\" version of `\%like\%`. It checks
+#' whether the elements of `LHS` match any of the elements in `RHS`, which
+#' are the patterns. The two arguments can have any length. The return value 
+#' has the same length as `LHS`.
 #'
-#' `\%nm_ic\%` is the case-insensitive version of `\%notmatch%` and 
-#' `\%nm\%`.
-#'
-#' `\%m_any\%` is an \"any pattern\" matching operator. For its RHS,
-#' it checks whether its elements match any of the patterns on the
-#' LHS, and returns logical indicators of this match. If an element
-#' on the RHS does not match any of the patters specified on the LHS,
-#' its corresponding returns value is `FALSE`, otherwise it is `TRUE`.
-#'
-#' `\%m_any_ic%` is a case-insensitive version of `\%m_any%`.
+#' `\%likeanyi%` is a case-insensitive version of `\%likeany%`.
 #'
 #' @examples
-#' # in one direction:
-#' "ay" %m% "daylight"
-#' "ai" %m% "daylight"
-#' "ay" %nm% "daylight"
-#' "ai" %nm% "daylight"
+#' # pattern on the left-hand side:
+#' 'ay' %m% 'daylight'              # TRUE
+#' 'ai' %m% 'daylight'              # FALSE
+#' 'ai' %m% 'daylight'              # FALSE
+#' 'ay' %nm% 'daylight'             # FALSE
+#' 'ai' %nm% 'daylight'             # TRUE
 #'
-#' # and in the opposite direction:
-#' "daylight" %matches% "ay"
-#' "daylight" %matches% "ai"
+#' # pattern on the left-hand side (vectors):
+#' c('ay','x') %m% 'daylight'       # TRUE, FALSE
+#' 'lig' %m% c('day','daylight')    # FALSE, TRUE
+#' rep('lig',3) %m% c('day','ops')  # error
 #'
-#' # case insensitive version:
-#' "DAYlight" %m_ic% "ay"
-#' "DAYlight" %m_ic% "ai"
+#' # pattern on the right-hand side:
+#' 'daylight' %like% 'ay'           # TRUE
+#' 'daylight' %like% 'ai'           # FALSE
+#' 'daylight' %notlike% 'ay'        # FALSE
+#' 'daylight' %notlike% 'ai'        # TRUE
+#'
+#' # pattern on the right-hand side:
+#' 'daylight' %like% c('ay','x')    # TRUE, FALSE
+#'
+#' # case insensitive versions:
+#' 'ay' %mi% 'DAYlight'             # TRUE
+#' 'aY' %mi% 'DAYlight'             # TRUE
+#' 'DAYlight' %likei% 'ay'          # TRUE
+#' 'DAYlight' %likei% 'aY'          # TRUE
+#'
+#' # any-pattern matching:
+#' c('Monday','January') %likeany% c('on','day','j')   # TRUE, FALSE, FALSE
+#' c('Monday','January') %likeanyi% c('on','day','j')  # TRUE, FALSE, TRUE
 #'
 #' @name operator_match
 #' @family operators provided by utilbox
 #' @export
-`%match%` = greplm
-
-#' @rdname operator_match
-#' @export
-`%m%` = `%match%`
-
-#' @rdname operator_match
-#' @export
-`%m_ic%` = function(pattern, x, ...) {
-  `%match%`(pattern, x, ignore.case=TRUE, ...)
-}
-#`%m_ic%` = `%match%`
-#base::formals(`%m_ic%`)[['ignore.case']] = TRUE
+`%m%` = greplm
 
 #' @rdname operator_match 
 #' @export
-`%notmatch%` = function(pattern, x, ...) {
-  !`%match%`(pattern, x, ...)
+`%nm%` = function(LHS, RHS) {
+  !greplm(LHS, RHS)
 }
-#`%notmatch%` = `%match%`
-#base::formals(`%notmatch%`)[['exclude']] = TRUE
-#`%notmatch%` = hijack(`%match%`, exclude=TRUE)
-#`%notmatch%` = Negate(`%match%`)
 
 #' @rdname operator_match
 #' @export
-`%nm%` = `%notmatch%`
+`%mi%` = function(LHS, x, ...) {
+  greplm(LHS, x, ignore.case=TRUE, ...)
+}
 
 #' @rdname operator_match
 #' @export
-`%nm_ic%` = function(pattern, x, ...) {
-  !`%match%`(pattern, x, ignore.case=TRUE, ...)
+`%nmi%` = function(LHS, x, ...) {
+  !greplm(LHS, x, ignore.case=TRUE, ...)
 }
-#`%nm_ic%` = `%notmatch%`
-#base::formals(`%nm_ic%`)[['ignore.case']] = TRUE
-#`%nm_ic%` = hijack(`%notmatch%`, ignore.case=TRUE)
 
 #' @rdname operator_match 
 #' @export
-`%matches%` = function(x, pattern, ...) {
-  `%match%`(pattern, x, ...)
+`%like%` = function(x, RHS, ...) {
+  greplm(RHS, x, ...)
 }
-
-#' @rdname operator_match
-#' @export
-`%mes%` = `%matches%`
 
 #' @rdname operator_match 
 #' @export
-`%notmatches%` = function(x, pattern, ...) {
-  !`%matches%`(pattern, x, ...)
-}
-#`%notmatches%` = `%matches%`
-#base::formals(`%notmatches%`)[['exclude']] = TRUE
-#`%notmatches%` = hijack(`%matches%`, exclude=TRUE)
-#`%notmatches%` = Negate(`%matches%`)
-
-#' @rdname operator_match
-#' @export
-`%nmes%` = `%notmatches%`
-
-#' @rdname operator_match
-#' @export
-`%m_any%` = function(pattern, x, ...) {
-  sapply(x, function(y) any(`%match%`(pattern, y, ...)))
+`%notlike%` = function(x, RHS, ...) {
+  !greplm(RHS, x, ...)
 }
 
-#' @rdname operator_match
+#' @rdname operator_match 
 #' @export
-`%m_any_ic%` = function(pattern, x, ignore.case=TRUE, ...) {
-  sapply(x, function(y) any(`%match%`(pattern, y, ignore.case=ignore.case, ...)))
+`%likei%` = function(x, RHS, ...) {
+  greplm(RHS, x, ignore.case=TRUE, ...)
 }
 
-#' @rdname operator_match
+#' @rdname operator_match 
 #' @export
-`%mes_any%` = function(x, pattern, ...) {
-  `%m_any%`(pattern , x, ...)
+`%notlikei%` = function(x, RHS, ...) {
+  !greplm(RHS, x, ignore.case=TRUE, ...)
 }
 
-#' @rdname operator_match
+#' @rdname operator_match 
 #' @export
-`%mes_any_ic%` = function(x, pattern, ignore.case=TRUE, ...) {
-  `%m_any%`(pattern, x, ignore.case=ignore.case, ...)
+`%likef%` = function(x, RHS, ...) {
+  greplm(RHS, x, fixed=TRUE, ...)
 }
 
-#' @rdname operator_match
+#' @rdname operator_match 
 #' @export
-`%nm_any%` = function(pattern, x, ...) {
-  !`%m_any%`(pattern, x, ...)
+`%notlikef%` = function(x, RHS, ...) {
+  !greplm(RHS, x, fixed=TRUE, ...)
+}
+
+#' @rdname operator_match 
+#' @export
+`%likefi%` = function(x, RHS, ...) {
+  greplm(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
+}
+
+#' @rdname operator_match 
+#' @export
+`%notlikefi%` = function(x, RHS, ...) {
+  !greplm(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%nm_any_ic%` = function(pattern, x, ignore.case=TRUE, ...) {
-  !`%m_any%`(pattern, x, ignore.case=ignore.case, ...)
+`%likeany%` = function(x, RHS, ...) {
+  sapply(x, function(y) any(grepl(RHS, y, ...)))
 }
 
 #' @rdname operator_match
 #' @export
-`%nmes_any%` = function(x, pattern, ...) {
-  !(pattern %m_any% x)
+`%notlikeany%` = function(x, RHS, ...) {
+  !`%likeany%`(x, RHS, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%nmes_any_ic%` = function(x, pattern, ignore.case=TRUE, ...) {
-  !(pattern %m_any_ic% x)
+`%likeanyi%` = function(x, RHS, ...) {
+  sapply(x, function(y) any(grepl(RHS, y, ignore.case=TRUE, ...)))
+}
+
+#' @rdname operator_match
+#' @export
+`%notlikeanyi%` = function(x, RHS, ...) {
+  !`%likeany%`(RHS, x, ignore.case=TRUE, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%likeanyf%` = function(x, RHS, ...) {
+  sapply(x, function(y) any(grepl(RHS, y, fixed=TRUE, ...)))
+}
+
+#' @rdname operator_match
+#' @export
+`%notlikeanyf%` = function(x, RHS, ...) {
+  !`%likeany%`(RHS, x, fixed=TRUE, ...)
+}
+
+#' @rdname operator_match
+#' @export
+`%likeanyfi%` = function(x, RHS, ...) {
+  sapply(x, function(y) any(grepl(RHS, y, fixed=TRUE, ignore.case=TRUE, ...)))
+}
+
+#' @rdname operator_match
+#' @export
+`%notlikeanyfi%` = function(x, RHS, ...) {
+  !`%likeany%`(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
 }
 
 #' @title
@@ -361,14 +349,14 @@
 #'
 #' Operators that change the name of an object by reassigning the 
 #' value from its left-hand side (for \code{\%->\%}) or right-hand side 
-#' (for \code{\%->\%}) and assigning the value to the variable on the 
+#' (for \code{\%<-\%}) and assigning the value to the variable on the 
 #' other side, thus effectively performing renaming of an object.
 #'
 #' @return The value originally found in `from`.
 #'
 #' @name renaming_operators
 #' @examples
-#' a = 100; a %->% b; b; exists('a')  # after the call b is 100 and a does not exist
+#' a = 100; a %->% b; b; exists('a')  # after the call b has the value 100 and a does not exist
 #' a = 100; b %<-% a; b; exists('a')  # same effect, opposite direction of syntax
 #'
 #' @family operators provided by utilbox

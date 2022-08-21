@@ -26,9 +26,9 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
   
     ## Extract the names only
     # Find the record opening opening 
-    b1 = strpos(x[k], "{", first=TRUE)
+    b1 = str_pos(x[k], "{", first=TRUE)
     if(b1<0) stop("Could not locate '{' for line ",k,": ",x[k])
-    b2 = strpos(x[k], "}", last=TRUE)
+    b2 = str_pos(x[k], "}", last=TRUE)
     if(b2<0) stop("Could not locate '}' for line ",k,": ",x[k])
     s1 = substr(x[k], 1, b1-1)
     s2 = substr(x[k], b1+1, b2-1)
@@ -63,9 +63,9 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
       a = a[nchar(a)>0]
       for(j in seq2(1,(length(a)-1),1)) {
         a[j] = if(!grepl(special_words,a[j])) {
-          substr(a[j],1,1) %p% dot 
+          paste0(substr(a[j],1,1), dot)
         } else {
-          " " %p% a[j]
+          paste0(" ", a[j])
         }
       }
       
@@ -80,24 +80,24 @@ fix_bibliography = function(infile, outfile, dot=".", lastname_first=TRUE,
         }
         
         n[i] = if(split==0) {
-          collapse1(a) 
+          paste(a, collapse=' ') 
         } else {
-          collapse1(tail(a,-split)) %p% ", " %p% collapse1(head(a, split))
+          paste0(paste(tail(a,-split), collapse=' '), ", ", paste(head(a, split), collapse=' '))
         }
         
       } else {
-        n[i] = collapse0(head(a, -1)) %p% tail(a,1)
+        n[i] = paste0(paste(head(a, -1), collapse=''), tail(a,1))
       }
     }
     
     # Paste the author line back together
-    x[k] = s1 %p% "{" %p% paste(n, collapse=" and ") %p% "},"
+    x[k] = paste0(s1, "{", paste(n, collapse=" and "), "},")
     
   }
 
   # Update the bibliography and save it to a file
   msgf("Saving bibliography to file '",outfile,"' ...")
-  catn(collapse0n(x), file=outfile)
+  catn(paste(x, collapse='\n'), file=outfile)
   
 }
 

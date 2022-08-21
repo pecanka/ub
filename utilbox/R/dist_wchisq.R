@@ -19,7 +19,7 @@
 qchisqw = function(p, weights, lower.tail=TRUE, epsw=1e-5, epsv=1e-12, df0=2) {
 
   if(any(weights<0)) 
-    error("All values in 'weights' must be non-negative.")
+    stop("All values in 'weights' must be non-negative.")
   
   # Check the input
   np = length(p)
@@ -48,7 +48,7 @@ qchisqw = function(p, weights, lower.tail=TRUE, epsw=1e-5, epsv=1e-12, df0=2) {
     }
     
     if(x$value>epsv) 
-      error("Non-convergent optimization (value ",x$value,").")
+      stop("Non-convergent optimization (value ",x$value,").")
       
     x$par
   }

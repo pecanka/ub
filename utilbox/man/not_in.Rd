@@ -26,7 +26,6 @@ otherwise.
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},
 \code{\link{operator_c}},

@@ -93,7 +93,7 @@ palette_ub = function(n) {
   
   if(missing(n)) n = length(palette)
   
-  h1(palette, n)
+  head(palette, n)
   
 }
 
@@ -180,7 +180,7 @@ show_Colors = function(n, col, cex=3, pch=16, pos1=2, pos2=4, adj1=-.25, adj2=0.
   y = - ((y-1)%%20+1)
   par(mar=c(0,0,0,0), oma=c(0,0,0,0))
   plot(y=y, x=x, cex=cex, pch=pch, col=col, xlim=range(x)+c(-1,3), ylim=range(y)+c(-1,1), axes=FALSE)
-  text(1:length(col)%p%'.', x=x+adj1, y=y, cex=0.7, pos=pos1)
+  text(paste0(1:length(col), '.'), x=x+adj1, y=y, cex=0.7, pos=pos1)
   text(col, x=x+adj2, y=y, cex=0.8, pos=pos2)
 }
 
@@ -201,7 +201,7 @@ hist2 = function(..., nbreaks) {
     arg = list(...)
     x = if(any(names(arg)=="x")) arg[["x"]] else arg[[1]]
     x = x[is.finite(x)]
-    if(length(x)==0) error("No values to plot.")
+    if(length(x)==0) stop("No values to plot.")
     breaks = seq(min(min(x)*0.99,min(x)-1e-9),max(max(x)*1.01,max(x)+1e-9), l=nbreaks)
     hist(..., breaks=breaks)
   }

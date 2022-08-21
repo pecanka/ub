@@ -1,6 +1,3 @@
-# This is just a short selection of simple web utilities. 
-# For more a sophisticated list of tools look at other packages such as httr and RCurl.
-
 #' @title
 #' Public IP address
 #'
@@ -41,6 +38,7 @@ download_file = function(url, destfile=separate_paths(url)$files, ...) {
 #' @title
 #' Download a file and read it
 #'
+#' @description
 #' `read_url_via_download()` is a workaround for when a direct reading of
 #' files from the web does not work (e.g. due to proxy) while the files
 #' are accessible for download. `read_url_via_download()` takes the url 
@@ -59,14 +57,14 @@ read_url_via_download = function(url, read_fun, ..., retain_file=FALSE, destfile
   }
 
   if(missing(destfile)) {
-    destfile = random_filename(nchar=10)%p%'.tmp'
+    destfile = paste0(random_filename(nchar=10), '.tmp')
   }
 
   if(!retain_file) {
     on.exit(file.remove(destfile))
   }
 
-  do.call(download.file, nlist(url, destfile) %append% opts)
+  do.call(download.file, append(nlist(url, destfile), opts))
   
   read_fun(destfile, ...)
   
@@ -124,8 +122,8 @@ url_exists = function(url, ok_status=200) {
 #' @export
 url_exists1 = function(url) {
   
-  if('^https:' %m% url) 
-    error("Only plain/unencrypted (http) URLs allowed.")
+  if(url %likei% '^https:') 
+    stop("Only plain/unencrypted (http) URLs allowed.")
   
   RCurl::url.exists(url, useragent="curl/7.39.0 Rcurl/1.95.4.5")
   

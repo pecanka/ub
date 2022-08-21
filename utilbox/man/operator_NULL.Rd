@@ -55,7 +55,6 @@ try(round('a'), silent=TRUE) \%ERRCLS\% 0    # returns 0
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_append}},
 \code{\link{operator_c}},

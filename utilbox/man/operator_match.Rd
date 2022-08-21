@@ -2,110 +2,129 @@
 % Please edit documentation in R/operators.R
 \name{operator_match}
 \alias{operator_match}
-\alias{\%match\%}
 \alias{\%m\%}
-\alias{\%m_ic\%}
-\alias{\%notmatch\%}
 \alias{\%nm\%}
-\alias{\%nm_ic\%}
-\alias{\%matches\%}
-\alias{\%mes\%}
-\alias{\%notmatches\%}
-\alias{\%nmes\%}
-\alias{\%m_any\%}
-\alias{\%m_any_ic\%}
-\alias{\%mes_any\%}
-\alias{\%mes_any_ic\%}
-\alias{\%nm_any\%}
-\alias{\%nm_any_ic\%}
-\alias{\%nmes_any\%}
-\alias{\%nmes_any_ic\%}
+\alias{\%mi\%}
+\alias{\%nmi\%}
+\alias{\%like\%}
+\alias{\%notlike\%}
+\alias{\%likei\%}
+\alias{\%notlikei\%}
+\alias{\%likef\%}
+\alias{\%notlikef\%}
+\alias{\%likefi\%}
+\alias{\%notlikefi\%}
+\alias{\%likeany\%}
+\alias{\%notlikeany\%}
+\alias{\%likeanyi\%}
+\alias{\%notlikeanyi\%}
+\alias{\%likeanyf\%}
+\alias{\%notlikeanyf\%}
+\alias{\%likeanyfi\%}
+\alias{\%notlikeanyfi\%}
 \title{Regular expression match operator}
 \usage{
-pattern \%match\% x
-
 pattern \%m\% x
 
-pattern \%m_ic\% x
+LHS \%nm\% RHS
 
-pattern \%notmatch\% x
+LHS \%mi\% x
 
-pattern \%nm\% x
+LHS \%nmi\% x
 
-pattern \%nm_ic\% x
+x \%like\% RHS
 
-x \%matches\% pattern
+x \%notlike\% RHS
 
-x \%mes\% pattern
+x \%likei\% RHS
 
-x \%notmatches\% pattern
+x \%notlikei\% RHS
 
-x \%nmes\% pattern
+x \%likef\% RHS
 
-pattern \%m_any\% x
+x \%notlikef\% RHS
 
-pattern \%m_any_ic\% x
+x \%likefi\% RHS
 
-x \%mes_any\% pattern
+x \%notlikefi\% RHS
 
-x \%mes_any_ic\% pattern
+x \%likeany\% RHS
 
-pattern \%nm_any\% x
+x \%notlikeany\% RHS
 
-pattern \%nm_any_ic\% x
+x \%likeanyi\% RHS
 
-x \%nmes_any\% pattern
+x \%notlikeanyi\% RHS
 
-x \%nmes_any_ic\% pattern
+x \%likeanyf\% RHS
+
+x \%notlikeanyf\% RHS
+
+x \%likeanyfi\% RHS
+
+x \%notlikeanyfi\% RHS
 }
 \description{
-\verb{\\\%match\\\%} (alias \verb{\\\%m\\\%}) is an operator version of
-\code{base::grepl}. It uses the left-hand side argument as the \code{pattern}
-and the right-hand side argument as the \code{text} arguments of a call to
-\code{base::grepl}. The call to \code{base::grepl} is vectorized,
-which means that the operator also takes vector arguments (on either
-side).
+\verb{\\\%m\\\%} is an operator version of \code{base::grepl}. It uses the left-hand
+side argument (\code{LHS}) as the pattern and the right-hand side argument
+(\code{RHS}) as the string that is compared with the pattern using a vectorized
+version of \code{base::grepl}. The vectorization means that the operator can
+take non-scalar arguments (on either side). It is required that the two
+arguments have the same length or that at least one of them has length 1.
+The return value has length of the longer argument.
 
-\verb{\\\%m_ic\\\%} is a version of \verb{\\\%m\\\%} which ignores case by default.
+\code{\%like\%} does the same except with the roles of the two
+arguments are reversed, i.e., \code{LHS} is the string and \code{RHS} is the
+pattern (analogous to the keyword 'LIKE' in SQL).
 
-\code{\%matches\%} does the same except with the roles of the two
-arguments reversed.
+\verb{\\\%nm\%} and \verb{\\\%notlike\%} are the negations of the two operators.
+\verb{\\\%mi\\\%}, \verb{\\\%likei\\\%}, \verb{\\\%nmi\\\%}, \verb{\\\%notlikei\\\%} are case-insensitive
+versions of the four operators above.
 
-\verb{\\\%notmatch\%} (alias \verb{\\\%nm\\\%}) and \verb{\\\%notmatches\%} (alias
-\verb{\\\%nmes\\\%}) are the negations of the two operators.
+\verb{\\\%likeany\\\%} is an \"any pattern\" version of \verb{\\\%like\\\%}. It checks
+whether the elements of \code{LHS} match any of the elements in \code{RHS}, which
+are the patterns. The two arguments can have any length. The return value
+has the same length as \code{LHS}.
 
-\verb{\\\%nm_ic\\\%} is the case-insensitive version of \verb{\\\%notmatch\%} and
-\verb{\\\%nm\\\%}.
-
-\verb{\\\%m_any\\\%} is an \"any pattern\" matching operator. For its RHS,
-it checks whether its elements match any of the patterns on the
-LHS, and returns logical indicators of this match. If an element
-on the RHS does not match any of the patters specified on the LHS,
-its corresponding returns value is \code{FALSE}, otherwise it is \code{TRUE}.
-
-\verb{\\\%m_any_ic\%} is a case-insensitive version of \verb{\\\%m_any\%}.
+\verb{\\\%likeanyi\%} is a case-insensitive version of \verb{\\\%likeany\%}.
 }
 \examples{
-# in one direction:
-"ay" \%m\% "daylight"
-"ai" \%m\% "daylight"
-"ay" \%nm\% "daylight"
-"ai" \%nm\% "daylight"
+# pattern on the left-hand side:
+'ay' \%m\% 'daylight'              # TRUE
+'ai' \%m\% 'daylight'              # FALSE
+'ai' \%m\% 'daylight'              # FALSE
+'ay' \%nm\% 'daylight'             # FALSE
+'ai' \%nm\% 'daylight'             # TRUE
 
-# and in the opposite direction:
-"daylight" \%matches\% "ay"
-"daylight" \%matches\% "ai"
+# pattern on the left-hand side (vectors):
+c('ay','x') \%m\% 'daylight'       # TRUE, FALSE
+'lig' \%m\% c('day','daylight')    # FALSE, TRUE
+rep('lig',3) \%m\% c('day','ops')  # error
 
-# case insensitive version:
-"DAYlight" \%m_ic\% "ay"
-"DAYlight" \%m_ic\% "ai"
+# pattern on the right-hand side:
+'daylight' \%like\% 'ay'           # TRUE
+'daylight' \%like\% 'ai'           # FALSE
+'daylight' \%notlike\% 'ay'        # FALSE
+'daylight' \%notlike\% 'ai'        # TRUE
+
+# pattern on the right-hand side:
+'daylight' \%like\% c('ay','x')    # TRUE, FALSE
+
+# case insensitive versions:
+'ay' \%mi\% 'DAYlight'             # TRUE
+'aY' \%mi\% 'DAYlight'             # TRUE
+'DAYlight' \%likei\% 'ay'          # TRUE
+'DAYlight' \%likei\% 'aY'          # TRUE
+
+# any-pattern matching:
+c('Monday','January') \%likeany\% c('on','day','j')   # TRUE, FALSE, FALSE
+c('Monday','January') \%likeanyi\% c('on','day','j')  # TRUE, FALSE, TRUE
 
 }
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},

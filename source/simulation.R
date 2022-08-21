@@ -132,12 +132,12 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
   model=c("norm", "unif"), two.sided=FALSE, evaluate_signif=FALSE, lambda, trace=1) {
 
   if(missing(M)) 
-    error("Missing argument 'M'.")
+    stop("Missing argument 'M'.")
     
   if(missing(N)) {
     
     if(missing(Sigma) || !is.matrix(Sigma)) 
-      error("Either 'N' or 'Sigma' (matrix) must be supplied.")
+      stop("Either 'N' or 'Sigma' (matrix) must be supplied.")
       
     N = nrow(Sigma)
     
@@ -146,7 +146,7 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
   if(trace>0) cat("Simulating ",M*N," p-values ... ")
   
   if(!missing(Sigma) && is.null(Sigma) && type=="bySigma")
-    error("Either supply non-null Sigma or change the type to something other than 'bySigma'.")
+    stop("Either supply non-null Sigma or change the type to something other than 'bySigma'.")
           
   if(!missing(Sigma) && !is.null(Sigma)) {
   
@@ -155,11 +155,11 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
     if(length(Sigma)==1) Sigma = diag2(rep(1, N), Sigma)
     
     if(n0+n1!=nrow(Sigma)) 
-      error("There's a conflict between n0, n1 and Sigma.")    
+      stop("There's a conflict between n0, n1 and Sigma.")    
     if(length(mu0)!=1 && length(mu0)!=n0) 
-      error("Supply consistent mu0 and n0.")
+      stop("Supply consistent mu0 and n0.")
     if(length(mu1)!=1 && length(mu1)!=n1) 
-      error("Supply consistent mu1 and n1.")
+      stop("Supply consistent mu1 and n1.")
 
     mu = sqrt(n) * c(rep(mu1, n1/length(mu1)), rep(mu0, n0/length(mu0)))
     
@@ -183,10 +183,10 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
       p = if(two.sided) 2*pnorm(abs(nn), lower.tail=FALSE) else pnorm(nn, lower.tail=FALSE)
       rm(nn)
       
-    } else error("Unknown model '",model,"'.")
+    } else stop("Unknown model '",model,"'.")
     
     if(!is_posdef(Sigma)) 
-      error("Sigma must be positive-definite.")
+      stop("Sigma must be positive-definite.")
     
     N = nrow(Sigma)
     
@@ -229,7 +229,7 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
     if(trace>0) cat("(completely dependent) ... ")
     p = matrix(runif(M), nrow=M, ncol=N)
 
-  } else error("Unknown type=",type,".")
+  } else stop("Unknown type=",type,".")
 
   if(trace>0) cat("done.\n")
 

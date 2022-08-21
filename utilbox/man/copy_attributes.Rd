@@ -4,7 +4,7 @@
 \alias{copy_attributes}
 \title{Copy attributes from one object to another}
 \usage{
-copy_attributes(to, from, ..., pattern = FALSE, fixed = FALSE)
+copy_attributes(to, from, ..., match_pattern = FALSE, fixed = FALSE)
 }
 \description{
 Copy specified attributes from one object to another. The specification

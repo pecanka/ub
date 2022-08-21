@@ -201,11 +201,15 @@ str_scrub_space = function(x, newline_is_space=FALSE) {
 #' @rdname str_trim_space
 #' @export
 str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
+
   if(split_punct && length(punct)==1 && nchar(punct)>1) {
     punct = unlist(strsplit(punct, ''))
   }
+
   no_punc = str_last(str_trim_space(x, side='right')) %notin% punct
-  ifelse(no_punc, x %p% p, x)
+
+  ifelse(no_punc, paste0(x, p), x)
+
 }
 
 #' @title
@@ -234,13 +238,18 @@ str_add_punct = function(x, p='.', punct='.!?', trim=TRUE, split_punct=TRUE) {
 #' @family string-manipulation functions provided by utilbox
 #' @export
 str_insert = function(x, what, pos, insert_white=FALSE, str2_shift=0, workhorse=substring) {
+
   str1 = do.call(workhorse, list(x, 1, pos-1))
+  
   if(insert_white) {
     nspace = pos - 1 - nchar(str1) + nchar(what)
-    what = sprintf('%'%p%nspace%p%'s', what)
+    what = sprintf(paste0('%', nspace, 's'), what)
   }
+  
   str2 = do.call(workhorse, list(x, pos + str2_shift, nchar(x)))
-  str1 %p% what %p% str2
+  
+  paste0(str1, what, str2)
+  
 }
 
 #' @rdname str_insert
@@ -294,9 +303,9 @@ str_last = function(x, n=1, drop=FALSE) {
 #'
 #' @description
 #'
-#' `str_rev` takes character input (scalar, vector, list, etc) and 
-#' reverses the order of characters in each of its elements. Generally, 
-#' tries to preserve input class (i.e. lists stay lists).
+#' `str_rev` takes character input (character or numeric vector or a list 
+#' of such vectors) and reverses the order of characters in each of its 
+#' elements.
 #'
 #' @examples
 #' str_rev('world')
@@ -304,18 +313,35 @@ str_last = function(x, n=1, drop=FALSE) {
 #'
 #' @family string-manipulation functions provided by utilbox
 #' @export
-str_rev = function(x, simplify=!is.list(x)) {
-  sapply(x, function(y) collapse0(rev(str2vector(y))), simplify=simplify, USE.NAMES=FALSE)
+str_rev.character = function(x) {
+  unlist(lapply(strsplit(x, NULL), function(y) paste(rev(y), collapse='')))
 }
+
+str_rev.numeric = function(x) {
+  str_rev.character(as.character(x))
+}
+
+str_rev.list = function(x) {
+  lapply(strsplit(unlist(x), NULL), function(y) paste(rev(y), collapse=''))
+  #lapply(x, function(y) paste(rev(unlist(strsplit(y, NULL))), collapse=''))
+}
+
+str_rev = function(x, ...) {
+  UseMethod('str_rev')
+}
+
+#str_rev0 = function(x, simplify=!is.list(x)) {
+#  sapply(x, function(y) paste(rev(str2vector(y)), collapse=''), simplify=simplify, USE.NAMES=FALSE)
+#}
 
 #' @title
 #' Find the first or last occurrence of a substring
 #'
 #' @description
 #'
-#' `str_pos` finds the first (when `first=TRUE`) and/or the last 
-#' (`last=TRUE`) occurrence of a substring (given as regular pattern) in 
-#' a string.
+#' `str_pos` finds the first (when `first=TRUE`) and/or the last (`last=TRUE`)
+#' occurrence of a substring (given as regular pattern when `fixed=FALSE`, or
+#' as a plain string when `fixed=TRUE`) in a string.
 #'
 #' `str_first_occurence` returns the position of the first occurrence 
 #' of `what` inside `x`, or the value in `miss` (-1 by default) if none 
@@ -355,7 +381,7 @@ str_pos = function(string, what, first=TRUE, last=FALSE, patternize=FALSE, escap
 #' @rdname str_pos
 #' @export
 str_first_occurence = function(x, what, miss=-1) {
-  p = c(unlist(regexpr('('%p%str_escape(what)%p%')', x)))
+  p = c(unlist(regexpr(paste0('(', str_escape(what), ')'), x)))
   ifelse(p < 0, miss, p)
 }
 
@@ -363,7 +389,7 @@ str_first_occurence = function(x, what, miss=-1) {
 #' @export
 str_last_occurence = function(x, what, miss=-1, escape=TRUE) {
   w = if(escape) str_escape(what) else what
-  p = c(t1(unlist(gregexpr('(' %p%w%p%')', x))))
+  p = c(tail(unlist(gregexpr(paste0('(', w, ')'), x)),1))
   ifelse(p < 0, miss, p)
 }
 
@@ -423,9 +449,9 @@ str_pad0 = function(x, min_width=max(nchar(x))+1, padding='0', nextra=0, side=c(
   pad = substr(spaces(npd, padding), 1, min_width-nchar(x))
 
   if(side=='left') {
-    pad %p% x
+    paste0(pad, x)
   } else {
-    x %p% pad
+    paste0(x, pad)
   }
 
 }
@@ -450,7 +476,7 @@ int_pad = function(x, min_width, format, fmt='d') {
     if(missing(min_width)) {
       min_width = max(ndigits(x))
     }  
-    format = '%0' %p% min_width %p% fmt
+    format = paste0('%0', min_width, fmt)
   }
   
   sprintf(format, x)
@@ -468,7 +494,7 @@ num_pad = function(x, min_nint, min_ndig=6, fmt='f', format) {
       min_nint = max(ndigits(int_part(x)))
     }  
     min_width = min_nint + I(x<0) + min_ndig + 1
-    format = '%0' %p% min_width %p% fmt
+    format = paste0('%0', min_width, fmt)
   }
   
   sprintf(format, x)
@@ -497,7 +523,7 @@ spaces = function(n, char=' ') {
 #' it only places the breaks between words.
 #'
 #' @examples
-#' string = collapse0(rep(collapse0(letters[1:8]),10), sep=" ")
+#' string = paste(rep('Rododendrons are pretty.',4), collapse=" ")
 #'
 #' # insert line breaks at given width
 #' message(str_break(string, max_width=20))
@@ -506,47 +532,116 @@ spaces = function(n, char=' ') {
 #' message(str_break(string, max_width=20, break_only_at_space=TRUE))
 #'
 #' @export
-str_break = function(x, max_width=Inf, eol='\n', break_only_at_space=FALSE) {
+str_break = function(x, max_width=Inf, break_only_at_space=FALSE, drop_space_after_newline=FALSE, eol='\n') {
+
+  if(break_only_at_space) {
+    str_break_at_space(x, max_width, drop_space_after_newline, eol)
+  } else {
+    str_break_anywhere(x, max_width, drop_space_after_newline, eol)
+  }
+
+}
+
+#' Break string into lines (anywhere)
+#'
+#' Break strings into lines so that the maximum length of a line does
+#' not exceed `max_width`. Line breaks are place anywhere (i.e., even
+#' in the middle of words).
+#'
+str_break_anywhere = function(x, max_width=Inf, drop_space_after_newline=FALSE, eol='\n') {
 
   if(length(x)>1) {
-    sapply(x, str_break, max_width, eol, break_only_at_space, USE.NAMES=FALSE)
+    return(unlist(lapply(x, str_break_anywhere, max_width, drop_space_after_newline, eol)))
   }
   
-  stopifnot(length(x)==1, length(max_width)==1, length(eol)==1)
+  stopifnot(length(x)==1, length(max_width)==1, max_width>=1, length(eol)==1)
   
   n = nchar(x)
   
-  if(n<=max_width) return(x)
+  if(n <= max_width) 
+    return(x)
+
+  nl = rep(c(rep('',max_width-1),'\n'), length.out=n)
+  nl[length(nl)] = ''
   
-  wb = n
-  weol = str_first_occurence(x, eol, Inf)
-  wsp = 1 + str_last_occurence(substr(x,2,max_width), '\\s+', miss=Inf)
+  txt = unlist(strsplit(x, '\\n'))
+  if(grepl('\\n$',x)) 
+    txt = c(txt, '')
   
-  if(weol<wb) {
-    wb = weol
+  if(drop_space_after_newline) {
+    txt = lapply(txt, str_strip_eol_space, max_width)
   }
   
-  if(!break_only_at_space) {
-    wb = max_width
-  } else {
+  txt = lapply(txt, function(y) paste(paste0(unlist(strsplit(y, NULL)), head(nl, nchar(y))), collapse=''))
+  txt = lapply(txt, gsub, pattern='\\n$', replacement='')
+  txt = paste(unlist(txt), collapse='\n')
   
-    if(wsp<wb) {
-      wb = wsp
-    }
+  txt
+  
+}
+
+#' Break string into lines (at white spaces only)
+#'
+#' Break strings into lines so that the maximum length of a line does
+#' not exceed `max_width` except when there is a single word longer
+#' than `max_width`). Lines are places only at white spaces.
+#'
+str_break_at_space = function(x, max_width=Inf, drop_space_after_newline=FALSE, eol='\n') {
+
+  if(length(x)>1) {
+    return(unlist(lapply(x, str_break_at_space, max_width, drop_space_after_newline, eol)))
+  }
+  
+  stopifnot(length(x)==1, length(max_width)==1, max_width>=1, length(eol)==1)
+  
+  n = nchar(x)
+  
+  if(n <= max_width) 
+    return(x)
     
-    if(wb>max_width) {
-      wb = str_first_occurence(substr(x,max_width,n), '\\s+', miss=n)
-    }
-    
-  }
+  txt = unlist(strsplit(x, '\\n'))
+  if(grepl('\\n$',x)) 
+    txt = c(txt, '')
   
-  if(wb >= n || wb==n-1 && str_last(x)==eol) {
-    x
-  } else {
-    args = nlist(max_width, eol, break_only_at_space)
-    substr(x, 1, wb) %p% ifelse(wb==weol, '', eol) %p% 
-      do.call(Recall, list(substr(x, wb+1, n)) %append% args)
-  }
+  #if(drop_space_after_newline) {
+  #  txt = lapply(txt, str_strip_eol_space, max_width)
+  #}
+  
+  txt = lapply(txt, function(y) {
+                      ws = unlist(strsplit(y, '\\s+'))
+                      W = ''
+                      for(w in ws) {
+                        nW = nchar(sub('.*\\n','',W))
+                        sep = if(nW>0 && nW + nchar(w) > max_width) '\n' else if(nW>0) ' ' else ''
+                        W = paste0(W, sep, w)
+                      }
+                      W
+                    })
+
+  txt = paste(unlist(txt), collapse='\n')
+  
+  txt
+  
+}
+
+#' Strip space at the end of a line
+#'
+#' If a string in `y` has a space as each `width`+1 position, it is 
+#' removed.
+#'
+str_strip_eol_space = function(y, width) { 
+  
+  if(nchar(y)<=width) return(y)
+  
+  ys = unlist(strsplit(y, NULL))
+  
+  idx = seq(width, length(ys)-1, by=width) 
+  idx = idx + 1:length(idx)
+  idx = idx[idx <= length(ys)]
+  
+  ys[idx] = ifelse(ys[idx]==' ', '', ys[idx])
+  
+  paste(ys, collapse='')
   
 }
 
@@ -634,9 +729,9 @@ str_paste_grid = function(..., vars, sep1='=', sep2='_') {
 #' many characters were cut out.
 #'
 #' @examples
-#' let = collapse0(letters)
-#' LET = collapse0(LETTERS)
-#' str_abbreviate(collapse0(c(let, LET, let, LET)))
+#' let = paste(letters, collapse='')
+#' LET = paste(LETTERS, collapse='')
+#' str_abbreviate(paste(c(let, LET, let, LET), collapse=''))
 #'
 #' @export
 str_abbreviate = function(x, n1=12, n2) {
@@ -645,7 +740,7 @@ str_abbreviate = function(x, n1=12, n2) {
   part1 = substr(x, 1, n1)
   part2 = substr(x, pmax(nchar(x)-n2+1, n1+1), nchar(x))
   ncut = nchar(x) - nchar(part1) - nchar(part2)
-  x = part1 %p% msg_character_shortened(ncut) %p% part2
+  x = paste0(part1, msg_character_shortened(ncut), part2)
   
   structure(x, ncut=ncut, class=c('abbrevstr', class(x)))
 

@@ -2,14 +2,7 @@
 % Please edit documentation in R/web.R
 \name{read_url_via_download}
 \alias{read_url_via_download}
-\title{Download a file and read it
-
-\code{read_url_via_download()} is a workaround for when a direct reading of
-files from the web does not work (e.g. due to proxy) while the files
-are accessible for download. \code{read_url_via_download()} takes the url
-address of the file to read via \code{url} and after downloading it reads
-the file using \code{fun} (e.g. \code{base::scan} or \code{xml2::read_html}). The
-downloaded file is deleted after reading unless \code{retain_file=TRUE}.}
+\title{Download a file and read it}
 \usage{
 read_url_via_download(
   url,
@@ -21,8 +14,6 @@ read_url_via_download(
 )
 }
 \description{
-Download a file and read it
-
 \code{read_url_via_download()} is a workaround for when a direct reading of
 files from the web does not work (e.g. due to proxy) while the files
 are accessible for download. \code{read_url_via_download()} takes the url

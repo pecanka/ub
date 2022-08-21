@@ -127,7 +127,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
 
   # Check for unknown combination method
   if(all(method!=c("fisher","stouffer","jakub","jelle")))
-    error("Unknown combination method '",method,"'.")
+    stop("Unknown combination method '",method,"'.")
   
   # Replace non-sensical p-values with NA
   if(trace>0) msgf("Checking for NA values ...")
@@ -154,7 +154,9 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
   # Check problems with P and lambda
   if(any(dim(mat_lam)!=dim(P)))
     stop("Incompatible sizes of lam and P!")
-  if(all(lam==0)) stop("Some values in lam must be non-zero!")
+    
+  if(all(lam==0)) 
+    stop("Some values in lam must be non-zero!")
   
   # Transform p-values to chisquare-2 variables
   if(trace>0) cat("Getting the logarithm of the p-values ...\n")
@@ -223,7 +225,7 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
       mdif = apply(mat_lam, 1, min_dif)
       
       if(any(mdif==0))
-        error("Some weights are equal.")
+        stop("Some weights are equal.")
       
       Q = X0 / mat_lam
       PQ = pchisq(Q, df=2, lower.tail=FALSE)
@@ -248,9 +250,9 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     } # if(method=="jakub")
 
     if(any(is.na(PP) & !is.na(X0)))
-      error("Non-NA input p-values were combined into NA p-values.")
+      stop("Non-NA input p-values were combined into NA p-values.")
     if(any(!is.na(PP)) && min(PP, na.rm=TRUE)<0)
-      error("Some p-values are negative.")
+      stop("Some p-values are negative.")
       
   }
 
@@ -258,8 +260,8 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
   if(any(PP<0.0, na.rm=TRUE)) {
     wn = which(PP<0.0)
     if(!exists(".pAsymptotic", mode="function"))
-      error("Missing function .pAsymptotic(). Look for Jelle's script that",
-            " defines the function.")
+      stop("Missing function .pAsymptotic(). Look for Jelle's script that",
+           " defines the function.")
     PP[wn] = sapply(seq_along(wn), function(i) 
                .pAsymptotic(X0[wn[i]], lams=rep(mat_lam[i,], t=2), accuracy=1e-100))
   }
@@ -295,9 +297,10 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
 
   # If there are still negative or NA p-values, stop
   if(any(PP<0.0, na.rm=TRUE))
-    error("Some p-values are negative.")
+    stop("Some p-values are negative.")
+    
   if(any(is.na(PP) & !is.na(X0)))
-    error("Non-NA input p-values were combined into NA p-values.")
+    stop("Non-NA input p-values were combined into NA p-values.")
 
   return(PP)
 

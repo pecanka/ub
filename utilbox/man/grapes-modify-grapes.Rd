@@ -18,7 +18,6 @@ list(a=1, b=2) \%modify\% list(b=3, c=4)
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},

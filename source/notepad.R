@@ -25,12 +25,12 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
   # 20000 characters, a limitations of Notepad++) by the R base, 
   # Keywords7 is reserved for overflow by the tidyverse words.
   if(missing(fields)) {
-    fields = 'Keywords' %p% c(1:6,8)
+    fields = paste0('Keywords', c(1:6,8))
   }
 
   if(length(fields)>1 && length(keywords)>1 && !is.list(keywords))
-    error("`keywords` should be a named list with names matching the fields",
-          " that they keywords should be appended to.")
+    stop("`keywords` should be a named list with names matching the fields",
+         " that they keywords should be appended to.")
           
   if(!is.null(keywords) && !is.list(keywords)) 
     keywords = `names<-`(list(keywords), fields)
@@ -44,11 +44,11 @@ notepad_update_highlighting = function(fields, keywords=NULL, npp_path, npp_lang
 
   # update the keywords
   #kw_extra = if(field=='type1') {
-  #  list_package_all(utilbox, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
+  #  list_package_all('utilbox', pattern='^[.a-zA-Z0-9_]+$', mode='function')[[1]]$object_name
   #} else if(field=='instre2') {
-  #  fbase = list_package_exported(base, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
-  #  fstats = list_package_exported(stats, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
-  #  futils = list_package_exported(utils, pattern='^[.a-zA-Z0-9_]+$', mode='function')$name
+  #  fbase = list_package_exported('base', pattern='^[.a-zA-Z0-9_]+$', mode='function')[[1]]$object_name
+  #  fstats = list_package_exported('stats', pattern='^[.a-zA-Z0-9_]+$', mode='function')[[1]]$object_name
+  #  futils = list_package_exported('utils', pattern='^[.a-zA-Z0-9_]+$', mode='function')[[1]]$object_name
   #  c(fbase, fstats, futils)
   #} else {
   #  msgf("No names added with field '",field,"'.")
@@ -94,25 +94,25 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   # set what entry to look for (via 'keyword=' on input)
   update_lang_open = '<(Language|UserLang) name=\"r\"'
   update_lang_close = '</(Language|UserLang)>'
-  update_kwrd_open = '<Keywords name=\"' %p% key_name %p% '\">'
+  update_kwrd_open = paste0('<Keywords name=\"', key_name, '\">')
   update_kwrd_close = '</Keywords>'
 
   # locate the correct language entry
-  w_lang_open = which(update_lang_open %m_ic% code)
-  w_lang_close = first_above(which(update_lang_close %m_ic% code), w_lang_open)
+  w_lang_open = which(code %likei% update_lang_open)
+  w_lang_close = first_above(which(code %likei% update_lang_close), w_lang_open)
   
   # locale the correct keyword entry
-  w_kwrd_open = first_above(which(update_kwrd_open %m_ic% code), w_lang_open)
-  w_kwrd_close = first_above_soft(which(update_kwrd_close %m_ic% code), w_kwrd_open)
+  w_kwrd_open = first_above(which(code %likei% update_kwrd_open), w_lang_open)
+  w_kwrd_close = first_above_soft(which(code %likei% update_kwrd_close), w_kwrd_open)
   stopifnot(!is_empty(w_kwrd_open), w_kwrd_open<=w_lang_close)
   stopifnot(!is_empty(w_kwrd_close), w_kwrd_close<=w_lang_close)
 
   # extract the keyword entry
   wkw = w_kwrd_open:w_kwrd_close
-  code_kw = collapse0(code[wkw])
+  code_kw = paste(code[wkw], collapse='')
   
   # prepare to update the keyword entry
-  new_kw_all = collapse0(keywords, sep=' ')
+  new_kw_all = paste(keywords, collapse=' ')
   n_extra_keywords = ceiling(nchar(new_kw_all) / max_nchar) - 1
   
   if(n_extra_keywords > 0) {
@@ -122,10 +122,11 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   }
   
   nlhold = 'XXX'
-  extra_keyname_hold = unnumber(key_name) %p% nlhold
-  extra_keyname = unnumber(key_name) %p% (force_as_integer(key_name)+0:n_extra_keywords)
-  new_kw_all = str_break(new_kw_all, max_nchar, eol='</Keywords>\n<Keywords name=\"'%p%
-                          extra_keyname_hold%p%'\"> ', break_only_at_space=TRUE)
+  extra_keyname_hold = paste0(unnumber(key_name), nlhold)
+  extra_keyname = paste0(unnumber(key_name), force_as_integer(key_name)+0:n_extra_keywords)
+  new_kw_all = str_break(new_kw_all, max_nchar, 
+                         eol=paste0('</Keywords>\n<Keywords name=\"', extra_keyname_hold, '\"> '), 
+                         break_only_at_space=TRUE)
   if(n_extra_keywords > 0) {
     new_kw_all = subm(new_kw_all, extra_keyname_hold, extra_keyname[-1])
   }
@@ -136,7 +137,7 @@ notepad_key_update = function(keywords, key_name, code, max_nchar=20000) {
   old_kw = unlist(str_grab('>[^<>]*<', code_kw))
   
   # update the entry
-  new_kw = '> ' %p% new_kw_all %p% ' <'
+  new_kw = paste0('> ', new_kw_all, ' <')
   code_kw = sub('>[^<>]*<', new_kw, code_kw)
   code[wkw] = c(code_kw, rep('', w_kwrd_close-w_kwrd_open))
   
@@ -161,7 +162,7 @@ notepad_pckg_keys = function(pckgs, pattern, exclude=TRUE, what=c('all','exporte
   
   exports = nlapply(pckgs, list_package_objects, pattern, all.names, exclude, what)
   exports = list_clean(exports, function(x) ncol(x)>1)
-  nams = do.call(rbind, exports)$object
+  nams = do.call(rbind, exports)$object_name
   
   nams = filter_by_pattern(nams, '^[^-[<>%&(@!$*|~+={^/:]+$')
   nams = setdiff(nams, c('.packageName','.__NAMESPACE__.','.__S3MethodsTable__.'))
@@ -177,7 +178,7 @@ notepad_pckg_keys = function(pckgs, pattern, exclude=TRUE, what=c('all','exporte
 #' Keywords 8 (utilbox) are currently returned. 
 notepad_keywords = function(field, do_methods=FALSE) {
 
-  pattern_drop = '^'%p%str_last(pckgs_Methods(do_methods), drop=TRUE)%p%'[.]'
+  pattern_drop = paste0('^', str_last(pckgs_Methods(do_methods), drop=TRUE), '[.]')
   
   if('Keywords1' %in% field) 
     Keywords1 = c('function','C','c','if','else','for','while','repeat',

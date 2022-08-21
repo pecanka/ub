@@ -42,7 +42,6 @@ print(fsdafsdaf) \%recover\% message('the printing did not work')
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},

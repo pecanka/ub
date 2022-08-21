@@ -3,20 +3,28 @@
 #'
 #' @description
 
-#' `orig_env()` get the original environment of a function or another object.
-#' When an object defined in a namespace is printed, its namespace is 
-#' shown as the last line. If a function in a package has been defined 
-#' as an alias of a function from another package, this original 
-#' information is still present when the function is printed For 
-#' instance, `utilbox::head` is just an alias for `utils::head`, as 
-#' shown when `print(utilbox::head)` is called. The function 
-#' `orig_env()` captures that information and returns it as a character 
-#' string. For objects with no such information printed it simply 
-#' returns the last element of a print call of that object.
+#' `orig_env()` get the "original" environment (which is more precisely 
+#' referred to as the *enclosing environment*) of a function (or another 
+#' object). As described in the help page of `base::parent.env()` (see 
+#' `?parent.env`), an object's parent environment is the environment where 
+#' it was defined. For a function, this is differentiated from the function's 
+#' *parent frame*, which is the environment from which the function was invoked.
+#' During object look up, the cascade of parent environments is searched
+#' for an object of the matching name. Parent frames are not part of this
+#' cascade.
+#'
+#' When an object defined in a namespace (i.e., inside a package) is printed, 
+#' its namespace is shown as the last line. If a function in a package has 
+#' been defined as an alias of a function from another package, this original 
+#' information is still present when the function is printed. For instance,
+#' `utilbox::head` is just an alias for `utils::head`. This can be seen by 
+#' calling `print(utilbox::head)`. The function `orig_env()` captures that 
+#' information and returns it as a character string. For objects with no such 
+#' information printed it returns the value in the argument `na`.
 #'
 #' `all_parent_envs()` returns the cascade of all parent environments
 #' of `x`. If no input is specified during a call to `all_parent_envs()`,
-#' the default is to take the calling environment.
+#' the default is to take the function's calling environment.
 #'
 #' @examples
 #' orig_env(mean)
@@ -27,22 +35,23 @@
 #' @name environments
 #' @export
 orig_env = function(obj, na='') {
-  last_line = t1(print2var(obj))
-  ifelse('<environment:.namespace:' %m% last_line, last_line, na)
+  last_line = tail(print2var(obj),1)
+  ifelse(last_line %like% '[<]environment[:].namespace[:]', last_line, na)
 }
 
 #' @rdname environments
 #' @export
 all_parent_envs = function(x=parent.frame()) {
   
-  if(!is.environment(x)) x = environment(x)
+  if(!is.environment(x)) 
+    x = environment(x)
   
   pe = try(parent.env(x), silent=TRUE)
-  #if(is_error(pe)) browser()
   
-  if(is_error(pe)) return(NULL)
+  if(is_error(pe)) 
+    return(NULL)
   
-  c(pe, all_parent_env(pe))
+  c(pe, all_parent_envs(pe))
   
 }
 
@@ -107,8 +116,8 @@ transfer_objects = function(from, to, what, check_existence=FALSE, delete=TRUE) 
 
   stopifnot(is.environment(from), is.environment(to), length(what)==1)
   
-  question = "Object named '" %p% what %p% "' already exists in the" %p%
-             " destination environment. Proceed?"
+  question = paste0("Object named '", what, "' already exists in the",
+                    " destination environment. Proceed?")
 
   proceed = !check_existence || !exists(what, envir=to) || ask(question)
 
@@ -167,29 +176,29 @@ mget2 = function(what, envir=parent.frame(), ...) {
 assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_namespace=FALSE) {
   
   if(!what_as_list && length(what)!=1)
-    error("The length of `what` must be 1 when `what_as_list=FALSE`.")
+    stop("The length of `what` must be 1 when `what_as_list=FALSE`.")
     
   if(what_as_list) {
     if(!is.list(what))
-      error("The value in `what` must be a list when `what_as_list=TRUE`.")
+      stop("The value in `what` must be a list when `what_as_list=TRUE`.")
     if(length(what)!=length(where))
-      error("The lengths of `where` and `what` must match when `what_as_list=TRUE`.")
+      stop("The lengths of `where` and `what` must match when `what_as_list=TRUE`.")
   } else {
     what = list(what)
   }
   
   if(in_namespace && missing(ns))
-    error("The name of the namespace must be supplied via `ns` when `in_namespace=TRUE`.")
+    stop("The name of the namespace must be supplied via `ns` when `in_namespace=TRUE`.")
 
   for(i in seq_along(where)) {
     args = list(x=where[i], value=what[[min(length(what),i)]])
     if(in_namespace) {
       #fun = 'fixInNamespace'
       fun = 'assignInNamespace'
-      do.call(fun, args %append% list(ns=ns))
+      do.call(fun, append(args, list(ns=ns)))
       #()
     } else {
-      do.call(assign, args %append% list(envir=envir))
+      do.call(assign, append(args, list(envir=envir)))
     }
   }
   
@@ -207,15 +216,15 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
 assign_locked = function(x, value, envir, namespace, keep_unlocked=FALSE) {
 
   if(!is.character(x))
-    error("Supply name of an object as character.")
+    stop("Supply name of an object as character.")
   
   if(missing(envir)) {
     envir = if(is.character(namespace)) asNamespace(namespace) else namespace
   }
   
   if(!exists(x, envir=envir))
-    error("Object '",x,"' not found in ",print2var(envir),
-          ". The object must exist in order to be overwritten.")
+    stop("Object '",x,"' not found in ",print2var(envir),
+         ". The object must exist in order to be overwritten.")
  
   is_locked = base::environmentIsLocked(envir)
   
@@ -251,17 +260,21 @@ assign_locked = function(x, value, envir, namespace, keep_unlocked=FALSE) {
 #' @export
 is_same_environment = function(x, y, assume_package_x=TRUE, assume_package_y=TRUE) {
 
-  if(is.character(x) && assume_package_x) x = 'package:' %p% x
-  if(is.character(y) && assume_package_y) y = 'package:' %p% y
+  if(is.character(x) && assume_package_x) 
+    x = paste0('package:', x)
+  if(is.character(y) && assume_package_y) 
+    y = paste0('package:', y)
   
-  if(is.character(x)) x = as.environment(x)
-  if(is.character(y)) y = as.environment(y)
+  if(is.character(x)) 
+    x = as.environment(x)
+  if(is.character(y)) 
+    y = as.environment(y)
   
   if(!is.environment(x))
-    error("'x' is not an environment.")
+    stop("'x' is not an environment.")
   
   if(!is.environment(y))
-    error("'y' is not an environment.")
+    stop("'y' is not an environment.")
   
   identical(x, y)
 

@@ -11,20 +11,28 @@ orig_env(obj, na = "")
 all_parent_envs(x = parent.frame())
 }
 \description{
-\code{orig_env()} get the original environment of a function or another object.
-When an object defined in a namespace is printed, its namespace is
-shown as the last line. If a function in a package has been defined
-as an alias of a function from another package, this original
-information is still present when the function is printed For
-instance, \code{utilbox::head} is just an alias for \code{utils::head}, as
-shown when \code{print(utilbox::head)} is called. The function
-\code{orig_env()} captures that information and returns it as a character
-string. For objects with no such information printed it simply
-returns the last element of a print call of that object.
+\code{orig_env()} get the "original" environment (which is more precisely
+referred to as the \emph{enclosing environment}) of a function (or another
+object). As described in the help page of \code{base::parent.env()} (see
+\code{?parent.env}), an object's parent environment is the environment where
+it was defined. For a function, this is differentiated from the function's
+\emph{parent frame}, which is the environment from which the function was invoked.
+During object look up, the cascade of parent environments is searched
+for an object of the matching name. Parent frames are not part of this
+cascade.
+
+When an object defined in a namespace (i.e., inside a package) is printed,
+its namespace is shown as the last line. If a function in a package has
+been defined as an alias of a function from another package, this original
+information is still present when the function is printed. For instance,
+\code{utilbox::head} is just an alias for \code{utils::head}. This can be seen by
+calling \code{print(utilbox::head)}. The function \code{orig_env()} captures that
+information and returns it as a character string. For objects with no such
+information printed it returns the value in the argument \code{na}.
 
 \code{all_parent_envs()} returns the cascade of all parent environments
 of \code{x}. If no input is specified during a call to \code{all_parent_envs()},
-the default is to take the calling environment.
+the default is to take the function's calling environment.
 }
 \examples{
 orig_env(mean)

@@ -80,8 +80,8 @@ compare_script_code = function(file1, file2, verbose=TRUE) {
   C2 = readLines(file2)
   
   # remove all commented lines
-  C1 = C1[!('^\\s*#' %m% C1)]
-  C2 = C2[!('^\\s*#' %m% C2)]
+  C1 = C1[C1 %notlike% '^\\s*#']
+  C2 = C2[C2 %notlike% '^\\s*#']
   
   # check for identical code
   if(identical(C1, C2)) {

@@ -15,14 +15,14 @@
 #' snippet2 = paste0(rep('Printing function.', t=30), collapse=' ')
 #' snippet3 = "\n#'\n#' @example\n#' f('Hello world!')\n#'\n#' @export\n"
 #' snippet4 = "f = function(x) {\n  print(x)\n}"
-#' script_help_fix(code=snippet1 %p% snippet2 %p% snippet3 %p% snippet4)
+#' script_help_fix(code=paste0(snippet1, snippet2, snippet3, snippet4))
 #'
 #' @export
 script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.!?', 
-  split_code=TRUE, split='\\n', verbose=TRUE) {
+    split_code=TRUE, split='\\n', verbose=TRUE) {
   
   if(equals(missing(file), missing(code))) {
-    error("Supply either file name (via 'file') or source code (via 'code').")
+    stop("Supply either file name (via `file`) or source code (via `code`).")
   }
   
   # read the file
@@ -53,8 +53,14 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
 
   # save the results to file
   if(!missing(file)) {
-    writeLines(Code, file2 <- file%p%'.wrapped') 
-    if(verbose) msgf("Output saved to file '",file2,"'.")
+  
+    file2 = paste0(file, '.wrapped')
+  
+    writeLines(Code, file2)
+    
+    if(verbose) 
+      msgf("Output saved to file '",file2,"'.")
+      
   } else {
     file = file2 = NULL
   }  
@@ -66,14 +72,15 @@ script_help_fix = function(file, code, max_width=70, eol="\n#' ", punctuation='.
 #' @rdname script_help_fix
 #' @export
 script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'", 
-  pattern_specials="#'[ ]*[@](example|family|export|rdname)", 
-  pattern_rdname="@name|@rdname") {
+    pattern_specials="#'[ ]*[@](example|family|export|rdname)", 
+    pattern_rdname="@name|@rdname") {
   
   # identify help explanation lines
   is_help = grepl(pattern_help_line, code)
   is_help_empty = grepl("^[#]?\\s*$",code) & 
     de_na(rotate(is_help, 1, value=NA), FALSE) & 
     de_na(rotate(is_help, -1, value=NA), FALSE)
+    
   if(any(is_help_empty)) is_help = is_help | is_help_empty
   
   # replace the empty lines within help with lines signifying help
@@ -101,7 +108,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
   
   # find the second non-empty line in each block (i.e. the first description line)
   hbD_begs_rel = lapply(hb_code, function(b) 
-    if(any("@description" %m_ic% b)) NULL else w_kth_nonzero(!is_empty_line(b),2))
+    if(any(b %likei% "@description")) NULL else w_kth_nonzero(!is_empty_line(b),2))
   hbD_begs = lapply(seq(nblocks), function(i) hbD_begs_rel[[i]] + hb_begs[i] - 1)
   #rm(hbD_begs_rel)
 
@@ -122,7 +129,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
       ifelse(!any(is_special), length(b)+1, is_special[1])
   })
   
-  hb_is_exported = sapply(hb_code, function(b) any('@export' %m_ic% b))
+  hb_is_exported = sapply(hb_code, function(b) any(b %likei% '@export'))
   
   # alter the block ends to ignore the lines below "specials"
   hb_ends = hb_begs - 1 + hb_specials - 1
@@ -152,18 +159,19 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     
     is_t_beg = i == (hbT_begs[[ib]] %||||% -1) && hb_is_exported[i]
     is_d_beg = i == (hbD_begs[[ib]] %||||% -1) && hb_is_exported[i]
-    is_p_beg = '@param' %m% tolower(code[i])
-    is_s_beg = '@section' %m% tolower(code[i])
-    is_i_beg = '(\\item|\\enum|[!][[])' %m% tolower(code[i])
-    is_b_beg = "#'[ ]*[}]" %m% tolower(code[i])
+    is_p_beg = code[i] %likei% '@param'
+    is_s_beg = code[i] %likei% '@section'
+    is_i_beg = code[i] %likei% '(\\item|\\enum|[!][[])'
+    is_b_beg = code[i] %likei% "#'[ ]*[}]"
     is_empt = is_empty_line(code[i])
     is_empt_p = i>1 && is_empty_line(code[i-1])
     
     #if(i>=27) {print(code[i]); print(is_d_beg); browser()}
     
-    if(is_t_beg && '@title' %nm% tolower(code[i])) 
+    if(is_t_beg && code[i] %notlikei% '@title') 
       C[j] = "#' @title\n"
-    if(is_d_beg && '@description' %nm% tolower(code[i]))
+      
+    if(is_d_beg && code[i] %notlikei% '@description')
       C[j] = "#' @description\n"
     
     is_beg = is_t_beg || is_p_beg || is_s_beg || is_i_beg || is_b_beg
@@ -172,7 +180,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     # an empty line (only "#'" on it) => save it unaltered
     if(i %in% hb_begs || is_empt || is_beg || hb_is_exported[i]) {
       #if(!is_p_beg) k = 0
-      C[j] = C[j] %p% code[i]
+      C[j] = paste0(C[j], code[i])
       C_rdnames[j] = hb_rdnames[ib]
       next
     }
@@ -182,7 +190,7 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     is_d_beg = is_d_beg || is_empt_p
     #k = k+1
     if(!is_d_beg) j = j-1
-    C[j] = str_trim_space(C[j] %p% ifelse(is_d_beg, "#'", "")) %..% strip_start(code[i])
+    C[j] = paste(str_trim_space(paste0(C[j], ifelse(is_d_beg, "#'", ""))), strip_start(code[i]))
     # save the current rdname    
     C_rdnames[j] = hb_rdnames[ib]
     
@@ -190,8 +198,8 @@ script_help_unwrap = function(code, help_string="#'", pattern_help_line="^#'",
     
   } # for(...)
   
-  Code = h1(C, j)
-  RDs = h1(C_rdnames, j)
+  Code = head(C, j)
+  RDs = head(C_rdnames, j)
   
   ## get rid of duplicate indicators of which lines were merged
   focus = setdiff(seq_along(Code), is_code)
@@ -223,42 +231,51 @@ script_help_clean_and_wrap = function(Help, RDs, max_width=70, eol="\n#' ", punc
   
   # wrap the lines
   long = nchar(Help) > max_width
-  Help[long] = str_break(Help[long], max_width, eol, break_only_at_space=TRUE)
+  Help[long] = str_break(Help[long], max_width, eol=eol, break_only_at_space=TRUE)
   
   Help
   
 }
 
-# function to strip out the strings that indicate help lines
+#'
+#' `strip_start()` removes the strings that indicate help lines (i.e., "#'").
+#'
 strip_start = function(x) {
   gsub("#'[ ]*","",x)
 }
 
-# function to indicate and "empty" (at most "#'" on it) line
+#'
+#' `is_empty_line()` identifies "empty" lines, where "empty" means
+#' that there is at most "#'" on the line.
+#'
 is_empty_line = function(x) {
   str_is_empty(strip_start(x), TRUE)
 }
 
-# function to indicate and "empty" (at most "#'" on it) line
+#'
+#' `is_title_line()` identifies "title lines", which are those 
+#'
 is_title_line = function(x) {
-  "#'\\s*@title" %m% x
+  grepl("#'\\s*@title", x)
 }
   
 extract_rdname = function(x) {
   sub('[ ].*$','',sub("#'[ ]*@[r]?[d]?(name)[ ]", '', x))
 }
   
-# function to replace \code{...} with `...`
+#' Replace code tag in R help text
+#' 
+#' `replace_code_tag()` replaces all occurences of "\code{word}" with "`word`" 
+#' or "`word()`" (when `add_brackets=TRUE`) or "[`word`]" (when `as_link=TRUE`).
+#"
 replace_code_tag = function(x, rds, add_brackets=FALSE, as_link=FALSE) {
   
   #pattern = '[\\]code[{]([a-zA-Z0-9:+_.()]+)[}]' 
   pattern = '[\\]code[{]([^{}}]+)[}]' 
 
   # replace the code tag with ticks
-  repl = ifelse(as_link,'[','') %p% 
-         '`\\1`' %p% 
-         ifelse(add_brackets,'()','') %p% 
-         ifelse(as_link,']','')
+  repl = paste0(if(as_link) '[', '`\\1`', if(add_brackets) '()', if(as_link) ']')
+  
   x = gsub(pattern, repl, x)
   
   # put all links in "code" font

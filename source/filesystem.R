@@ -1,3 +1,27 @@
+#' Extract file name and path
+#'
+#' `dir_name()` is the analogue of `base::dirname()` which does not 
+#' fail on long paths. `base_name()` is the equivalent analogue of
+#' `base::basename()`.
+#'
+#' @examples
+#' file = 'c:\\Windows\\System32\\cmd.exe'
+#' dir_name(file)     # returns the part part, i.e., 'c:\\Windows\\System32'
+#' base_name(file)    # returns the filename part, i.e., 'cmd.exe'
+#'
+#' @export
+dir_name = function(files) {
+  files = gsub('\\\\','/',files)
+  files = strsplit(files, '/')
+  sapply(files, function(x) paste(head(x,-1), collapse='/'))
+}
+
+base_name = function(files) {
+  files = gsub('\\\\','/',files)
+  files = strsplit(files, '/')
+  sapply(files, tail, 1)
+}
+
 #' @title
 #' List files matching regular pattern
 #'
@@ -83,8 +107,7 @@ file_path = function(path, file, normalize=TRUE, fsep = .Platform$file.sep) {
 #' @rdname file_path
 #' @export
 is_absolute_path = function(path) {
-  any(c(is_win() && ('^[a-z][:](/|\\\\)' %m% tolower(path)), 
-        is_linux() && ('^[/]' %m% tolower(path))))
+  (is_win() && path %likei% '^[a-z][:](/|\\\\)') || (is_linux() && path %like% '^[/]')
 }
 
 #' @title
@@ -112,8 +135,8 @@ list_file_match = function(p, path, type=NULL, full.names=FALSE, ...) {
   
   type = type %|||% c('exact','partial','free')
 
-  p = list(exact = '^' %p% str_patternize(p) %p% '$', 
-           partial = '^' %p% str_patternize(p), 
+  p = list(exact = paste0('^', str_patternize(p), '$'), 
+           partial = paste0('^', str_patternize(p)), 
            free = str_patternize(p))
 
   lf = hijack(list.files, path=path, full.names=full.names)
@@ -232,7 +255,7 @@ dir_exist_check = function(dir, stop_if_fail=TRUE, create_on_missing=TRUE, trace
 
   if(!dir.exists(dir)) {
     msg = paste0("Directory '",dir,"' could not be created.")
-    if(stop_if_fail) error(msg) else if(trace>0) warn(msg)
+    if(stop_if_fail) stop(msg) else if(trace>0) warn(msg)
     dir = "./"
   }
   
@@ -255,7 +278,7 @@ file_exists = function(files, path, stop_on_missing=FALSE, warn_on_missing=TRUE)
   msg = `if`(all(fexists), NULL, msg_files_missing(files[!fexists], path))
 
   if(!is.null(msg)) {
-    if(stop_on_missing) error(msg)
+    if(stop_on_missing) stop(msg)
     if(warn_on_missing) warn(msg)
   }
 
@@ -264,8 +287,7 @@ file_exists = function(files, path, stop_on_missing=FALSE, warn_on_missing=TRUE)
 }
 
 msg_files_missing = function(files, path='.') {
-  "The following files are missing (relative to path '" %p% path %p% "'):\n" %p% 
-  collapse0n(files, "\n") %p% '\n'
+  paste0("The following files are missing (relative to path '", path, "'):\n", paste(files, "\n", collapse='\n'), '\n')
 }
   
 #' @rdname dir_exist_check
@@ -351,10 +373,10 @@ file_rename_via_drive = function(from, to, drive='T', unmap=TRUE, nretry=2, time
 
   wdir_init = getwd()
 
-  file_from = basename(from)
-  file_to = basename(to)
-  dir_from = dirname(from)
-  dir_to = dirname(to)
+  file_from = base_name(from)
+  file_to = base_name(to)
+  dir_from = dir_name(from)
+  dir_to = dir_name(to)
 
   to = normalizePath(paste0(drive,':/', file_to), mustWork=FALSE)
 
@@ -402,7 +424,7 @@ file_remove_one = function(file, nretry=10, time_to_sleep_prior=0) {
 #' @rdname file_rename
 #' @export
 file_rename_timestamp = function(filename, attrib='mtime', nretry=10) {
-  newname = filename %_% file_timestamp(filename)
+  newname = paste0(filename, '_', file_timestamp(filename))
   file_rename(filename, newname, nretry=nretry)
 }
 
@@ -441,7 +463,7 @@ file_sort = function(files, by=c("time","name","isdir","mode","mtime","ctime","a
                      
   if(!length(files)) return(files)
   
-  if(!length(by)) error("Missing value in 'by'!")
+  if(!length(by)) stop("Missing value in 'by'!")
   
   by = by[1]
   
@@ -452,7 +474,7 @@ file_sort = function(files, by=c("time","name","isdir","mode","mtime","ctime","a
   } else {
     Info = file.info(files)
     if(all(colnames(Info)!=by)) 
-      error("Unknown sorting attribute '",by,"'.")
+      stop("Unknown sorting attribute '",by,"'.")
     f = files[order(Info[,by], decreasing=decreasing)]
   }
   
@@ -533,7 +555,7 @@ file_can_open_check = function(filename) {
 check_file_locked = function(file) {
 
   if(missing(file)) 
-    error("Supply file name.")
+    stop("Supply file name via `file`.")
   
   if(is_win()) {
   
@@ -560,12 +582,12 @@ check_file_locked = function(file) {
 #' @export
 clean_filename = function(x, chr="-", keep_last_dot=TRUE) {
 
-  p = if(keep_last_dot) strpos(x, ".", last=TRUE) else -1
+  p = if(keep_last_dot) str_pos(x, ".", last=TRUE) else -1
   
   if(p<=0) {
     gsub("[.]", chr, x)
   } else {
-    gsub("[.]", chr, substr(x,1,p-1)) %p% substr(x,p,nchar(x))
+    paste0(gsub("[.]", chr, substr(x,1,p-1)), substr(x,p,nchar(x)))
   }
   
 }
@@ -612,7 +634,7 @@ separate_path = function(files, path0="./") {
 #' @export
 random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-%#@")) {
   
-  file = collapse0(sample(chars, nchar, replace=TRUE))
+  file = paste(sample(chars, nchar, replace=TRUE), collapse='')
   
   if(file_exists_check(file, path)) {
     file = Recall(path, char, chars)
@@ -635,7 +657,7 @@ random_filename = function(path=".", nchar=3, chars=c(letters, LETTERS, 0:9, "_-
 #' @export
 file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_msg=msgf) {
   
-  file_bak = file %p% '_' %p% timest(add_pid=pid) %p% '.bak'
+  file_bak = paste0(file, '_', timest(add_pid=pid), '.bak')
   
   if(!missing(path)) {
     file = file_path(path, file)

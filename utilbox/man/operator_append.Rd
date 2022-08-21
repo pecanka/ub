@@ -33,7 +33,6 @@ c(1,2) \%append\% list(c=3)            # turns the LHS into a list, then appends
 Other operators provided by utilbox: 
 \code{\link{\%anyin\%}()},
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
 \code{\link{operator_c}},

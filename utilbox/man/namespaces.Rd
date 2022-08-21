@@ -12,16 +12,24 @@ check_namespace(pckg, envir = parent.frame(), severity = 2)
 }
 \description{
 \code{get_package_namespace()} returns the namespace of the package
-with name in \code{pckg}.
+with name in \code{pckg}. It is basically the same as \code{base::asNamespace()}
+except it allows for package names to be supplied as symbols (e.g.,
+like \code{base::library()} or \code{base::require()}). Stopping on error
+is controlled via \code{stop_on_error}.
 
 \code{check_namespace()} checks whether the package \code{pckg} is installed
-and available and throws an error if not.
+and available and if not it throws an error (when \code{severity=2}, the
+default), or warning (when \code{severity=1}) or simply returns \code{FALSE}
+(when \code{severity=0}).
 }
 \examples{
 get_package_namespace('base')
+get_package_namespace(base)
 
-check_namespace('base')          # no error
-check_namespace('XYZABC12323')   # error
+check_namespace('base')                      # TRUE (no error)
+check_namespace('XYZABC12323')               # error
+check_namespace('XYZABC12323', severity=1)   # warning
+check_namespace('XYZABC12323', severity=0)   # FALSE (no error)
 
 }
 \seealso{
@@ -29,11 +37,11 @@ Other coding-related functions provided by utilbox:
 \code{\link{append_body}()},
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
-\code{\link{fun_code_to_text}()},
-\code{\link{fun_dump_code}()},
+\code{\link{fun_name}},
+\code{\link{function_code_to_text}()},
+\code{\link{function_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
-\code{\link{is_error}()},
-\code{\link{this_fun_name}()}
+\code{\link{is_error}()}
 }
 \concept{coding-related functions provided by utilbox}

@@ -4,7 +4,7 @@
 \alias{which_package}
 \title{Identify object's package}
 \usage{
-which_package(object)
+which_package(object_name)
 }
 \description{
 \code{which_package} tries to identity the package in which the

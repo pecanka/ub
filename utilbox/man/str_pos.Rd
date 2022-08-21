@@ -21,9 +21,9 @@ str_first_occurence(x, what, miss = -1)
 str_last_occurence(x, what, miss = -1, escape = TRUE)
 }
 \description{
-\code{str_pos} finds the first (when \code{first=TRUE}) and/or the last
-(\code{last=TRUE}) occurrence of a substring (given as regular pattern) in
-a string.
+\code{str_pos} finds the first (when \code{first=TRUE}) and/or the last (\code{last=TRUE})
+occurrence of a substring (given as regular pattern when \code{fixed=FALSE}, or
+as a plain string when \code{fixed=TRUE}) in a string.
 
 \code{str_first_occurence} returns the position of the first occurrence
 of \code{what} inside \code{x}, or the value in \code{miss} (-1 by default) if none
@@ -59,7 +59,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
 \code{\link{str_paste_grid}()},
-\code{\link{str_rev}()},
+\code{\link{str_rev.character}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},
 \code{\link{toupperfirst}()}

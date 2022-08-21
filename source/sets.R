@@ -29,22 +29,18 @@ mintersect = function(...) {
 
 #' @rdname sets
 #' @export
-setdiffsym = function(x, y, labels, report_counts=TRUE) {
-  
-  if(missing(labels)) {
-    labels = c('x','y')
-    #labels = unlist(argvars_to_nlist())
-  }
+setdiffsym = function(x, y, labels=c('x','y'), report_counts=TRUE) {
   
   dxy = base::setdiff(x,y)
   dyx = base::setdiff(y,x)
   
   tdi = ' (#difference|#intersect|#total)'
-  Counts =
-    c('x: '%p%collapse0(c(length(dxy),length(x)-length(dxy),length(x)),sep='|'),
-      'y: '%p%collapse0(c(length(dyx),length(y)-length(dyx),length(y)),sep='|'))%p%tdi
-                
-  structure(`names<-`(list(dxy, dyx), labels), Counts=Counts)
+  Counts = c(
+    paste0('x: ', paste(length(dxy), length(x)-length(dxy), length(x), sep='|'), tdi),
+    paste0('y: ', paste(length(dyx), length(y)-length(dyx), length(y), sep='|'), tdi)
+  )
+     
+  structure(list(dxy, dyx), names=labels, Counts=Counts)
   
 }
 
@@ -60,9 +56,15 @@ is_subset = function(x, y) {
 #'
 #' @export
 all_subsets = function(set, use_varnames_in_status=TRUE, stringsAsFactors=FALSE) {
+
   n = length(set)
+
   status = expand.grid(rep(list(c(FALSE, TRUE)), n), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=stringsAsFactors)
+
   if(use_varnames_in_status) names(status) = set
+
   subsets = apply(status, 1, function(x) names(x)[x])
+
   list(set=set, subsets=subsets, status=status)
+  
 }

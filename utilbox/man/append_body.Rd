@@ -62,12 +62,12 @@ f(1:5, 3:10)
 Other coding-related functions provided by utilbox: 
 \code{\link{call_to_list}},
 \code{\link{compare_functions}()},
-\code{\link{fun_code_to_text}()},
-\code{\link{fun_dump_code}()},
+\code{\link{fun_name}},
+\code{\link{function_code_to_text}()},
+\code{\link{function_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},
-\code{\link{namespaces}},
-\code{\link{this_fun_name}()}
+\code{\link{namespaces}}
 }
 \concept{coding-related functions provided by utilbox}

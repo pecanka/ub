@@ -39,7 +39,7 @@ groups_of_unique = function(x, format=as.numeric) {
 split_into_groups = function(x, n) {
 
   if(missing(n))
-    error("Supply the number of groups to divide `x` into.")
+    stop("Supply the number of groups to divide `x` into.")
   
   tapply(x, (seq_along(x) - 1) %/% max(1,ceiling(n)) + 1, `[`, simplify=FALSE)
   

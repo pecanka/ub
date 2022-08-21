@@ -12,8 +12,8 @@ out the middle section and replaces it with information about how
 many characters were cut out.
 }
 \examples{
-let = collapse0(letters)
-LET = collapse0(LETTERS)
-str_abbreviate(collapse0(c(let, LET, let, LET)))
+let = paste(letters, collapse='')
+LET = paste(LETTERS, collapse='')
+str_abbreviate(paste(c(let, LET, let, LET), collapse=''))
 
 }

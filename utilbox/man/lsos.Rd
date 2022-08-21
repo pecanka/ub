@@ -18,7 +18,8 @@ object_sizes(
   with_unit = TRUE,
   envir = parent.frame(),
   ndigits = 2,
-  size_fun = NULL
+  size_fun = NULL,
+  sort_by = c("size", "name")
 )
 
 list_object_sizes(

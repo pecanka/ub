@@ -296,7 +296,7 @@ first_nonempty = function(x) {
 #' @family numeric functions provided by utilbox
 #' @export
 w_first_nonzero = function(x) {
-  h1(which(x!=0))
+  head(which(x!=0),1)
 }
 
 #' @rdname locate_position_of_value
@@ -304,9 +304,9 @@ w_first_nonzero = function(x) {
 w_kth_nonzero = function(x, n) {
   stopifnot(n>=1)
   if(n==1) {
-    h1(which(x!=0))
+    head(which(x!=0),1)
   } else {
-    h1(tail(which(x!=0),-n+1))
+    head(tail(which(x!=0),-n+1),1)
   }
 }
 
@@ -383,7 +383,7 @@ w_first_nonempty = function(...) {
 
 #' @export
 w_first_nonempty.list = function(x) {
-  h1(which(sapply(x, is_not_empty)))
+  head(which(sapply(x, is_not_empty)),1)
 }
 
 #' @title
@@ -477,21 +477,21 @@ nonpositive = function(x) {
 #' @family sequence-related functions provided by utilbox
 #' @export
 filter_by_value = function(x, pattern, fixed=TRUE, exclude=FALSE, ignore.case=FALSE) {
-  keep = not_if(`%m_any%`(pattern, x, fixed=fixed, ignore.case=ignore.case), exclude)
+  keep = not_if(`%likeany%`(x, pattern, fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
 filter_by_pattern = function(x, pattern, fixed=FALSE, exclude=FALSE, ignore.case=FALSE) {
-  keep = not_if(`%m_any%`(pattern, x, fixed=fixed, ignore.case=ignore.case), exclude)
+  keep = not_if(`%likeany%`(x, pattern, fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
 #' @rdname filter_by
 #' @export
 filter_by_name = function(x, pattern, fixed=FALSE, exclude=FALSE, ignore.case=FALSE) {
-  keep = not_if(`%m_any%`(parent, names(x), fixed=fixed, ignore.case=ignore.case), exclude)
+  keep = not_if(`%likeany%`(names(x), pattern, fixed=fixed, ignore.case=ignore.case), exclude)
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   
@@ -510,7 +510,7 @@ filter_by_call = function(...) {
   args = dots_to_nlist()
   
   if(length(args)<2) 
-    error('Supply both the vector to filter and the call to filter it with.')
+    stop('Supply both the vector to filter and the call to filter it with.')
   
   call = kthr(args, 1)
   args = kthmr(args, -1)
@@ -550,7 +550,7 @@ filter_out = function(x, pattern, fixed=FALSE, ignore.case=FALSE) {
 
 #lazy_dots_to_args_and_call = function(..., envir=parent.frame()) {
 #  args = list(...)
-#  if(is_empty(args)) error('Supply a call.')
+#  if(is_empty(args)) stop('Supply a call.')
 #  assign('call', kthr(args,1), envir=envir)
 #  assign('args', kthmr(args, -1), envir=envir)
 #}

@@ -107,7 +107,7 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
   } else {
   
     if(N%%nb!=0) 
-      error("Number of blocks 'nb' must divide 'N'.")
+      stop("Number of blocks 'nb' must divide 'N'.")
       
     n = N%/%nb
     Sigma = matrix(rho, nrow=n, ncol=n)
@@ -160,7 +160,8 @@ r_squared = function(y, yh, na.rm=TRUE, adjusted=FALSE, k=NULL) {
   c_adj = 1
   
   if(adjusted) {
-    if(is.null(k)) stop("With adjusted=TRUE a value for k (number of regressors) must be supplied.")
+    if(is.null(k)) 
+      stop("With adjusted=TRUE a value for k (number of regressors) must be supplied.")
     n = length(y)
     c_adj = (n - 1) / (n - 1 - k)
   }

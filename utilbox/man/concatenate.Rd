@@ -2,71 +2,38 @@
 % Please edit documentation in R/operators.R
 \name{concatenate}
 \alias{concatenate}
-\alias{\%p\%}
-\alias{\%..\%}
 \alias{\%_\%}
-\alias{\%__\%}
-\alias{\%.^\%}
-\alias{\%^.\%}
+\alias{\%pastefront\%}
+\alias{\%pasteend\%}
 \title{Concatenation operators}
 \usage{
-x \%p\% y
+... \%_\% sep
 
-x \%..\% y
+LHS \%pastefront\% RHS
 
-x \%_\% y
-
-... \%__\% sep
-
-x \%.^\% y
-
-x \%^.\% y
+LHS \%pasteend\% RHS
 }
 \description{
 Concatenation operators, which are aliases for \code{base::paste}.
 
-\code{\%.\%} is an operator versions of \code{base::paste0}.
-
-\code{\%..\%} is an operator versions of \code{base::paste}.
-
 \code{\%_\%} is an operator versions of \code{base::paste} with
-\code{sep='_'}.
-
-\code{\%__\%} is an operator versions of \code{base::paste} with
 \code{sep='_'} and which takes symbols as arguments (see the examples
 below).
 
-\code{\%.^\%} is a conditional concatenatation operator, which
-appends the left-hand side (LHS) onto the right-hand side (RHS)
-but only if the right-hand argument does not
-already start with the string on the left-hand side.
+\code{\%pastefront\%} is a conditional concatenatation operator,
+which appends the string in \code{LHS} onto \code{RHS} from the left but
+only if \code{RHS} does not already start with the string in \code{LHS}.
 
-\code(\\%^.\\%} is similar to \code{\%.^\%} except it appends the
-RHS onto the LHS but only if the LHS does not end with the
-string inside the RHS.
+\code(\\%pasteend\\%} appends the string in \code{LHS} onto \code{RHS} from
+the right (i.e., onto the end) but only if \code{RHS} does not already
+end with the string inside the \code{LHS}.
 }
 \examples{
 a = 'multi'; b = 'tasking'
-a \%p\% b                    # yields 'multitasking'
-a \%..\% b                   # yields 'multi tasking'
-a \%_\% b                    # yields 'multi_tasking'
-a \%__\% b                   # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
-'name:' \%.^\% 'james'        # yields 'name:james'
-'name:' \%.^\% 'name:james'   # also yields 'name:james'
-'name:' \%^.\% 'james'        # yields 'name:james'
-'name:james' \%^.\% 'james'   # also yields 'name:james'
+a \%_\% b                    # BEWARE: yields 'a_b' (the inputs are treated as symbolic!)
+'name:' \%pastefront\% 'james'        # yields 'name:james'
+'name:' \%pastefront\% 'name:james'   # yields 'name:james'
+'james' \%pasteend\% 'name:'          # yields 'name:james'
+'james' \%pasteend\% 'name:james'     # yields 'name:james'
 
 }
-\seealso{
-Other operators provided by utilbox: 
-\code{\link{\%anyin\%}()},
-\code{\link{\%modify\%}()},
-\code{\link{not_in}},
-\code{\link{operator_NULL}},
-\code{\link{operator_append}},
-\code{\link{operator_c}},
-\code{\link{operator_match}},
-\code{\link{operator_try}},
-\code{\link{renaming_operators}}
-}
-\concept{operators provided by utilbox}

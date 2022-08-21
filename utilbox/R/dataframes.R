@@ -212,7 +212,7 @@ find_column_in_file = function(name, df_pattern='.*', files, dir='.', file_patte
     cat0("... loading file '",f,"' (",i,") ... ")
     res = try(load(base::file.path(dir,f), envir=env))
     
-    if(is_error(res)) {
+    if('try-error' %in% class(res)) {
       warn("File '",f,"' could not be loaded.")
       next
     }

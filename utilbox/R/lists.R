@@ -29,7 +29,7 @@ is_list_class = function(x) {
 list_empty = function(x) {
   
   if(is.list(x) && !has_all_names(x))
-    error("Supply either a vector of names in 'x' or a \"fully\" named list.")
+    stop("Supply either a vector of names in 'x' or a \"fully\" named list.")
   
   if(is.list(x) || has_all_names(x)) {
     x = names(x)
@@ -93,7 +93,7 @@ list_mirror = function(x, value, depth=1) {
   if(depth==1) {
     lapply(x, function(x1) rep(value, length(x1)))
   } else {
-    error("Mirroring with 'depth=",depth,"' not yet implemented.")
+    stop("Mirroring with 'depth=",depth,"' not yet implemented.")
   }
 }
 
@@ -313,9 +313,9 @@ nlapply = function(...) {
 list_set_attr = function(x, attrib_name, attrib) {
   
   if(missing(attrib_name)) 
-    error("Supply attribute name via 'attrib_name'.")
+    stop("Supply attribute name via 'attrib_name'.")
   if(missing(attrib)) 
-    error("Supply attributes via 'attrib'.")
+    stop("Supply attributes via 'attrib'.")
   
   stopifnot(any(length(attrib)==c(1,length(x))))
   stopifnot(is.list(x))

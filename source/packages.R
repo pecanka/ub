@@ -4,30 +4,39 @@
 #' @description
 #'
 #' `get_package_namespace()` returns the namespace of the package 
-#' with name in `pckg`.
+#' with name in `pckg`. It is basically the same as `base::asNamespace()`
+#' except it allows for package names to be supplied as symbols (e.g.,
+#' like `base::library()` or `base::require()`). Stopping on error
+#' is controlled via `stop_on_error`.
 #'
 #' `check_namespace()` checks whether the package `pckg` is installed 
-#' and available and throws an error if not.
+#' and available and if not it throws an error (when `severity=2`, the 
+#' default), or warning (when `severity=1`) or simply returns `FALSE` 
+#' (when `severity=0`).
 #'
 #' @examples
 #' get_package_namespace('base')
+#' get_package_namespace(base)
 #'
-#' check_namespace('base')          # no error
-#' check_namespace('XYZABC12323')   # error
+#' check_namespace('base')                      # TRUE (no error)
+#' check_namespace('XYZABC12323')               # error
+#' check_namespace('XYZABC12323', severity=1)   # warning
+#' check_namespace('XYZABC12323', severity=0)   # FALSE (no error)
 #'
 #' @name namespaces
 #' @family coding-related functions provided by utilbox
 #' @export
 get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE) {
 
-  if(!character.only) pckg = as.character(substitute(pckg))
+  if(!character.only) 
+    pckg = as.character(substitute(pckg))
   
-  ns = try(as.environment("package:"%p%pckg), silent=TRUE)
+  res = try(base::asNamespace(pckg), silent=TRUE)
   
-  if(is_error(ns) && stop_on_error)
-    error("Namespace for package '",pckg,"' not found.")
+  if('try-error' %in% class(res) && stop_on_error)
+    stop("Namespace '",pckg,"' not found.")
     
-  ns
+  res
   
 }
 
@@ -35,21 +44,21 @@ get_package_namespace = function(pckg, character.only=FALSE, stop_on_error=FALSE
 #' @export
 check_namespace = function(pckg, envir=parent.frame(), severity=2) {
   
-  #fun_name = eval(parse(text='this_fun_name()'), envir=envir)
-  fun_name = evalq(this_fun_name(), envir=envir)
+  res = requireNamespace(pckg, quietly=severity==0)
   
-  res = requireNamespace(pckg)
+  if(res || severity==0) 
+    return(res)
   
-  if(res || severity==0) return(res)
+  parent_fun = parent_fun_name()
+  
+  error_msg = paste0("Package '", pckg, "' not found.")
+  
+  if(nzchar(parent_fun)) 
+    error_msg = paste0(error_msg, " It must be installed to use the function `", parent_fun, "()`.")
   
   fun = if(severity==1) warning else stop
   
-  msg = "Package '" %p% pckg %p% "' not found."
-  
-  if(nzchar(fun_name)) 
-    msg = msg %p% " It must be installed to use the function `" %p% fun_name %p% "()`."
-  
-  fun(msg)
+  fun(error_msg)
     
 }
 
@@ -89,16 +98,18 @@ check_namespace = function(pckg, envir=parent.frame(), severity=2) {
 #' @family package-related functions provided by utilbox
 #' @export
 llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn, 
-  detach_first=FALSE, remove_first=FALSE, default_src="CRAN", lib_fun=base::library,
-  url_CRAN="https://cloud.r-project.org/", suppress_startup_msgs=FALSE, ...) {
+    detach_first=FALSE, remove_first=FALSE, default_src="CRAN", lib_fun=base::library,
+    url_CRAN="https://cloud.r-project.org/", suppress_startup_msgs=FALSE, ...) {
 
   echo = if(quietly) null else msgf
 
   ## If symbol names expected, make them into strings
-  if(!character.only) pckgs = as.character(substitute(pckgs))
+  if(!character.only) 
+    pckgs = as.character(substitute(pckgs))
     
   ## If no packages supplied, silently return
-  if(length(pckgs)==0) return()
+  if(length(pckgs)==0) 
+    return()
    
   ## Get the currently loaded libraries
   loaded_packages = list_loaded_packages()
@@ -115,7 +126,7 @@ llibrary = function(pckgs=NULL, quietly=TRUE, character.only=FALSE, fail=warn,
     if(any(lib$name==loaded_packages)) {
       if(!detach_first && !remove_first) next
       echo("Detaching package ",lib$name," ...")
-      detach('package:'%p%lib$name, character.only=TRUE)
+      detach(paste0('package:', lib$name), character.only=TRUE)
     }
     
     # Remove the package prior to loading
@@ -180,19 +191,22 @@ llib = function(..., detach_first=FALSE, remove_first=FALSE, suppress_startup_ms
 #' @export
 unload_library = function(pckgs=NULL, character.only=FALSE, warn=TRUE) {
 
-  if(!character.only) pckgs = as.character(substitute(pckgs))
+  if(!character.only) 
+    pckgs = as.character(substitute(pckgs))
   
-  unloaded = rep(FALSE, length(pckgs))
-  names(unloaded) = pckgs
+  unloaded = structure(rep(FALSE, length(pckgs)), names=pckgs)
+  
   for(pckg in pckgs) {
-    ps = c("package:" %.^% pckg, pckg)
-    res1 = try(detach(ps[1], character.only=TRUE, unload=TRUE), silent=TRUE)
-    res2 = try(detach(ps[2], character.only=TRUE, unload=TRUE), silent=TRUE)
-    if(is_error(res1) && is_error(res2) && warn) {
+  
+    ps = ifelse(base::startsWith(pckg, "package:"), pckg, paste0("package:",pckg))
+    res = try(detach(ps, character.only=TRUE, unload=TRUE), silent=TRUE)
+
+    if('try-error' %in% class(res) && warn) {
       warning("Unloading of package '", pckg,"' failed.")
     } else {
       unloaded[pckg] = TRUE
     }
+    
   }
   
   return(invisible(unloaded))
@@ -213,11 +227,12 @@ unload_attached_library = function(pckgs) {
 #' @export
 unload_all_libraries = function() {
 
-  pckg_loaded = list_attached_packages(only_name=FALSE)
-  pckg_base = list_loaded_packages(other=FALSE)
-  pckg_loaded = setdiff(pckg_loaded, pckg_base)
-  pckg_loaded = setdiff(pckg_loaded, paste0('package:',pckg_base))
-  unloaded = unload_attached_library(pckg_loaded)
+  list_pckg_loaded = list_attached_packages(only_name=FALSE)
+  list_pckg_base = list_loaded_packages(other=FALSE)
+  
+  list_pckg_loaded = setdiff(list_pckg_loaded, paste0('package:',list_pckg_base))
+  
+  unloaded = unload_attached_library(list_pckg_loaded)
   
   assign('.utilbox_unloaded_libraries', unloaded, envir=.GlobalEnv)
 
@@ -229,10 +244,28 @@ unload_all_libraries = function() {
 #' @export
 reload_unloaded_libraries = function(pckgs) {
 
-  if(missing(pckgs)) pckgs = rev(get('.utilbox_unloaded_libraries', envir=.GlobalEnv))
-  for(pckg in names(pckgs)) {
-    if(pckgs[pckg]) library(sub('package[:]','',pckg), character.only=TRUE)
+  if(missing(pckgs)) {
+    pckgs = if(exists('.utilbox_unloaded_libraries', envir=.GlobalEnv)) {
+      rev(get('.utilbox_unloaded_libraries', envir=.GlobalEnv))
+    } else {
+      NULL
+    }
   }
+  
+  if(is.null(pckgs)) 
+    return(invisible())
+
+  
+  reloaded = structure(rep(NA, length(pckgs)), names=pckgs)
+  
+  for(pckg in names(pckgs)) {
+    if(pckgs[pckg]) {
+      library(sub('package[:]','',pckg), character.only=TRUE)
+      reloaded[pckg] = TRUE
+    }
+  }
+  
+  return(invisible(reloaded))
 
 }
 
@@ -240,9 +273,10 @@ reload_unloaded_libraries = function(pckgs) {
 #' @export
 package_is_installed = function(pckgs, character.only=FALSE) {
 
-  if(!character.only) pckgs = as.character(substitute(pckgs))
+  if(!character.only) 
+    pckgs = as.character(substitute(pckgs))
   
-  `names<-`(sapply(pckgs, requireNamespace, quietly=TRUE), pckgs)
+  structure(sapply(pckgs, requireNamespace, quietly=TRUE), names=pckgs)
   
 }
 
@@ -270,9 +304,7 @@ is_lib_installed = package_is_installed
 #' @export
 list_installed_packages = function() {
 
-  x = try(installed.packages()[,"Package"])
-  
-  if(class(x)=="try-error") "" else x
+  utils::installed.packages()[,"Package"]
   
 }
   
@@ -288,11 +320,10 @@ list_loaded_packages = function(base=TRUE, other=TRUE) {
 #' @export
 list_attached_packages = function(only_name=TRUE, list_ignore=c('.GlobalEnv','Autoloads')) {
 
-  plist = base::search()
-  #plist = plist[grepl('^package[:]',plist)]
-  #plist = sub('^package[:]', '', plist)
-  plist = setdiff(plist, list_ignore)
-  if(only_name) plist = sub('^package[:]', '', plist)  
+  plist = setdiff(base::search(), list_ignore)
+  
+  if(only_name) 
+    plist = sub('^package[:]', '', plist)  
   
   plist
 
@@ -328,7 +359,7 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
   what = match.arg(what)
   
   if(!is.character(pckg))
-    error("Supply package name as character.")
+    stop("Supply package name as character.")
     
   if(!namespace_exists(pckg)) {
     if(warn) warning("Namespace '",pckg,"' does not exist and thus its objects cannot be obtained.")
@@ -376,11 +407,11 @@ list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
   
   x = do.call(base::rbind, list_package_exported(pckgs, warn=FALSE, quietly=quietly))
   rownames(x) = NULL
-  z = x['function' %in% z$all_classes,c('package','object')]
-  cnts = tapply(z$package, z$object, length)
-  pckg_nams = tapply(z$package, z$object, paste, collapse=sep)
+  z = x['function' %in% z$all_classes,c('package','object_name')]
+  cnts = tapply(z$package, z$object_name, length)
+  pckg_nams = tapply(z$package, z$object_name, paste, collapse=sep)
   
-  res = data.frame(object=names(cnts), count=cnts, packages=pckg_nams)[cnts>1]
+  res = data.frame(object_name=names(cnts), count=cnts, packages=pckg_nams)[cnts>1]
   
   if(!quietly) {
     msgf('List of functions exported by multiple packages:')
@@ -396,10 +427,10 @@ list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
 as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
 
   if(!is.character(pckg) && !is.environment(pckg))
-    error("Supply either a package name (character) or an environment.")
+    stop("Supply either a package name (character) or an environment.")
     
   if(is.character(pckg) && !namespace_exists(pckg))
-    error("Namespace '",pckg,"' not found.")
+    stop("Namespace '",pckg,"' not found.")
 
   if(namespace_exists(pckg)) {  
     is_exported = objs %in% getNamespaceExports(pckg)
@@ -409,16 +440,14 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
     env_pckg = orig_env(pckg)
   }
   
-  class1 = apply_pckg(objs, pckg, function(x) h1(class(x)))
-  classes = apply_pckg(objs, pckg, function(x) collapse0(class(x), sep=','))
+  class1 = apply_pckg(objs, pckg, function(x) head(class(x)),1)
+  classes = apply_pckg(objs, pckg, function(x) paste(class(x), collapse=','))
   namespace = apply_pckg(objs, pckg, function(x) orig_env(x))
   namespace = ifelse(namespace==env_pckg, '', namespace)
 
-  #self_reference = apply_pckg(objs, pckg, function(x, nam) any(('[,(/%! ]'%p%str_patternize(nam)%p%'[(, ]') %m% fun_code_to_text(x)))
-
   # put the information into a list
   tbl = list(location=if(is.environment(pckg)) print2var(pckg) else pckg,
-             object=objs %|||% NA_character_, 
+             object_name=objs %|||% NA_character_, 
              exported=ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
              primary_class=class1 %|||% NA_character_, 
              all_classes=classes, 
@@ -429,22 +458,23 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   tbl = as.data.frame(list_clean(tbl), stringsAsFactors=FALSE)
   
   # drop the rows that were artificially added
-  tbl = tbl[!is.na(tbl$object),]
+  tbl = tbl[!is.na(tbl$object_name),]
 
-  if('object' %nin% colnames(tbl)) 
+  if('object_name' %nin% colnames(tbl)) 
     return(tbl) 
   
   if(!missing(pattern) && !str_is_empty(pattern)) {
-    tbl = tbl[`%m_any%`(pattern, tbl$object, exclude=exclude),]
+    #tbl = tbl[`%m_any%`(pattern, tbl$object_name, exclude=exclude),]
+    tbl = tbl[tbl$object_name %notlikeany% pattern,]
   }
   
   if(!missing(mode) && is.character(mode)) {
-    mode_fits = apply_pckg(tbl$object, pckg, function(x, nam) mode(x) == mode, value_error=FALSE)
+    mode_fits = apply_pckg(tbl$object_name, pckg, function(x, nam) mode(x) == mode, value_error=FALSE)
     tbl = tbl[mode_fits,]
   }
   
   if(nrow(tbl)>0) {
-    tbl = `rownames<-`(sort_df(tbl, primary_class, object), 1:nrow(tbl))
+    tbl = `rownames<-`(sort_df(tbl, primary_class, object_name), 1:nrow(tbl))
   }
   
   tbl
@@ -477,7 +507,7 @@ apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, value_error=NA) {
   if(is.character(pckg)) pckg = getNamespace(pckg)
   
   fun_to_apply = function(n) {
-    args = h1(list(get(n, envir=pckg), n, ...), nformals(f))
+    args = head(list(get(n, envir=pckg), n, ...), nformals(f),1)
     try(do.call(f, args), silent=TRUE) %ERRCLS% value_error
   }
 
@@ -570,8 +600,8 @@ install_package_dependencies = function(pckg, ..., skip_installed=TRUE, quiet=FA
 #'
 #' @family package-related functions provided by utilbox
 #' @export
-which_package = function(object) {
-  sub('>','',sub('.*[:][ ]?','',print2var(environment(object))))
+which_package = function(object_name) {
+  sub('>','',sub('.*[:][ ]?','',print2var(environment(object_name))))
 }
 
 #' Enable/disable auto-installation of packages
@@ -620,3 +650,42 @@ enable_auto_install = .eai
 #' @rdname auto_install_packages
 #' @export
 disable_auto_install = .dai
+
+#' Finding functions by substrings
+#'
+#' `str_find_in_funtion()` searches the function body of the specified 
+#' function (via `fun`) for the given `string`. If the string is found,
+#' it returns the corresponding line(s) (as obtained by printing the 
+#' result of a call to `base::body()`), otherwise `NULL` is returned. 
+#'
+#' `str_find_in_package()` searches for the string in functions within
+#' a package. Either all functions when (`what='all'`) or only exported
+#' functions (when `what='exported'`) are searched.
+#'
+#' @examples
+#' str_find_in_function('contrasts', 'lm', envir=asNamespace('stats')) # returns lines 3, 49, 59
+#' str_find_in_package('contrasts', 'stats') # returns 28 functions from the package `stats`
+#'
+#' @name str_find_in
+#' @export 
+str_find_in_function = function(string, fun, envir=parent.frame()) {
+
+  if(is.character(fun))
+    fun = get(fun, envir=envir)
+    
+  grep(string, print2var(fun))
+  
+}
+
+#' @rdname str_find_in
+#' @export 
+str_find_in_package = function(string, pckg, what='all') {
+
+  funs = list_package_objects(pckg, mode='function', what=what, quiet=TRUE)$object_name
+  names(funs) = funs
+  
+  locs = lapply(funs, str_find_in_funtion, string=string, envir=asNamespace(pckg))
+  
+  list_clean(locs)
+  
+}

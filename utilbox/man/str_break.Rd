@@ -4,7 +4,13 @@
 \alias{str_break}
 \title{Wrap text}
 \usage{
-str_break(x, max_width = Inf, eol = "\\n", break_only_at_space = FALSE)
+str_break(
+  x,
+  max_width = Inf,
+  break_only_at_space = FALSE,
+  drop_space_after_newline = FALSE,
+  eol = "\\n"
+)
 }
 \description{
 \code{str_break()} wraps (or more generally breaks) a string text. In other words,
@@ -15,7 +21,7 @@ it places the breaks (\code{eol}) anywhere, while with \code{break_only_at_space
 it only places the breaks between words.
 }
 \examples{
-string = collapse0(rep(collapse0(letters[1:8]),10), sep=" ")
+string = paste(rep('Rododendrons are pretty.',4), collapse=" ")
 
 # insert line breaks at given width
 message(str_break(string, max_width=20))

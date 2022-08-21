@@ -53,9 +53,9 @@ join_recurse = function(list, ..., join_fun) {
   stopifnot(is.list(list))
   
   if(!is.function(join_fun) && !exists(join_fun, mode='function'))
-    error("The function '",join_fun,"' supplied in 'join_fun' does not exist.",
-          " If you are using the defaults, remember that the package",
-          " 'dplyr' needs to be installed.")
+    stop("The function '",join_fun,"' supplied in `join_fun` does not exist.",
+         " If you are using the defaults, remember that the package",
+         " 'dplyr' needs to be installed.")
   
   if(length(list)<=1) unlist(list)
   
@@ -127,9 +127,9 @@ inner_join_recurse = function(list, ..., join_fun='inner_join') {
 anti_join_sym = function(x, y, by, ..., join_fun='anti_join') {
 
   if(!is.function(join_fun) && !exists(join_fun, mode='function'))
-    error("The function '",join_fun,"' supplied in 'join_fun' to 'anti_join_sym' does not exist.",
-          " If you are using the defaults, remember that the package",
-          " 'dplyr' needs to be installed.")
+    stop("The function '",join_fun,"' supplied in `join_fun` to `anti_join_sym`",
+         " does not exist. If you are using the defaults, remember that the",
+         " package 'dplyr' needs to be installed.")
           
   if(!is.function(join_fun)) 
     join_fun = get(join_fun, mode='function')

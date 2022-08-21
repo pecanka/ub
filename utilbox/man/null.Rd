@@ -2,8 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{null}
 \alias{null}
-\title{export
-Null function (function that does nothing)}
+\title{Null function (function that does nothing)}
 \usage{
 null(...)
 }

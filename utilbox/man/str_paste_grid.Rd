@@ -51,7 +51,7 @@ Other string-manipulation functions provided by utilbox:
 \code{\link{str_insert}()},
 \code{\link{str_is_empty}()},
 \code{\link{str_pos}()},
-\code{\link{str_rev}()},
+\code{\link{str_rev.character}()},
 \code{\link{str_trim_space}()},
 \code{\link{sub_at}()},
 \code{\link{toupperfirst}()}

@@ -18,10 +18,12 @@
 #' vector `code`) and adds lines to the .Rprofile file for the code to 
 #' evaluated at R's start up.
 #'
-#' `R_del_code_startup()` removes all lines that match the supplied 
-#' code.
+#' `R_del_code_startup()` removes all lines in .Rprofile that match the 
+#' code supplied in `code` either exactly (when `exact_match=TRUE`) or 
+#' partially (when `exact_match=FALSE`, a fixed string comparison via 
+#' `grep(..., fixed=TRUE)`).
 #'
-#' Do not forget to double-backslash the supplied code.
+#' Note: Do not forget to double-backslash the supplied code.
 #'
 #' @examples
 #' #R_add_lib_startup('utilbox')   # run this example only if you want to set 'utilbox' to load on startup
@@ -48,7 +50,7 @@ R_append_default_pckgs = function(..., system_var_name='R_DEFAULT_PACKAGES') {
   
   def_pckg = Sys.getenv(system_var_name) %|||||% NULL
   
-  PCKGS = collapse0(c(def_pckg, pckg), sep=',')
+  PCKGS = paste(c(def_pckg, pckg), collapse=',')
   
   do.call(Sys.setenv, `names<-`(list(PCKGS), system_var_name))
   
@@ -68,22 +70,22 @@ R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
   }
   
   msgf('Modifying the file ',Rprof_file,' ...')
-  msgf('Packages to be added among those that load at startup: ',collapse0(pckg, sep=", "))
+  msgf('Packages to be added among those that load at startup: ',paste(pckg, collapse=", "))
   
   all_pckgs = union(getOption('defaultPackages'), pckg)
 
-  wrt2fil = hijack(catn, file=Rprof_file, append=TRUE)
-  wrt2fil(".inst = utils::installed.packages()[,'Package']")
-  wrt2fil(".defs = c('",collapse0(all_pckgs, sep="','"),"')")
-  wrt2fil(".defs_avail = intersect(.defs, .inst)")
-  wrt2fil(".defs_miss = setdiff(.defs, .inst)")
-  wrt2fil("options(defaultPackages = .defs_avail)")
-  #wrt2fil("cat('Packages loaded at startup:', " \",sQuote('" %p% all_pckgs %p% "'),\"", "\\n\")")
-  wrt2fil("cat('Packages loaded at startup: ',paste(sapply(.defs_avail, sQuote), collapse=' '),'\\n')")
-  wrt2fil("if(length(.defs_miss)>0) cat('Packages not loaded at startup (not installed): ',paste(sapply(.defs_miss, sQuote), collapse=' '),'\\n')")
-  wrt2fil("rm(.defs, .inst, .defs_avail, .defs_miss)")
+  calls = c(
+    ".inst = utils::installed.packages()[,'Package']",
+    paste0(".defs = c('",paste(all_pckgs, collapse="','"),"')"),
+    ".defs_avail = intersect(.defs, .inst)",
+    ".defs_miss = setdiff(.defs, .inst)",
+    "options(defaultPackages = .defs_avail)",
+    "cat('Packages loaded at startup: ',paste(sapply(.defs_avail, sQuote), collapse=' '),'\\n')",
+    "if(length(.defs_miss)>0) cat('Packages not loaded at startup (not installed): ',paste(sapply(.defs_miss, sQuote), collapse=' '),'\\n')",
+    "rm(.defs, .inst, .defs_avail, .defs_miss)"
+  )
+  catn(paste(calls, sep='\n'), file=Rprof_file, append=TRUE)
 
-  
   msgf("File ",Rprof_file," modified.")
   msgf("You must reload the R session for any changes to take effect.")
   
@@ -93,25 +95,19 @@ R_add_lib_startup = function(pckg, Rprof_file, check_duplicate_load=TRUE) {
 
 #' @rdname R_defaults
 #' @export
-R_add_code_startup = function(code, Rprof_file) {
+R_add_code_startup = function(calls, Rprof_file) {
   
   if(missing(Rprof_file)) {
     Rprof_file = R_default_Rprofile_file()
   }
   
-  wrt2fil = hijack(catn, file=Rprof_file, append=TRUE)
-
-  add_line = function(line) {
-    added = "eval(parse(text=\"" %p% line %p% "\"))"
-    wrt2fil(added)
-    added
-  }
+  catn("Appending code to the file '",Rprof_file,"' ...")
+  #code = paste0("eval(parse(text='", calls, "'))")
+  #catn(paste(code, collapse='\n'), file=Rprof_file, append=TRUE)
+  catn(paste(calls, collapse='\n'), file=Rprof_file, append=TRUE)
+  catn('Total of ',length(calls),' line(s) of code appended to the file.')
   
-  catn('Appending code to the file ',Rprof_file,' ...')
-  added = sapply(code, add_line)
-  catn('Total of ',length(code),' line(s) of code appended to the file.')
-  
-  invisible(list(added_lines=added))
+  invisible(list(added_code=code))
 
 }
 
@@ -126,12 +122,12 @@ R_del_code_startup = function(code, Rprof_file, exact_match=FALSE, remove_all_ma
   matched_by_line = if(exact_match) {
     function(code) which(code==lines)
   } else {
-    function(code) which(`%m%`(code, lines, fixed=TRUE))
+    function(code) grep(code, lines, fixed=TRUE)
   }
   
   if(!file.exists(Rprof_file)) {
     catn("Nothing to remove since file '",Rprof_file,"' does not exist.")
-    return(invisible(list(lines_dropped=NULL)))
+    return(invisible(list(code_removed=NULL)))
   }
 
   catn("Reading file '",Rprof_file,"' ...")
@@ -152,6 +148,6 @@ R_del_code_startup = function(code, Rprof_file, exact_match=FALSE, remove_all_ma
     msgf('Total of ',length(to_drop),' lines of matching code were removed from the file.')
   }
   
-  invisible(list(lines_dropped=lines[to_drop]))
+  invisible(list(code_removed=lines[to_drop]))
 
 }

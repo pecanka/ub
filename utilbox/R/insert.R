@@ -105,13 +105,13 @@ insert.list = function(x, what, at, count=1, replace_old=FALSE, new_old=FALSE) {
   if(is_empty(x)) return(x)
   
   if(missing(at))
-    error("Supply 'at'.")
+    stop("Supply 'at'.")
   if(any(at<1 | at>length(x)))
-    error("Value in 'at' are out of range of 'x'.")
+    stop("Value in 'at' are out of range of 'x'.")
   if(length(what)!=length(at))
-    error("The lengths of 'what' and 'at' must match.")
+    stop("The lengths of 'what' and 'at' must match.")
   if(any(count<0))
-    error("Negative counts are not allowed")
+    stop("Negative counts are not allowed")
   
   # alter placements and counts 
   count = rep_len(count, length.out=length(what))
@@ -121,7 +121,7 @@ insert.list = function(x, what, at, count=1, replace_old=FALSE, new_old=FALSE) {
     what = what[ord]
     count = count[ord]
     at = at[ord]
-    at = at + cumsum(c(0, sapply(h1(what,-1), length) * h1(count,-1)))
+    at = at + cumsum(c(0, sapply(head(what,-1), length) * head(count,-1)))
   }
   
   if(replace_old) {
@@ -154,7 +154,7 @@ insert.default = function(x, what, ...) {
   
   if(is.vector(x)) {
     
-    yy = tryCatch(do.call('as.'%p%class(x)[1], list(y)), warning=hide, error=hide)
+    yy = tryCatch(do.call(paste0('as.', class(x)[1]), list(y)), warning=hide, error=hide)
     
     if(!is_error(yy)) {
       attributes(yy) = attributes(y)
@@ -174,8 +174,8 @@ insert_recurse.list = function(x, what, at, count=1, replace=FALSE) {
   if(length(what)==1) {
     insert1(x, what, at, count, replace)
   } else {
-    x1 = Recall(x, h1(what,-1), h1(at,-1), h1(count,-1), replace)
-    insert1(x1, t1(what), t1(at), t1(count), replace)
+    x1 = Recall(x, head(what,-1), head(at,-1), head(count,-1), replace)
+    insert1(x1, tail(what,1), tail(at,1), tail(count,1), replace)
   }
 
 }
@@ -201,7 +201,7 @@ insert1.list = function(x, what, at, count=1, replace=FALSE) {
   middle = rep_list(what, count, rep_as_list=TRUE)
   end = if(at==1 && !replace) x else tail(x, -(at - 1 + replace))
 
-  start %append% middle %append% end
+  append(append(start, middle), end)
   
 }
 

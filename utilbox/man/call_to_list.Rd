@@ -4,7 +4,7 @@
 \alias{call_to_list}
 \alias{dots_to_nlist}
 \alias{args_to_nlist}
-\alias{argvars_to_nlist}
+\alias{argvals_to_nlist}
 \title{Processing of ellipsis and call arguments}
 \usage{
 dots_to_nlist(
@@ -17,7 +17,7 @@ dots_to_nlist(
 
 args_to_nlist(envir = parent.frame())
 
-argvars_to_nlist(envir = parent.frame())
+argvals_to_nlist(envir = parent.frame())
 }
 \description{
 \code{dots_to_nlist()} returns the contents of the ellipsis of a parent function in a
@@ -30,12 +30,14 @@ gives the names in character form. Using \code{keep_symbolic=TRUE} is handy
 for instance for processing symbolic calls (e.g. column names to sort by
 in \code{sort_df()} or packages to load in \code{llib()}).
 
-\code{args_to_nlist()} returns all arguments supplied or simply defined
-to the call of the parent function in a nice \verb{named list} form. In order
-for it to work properly, the call to \code{args_to_nlist()} should be the first
-call inside the parent function,
-otherwise the call to \code{ls} might return also objects that did not
-exist upon the call to the function.
+\code{args_to_nlist()} returns all arguments supplied to or simply defined in
+the call of the parent function in the form of a \verb{named list}. In order
+for it to work properly, the call to \code{args_to_nlist()} must be the first
+call inside the parent function, otherwise the call to \code{ls} might return
+also objects that did not exist upon the call to the function.
+
+\code{argvals_to_nlist()} extracts the values supplied as arguments during
+the call to the parent function.
 }
 \examples{
 f = function(...) { dots_to_nlist() }
@@ -51,12 +53,12 @@ g('John', c('Peter','Jake'))
 Other coding-related functions provided by utilbox: 
 \code{\link{append_body}()},
 \code{\link{compare_functions}()},
-\code{\link{fun_code_to_text}()},
-\code{\link{fun_dump_code}()},
+\code{\link{fun_name}},
+\code{\link{function_code_to_text}()},
+\code{\link{function_dump_code}()},
 \code{\link{hide}()},
 \code{\link{hijack}()},
 \code{\link{is_error}()},
-\code{\link{namespaces}},
-\code{\link{this_fun_name}()}
+\code{\link{namespaces}}
 }
 \concept{coding-related functions provided by utilbox}

@@ -58,7 +58,7 @@ sort_df = function(x, ..., decreasing=FALSE) {
 
   vars = as.character(dots_to_nlist(keep_symbolic=TRUE))
   args = unname(as.list(x[vars])) %||||% list(1:nrow(x))
-  ord = do.call('order', args %append% list(decreasing=decreasing))
+  ord = do.call('order', append(args, list(decreasing=decreasing)))
   x[ord,]
   
 }
@@ -147,7 +147,7 @@ sort_by_pattern = function(x, pattern, by_names=FALSE, invert=FALSE, get_order=F
   keep_order_in_groups=FALSE, allow_empty_names=FALSE, ...) {
   
   if(missing(pattern))
-    error('Supply a pattern via `pattern`.')
+    stop('Supply a pattern via `pattern`.')
   
   if(is_empty(x)) {
     return(if(get_order) seq_along(x) else x)
@@ -155,10 +155,10 @@ sort_by_pattern = function(x, pattern, by_names=FALSE, invert=FALSE, get_order=F
   
   if(!allow_empty_names && by_names) {
     if(is_empty(names(x)))
-      error('`x` cannot be sorted according to its `names` when `x` has no names.')
+      stop('`x` cannot be sorted according to its `names` when `x` has no names.')
     if(str_is_empty_any(names(x)))
-      error('Some elements of `x` have no names. If you wish to proceed, you can disable',
-            ' this check via `allow_empty_names=TRUE`')
+      stop('Some elements of `x` have no names. If you wish to proceed, you can disable',
+           ' this check via `allow_empty_names=TRUE`')
   }
     
   if(by_names && is_empty(names(x))) {
@@ -255,8 +255,8 @@ order_by_pattern2 = function(x, ord, pattern, invert=FALSE, keep_order=FALSE, ..
   
   args = nlist(pattern=pattern[-1], invert, keep_order, ...)
   
-  y1 = do.call(Recall, list(x1, ord1) %append% args)
-  y2 = do.call(Recall, list(x2, ord2) %append% args)
+  y1 = do.call(Recall, append(list(x1, ord1), args))
+  y2 = do.call(Recall, append(list(x2, ord2), args))
 
   list(y=c(y1$y, y2$y), order=c(y1$ord, y2$ord))
   
@@ -266,10 +266,10 @@ sort_by_pattern_v2 = function(x, pattern, sort_by_names=FALSE, invert=FALSE, get
   keep_order_within_pattern_groups=FALSE, allow_empty_names=FALSE, ...) {
   
   if(missing(pattern))
-    error('Supply a pattern via `pattern`.')
+    stop('Supply a pattern via `pattern`.')
   
   if(!allow_empty_names && sort_by_names && is_empty(names(x)))
-    error('`x` cannot be sorted according to its `names` when `x` has no names.')
+    stop('`x` cannot be sorted according to its `names` when `x` has no names.')
     
   if(is_empty(x) || (sort_by_names && is_empty(names(x)))) {
     return(if(get_order) seq_along(x) else x)
@@ -297,8 +297,8 @@ sort_by_pattern_v2 = function(x, pattern, sort_by_names=FALSE, invert=FALSE, get
   
   args = nlist(pattern=pattern[-1], sort_by_names, invert, get_ord, keep_order_within_pattern_groups, ...)
   
-  y1 = do.call(Recall, list(y1) %append% args)
-  y2 = do.call(Recall, list(y2) %append% args)
+  y1 = do.call(Recall, append(list(y1), args))
+  y2 = do.call(Recall, append(list(y2), args))
 
   c(y1, y2)
   

@@ -9,12 +9,12 @@
 #' copy_attributes(y, x, 'name_first')
 #'
 #' @export
-copy_attributes = function(to, from, ..., pattern=FALSE, fixed=FALSE) {
+copy_attributes = function(to, from, ..., match_pattern=FALSE, fixed=FALSE) {
   
   attribs = unlist(dots_to_nlist())
   
-  if(pattern) {
-    attribs = filter_by_call(names(attributes(from)), ~`%m_any%`(attribs, .x, fixed=fixed))
+  if(match_pattern) {
+    attribs = filter_by_call(names(attributes(from)), ~`%likeany%`(.x, attribs, fixed=fixed))
   }
   
   for(a in attribs) {

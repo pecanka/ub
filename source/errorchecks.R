@@ -46,8 +46,9 @@
 #' @family coding-related functions provided by utilbox
 #' @export
 is_error = function(x, ok_value, ok_set, compare_via=identical, 
-  error_classes=c('try-error','simpleError','error'), 
-  warning_is_error=TRUE, warning_classes=c('simpleWarning','warning')) {
+    error_classes=c('try-error','simpleError','error'), 
+    warning_is_error=TRUE, warning_classes=c('simpleWarning','warning')) 
+{
   
   cond1 = !is_empty(intersect(class(x), error_classes))
   cond2 = warning_is_error && !is_empty(intersect(class(x), warning_classes))

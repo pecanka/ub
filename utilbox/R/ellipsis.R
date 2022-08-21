@@ -12,12 +12,14 @@
 #' for instance for processing symbolic calls (e.g. column names to sort by
 #' in `sort_df()` or packages to load in `llib()`).
 #'
-#' `args_to_nlist()` returns all arguments supplied or simply defined 
-#' to the call of the parent function in a nice `named list` form. In order 
-#' for it to work properly, the call to `args_to_nlist()` should be the first 
-#' call inside the parent function, 
-#' otherwise the call to `ls` might return also objects that did not 
-#' exist upon the call to the function.
+#' `args_to_nlist()` returns all arguments supplied to or simply defined in
+#' the call of the parent function in the form of a `named list`. In order 
+#' for it to work properly, the call to `args_to_nlist()` must be the first 
+#' call inside the parent function, otherwise the call to `ls` might return 
+#' also objects that did not exist upon the call to the function.
+#'
+#' `argvals_to_nlist()` extracts the values supplied as arguments during
+#' the call to the parent function.
 #'
 #' @examples
 #' f = function(...) { dots_to_nlist() }
@@ -33,11 +35,12 @@
 #' @export
 dots_to_nlist = function(keep_symbolic=FALSE, flatten=FALSE, assign_names=TRUE, names, envir=parent.frame()) {
 
-  args = eval(parse(text="match.call(expand.dots=FALSE)$`...`"), envir=envir)
+  args = eval(bquote(match.call(expand.dots=FALSE)$`...`), envir=envir)
   
-  if(keep_symbolic) return(args)
-   
-  vals = eval(parse(text="list(...)"), envir=envir)
+  if(keep_symbolic) 
+    return(args)
+    
+  vals = eval(bquote(list(...)), envir=envir)
   
   if(flatten) {
     vals = list_flatten(vals)
@@ -55,9 +58,9 @@ args_to_nlist = function(envir=parent.frame()) {
 
   nams = ls(all.names=TRUE, envir=envir)
   
-  present = sapply(nams, function(n) eval(parse(text='!missing('%p%n%p%')'), envir=envir))
+  present = sapply(nams, function(n) eval(bquote(!missing(.(n))), envir=envir))
   
-  nams = filter_by_bool(nams, present)
+  nams = nams[present]
   
   `names<-`(lapply(nams, get, envir=envir), nams)
   
@@ -65,13 +68,7 @@ args_to_nlist = function(envir=parent.frame()) {
 
 #' @rdname call_to_list
 #' @export
-argvars_to_nlist = function(envir=parent.frame()) {
-  eval(parse(text="lapply(as.list(match.call(expand.dots=FALSE))[-1], as.character)"), envir=envir)
+argvals_to_nlist = function(envir=parent.frame()) {
+  argvars = eval(bquote(match.call(expand.dots=FALSE)), envir=envir)
+  lapply(as.list(argvars)[-1], as.character)
 }
-
-#args_to_nlist2 = function(envir=parent.frame()) {
-#  lapply(call[-1], eval, envir=envir)
-#  #call = as.list(kthr(sys.calls(),2))
-#  #h1(as.list(args(get(as.character(call[[1]])))),-1)
-#}
-

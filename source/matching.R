@@ -14,13 +14,13 @@ multi_grep = function(pattern, x, ..., workhorse=base::grepl) {
   }
   
   if(!is.character(pattern))
-    error("pattern must be type 'character'.")
+    stop("pattern must be type 'character'.")
     
   if(length(x)>1 && length(pattern) %nin% c(1,length(x)))
-    error("With 'x' non-scalar, 'pattern' must be a scalar or same length as 'x'.")
+    stop("With 'x' non-scalar, 'pattern' must be a scalar or same length as 'x'.")
 
   if(length(pattern)>1 && length(x) %nin% c(1,length(pattern)))
-    error("With 'pattern' non-scalar, 'x' must be a scalar or same length as 'pattern'.")
+    stop("With 'pattern' non-scalar, 'x' must be a scalar or same length as 'pattern'.")
     
   n = max(length(x), length(pattern))
   pattern = rep(pattern, length.out=n)
@@ -174,7 +174,7 @@ sub_at = function(x, ..., at='@') {
 #' @rdname sub_at
 #' @export
 substitute_at = function(x, sub_list, at='@', workhorse=subm) {
-  workhorse(x, at %p% names(sub_list), sub_list)
+  workhorse(x, paste0(at, names(sub_list)), sub_list)
 }
 
 #' @title

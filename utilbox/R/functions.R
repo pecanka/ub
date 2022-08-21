@@ -2,18 +2,27 @@
 #' Get function name
 #'
 #' @description
-#' Returns the name of the parent function, i.e. that from whose body 
-#' it is invoked. If invoked from `.GlobalEnv`, returns an empty string 
-#' (i.e. "").
+#' `this_fun_name()` returns the name of the parent function, i.e. the
+#' function from which it is invoked. If invoked from `.GlobalEnv`, it 
+#' returns an empty string.
+#'
+#' `parent_fun_name()` returns the parent function of the parent function.
 #'
 #' @examples
 #' example_function = function() print(this_fun_name())
 #' example_function()     # should return 'example_function'
 #'
 #' @family coding-related functions provided by utilbox
+#' @name fun_name
 #' @export
 this_fun_name = function(e=sys.parent()) {
-  if(e==0) "" else as.character(h1(sys.call(which=e))) 
+  if(e==0) "" else as.character(head(sys.call(which=e), 1)) 
+}
+
+#' @rdname fun_name
+#' @export
+parent_fun_name = function(n=2L) {
+  this_fun_name(sys.parent(n))
 }
 
 #' Argument hijack function
@@ -31,19 +40,19 @@ this_fun_name = function(e=sys.parent()) {
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-hijack = function(FUN, ...) {
+hijack = function(fun, ...) {
   
-  .FUN = FUN
+  fun_hj = fun
   args = list(...)
-  w_old = names(args) %in% names(formals(.FUN))
+  w_old = names(args) %in% names(formals(fun_hj))
   
-  lapply(seq_along(args[w_old]), function(i) formals(.FUN)[[names(args)[i]]] <<- args[[i]])
+  lapply(seq_along(args[w_old]), function(i) formals(fun_hj)[[names(args)[i]]] <<- args[[i]])
   
   if(any(!w_old)) {
-    formals(.FUN) = formals(.FUN) %append% args[!w_old]  
+    formals(fun_hj) = append(formals(fun_hj), args[!w_old])
   }
   
-  .FUN
+  fun_hj
   
 }
 
@@ -75,7 +84,7 @@ nformals = function(fun, envir=parent.frame()) {
 #' Get the source code of a function
 #'
 #' @description
-#' `fun_code_to_text()` returns the body of the supplied function as 
+#' `function_code_to_text()` returns the body of the supplied function as 
 #' a character string.
 #'
 #' @param fun function for which the body of the code is desired
@@ -92,12 +101,12 @@ nformals = function(fun, envir=parent.frame()) {
 #'   x = 2
 #'   invisible(x)
 #' }
-#' ff <- fun_code_to_text(f)
+#' ff <- function_code_to_text(f)
 #' print(ff)
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-fun_code_to_text = function(fun, file=NULL) {
+function_code_to_text = function(fun, file=NULL) {
 
   stopifnot(is.function(fun))
   
@@ -114,27 +123,27 @@ fun_code_to_text = function(fun, file=NULL) {
 
 #' Dump the source code of a function to a file
 #'
-#' Dumps the source code of a function `fun` to a file `file`.
+#' `function_dump_code()` dumps the source code of a function `fun` 
+#' to a file `file` (`stdout()` by default).
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-fun_dump_code = function(fun, file) {
-
-  catnn(collapse0n(print2var(fun)), file=file)
-  
+function_dump_code = function(fun, file=stdout()) {
+  cat(paste(print2var(fun), collapse='\n'), '\n', file=file)
 }
 
 #' Separate lines of the code of a function 
 #'
-#' `fun_separate_lines()` converts the body of a function (`fun`) to a list where
-#' each element in the list corresponds to one line for the purposes of altering 
-#' the code for instance via `append_body()` below or via `base::trace()`.
+#' `function_separate_code()` converts the body of a function (`fun`) to a list
+#' where each element in the list corresponds to a block of code (often a
+#' line). This is used when altering the code for instance via `append_body()`
+#' below or via `base::trace()`.
 #'
 #' @export
-fun_separate_lines = function(fun) {
+function_separate_code = function(fun) {
   b = as.list(body(fun))
-  num = seq(1, length(b), 1) - ifelse(identical(b[[1]], as.name('{')), 1, 0)
-  `names<-`(b, "'at' line number "%p%num)
+  num = seq_along(b) - ifelse(identical(b[[1]], as.name('{')), 1, 0)
+  `names<-`(b, paste0("at=", num))
 }
 
 #' @title
@@ -190,6 +199,45 @@ fun_separate_lines = function(fun) {
 append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replace_at=TRUE) {
   
   where = if(missing(where) && !missing(at)) 'at' else match.arg(where)
+
+  if(where=='at' && length(at)!=1)
+    stop("Supply a single value via `at` when `where='at'`.")
+  
+  if(length(body(fun))==0) {
+    warning('The supplied function has an empty body. It is probably a generic, which',
+            ' `append_body()` does not support. Returning the unmodified function.')
+    return(fun)
+  }
+
+  if(is.character(calls)) {
+    calls = lapply(calls, base::str2lang)
+  }
+    
+  old_body = as.list(body(fun))
+  
+  old_body = if(identical(old_body[[1]], as.name('{'))) {
+    old_body[-1]
+  } else {
+    list(body(fun)) 
+  }
+  
+  new_body = if(where=='first' || at<1) {
+    append(calls, old_body)
+  } else if(where=='last' || at > length(old_body)) {
+    append(old_body, calls)
+  } else {
+    append(append(head(old_body, at-1), calls), tail(old_body, -at+1))
+  }
+
+  body(fun) = as.call(c(as.name("{"), new_body))
+  
+  return(fun)
+
+}
+  
+append_body_old = function(fun, calls, where=c('first','last','at'), at=NULL, replace_at=TRUE) {
+  
+  where = if(missing(where) && !missing(at)) 'at' else match.arg(where)
   
   old_body = as.list(body(fun))
   
@@ -216,12 +264,12 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replac
   } else {
   
     if(length(calls)!=1) 
-      error("With where='at' exactly one code line must be supplied.")
+      stop("With where='at' exactly one code line must be supplied.")
     if(missing(at))
-      error("With where='at' a value for 'at' must be supplied.")
+      stop("With where='at' a value for 'at' must be supplied.")
     
     calls = calls[[1]]
-    #browser()
+
     at = min(at, length(old_body))
     .oldline. = old_body[[at]]
     
@@ -232,17 +280,6 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replac
     
     new_body = insert(old_body, list(new_code), at, replace_old=replace_at)
 
-    #bquote_ready = base::str2lang(gsub('.oldline.', '.(.oldline.)', calls, fixed=TRUE))
-    #new_code = do.call(bquote, list(bquote_ready))
-
-    #old_code = collapse0(print2var(.oldline.), sep=';')
-    #calls = gsub('.oldline.', old_code, calls, fixed=TRUE)
-    #new_code = base::str2lang(calls)
-    #oldbody[[at]] = new_code
-    
-    #oldbody[[at]] = eval(parse(text=calls))
-    #newbody = oldbody
-    
   }
   
   # assign the modified code back into fun and return the function
@@ -252,80 +289,260 @@ append_body = function(fun, calls, where=c('first','last','at'), at=NULL, replac
   
 }
 
-#' Replacement in expressions
-#'
-#' Similarly to `gsub` and `sub`, the functions `gsub_lang` and `sub_lang`
-#' perform replacement in expressions. The expressions are first converted
-#' to strings, the replacement is executed (via `base::gsub` or `base::sub`)
-#' and the result is converted back to language expressions. The input can
-#' be a list of expressions or a function.
-#'
-#' @examples
-#' # let's modify the `get2` function to return an NA when the requested
-#' # object is not found.
-#' get3 = hijack(get2, default_value2=NA)
-#' get3 = gsub(get3, 'default_value', 'default_value2')
-#' 
-#' @export
-lang_sub = function(code, pattern, repl, fixed=TRUE, workhorse=gsub) {
-
-  expr = code
-  
-  if(is.function(code)) {
-    expr = as.list(body(expr))
-  }
-  
-  for(i in seq_along(expr)) {
-  
-    line = as.character(expr[i])
-    line = gsub(pattern, repl, line, fixed=fixed)
-    line = base::str2lang(line)
-    expr[[i]] = line
-  
-  }
-  
-  if(is.function(code)) {
-    body(code) = as.call(expr)
-    expr = code
-  }
-  
-  expr
-  
-}
-
-#' @rdname lang_sub
-#' @export
-gsub_lang = function(...) {
-  lang_sub(..., workhorse=gsub)
-}
-
-#' @rdname lang_sub
-#' @export
-sub_lang = function(...) {
-  lang_sub(..., workhorse=sub)
-}
-
-#' export
-#bquote2 = function (expr, where = parent.frame()) {
-#  unquote <- function(e) {
-#    if (is.pairlist(e)) {
-#      as.pairlist(lapply(e, unquote))
-#    } else if (length(e) <= 1L) {
-#      e
-#    } else if (e[[1L]] == as.name(".")) {
-#      eval(e[[2L]], where)
-#    } else {
-#      as.call(lapply(e, unquote))
-#    }
-#  }
-#  unquote(substitute(expr))
-#}
-
 #' Null function (function that does nothing)
 #'
 #' `null()` is a function that takes arbitrary arguments and does nothing.
 #'
 #' @export
 null = function(...) {
-  return()
+  return(invisible())
+}
+
+#' Modify and restore functions
+#'
+#' Functions to **modify in place** and restore other functions located  
+#' anywhere including inside locked packages.
+#'
+#' `function_modify_in_place()` is the workhorse function that can be used to 
+#' modify other functions **in place**. It attaches the original source 
+#' code of the function that is being modified as the attribute 
+#' `original_function` of the modified function.
+#'
+#' `function_restore()` restores the original code of a modified
+#' function (specifically using the attribute `original_function`).
+#'
+#' `function_disable()` can be used to disable any function, i.e., make
+#' the function (supplied by name) do no action. The modification is done
+#' also **in place**.
+#
+#' `function_kidnap()` kidnaps the supplied function, where kidnapping 
+#' means that the function will ask the user for input before proceeding 
+#' with its code. The original code of the kidnapped function is backed 
+#' up in the attribute `original_function` of the kidnapped function.
+#' The modification is done also **in place**.
+#'
+#' @export
+function_modify_in_place = function(fun_name, calls='', envir=parent.frame(), where=c('first','last','at'), 
+    at = NULL, restore_call, modify_only_unmodified=FALSE, quietly=FALSE) {
+
+  if(quietly)
+    message = function(...) {}
+
+  stopifnot(is.character(fun_name))
+  
+  if(missing(where) && !missing(at))
+    where = 'at'
+  
+  if(missing(envir) && grepl('::', fun_name)) {
+    envir = sub('::.*', '', fun_name)
+    fun_name = sub('.*::','',fun_name)
+  }
+
+  if(is.character(envir)) {
+
+    if(missing(restore_call))
+      restore_call = paste0("function_restore('",fun_name,"', '",envir,"')")
+      
+    envir_name = paste0("in the namespace '",envir,"'")
+    envir = asNamespace(envir)
+    
+  } else if(identical(envir, parent.frame())) {
+    envir_name = "in the parent frame"
+  } else {
+    envir_name = "in the specified namespace / environment"
+  }
+
+  if(is.character(calls)) {
+    calls = paste('{', paste(calls, collapse='\n'), '}')
+    calls = base::str2lang(calls)
+  }
+
+  fun = get(fun_name, envir=envir)
+
+  if(!is.null(attr(fun, 'original_function')) && modify_only_unmodified) {
+    message("The function '",fun_name,"' had already been modified. To modify it",
+            " further, set the argument 'modify_only_unmodified=FALSE'.")
+    return(FALSE)
+  }
+
+  fun_modified = append_body(fun, calls, where=where, at=at)
+  attributes(fun_modified) = attributes(fun)
+
+  if(is.null(attr(fun, 'original_function'))) {
+    attr(fun_modified, 'original_function') = fun
+  }
+
+  message('Modifying the function `',fun_name,'` (',envir_name,') ...')
+  
+  unlockBinding(fun_name, env=envir)
+  assign(fun_name, fun_modified, envir=envir)
+  lockBinding(fun_name, env=envir)
+ 
+  if(identical(get(fun_name, envir=envir), fun_modified)) {
+  
+    message('Function `',fun_name,'` has been modified (',envir_name,').')
+    result = TRUE
+    
+    if(missing(restore_call)) 
+      restore_call = 'function_restore()'
+      
+    if(!is.null(restore_call)) 
+      message('You can restore the original version(s) using `',restore_call,'`.')
+    
+  } else {
+    warning('Something went wrong during the modification of `',fun_name,'`!', immediate.=TRUE)
+    result = FALSE
+  }
+  
+  invisible(result)
+ 
+}
+
+
+#' @rdname kidnap_modify
+#' @export
+function_restore = function(fun_name, envir=parent.frame(), quietly=FALSE) {
+
+  if(quietly)
+    message = function(...) {}
+
+  if(missing(envir) && grepl('::', fun_name)) {
+    envir = sub('::.*', '', fun_name)
+    fun_name = sub('.*::','',fun_name)
+  }
+  
+  if(is.character(envir))
+    envir = asNamespace(envir)
+
+  if(is.null(attr(get(fun_name, envir=envir), 'original_function'))) {
+    message("The function `",fun_name,"` does not appear to have been modified,",
+            "or the attribute `original_function` has been lost at some point.")
+    return(invisible())
+  }
+
+  message('Restoring the original version of the function `',fun_name,'` ...')
+  
+  fun_original = attr(get(fun_name, envir=envir), 'original_function')
+  
+  unlockBinding(fun_name, env=envir)
+  assign(fun_name, fun_original, envir=envir)
+  lockBinding(fun_name, env=envir)
+ 
+  if(identical(get(fun_name, envir=envir), fun_original)) {
+    message('The original version of the function `',fun_name,'` has been restored.')
+    result = TRUE
+  } else {
+    warning('Something went wrong when restoring of `',fun_name,'`!', immediate.=TRUE)
+    result = TRUE
+  }
+  
+  invisible(result)
+
+}
+
+#' @rdname function_modify_in_place
+#' @export
+function_disable = function(fun_name, envir=parent.frame(), quietly=FALSE) {
+
+  if(missing(envir) && grepl('::', fun_name)) {
+    envir = sub('::.*', '', fun_name)
+    fun_name = sub('.*::','',fun_name)
+  }
+
+  function_modify_in_place(fun_name, 'return()', envir=envir, quietly=quietly)
+
+}
+
+#' @title`
+#' Find dependencies of a function
+#'
+#' @description
+#' `function_find_dependencies()` searches the source code of a
+#' function (supplied either directly or by name as string via `fun`)
+#' and identifies invocations of functions that are found in the 
+#' specified environment or package (supplied via `dep_envir`). When
+#' supplied by name, the environment in `dep_envir` is searched for
+#' a function of matching name. The function name can be supplied
+#' together with a package using the double colon notation (e.g.,
+#' 'base::mean`), which is then used to set `fun_envir` (unless
+#' it has been supplied. When the argument `dep_envir` was not specified,
+#' the environment in `fun_envir` is used.
+#'
+#' @examples
+#' # Function supplied directly or by name, `fun_envir` is implied (i.e.,
+#' # set to `environment(base::sample)`), `dep_envir` missing so taken 
+#' # the same as `fun_envir`. Thus it looks for dependencies of `sample` 
+#' # in the environment "base".
+#' function_find_dependencies(base::sample)
+#' function_find_dependencies('base::sample') 
+#'
+#' # function supplied directly, `fun_envir` is implied (i.e., set to
+#' # `environment(base::sample)`), `dep_envir` is specified explicitly.
+#' function_find_dependencies(base::sample, 'stats')
+#' function_find_dependencies('base::sample', 'stats')
+#' function_find_dependencies('sample', 'stats', 'base')
+#'
+#' # An example of a missing function (xxxx)
+#' g = function() print('hi')
+#' ff = function() { x = xxxx(); a = sin(1); g() }
+#' function_find_dependencies(ff)
+#'
+#' @export
+function_find_dependencies = function(fun, dep_envir, fun_envir=parent.frame(), get_status=TRUE) {
+
+  stopifnot(length(fun)==1)
+
+  if(is.character(fun)) {
+    if(missing(fun_envir) && grepl('::', fun)) {
+      fun_envir = sub('::.*', '', fun)
+      fun = sub('.*::','',fun)
+    }
+  }
+  
+  if(is.character(fun_envir)) {
+    fun_envir = asNamespace(fun_envir)
+  }
+
+  if(is.character(fun)) {
+    fun = get(fun, envir=fun_envir)
+  }
+  
+  if(!is.function(fun))
+    stop('Argument `fun` must be a function.')
+
+  fun_envir = environment(fun)
+  
+  if(missing(dep_envir))
+    dep_envir = fun_envir
+
+  if(is.character(dep_envir)) {
+    dep_envir = asNamespace(dep_envir)
+  }
+  
+  funs = fun2funcalls(fun)
+  funs = unique(funs)
+  funs = unlist(lapply(lapply(funs, str2lang), as.character))
+  
+  if(get_status) {
+    locs = lapply(funs, function(x) unlist(getAnywhere(x)))
+    names(locs) = funs
+    miss = unlist(lapply(locs, function(x) !any(grepl('where[0-9]*', names(x)))))
+    locs = lapply(locs, function(x) unname(unlist(x[grepl('where[0-9]*', names(x))])))
+    packgs = lapply(locs, function(x) x[!grepl('^namespace:',x)])
+    namsps = lapply(locs, function(x) x[grepl('^namespace:',x)])
+
+    in_dep = unlist(if(isNamespace(dep_envir)) {
+      lapply(namsps, function(x) if(length(x)==0) FALSE else lapply(x, function(y) identical(asNamespace(sub('^namespace:','',y)), dep_envir)))
+    } else {
+      lapply(packgs, function(x) if(length(x)==0) FALSE else lapply(x, function(y) identical(as.environment(y), dep_envir)))
+    })
+    
+    locs = unlist(lapply(locs, paste, collapse=';'))
+    funs = data.frame(dependency=funs, currently_missing=miss, locations=locs, found_in_dep_envir=in_dep)
+    rownames(funs) = NULL
+
+  }
+  
+  funs
+  
 }

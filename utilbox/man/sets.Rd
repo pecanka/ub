@@ -9,7 +9,7 @@
 \usage{
 mintersect(...)
 
-setdiffsym(x, y, labels, report_counts = TRUE)
+setdiffsym(x, y, labels = c("x", "y"), report_counts = TRUE)
 
 is_subset(x, y)
 }

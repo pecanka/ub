@@ -20,11 +20,11 @@ to_base_k = function(x, k, recode=TRUE, min_ndig=1, codes=c(0:9,letters,LETTERS)
   
   pos = lapply(x, to_base_k_1, k, min_ndig)
   
-  rec = lapply(pos, function(p) collapse0(codes[p+1], sep=sep))
+  rec = lapply(pos, function(p) paste(codes[p+1], collapse=sep))
   
   if(simplify && !is.null(sep)) rec = unlist(rec, recursive=FALSE)
   
-  if(!is.null(collapse)) collapse0(unlist(rec), sep=collapse) else rec
+  if(!is.null(collapse)) paste(unlist(rec), collapse=collapse) else rec
   
 }
 

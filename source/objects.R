@@ -144,23 +144,23 @@ lsos = function(..., envir=parent.frame(), n=10, ndigits=2, size_fun=NULL) {
 object_size = function(name, envir=parent.frame(), size_fun=object.size) {
 
   if(!is.character(name))
-    error("The argument 'name' of 'object_size' must be of class character.")
+    error("The argument `name` of `object_size` must be of class character.")
     
   if(missing(size_fun) || is.null(size_fun))
     size_fun = object.size
 
   if(!is.function(size_fun))
-    error("The value supplied to 'object_size' via 'size_fun' must be a function.")
+    error("The value supplied to `object_size` via `size_fun` must be a function.")
     
   mem = try(size_fun(get(name, envir=envir)), silent=package_is_installed('pryr'))
   
   if(is_error(mem) && package_is_installed('pryr')) {
-      mem = try(pryr::object_size(get(name, envir=envir)))
+    mem = try(pryr::object_size(get(name, envir=envir)))
   }
   
   if(is_error(mem))
-    error("A memory query on the object '",name,"' failed.")
-    
+    error("A memory query on the object `",name,"` failed.")
+
   as.numeric(mem) 
    
 }
@@ -168,25 +168,27 @@ object_size = function(name, envir=parent.frame(), size_fun=object.size) {
 #' @rdname lsos
 #' @export
 object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=parent.frame(), 
-  ndigits=2, size_fun=NULL) {
+  ndigits=2, size_fun=NULL, sort_by=c('size','name')) {
+  
+  sort_by = match.arg(sort_by)
   
   dots = match.call(expand.dots = FALSE)$`...`
   
   if (length(dots) && !all(sapply(dots, function(x) is.symbol(x) || is.character(x)))) 
     error("'...' must contain names or character strings.")
     
-  names = c(list, sapply(dots, as.character))
+  obj_names = unname(unlist(c(list, sapply(dots, as.character))))
   
   # Get object sizes
-  s = try(sapply(names, function(x) 
+  s = try(sapply(obj_names, function(x) 
                           if(exists(x, envir=envir)) {
                             object_size(x, envir=envir, size_fun=size_fun) 
-                          } else NA))
+                          } else NA, USE.NAMES=FALSE))
   
   # Convert the sizes in bytes to different units (unless error occured)
   if(is_error(s)) {
   
-    s = rep(NA, length(names))
+    s = rep(NA, length(obj_names))
     
   } else if(length(s)>0) {
     
@@ -194,9 +196,13 @@ object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=p
     if(missing(unit) && with_unit) {
       unit = get_unit(s)
     }
-    
-    # Convert units
-    s = data.frame(bytesize=s, size=convert_unit(s, unit, append_unit=with_unit, ndigits=ndigits))
+
+    # Combine results and convert units
+    s = data.frame(object_name=obj_names, 
+                   bytesize=s, 
+                   size=convert_unit(s, unit, append_unit=with_unit, ndigits=ndigits))
+                   
+    s = s[order(if(sort_by=='name') s$object_name else -s$bytesize),]
     
   }
   

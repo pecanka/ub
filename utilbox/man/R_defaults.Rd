@@ -15,7 +15,7 @@ R_append_default_pckgs(..., system_var_name = "R_DEFAULT_PACKAGES")
 
 R_add_lib_startup(pckg, Rprof_file, check_duplicate_load = TRUE)
 
-R_add_code_startup(code, Rprof_file)
+R_add_code_startup(calls, Rprof_file)
 
 R_del_code_startup(
   code,
@@ -40,10 +40,12 @@ file in the user's home directory for instance.
 vector \code{code}) and adds lines to the .Rprofile file for the code to
 evaluated at R's start up.
 
-\code{R_del_code_startup()} removes all lines that match the supplied
-code.
+\code{R_del_code_startup()} removes all lines in .Rprofile that match the
+code supplied in \code{code} either exactly (when \code{exact_match=TRUE}) or
+partially (when \code{exact_match=FALSE}, a fixed string comparison via
+\code{grep(..., fixed=TRUE)}).
 
-Do not forget to double-backslash the supplied code.
+Note: Do not forget to double-backslash the supplied code.
 }
 \examples{
 #R_add_lib_startup('utilbox')   # run this example only if you want to set 'utilbox' to load on startup

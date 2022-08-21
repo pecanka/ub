@@ -35,43 +35,41 @@ add_class = function(x, class) {
 #' @export
 drop_class = function(x, class) {
   `class<-`(x, setdiff(class(x), class))
-  #`class<-`(x, class(x)[h1(which(class(x)!=class))])
 }
 
-#' @title
-#' Set class
-#'
-#' @description
-#'
-#' `set_class()` attempts to set the class of `x` to `class` by 
-#' calling `as.*` where `*` is substituted for the character value in 
-#' `class`.
-#'
-#' `has_class()` checks if the class given in `class` is among the 
-#' classes of `x`.
-#'
-#' @examples
-#' set_class(1, 'character')
-#'
-#' has_class(1, 'character')
-#' has_class(set_class(1, 'character'), 'character')
-#'
-#' @export
-set_class = function(x, class) {
-  fun_name = 'as.'%p%class
-  if(exists(fun_name, mode='function')) {
-    do.call(fun_name, list(x))
-  } else {
-    `class<-`(x, class)
-  }
-}
+# #' @title
+# #' Set class
+# #'
+# #' @description
+# #'
+# #' `set_class()` attempts to set the class of `x` to `class` by 
+# #' calling `as.*` where `*` is substituted for the character value in 
+# #' `class`.
+# #'
+# #' `has_class()` checks if the class given in `class` is among the 
+# #' classes of `x`.
+# #'
+# #' @examples
+# #' set_class(1, 'character')
+# #'
+# #' has_class(1, 'character')
+# #' has_class(set_class(1, 'character'), 'character')
+# #'
+# #' @export
+# set_class = function(x, class) {
+#   fun_name = paste0('as.', class)
+#   if(exists(fun_name, mode='function')) {
+#     do.call(fun_name, list(x))
+#   } else {
+#     `class<-`(x, class)
+#   }
+# }
 
-#' @rdname set_class
-#' @export
-has_class = function(x, class) {
-  inherits(x, class)
-  #class %in% class(x)
-}
+# #' @rdname set_class
+# #' @export
+# has_class = function(x, class) {
+#   inherits(x, class)
+# }
 
 #' @title
 #' Convert objects to class `huge`
@@ -269,7 +267,7 @@ truncate_huge.default = function(x, n) {
 }
 
 msg_character_shortened = function(ncut, cut_symbol='......') {
-  ifelse(ncut<=0, '', cut_symbol %p% ' (' %p% ncut %p% ' characters omitted) ' %p% cut_symbol)
+  ifelse(ncut<=0, '', paste0(cut_symbol, ' (', ncut, ' characters omitted) ', cut_symbol))
 }
 
 default_trunc_info = function() {
@@ -288,8 +286,8 @@ print_trunc_note = function() {
   any_hidden = get_in_utilbox_env("trunc_n_hidden")
   #print(any_hidden)
   if(any_hidden>0) {
-    msg = "Note: For objects of class 'huge' only the first " %p% n_limit %p% 
-          " elements were printed. Use print(n=...) to change this limit."
+    msg = paste0("Note: For objects of class 'huge' only the first ", n_limit, 
+                 " elements were printed. Use print(n=...) to change this limit.")
     msgf('\n',msg)
     invisible(msg)
   }

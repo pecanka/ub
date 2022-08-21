@@ -1,131 +1,210 @@
-#' Kidnap the warning function in base
+#' Kidnap the stop and warning functions
 #'
-#' `function_kidnap()` modifies the code of the supplied function.
-#' Kidnapping in this context means that the function will ask the
-#' user for input before proceeding with its code. The original code 
-#' of the kidnapped function is backed up in the attribute 'original_function'
-#' of the kidnapped function.
+#' `kidnap_stop_function()` kidnaps the function `base::stop`.
+#' In this context, kidnapping of a function means that the function 
+#' is modified so that it asks the user for input before proceeding 
+#' with its code. The original code of the kidnapped function is backed 
+#' up in the attribute `original_function` of the kidnapped function
+#' so that the original function can be restored. 
 #'
-#' `function_restore()` restores the original code of a kidnapped function.
+#' `restore_stop_function()` restores the original version of the stop
+#' function.
 #'
-#' `stop_function_kidnap()` is a shortcut for kidnapping the function 
-#' `base::stop`, while `stop_function_restore()` restores it.
-#'
-#' `warning_function_kidnap()` and `warning_function_restore()` perform
+#' `kidnap_warning_function()` and `restore_warning_function()` perform
 #' the same action for the warning functions `base::warning` and
 #' `base::.signalSimpleWarning`.
 #'
+#' `function_kidnap()` is the workhorse that does the actual kidnapping,
+#' which modified the function **in place**.
+#'
+#' @name kidnap_function
 #' @export
-function_kidnap = function(fun_name, where=parent.frame(), msg_argument, restore_call) {
+kidnap_stop_function = function(quietly=FALSE) {
+  result = function_kidnap('stop', 'base', msg_argument='...', 
+                           restore_call='restore_stop_function()', 
+                           quietly=quietly)
+  invisible(result)
+}
 
-  if(is.character(where)) {
-    where_name = paste0("in the namespace '",where,"'")
-    where = asNamespace(where)
-  } else if(identical(where, parent.frame())) {
-    where_name = "in the parent frame"
-  } else {
-    where_name = "in the specified namespace"
-  }
+#' @rdname kidnap_function
+#' @export
+restore_stop_function = function(quietly=FALSE) {
+  result = function_restore('stop', 'base', quietly=quietly)
+  invisible(result)
+}
 
-  if(!is.null(attr(get(fun_name, envir=where), 'original_function'))) {
-    message('The function `',fun_name,'` had already been modified.')
-    return(invisible())  
-  }
+#' @rdname kidnap_function
+#' @export
+kidnap_warning_function = function(quietly=FALSE) {
+  res1 = function_kidnap('warning', 'base', msg_argument='...', restore_call=NULL, 
+                         quietly=quietly)
+  res2 = function_kidnap('.signalSimpleWarning', 'base', msg_argument='msg', 
+                         restore_call='restore_warning_function()', 
+                         quietly=quietly)
+  invisible(res1 && res2)
+}
 
-  code = c("message('\n*************** KIDNAPPING IN EFFECT ***************');",
-           paste0("message('The function `",fun_name,"()` has been invoked'", 
-                  if(!missing(msg_argument)) paste0(", ' (with message \\'', ",msg_argument,",'\\').');")),
+#' @rdname kidnap_function
+#' @export
+restore_warning_function = function(quietly=FALSE) {
+  res1 = function_restore('warning', 'base', quietly=quietly)
+  res2 = function_restore('.signalSimpleWarning', 'base', quietly=quietly)
+  invisible(res1 && res2)
+}
+
+#' @rdname kidnap_function
+#' @export
+function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore_call, modify_only_unmodified=TRUE, 
+    quietly=FALSE) {
+
+  calls = c(
+    "message('\n*************** KIDNAPPING IN EFFECT ***************');",
+    paste0("message('The function `",fun_name,"()` has been invoked'",
+          if(!missing(msg_argument)) paste0(", ' (with message \\'', ",msg_argument,",'\\').');")),
            "message('Because the function had been kidnapped, it behaves differently.');",
            "repeat {",
-           "message('You have the following options:');",
-           paste0("message('  - input \\'i\\' and press Enter to ignore the `",fun_name,
-                  "()` call and continue execution as if it was never called');"),
-           paste0("message('  - input \\'b\\' and press Enter to enter the browser inside the `",
-                  fun_name,"()` call');"),
-           paste0("message('  - press Enter to continue the execution of the `",fun_name,"()` call as normal');"),
-           "  input = scan('', what = 'character', nmax = 1, quiet = TRUE);",
+           "  message('You have the following options:');",
+    paste0("  message('  - input \\'i\\' and press ENTER to ignore the `",fun_name,
+           "          ()` call and continue as if it was never called');"),
+    paste0("  message('  - input \\'b\\' and press ENTER to enter the browser inside the `",
+                      fun_name,"()` call');"),
+    paste0("  message('  - press ENTER to continue the execution of the `",fun_name,
+           "          ()` call as normal');"),
+           "  input = scan('', what='character', nmax=1, quiet=TRUE);",
            "  input = if(length(input)==0) '' else tolower(substr(input, 1, 1));",
-           paste0("if(input == 'i') {
-                      message('Invokation of `",fun_name,"()` is being ignored and the execution is continuing...');
-                      return(invisible(NULL));
-                  } else if(input == 'b') {
-                      message('Browser will be entered. After continuing via \\'c\\' you will be asked again what to do.\nCalling `browser()`...');
-                      browser();
-                  } else {
-                      message('Continuing with normal execution of `",fun_name,"()`...\n');
-                      break;
-                  }"),
-           "}"
-          )
+    paste0("if(input == 'i') {
+              message('Invokation of `",fun_name,"()` is being ignored, continuing execution ...');
+              return(invisible(NULL));
+          } else if(input == 'b') {
+              message('Launching browser. After continuing via \\'c\\' you will be',
+                      ' asked again what to do.\nCalling `browser()`...');
+              browser();
+          } else {
+              message('Continuing with normal execution of `",fun_name,"()`...\n');
+              break;
+          }"),
+    "}"
+  )
 
-  code = paste('{', paste(code, collapse='\n'), '}')
-  call = base::str2lang(code)
-  fun_polite = utilbox::append_body(get(fun_name, envir=where), call, where='first')
-
-  attr(fun_polite, 'original_function') = get(fun_name, envir=where)
-
-  message('Modifying the function `',fun_name,'` ...')
-  unlockBinding(fun_name, env=where)
-  assign(fun_name, fun_polite, envir=where)
-  lockBinding(fun_name, env=where)
+  function_modify_in_place(fun_name, calls=calls, envir=envir, where='first', 
+      restore_call=restore_call, modify_only_unmodified=modify_only_unmodified, 
+      quietly=quietly)
   
-  if(identical(get(fun_name, envir=where), fun_polite)) {
-    if(missing(restore_call)) restore_call = 'function_restore()'
-    message('Function `',fun_name,'` has been modified (',where_name,').')
-    if(!is.null(restore_call)) message('You can restore the original version(s) using `',restore_call,'`.')
+}
+
+#' @title
+#' Toggle dumping on frames on error
+#'
+#' @description
+#' `.roe()` (or it alias `toggle_dump_on_error()`) toggle between dumping of
+#' frames when an error is encoutered. This is done by setting `options()$error`
+#' to a version of `utils::dump.frames()`. Optionally, the dumping is done to
+#' to file (when `to_file=TRUE`) and/or includes the global environment
+#' (when `include_GlobalEnv=TRUE`).
+#'
+#' @export
+toggle_dump_on_error = function(dumpto='last.dump', to_file=FALSE, include_GlobalEnv=FALSE) {
+
+  if(is.null(options()$error)) {
+    message('Enabling frame dumping on error ...')
+    if(!interactive()) {
+      to_file = include_GlobalEnv = TRUE
+    }
+    call_text = paste0("options(error=quote(dump.frames(dumpto='",dumpto,"', to.file=",to_file,
+                       ", include.GlobalEnv=",include_GlobalEnv,")))")
+    eval(str2lang(call_text))
   } else {
-    message('Something went wrong during the modification of `',fun_name,'`!')
+    message('Disabling frame dumping on error ...')
+    options(error = NULL)
   }
   
 }
 
-#' @rdname function_kidnap
+#' @rdname toggle_dump_on_error
 #' @export
-function_restore = function(fun_name, where=parent.frame()) {
+.doe = toggle_dump_on_error
 
-  if(is.character(where)) where = asNamespace(where)
+#' Ask for confirmation
+#'
+#' `ask_to_confirm()` and `ask_to_confirm_with_timeout()` ask the user for 
+#' confirmation with the given message. For the latter, a lack of input within
+#' `timeout` seconds is considered non-confirmation, and so are the answers
+#' listed in `no`.
+#'
+#' @export
+ask_to_confirm = function (msg="Press ENTER to continue or ESC to quit ...", ...) {
 
-  if(is.null(attr(get(fun_name, envir=where), 'original_function'))) {
-    message('The function `',fun_name,'` does not appear to have been modified.')
-    return(invisible())
+  if(!interactive()) return(invisible(TRUE))
+   
+  msgf(msg, ...)
+  scan("", what = "character", nmax=1, quiet=TRUE)
+ 
+}
+
+#' @rdname ask_to_confirm
+#' @export
+ask_to_confirm_with_timeout = function(msg='', timeout=10, no=NULL) {
+  answer = R.utils::withTimeout(ask_to_confirm(msg), timeout=timeout, onTimeout = 'silent')
+  !is.null(answer) && !isTRUE(answer %in% no)
+}
+
+#' Browser with timeout
+#'
+#' This is a wrapper around `base::browser()` that asks the user for confirmation 
+#' before calling `base::browser()`. The confirmation must happen within `timeout` 
+#' seconds, otherwise no browser is launched and the execution continues as normal.
+#'
+#' @export
+browser_with_timeout = function(text = "", condition = NULL, expr = TRUE, skipCalls = 0L, timeout=10) {
+
+  if(interactive()) {
+
+    msg = paste0(
+      "*** BROWSER WITH TIMEOUT ***\n",
+      "Press ENTER in the next ",timeout," seconds to call `base::browser()`.\n",
+      "Otherwise the execution will continue as normal.\n",
+      "Input 'c' and press ENTER to continue immediately.\n",
+      "Pressing ESC will terminate the execution."
+    )
+    confirmed = ask_to_confirm_with_timeout(msg, timeout, no=c('c','C'))
+   
+    if(confirmed) {
+      message("Request confirmed by user. Launching `browser()` ...")
+    } else {
+      message("Request not confirmed by user. Continuing execution as normal ...")
+      return(invisible(NULL))
+    }
+   
   }
 
-  message('Restoring the function `',fun_name,'` ...')
-  fun_original = attr(get(fun_name, envir=where), 'original_function')
-  unlockBinding(fun_name, env=where)
-  assign(fun_name, fun_original, envir=where)
-  lockBinding(fun_name, env=where)
-  
-  if(identical(get(fun_name, envir=where), fun_original)) {
-    message('The original version of the function `',fun_name,'` has been restored.')
-  } else {
-    message('Something went wrong when restoring of `',fun_name,'`!')
-  }
-
+  do.call(.Primitive("browser"), list(text=text, condition=condition, expr=exp, skipCalls=skipCalls + 2L), envir=parent.frame())
+ 
 }
 
-#' @rdname function_kidnap
+#' Insert a browser into a pipe
+#'
+#' A function that is intended to be inserted as a step
+#' in a pipe sequence during debugging to explore the state
+#' of the input object. It only calls the function `base::browser()`
+#' and returns the input object unmodified. Exit the browser
+#' with the call `cont` (or `c` for short). See `?browser` for more
+#' information.
+#'
+#' @examples
+#' mtcars %>% browse() %>% print()   # use `.`, `cyl`, tidyverse-style
+#' 1:10 %>% browse() %>% print()     # use `x` to get the pipe input
+#'
 #' @export
-stop_function_kidnap = function() {
-  function_kidnap('stop', 'base', msg_argument='...', restore_call='stop_function_restore()')
+browse = function(x, ...) {
+  UseMethod('browse')
 }
 
-#' @rdname function_kidnap
-#' @export
-stop_function_restore = function() {
-  function_restore('stop', 'base')
+browse.data.frame = function(data, ...) {
+  x %>% mutate({base::browser()}, ...)
+  x
 }
 
-#' @rdname function_kidnap
-#' @export
-warning_function_kidnap = function() {
-  function_kidnap('warning', 'base', msg_argument='...', restore_call=NULL)
-  function_kidnap('.signalSimpleWarning', 'base', msg_argument='msg', restore_call='warning_function_restore()')
-}
-
-#' @rdname function_kidnap
-#' @export
-warning_function_restore = function() {
-  function_restore('warning', 'base')
-  function_restore('.signalSimpleWarning', 'base')
+browse.default = function(x, ...) {
+  base::browser()
+  x
 }

@@ -142,7 +142,7 @@ seq2 = function(from=1, to=1, ...) {
     }
     
   } else {  
-    do.call(base::seq, nlist(from, to) %append% args)
+    do.call(base::seq, append(nlist(from, to), args))
   }
   
 } 
@@ -165,7 +165,7 @@ seq2 = function(from=1, to=1, ...) {
 seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   
   if(missing(a))
-    error("Supply 'a' in seq_around.")
+    stop("Supply 'a' in seq_around.")
   
   if(length(a)>1) {
   
@@ -177,7 +177,7 @@ seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   } else stopifnot(!missing(b))
   
   if(a > b && len>1)
-    error("With 'len' above 1 the value in 'b' cannot be smaller than value in 'a'!")
+    stop("With 'len' above 1 the value in 'b' cannot be smaller than value in 'a'!")
       
   if(a > b) return(a)
 
@@ -190,10 +190,10 @@ seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   } else if(missing(m2) || abs(m1-m2)/abs(b-a)<1e-6) {
 
     if(a>m1) 
-      error("Make m1 >= a.")
+      stop("Make m1 >= a.")
     
     if(m1>b) 
-      error("Make m1 <= b.")
+      stop("Make m1 <= b.")
       
     if(m1==a || m1==b) {
     
@@ -213,8 +213,12 @@ seq_around = function(a, b, m1, m2, len, add_a=FALSE, add_b=FALSE) {
   } else {
   
     if(m1>m2) { tmp = m2; m2 = m1; m1 = tmp; rm(tmp) }
-    if(m2>=b) error("Make both midpoints smaller than b.")
-    if(a>=m1) error("Make both midpoints larger than a.")
+    
+    if(m2>=b) 
+      stop("Make both midpoints smaller than b.")
+    if(a>=m1) 
+      stop("Make both midpoints larger than a.")
+      
     rat = (m2 - m1) / (b - a)
     l1 = max(2,ceiling(len * rat))
     middle_seq = seq(m1,m2,l=l1)

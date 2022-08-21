@@ -36,7 +36,7 @@ pmnormrect = function(upper=c(Inf, Inf), lower=c(-Inf,-Inf), mean=rep(0, length(
                       Sigma=diag(length(upper)), varcov) {
                       
   if(!missing(varcov) && !missing(Sigma))   
-    error("Supply either Sigma or varcov.")
+    stop("Supply either Sigma or varcov.")
   
   if(!missing(varcov)) Sigma = varcov
   

@@ -65,11 +65,11 @@ err = function(msg) { x <- get('x', envir=parent.frame()); message('Error: ', ms
 make_numeric(c('1','a'), fun_error=err)
 
 # remove all numbers
-unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'))
+unnumber(paste0('x: ', c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2')))
 # remove all numbers and number strings (including the decimal point)
-unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE)
+unnumber(paste0('x: ', c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2')), TRUE)
 # remove all numbers and number strings (including the decimal point)
-unnumber('x: '\%p\%c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2'), TRUE, TRUE)
+unnumber(paste0('x: ', c('1','32','1.2','.32342','212.20','+42.2','-13','-0.2')), TRUE, TRUE)
 
 }
 \concept{numeric conversion functions provided by utilbox}

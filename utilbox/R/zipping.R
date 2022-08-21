@@ -72,7 +72,7 @@ list_zip = function(zipfiles, pattern=".*", exclude=FALSE) {
 zip_file = function(files, extras="-m", appendix=".zip", add_timestamp=FALSE, check_status=TRUE) {
 
   if(missing(files)) 
-    error("Supply names of files to zip up.")
+    stop("Supply names of files to zip up.")
   
   if(length(files)==0) return(-1)
   
@@ -192,8 +192,8 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
   ## file name on the single file found.
   if(missing(outfile) && single_archive) {
     if(length(files)>1) 
-      error("The archive name must be supplied when multiple files",
-            " match the mask and single_archive is TRUE.")
+      stop("The archive name must be supplied when multiple files",
+           " match the mask and single_archive is TRUE.")
     outfile = paste0(files, appendix)
   }
 
@@ -222,7 +222,7 @@ zip_files_pattern = function(mask=".*", mask_exclude, outfile, path=".", appendi
     
     # If single archive should be produced, add the flag 'g' (from the 2nd file on)
     ichunk = ichunk + 1
-    if(single_archive && ichunk==2) extras = "-"%p%sub("-","",extras)%p%"g"
+    if(single_archive && ichunk==2) extras = paste0("-", sub("-","",extras), "g")
     
     # Zip the current file up. Possibly try a few times in case a file access error occurred
     iis = c(1,rep(2,5))[c(TRUE, rep(retry,nretries))]
@@ -304,8 +304,8 @@ zip_all_in_path = function(path=".", check_status=FALSE, extras="-m", disable_wa
       of = paste0(f,".zip")
       ios = zip(of, f, extras=extras)
       if(check_status) check_zip_ios(ios, f)
-      files = c(files, d%p%f)
-      zipfiles = c(zipfiles, d%p%of)
+      files = c(files, paste0(d, f))
+      zipfiles = c(zipfiles, paste0(d, of))
       Ios = c(Ios, ios)
     }
     
@@ -352,7 +352,7 @@ unzip_files = function(zipfiles, mask=".*", mask_exclude=FALSE, patternize=TRUE)
 unzip_files_single = function(zipfile, mask=".*", mask_exclude=FALSE, patternize=TRUE) {
   
   if(!file.exists(zipfile)) 
-    error("File '",zipfile,"' does not exist.")
+    stop("File '",zipfile,"' does not exist.")
   
   ## List the files matching mask
   if(patternize) mask = str_patternize(mask)
@@ -503,19 +503,19 @@ read_zip = function(zipfiles, files=NULL, pattern=NULL, maxnfiles=Inf, skipnfile
 read_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, trace=0, ...) {
   
   if(missing(file) || length(file)!=1) 
-    error('Supply exactly one file name to read from the zip archive.')
+    stop('Supply exactly one file name to read from the zip archive.')
   
   if(missing(zipfile) || length(zipfile)!=1) 
-    error('Supply exactly one zip archive file name.')
+    stop('Supply exactly one zip archive file name.')
 
   if(missing(fun_read))
-    error('Supply a value for the argument fun_read (e.g. read_char or read_table)')
+    stop('Supply a value for the argument fun_read (e.g. read_char or read_table)')
     
   if(!is.function(fun_read))
-    error('The object in fun_read must be a function.')
+    stop('The object in fun_read must be a function.')
     
   if(missing(list_connections))
-    error('Supply a list of open connections for comparison.')
+    stop('Supply a list of open connections for comparison.')
   
   # Open connection
   if(zip_type=="zip") {
@@ -535,7 +535,7 @@ read_zip_single = function(file, zipfile, zip_type, list_connections, fun_read, 
     infile = file
     nam = paste0(zipfile,":",file)
     
-  } else error("Unknown compression format of file ",zipfile,".")
+  } else stop("Unknown compression format of file ",zipfile,".")
 
   if(identical(fun_read, read_char)) 
     attr(infile, 'size') = attr(file, 'size')
@@ -563,17 +563,16 @@ check_zip_ios = function(ios, file) {
 
   if(ios==0) return(invisible(nlist(ios, msg='OK')))
   
-  msg = "There might have been a problem during the zipping"%p%
-    ifelse(!missing(file), "file '"%p%file%p%"'", "")%p%
-    " (status code "%p%ios%p%")." %p%
+  msg = paste0(
+    'Status code ', ios, ': There was a problem during zipping', 
+    if(!missing(file)) paste0('(file: ', file, ')'),'.',
     if(ios==127) {
-      "The zip archiver appears to be missing (zip returned code 127)."%p% 
-      ifelse(is_win(), " (Hint: Install Rtools)","")
+      paste0('The zip archiver appears to be missing.', if(is_win()) ' (Hint: Install Rtools)')
     } else if(ios==12) {
-      "The zip archiver reported an error 'name not matched' (status code "%p%
-      ios%p%"). This occurred probably due to some of the file names"%p%
-      " being very long. Attempting to continue regardless..."
-  }
+      paste0('The zip archiver reported an error "name not matched". This could occurs for ',
+             'instance when file names are too long. Attempting to continue regardless ...')
+    }
+  )
            
   note(msg)
   return(invisible(nlist(ios, msg)))

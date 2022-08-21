@@ -17,7 +17,6 @@ reduced to a scalar via \code{any}.
 \seealso{
 Other operators provided by utilbox: 
 \code{\link{\%modify\%}()},
-\code{\link{concatenate}},
 \code{\link{not_in}},
 \code{\link{operator_NULL}},
 \code{\link{operator_append}},
