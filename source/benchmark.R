@@ -10,7 +10,9 @@ mb = function(..., list = NULL, times = 100L, unit = NULL, check = NULL, control
   check_namespace("microbenchmark")
   exprs = c(as.list(match.call(expand.dots = FALSE)$...), list)
   args = list(list=exprs, times=times, unit=unit, check=check, control=control)
-  do.call('microbenchmark', args = args, envir=asNamespace('microbenchmark'))
+  environment(args) = parent.frame()
+  do.call(microbenchmark::microbenchmark, args = args, envir=parent.frame())
+  #do.call('microbenchmark', args = args, envir=asNamespace('microbenchmark'))
 }
 
 ## Another version which works by adding arguments `envir` and `parent.frame`

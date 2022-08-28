@@ -20,7 +20,8 @@
 #' @family plotting-related functions provided by utilbox
 #' @export
 .all_devs = function(silent=TRUE) {
-  if(!silent) msgf("Found ",length(dev.list())," open devices.") 
+  if(!silent) 
+    msgf(length(dev.list())," open device(s) found.") 
   dev.list()
 }
 
@@ -29,19 +30,25 @@
 #' @export
 .all_devs_off = function(silent=TRUE) {
 
+  message = if(silent) function(...) {} else msgf
+
   devs = .all_devs(silent)
   
-  if(is.null(devs)) return(invisible(0))
+  if(is.null(devs)) 
+    return(invisible(0))
 
-  if(!silent) msgf("Closing all open devices ...")
+  message("Closing all open devices ...")
   
-  for(dev in devs) dev.off(dev)
+  for(dev in devs) 
+    dev.off(dev)
 
-  if(!is.null(dev.list()))
-    warn("Some devices could not be closed.")
-    
-  else if(!silent) 
-    cat0("All devices closed.\n")
+  if(!is.null(dev.list())) {
+    warning("Some devices could not be closed.")
+  } else {
+    message("All devices closed.")
+  }
+  
+  return(invisible(dev.list()))
   
 }
 
@@ -322,8 +329,8 @@ add_box_above = function(nboxes=0, labels=NULL, hfr=0.07, hsp=0.01, hfac=1, base
 #' @export
 get_legend <- function(p, direction=NULL, nrow_color=NULL) {
  
-  if(!is.null(direction)) p = p + theme(legend.direction=direction, legend.box = direction)
-  if(!is.null(nrow_color)) p = p + guides(color = guide_legend(nrow = nrow_color))
+  if(!is.null(direction)) p = p + ggplot2::theme(legend.direction=direction, legend.box = direction)
+  if(!is.null(nrow_color)) p = p + ggplot2::guides(color = guide_legend(nrow = nrow_color))
 
   tmp <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(p))
   wleg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")

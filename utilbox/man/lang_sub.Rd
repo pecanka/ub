@@ -22,10 +22,11 @@ expressions or a function. \code{pattern} and \code{repl} are the analogues
 \code{pattern} and \code{replacement} in \code{base::sub()} and \code{base::gsub()}.
 }
 \examples{
-# Modify the `get2` function to return an NA when the requested
-# object is not found.
-get3 = hijack(get2, default_value2=NA)
-get3 = gsub(get3, 'default_value', 'default_value2')
+# Modify the `get0` function to return an NA when the requested
+# object is not found, and to change the name of the argument
+# 'ifnotfound' to 'default_value':
+get3 = gsub_lang(base::get0, 'ifnotfound', 'default_value')
+get3 = hijack(get3, default_value = NA)
 
 # Modify the mean function to make a median
 median2 = lang_sub(mean.default, 'trim = 0','trim = 0.5', fixed=TRUE)

@@ -93,7 +93,7 @@ drop_class = function(x, class) {
 #' @family class-related functions provided by utilbox
 #' @export
 is.huge = function(x) {
-  has_class(x, 'huge')
+  inherits(x, 'huge')
 }
 
 #' @rdname class_huge
@@ -194,7 +194,7 @@ print.huge.default = function(x, n, len, show_note=TRUE) {
 #' @name class_truncated
 #' @export
 is_truncated = function(x) {
-  has_class(x, 'truncated')
+  inherits(x, 'truncated')
 }
 
 #' @rdname class_truncated
@@ -207,6 +207,12 @@ is_truncated = function(x) {
 #' @export
 `[[.truncated` = function(x, i) {
   as.truncated(NextMethod())
+}
+
+#' @rdname class_truncated
+#' @export
+as.truncated = function(x) {
+  UseMethod('as.truncated')
 }
 
 #' @rdname class_truncated

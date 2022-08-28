@@ -8,8 +8,10 @@ Find dependencies of a function}
 function_find_dependencies(
   fun,
   dep_envir,
-  fun_envir = parent.frame(),
-  get_status = TRUE
+  envir = parent.frame(),
+  get_status = TRUE,
+  announce = TRUE,
+  warn = TRUE
 )
 }
 \description{
@@ -20,17 +22,17 @@ specified environment or package (supplied via \code{dep_envir}). When
 supplied by name, the environment in \code{dep_envir} is searched for
 a function of matching name. The function name can be supplied
 together with a package using the double colon notation (e.g.,
-'base::mean\verb{), which is then used to set }fun_envir\verb{(unless it has been supplied. When the argument}dep_envir\verb{was not specified, the environment in}fun_envir` is used.
+'base::mean\verb{), which is then used to set }envir\verb{(unless it has been supplied. When the argument}dep_envir\verb{was not specified, the environment in}envir` is used.
 }
 \examples{
-# Function supplied directly or by name, `fun_envir` is implied (i.e.,
+# Function supplied directly or by name, `envir` is implied (i.e.,
 # set to `environment(base::sample)`), `dep_envir` missing so taken 
-# the same as `fun_envir`. Thus it looks for dependencies of `sample` 
+# the same as `envir`. Thus it looks for dependencies of `sample` 
 # in the environment "base".
 function_find_dependencies(base::sample)
 function_find_dependencies('base::sample') 
 
-# function supplied directly, `fun_envir` is implied (i.e., set to
+# function supplied directly, `envir` is implied (i.e., set to
 # `environment(base::sample)`), `dep_envir` is specified explicitly.
 function_find_dependencies(base::sample, 'stats')
 function_find_dependencies('base::sample', 'stats')

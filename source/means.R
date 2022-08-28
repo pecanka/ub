@@ -12,9 +12,9 @@
 #' `amean()` gives the arithmetic mean of `x`.
 #'
 #' `gmean()` and `gmeanw` calculate the geometric mean of `x`, while 
-#' the latter permits weighing. `gmmean()` is a version that processes
+#' the latter permits weighing. `gmean2()` is a version that processes
 #' inputs with negative values without warnings as well as drops zeros
-#' (unless `zero_propagate=TRUE`). `gmmean()` inspired by this:
+#' (unless `zero_propagate=TRUE`). `gmean2()` inspired by this:
 #' https://stackoverflow.com/a/25555105
 #'
 #' `hmean()` calculates the harmonic mean (single value) of a single 
@@ -57,29 +57,35 @@ hmean = function(..., na.rm=TRUE) {
 #' @rdname means
 #' @export
 gmean = function(x, na.rm=TRUE) {
-  if(is_na(x)) {
-    NULL 
-  } else {
-    if(na.rm) x = x[!is.na(x)]
-    #prod(x)^(1/length(x))
-    exp(sum(log(x)/length(x)))
-  }
+
+  if(is_na(x))
+    return(NULL)
+
+  if(na.rm) x = x[!is.na(x)]
+  exp(sum(log(x)/length(x)))
+
 }
 
 #' @rdname means
 #' @export
-gmmean = function(x, na.rm=TRUE, zero_propagate = FALSE){
-  if(any(x < 0, na.rm = TRUE)){
+gmean2 = function(x, na.rm=TRUE, zero.propagate = FALSE) {
+
+  if(any(x < 0, na.rm = TRUE))
     return(NaN)
-  }
+  
   if(zero.propagate){
-    if(any(x == 0, na.rm = TRUE)) {
+
+    if(any(x == 0, na.rm = TRUE))
       return(0)
-    }
+
     exp(mean(log(x), na.rm = na.rm))
+    
   } else {
+    
     exp(sum(log(x[x > 0]), na.rm=na.rm) / length(x))
+    
   }
+  
 }
 
 #' @rdname means

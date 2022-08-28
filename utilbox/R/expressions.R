@@ -146,13 +146,40 @@ fun2funcalls = function(fun) {
 
   stopifnot(is.function(fun))
   
-  tree = unname(unlist(lapply(fun, lobstr:::ast_tree)))
+  tree = lapply(fun, my_ast_tree, list(n='_'))
+  tree = str_trim_space(unlist(tree))
+  w_calls = grep(pattern='^[ _]*_', tree)
+  calls = sub('^[ _]*_','', tree[w_calls])
+  
+  if('`::`' %in% calls) {
+    wddc = which(calls == '`::`')
+    wddt = grep('`::`', tree)
+    calls[wddc] = paste0('`',tree[wddt+1],gsub('`','',calls[wddc]),tree[wddt+2],'`')
+  }
+  
+  # Drop the calls that correspond to empty arguments inside function
+  # definitions, and which are not valid calls
+  calls = calls[!grepl('=[ ][`][`]', calls)]
+  
+  return(list(order = w_calls, calls = calls))
+  
+}
 
-  w_calls = unlist(lapply(tree, grepl, pattern='o-'))
+#' @rdname expressions
+#' @export
+fun2assigncalls = function(fun) {
+
+  stopifnot(is.function(fun))
   
-  calls = tree[w_calls]
+  tree = lapply(fun, my_ast_tree, list(n='_'))
+  tree = str_trim_space(unlist(tree))
+  w_calls = grep(pattern='^[ _]*_`<-`', tree)
   
-  calls = sub('.*o-','', calls)
+  calls = sub('^[ _]*_','',tree[w_calls])
+  lhs = tree[w_calls+1]
+  rhs = sub('^[ _]*_','',tree[w_calls+2])
+  
+  list(order = w_calls, calls=calls, lhs = lhs, rhs = rhs)
   
 }
 
@@ -172,6 +199,8 @@ fun2funcalls2 = function(fun) {
   calls = tree[w_calls]
   
   calls = sub('.*o-','', calls)
+  
+  return(calls)
   
 }
 
@@ -257,10 +286,11 @@ is_assign_call = function(expr, stop_on_error=FALSE) {
 #' `pattern` and `replacement` in `base::sub()` and `base::gsub()`.
 #'
 #' @examples
-#' # Modify the `get2` function to return an NA when the requested
-#' # object is not found.
-#' get3 = hijack(get2, default_value2=NA)
-#' get3 = gsub(get3, 'default_value', 'default_value2')
+#' # Modify the `get0` function to return an NA when the requested
+#' # object is not found, and to change the name of the argument
+#' # 'ifnotfound' to 'default_value':
+#' get3 = gsub_lang(base::get0, 'ifnotfound', 'default_value')
+#' get3 = hijack(get3, default_value = NA)
 #' 
 #' # Modify the mean function to make a median
 #' median2 = lang_sub(mean.default, 'trim = 0','trim = 0.5', fixed=TRUE)
@@ -272,7 +302,7 @@ lang_sub = function(x, ...) {
   UseMethod('lang_sub')
 }
 
-lang_sub.function = function(code, pattern, replacement, fixed=TRUE, workhorse=gsub) {
+lang_sub.function = function(code, pattern, replacement, fixed = TRUE, workhorse = gsub) {
   
   fun_head = print2var(list(args(code))[[1]])
   fun_head[length(fun_head)] = '{}'
@@ -285,31 +315,54 @@ lang_sub.function = function(code, pattern, replacement, fixed=TRUE, workhorse=g
     return(code)
   }
   
-  expr_head = lang_sub(fun_head, pattern, replacement, fixed, workhorse) 
-  expr_body = lang_sub(fun_body, pattern, replacement, fixed, workhorse) 
-  
-  fun = do.call(eval, expr_head)
-  body(fun) = as.call(expr_body)
-  environment(fun) = environment(code)
+  fun = try({
+    expr_head = lang_sub(fun_head, pattern, replacement, fixed, workhorse) 
+    expr_body = lang_sub(fun_body, pattern, replacement, fixed, workhorse) 
+    
+    fun = do.call(eval, expr_head)
+    body(fun) = as.call(expr_body)
+    environment(fun) = environment(code)
+    
+    fun }, silent=TRUE)
 
-  fun
+  if('try-error' %in% class(fun)) {
+    warning('Substitution by `lang_sub` failed. Returning unchanged object.', immediate = TRUE)
+    code 
+  } else {
+    fun
+  }
   
 }
 
 lang_sub.default = function(code, pattern, replacement, fixed=TRUE, workhorse=gsub) {
 
-  code2 = list()
+  code2 = try({
   
-  for(i in seq_along(code)) {
+    code2 = list()
+
+    for(i in seq_along(code)) {
+
+      if(identical(code[i], empty_symbol())) {
+        code2[[i]] = code[i]
+      } else {
+        block = as.character(code[i])
+        block = gsub(pattern, replacement, block, fixed=fixed)
+        block = base::str2lang(block)
+        code2[[i]] = block
+      }
+      
+    }
+    
+    code2
+    
+  }, silent=TRUE)
   
-    block = as.character(code[i])
-    block = gsub(pattern, replacement, block, fixed=fixed)
-    block = base::str2lang(block)
-    code2[[i]] = block
-  
+  if('try-error' %in% class(code2)) {
+    warning('Substitution by `lang_sub()` failed. Returning unchanged code.', immediate.=TRUE)
+    code 
+  } else {
+    code2
   }
-  
-  code2
   
 }
 
@@ -323,6 +376,41 @@ gsub_lang = function(...) {
 #' @export
 sub_lang = function(...) {
   lang_sub(..., workhorse=sub)
+}
+
+#' This is a slightly modified version of the function `lobstr:::ast_tree()`.
+#' It is used by the function `fun2funcalls()`, which required the modifications.
+my_ast_tree = function (x, layout = box_chars()) {
+    
+    if (rlang::is_quosure(x)) {
+        x <- rlang::quo_squash(x)
+    }
+
+    if (rlang::is_syntactic_literal(x)) {
+        return(lobstr:::ast_leaf_constant(x))
+    } else if (rlang::is_symbol(x)) {
+        return(lobstr:::ast_leaf_symbol(x))
+    }
+
+    xt = print2var(x, width=10000)
+    if(is.call(x) && grepl('=',xt)) {
+      x = str2lang(formatR::tidy_source(text = xt, arrow = TRUE, output = FALSE)[[1]])
+    }
+
+    subtrees <- lapply(x, my_ast_tree, layout = layout)
+    subtrees <- lobstr:::name_subtree(subtrees)
+    
+    n <- length(x)
+    
+    if (n == 0) {
+        character()
+    } else if (n == 1) {
+        lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), "  ")
+    } else {
+        c(lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), paste0(layout$v, " ")), 
+          unlist(lapply(subtrees[-c(1, n)], lobstr:::str_indent, paste0(layout$j, layout$h), paste0(layout$v, " "))), 
+          lobstr:::str_indent(subtrees[[n]], paste0(layout$l, layout$h), "  "))
+    }
 }
 
 #' export
@@ -412,3 +500,4 @@ sub_lang = function(...) {
 #
 ###
 
+# a = lapply(list.files(), source); list_package_exported('utilbox', dependencies=T)

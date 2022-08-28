@@ -25,6 +25,45 @@ parent_fun_name = function(n=2L) {
   this_fun_name(sys.parent(n))
 }
 
+#' Finding functions by substrings
+#'
+#' `str_find_in_funtion()` searches the function body of the specified 
+#' function (via `fun`) for the given `string`. If the string is found,
+#' it returns the corresponding line(s) (as obtained by printing the 
+#' result of a call to `base::body()`), otherwise `NULL` is returned. 
+#'
+#' `str_find_in_package()` searches for the string in functions within
+#' a package. Either all functions when (`what='all'`) or only exported
+#' functions (when `what='exported'`) are searched.
+#'
+#' @examples
+#' str_find_in_function('contrasts', 'lm', envir=asNamespace('stats')) # lines 3, 49, 59
+#' str_find_in_package('contrasts', 'stats') # returns 28 functions from `stats`
+#'
+#' @name str_find_in
+#' @export 
+str_find_in_function = function(string, fun, envir=parent.frame()) {
+
+  if(is.character(fun))
+    fun = get(fun, envir=envir)
+    
+  grep(string, print2var(fun))
+  
+}
+
+#' @rdname str_find_in
+#' @export 
+str_find_in_package = function(string, pckg, what='all') {
+
+  funs = list_package_objects(pckg, mode='function', what=what, quiet=TRUE)$object_name
+  names(funs) = funs
+  
+  locs = lapply(funs, str_find_in_funtion, string=string, envir=asNamespace(pckg))
+  
+  list_clean(locs)
+  
+}
+
 #' Argument hijack function
 #'
 #' @description
@@ -472,19 +511,19 @@ function_disable = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 #' supplied by name, the environment in `dep_envir` is searched for
 #' a function of matching name. The function name can be supplied
 #' together with a package using the double colon notation (e.g.,
-#' 'base::mean`), which is then used to set `fun_envir` (unless
+#' 'base::mean`), which is then used to set `envir` (unless
 #' it has been supplied. When the argument `dep_envir` was not specified,
-#' the environment in `fun_envir` is used.
+#' the environment in `envir` is used.
 #'
 #' @examples
-#' # Function supplied directly or by name, `fun_envir` is implied (i.e.,
+#' # Function supplied directly or by name, `envir` is implied (i.e.,
 #' # set to `environment(base::sample)`), `dep_envir` missing so taken 
-#' # the same as `fun_envir`. Thus it looks for dependencies of `sample` 
+#' # the same as `envir`. Thus it looks for dependencies of `sample` 
 #' # in the environment "base".
 #' function_find_dependencies(base::sample)
 #' function_find_dependencies('base::sample') 
 #'
-#' # function supplied directly, `fun_envir` is implied (i.e., set to
+#' # function supplied directly, `envir` is implied (i.e., set to
 #' # `environment(base::sample)`), `dep_envir` is specified explicitly.
 #' function_find_dependencies(base::sample, 'stats')
 #' function_find_dependencies('base::sample', 'stats')
@@ -497,57 +536,112 @@ function_disable = function(fun_name, envir=parent.frame(), quietly=FALSE) {
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-function_find_dependencies = function(fun, dep_envir, fun_envir=parent.frame(), get_status=TRUE) {
+function_find_dependencies = function(fun, dep_envir, envir=parent.frame(), get_status = TRUE, 
+    announce = TRUE, warn = TRUE) {
 
-  stopifnot(length(fun)==1)
+  if(length(fun)==0)
+    return(NULL)
+    
+  if(length(fun) > 1) {
+    deps = lapply(fun, function_find_dependencies, dep_envir, envir, get_status)
+    deps = do.call(rbind, deps)
+    return(deps)
+  }
+  
+  if(announce)
+    msgf("Identifying dependencies for '",fun,"' ...")
 
   if(is.character(fun)) {
-    if(missing(fun_envir) && grepl('::', fun)) {
-      fun_envir = sub('::.*', '', fun)
+    fun_name = fun  
+    if(missing(envir) && grepl('::', fun)) {
+      envir = sub('::.*', '', fun)
       fun = sub('.*::','',fun)
     }
+  } else {
+    fun_name = NA_character_
   }
   
-  if(is.character(fun_envir)) {
-    fun_envir = asNamespace(fun_envir)
+  if(is.character(envir)) {
+    envir = asNamespace(envir)
   }
 
   if(is.character(fun)) {
-    fun = get(fun, envir=fun_envir)
+    fun = get(fun, envir=envir)
   }
   
-  if(!is.function(fun))
-    stop('Argument `fun` must be a function.')
+  if(!is.function(fun)) {
+    if(warn) {
+      warning("Argument `fun` must be a function or a name of an existing function.", 
+              if(!is.na(fun_name)) paste0(" Function '",fun_name,"' not found."),
+              immediate. = TRUE)
+    }
+    return(NULL)
+  }
 
-  fun_envir = environment(fun)
+  envir = environment(fun)
   
   if(missing(dep_envir))
-    dep_envir = fun_envir
+    dep_envir = envir
 
   if(is.character(dep_envir)) {
     dep_envir = asNamespace(dep_envir)
   }
   
-  funs = fun2funcalls(fun)
-  funs = unique(funs)
+  # Identify the portions of the function's code that correspond 
+  # to function calls
+  fun_calls = fun2funcalls(fun)
+  funs = unique(fun_calls$calls)
   funs = unlist(lapply(lapply(funs, str2lang), as.character))
   
   if(get_status) {
-    locs = lapply(funs, function(x) unlist(getAnywhere(x)))
+  
+    assign_calls = fun2assigncalls(fun)
+    lhs = list2DF(assign_calls)[,c('order','lhs')]
+    fcs = list2DF(fun_calls)[,c('order','calls')]
+    info = merge(fcs, lhs, by.x='calls', by.y='lhs', all.x=TRUE)
+    info$calls = gsub('`','',info$calls)
+    info$ok = sapply(info$order.x > info$order.y, isTRUE)
+    ok = tapply(info$ok, info$calls, all)
+    
+    Get = function(x) {
+      if(grepl('::', x)) {
+        list(where = try(environment(eval(str2lang(x))), silent=TRUE) %ERR% NULL)
+      } else {
+        unlist(getAnywhere(x))
+      }
+    }
+    
+    locs = structure(lapply(funs, Get), names=funs)
+    locs = lapply(locs, function(l) l[grepl('^where',names(l))])
     names(locs) = funs
     miss = unlist(lapply(locs, function(x) !any(grepl('where[0-9]*', names(x)))))
-    locs = lapply(locs, function(x) unname(unlist(x[grepl('where[0-9]*', names(x))])))
-    packgs = lapply(locs, function(x) x[!grepl('^namespace:',x)])
-    namsps = lapply(locs, function(x) x[grepl('^namespace:',x)])
-
-    in_dep = unlist(if(isNamespace(dep_envir)) {
-      lapply(namsps, function(x) if(length(x)==0) FALSE else lapply(x, function(y) identical(asNamespace(sub('^namespace:','',y)), dep_envir)))
-    } else {
-      lapply(packgs, function(x) if(length(x)==0) FALSE else lapply(x, function(y) identical(as.environment(y), dep_envir)))
-    })
+    miss[names(miss) %in% names(as.list(args(fun)))] = FALSE
+    ok = ok[names(miss)]
+    miss[ok] = FALSE
     
+    nam_miss = names(miss[miss])
+    
+
+    locs = lapply(locs, function(x) unname(unlist(x[grepl('where[0-9]*', names(x))])))
+    
+    packgs = lapply(locs, function(x) x[!grepl('^namespace:',x)])
+    packgs = lapply(packgs, sub, pattern='^[^:]+:', repl='')
+    packgs = lapply(packgs, function(nam) try(asNamespace(nam), silent=TRUE) %ERR% nam)
+    packgs = lapply(packgs, function(nam) try(as.environment(nam), silent=TRUE) %ERR% nam)
+
+    namsps = lapply(locs, function(x) x[grepl('^namespace:',x)])
+    namsps = lapply(namsps, sub, pattern='^namespace:', repl='')
+    namsps = lapply(namsps, function(nam) try(asNamespace(nam), silent=TRUE) %ERR% nam)
+    namsps = lapply(namsps, function(nam) try(as.environment(nam), silent=TRUE) %ERR% nam)
+
     locs = unlist(lapply(locs, paste, collapse=';'))
-    funs = data.frame(dependency=funs, currently_missing=miss, locations=locs, found_in_dep_envir=in_dep)
+    
+    in_dep_pckg = unlist(lapply(lapply(packgs, identical, dep_envir), any))
+    in_dep_nsps = unlist(lapply(lapply(namsps, identical, dep_envir), any))
+    in_dep = in_dep_pckg | in_dep_nsps
+    
+    funs = data.frame(function_name = fun_name, dependency=funs, currently_missing=miss, 
+                      locations=locs, found_in_envir=in_dep)
     rownames(funs) = NULL
 
   }

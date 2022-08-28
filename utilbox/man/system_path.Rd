@@ -33,8 +33,8 @@ Other system-related functions provided by utilbox:
 \code{\link{R_session_info}()},
 \code{\link{environment_variables}},
 \code{\link{is_win}()},
-\code{\link{pause}},
 \code{\link{stopping_control}},
-\code{\link{timest}()}
+\code{\link{timest}()},
+\code{\link{wait}()}
 }
 \concept{system-related functions provided by utilbox}

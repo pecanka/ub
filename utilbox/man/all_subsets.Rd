@@ -4,8 +4,19 @@
 \alias{all_subsets}
 \title{Generate all subsets}
 \usage{
-all_subsets(set, use_varnames_in_status = TRUE, stringsAsFactors = FALSE)
+all_subsets(
+  set,
+  max_size = Inf,
+  use_varnames_in_status = TRUE,
+  stringsAsFactors = FALSE
+)
 }
 \description{
-Generate all subsets
+\code{all_subsets()} returns a list of subsets of the given set (supplied via \code{set})
+(of maximum size \code{max_size}) together with presence indicator for each
+value in \code{set}.
+}
+\details{
+\code{all_subsets_fast()} is a faster version that uses the package 'combinat',
+which does not produce the presence indicators.
 }

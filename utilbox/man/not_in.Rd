@@ -4,11 +4,14 @@
 \alias{not_in}
 \alias{\%notin\%}
 \alias{\%nin\%}
+\alias{\%has\%}
 \title{Not-in-set operator}
 \usage{
 ... \%notin\% NA
 
 ... \%nin\% NA
+
+table \%has\% x
 }
 \description{
 Logical negation of the value matching operator \code{\%in\%}. The
@@ -16,6 +19,9 @@ operator \code{\%notin\%} (just like its alias \code{\%notin\%})
 returns \code{TRUE} for all elements of the first argument that are not
 contained among the elements of the second argument, and \code{FALSE}
 otherwise.
+
+\code{\%has\%} is equivalent to \code{\%in\%} except with the roles
+of the two sides switched.
 }
 \examples{
 1 \%notin\% 1:3

@@ -336,10 +336,10 @@ list_attached_packages = function(only_name=TRUE, list_ignore=c('.GlobalEnv','Au
 #'
 #' List all/exported objects in a package.
 #'
-#' `list_package_exported()` lists all exported objects by a package.
-#'
 #' `list_package_all()` lists all objects defined in a package 
 #' (including non-exported objects).
+#'
+#' `list_package_exported()` lists all exported objects by a package.
 #'
 #' `as_object_table()` puts the objects and their main characteristics into 
 #' a single table (class `data.frame`).
@@ -354,7 +354,8 @@ list_attached_packages = function(only_name=TRUE, list_ignore=c('.GlobalEnv','Au
 #' # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 #'
 #' @export
-list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, what=c('all','exported'), mode=NULL, warn=TRUE, quietly=FALSE) {
+list_package_objects = function(pckg, pattern, all.names = TRUE, exclude = FALSE, what = c('all','exported'), 
+    dependencies = FALSE, mode = NULL, warn = TRUE, quietly = FALSE) {
 
   what = match.arg(what)
   
@@ -372,30 +373,48 @@ list_package_objects = function(pckg, pattern, all.names=TRUE, exclude=FALSE, wh
   objs = if(what=='all') {
     ls(envir=getNamespace(pckg), all.names=all.names)
   } else {
-    filter_out(getNamespaceExports(pckg), ifelse(all.names, '^$', '^[.]'))
+    exports = getNamespaceExports(pckg)
+    export = exports[!grepl(ifelse(all.names, '^$', '^[.]'), exports)]
   }
   
-  as_object_table(objs, pckg, pattern, exclude, mode)
+  res = as_object_table(objs, pckg, pattern, exclude, mode)
+  
+  if(dependencies) {
+    env = asNamespace(pckg)
+    funs = res$object_name[res$primary_class == 'function']
+    deps = function_find_dependencies(funs, dep_envir=env, envir=env, announce=TRUE)
+    res = merge(res, deps, by.x='object_name', by.y='function_name')
+  }
+  
+  res
   
 }
 
 #' @rdname list_package_objects
 #' @export
-list_package_exported = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL, warn=TRUE, quietly=FALSE) {
-  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, 
-          exclude=exclude, what='exported', mode=mode, warn=warn, quietly=quietly)
+list_package_exported = function(pckg, pattern, all.names = TRUE, exclude = FALSE, dependencies = FALSE, 
+    mode = NULL, warn = TRUE, quietly = FALSE) {
+    
+  nlapply(pckg, list_package_objects, pattern = pattern, all.names = all.names, 
+          exclude = exclude, what = 'exported', dependencies = dependencies, mode = mode,
+          warn = warn, quietly = quietly)
+          
 }
 
 #' @rdname list_package_objects
 #' @export
-list_package_all = function(pckg, pattern, all.names=TRUE, exclude=FALSE, mode=NULL, warn=TRUE, quietly=FALSE) {
-  nlapply(pckg, list_package_objects, pattern=pattern, all.names=all.names, 
-          exclude=exclude, what='all', mode=mode, warn=warn, quietly=quietly)
+list_package_all = function(pckg, pattern, all.names = TRUE, exclude = FALSE, dependencies = FALSE, 
+    mode = NULL, warn = TRUE, quietly = FALSE) {
+  
+  nlapply(pckg, list_package_objects, pattern = pattern, all.names = all.names, 
+          exclude = exclude, what = 'all', dependencies = dependencies, mode = mode, 
+          warn = warn, quietly = quietly)
+          
 }
 
 #' @rdname list_package_objects
 #' @export
-list_package_duplicates = function(pckgs, quietly=FALSE, sep='|') {
+list_package_duplicates = function(pckgs, quietly = FALSE, sep = '|') {
 
   if(!quietly) {
     msgf('Identifying functions found in multiple packages ...')
@@ -442,16 +461,16 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   
   class1 = apply_pckg(objs, pckg, function(x) head(class(x)),1)
   classes = apply_pckg(objs, pckg, function(x) paste(class(x), collapse=','))
-  namespace = apply_pckg(objs, pckg, function(x) orig_env(x))
-  namespace = ifelse(namespace==env_pckg, '', namespace)
+  environ = apply_pckg(objs, pckg, function(x) orig_env(x))
+  #environ = ifelse(environ==env_pckg, '', environ)
 
   # put the information into a list
-  tbl = list(location=if(is.environment(pckg)) print2var(pckg) else pckg,
-             object_name=objs %|||% NA_character_, 
-             exported=ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
-             primary_class=class1 %|||% NA_character_, 
-             all_classes=classes, 
-             original_namespace=namespace)
+  tbl = list(location = if(is.environment(pckg)) print2var(pckg) else pckg,
+             object_name = objs %|||% NA_character_, 
+             exported = ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
+             primary_class = class1 %|||% NA_character_, 
+             all_classes = classes, 
+             environment = environ)
   
   # make sure the list is not completely empty and convert it to a data frame
   tbl = lapply(tbl, `%||||%`, NA_character_)
@@ -538,11 +557,13 @@ apply_pckg = function(objs, pckg, f, ..., workhorse=sapply, value_error=NA) {
 #' @export
 set_pkglib = function(libpath) {
 
-  if(is.null(libpath)) return(invisible(0))
+  if(is.null(libpath)) 
+    return(invisible(0))
   
-  if(.libPaths()[1]!=libpath) return(invisible(1))
+  if(.libPaths()[1]!=libpath) 
+    return(invisible(1))
   
-  cat("Setting primary local R library to '",libpath,"' ...\n", sep="")
+  message("Setting primary local R library to '",libpath,"' ...")
   
   dir_exist_check(libpath)
   
@@ -651,41 +672,3 @@ enable_auto_install = .eai
 #' @export
 disable_auto_install = .dai
 
-#' Finding functions by substrings
-#'
-#' `str_find_in_funtion()` searches the function body of the specified 
-#' function (via `fun`) for the given `string`. If the string is found,
-#' it returns the corresponding line(s) (as obtained by printing the 
-#' result of a call to `base::body()`), otherwise `NULL` is returned. 
-#'
-#' `str_find_in_package()` searches for the string in functions within
-#' a package. Either all functions when (`what='all'`) or only exported
-#' functions (when `what='exported'`) are searched.
-#'
-#' @examples
-#' str_find_in_function('contrasts', 'lm', envir=asNamespace('stats')) # returns lines 3, 49, 59
-#' str_find_in_package('contrasts', 'stats') # returns 28 functions from the package `stats`
-#'
-#' @name str_find_in
-#' @export 
-str_find_in_function = function(string, fun, envir=parent.frame()) {
-
-  if(is.character(fun))
-    fun = get(fun, envir=envir)
-    
-  grep(string, print2var(fun))
-  
-}
-
-#' @rdname str_find_in
-#' @export 
-str_find_in_package = function(string, pckg, what='all') {
-
-  funs = list_package_objects(pckg, mode='function', what=what, quiet=TRUE)$object_name
-  names(funs) = funs
-  
-  locs = lapply(funs, str_find_in_funtion, string=string, envir=asNamespace(pckg))
-  
-  list_clean(locs)
-  
-}

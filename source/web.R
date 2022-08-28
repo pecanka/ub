@@ -30,7 +30,7 @@ get_my_ip = function(server = "https://api.ipify.org", trace=1) {
 #' @examples
 #' download_file('http://www.karlin.mff.cuni.cz/~kpms/index.php')
 #' @export
-download_file = function(url, destfile=separate_paths(url)$files, ...) {
+download_file = function(url, destfile = separate_path(url)$files, ...) {
   try(download.file(url, destfile, ...))
   invisible(destfile)
 }
@@ -102,7 +102,7 @@ web_file_exists = function(url, ...) {
 #' @export
 get_ftp_file_list = function(ftp) {
 
-  txt = getURL(ftp)
+  txt = RCurl::getURL(ftp)
 
   dir = read.table(textConnection(txt), as.is=TRUE)
   out = data.frame(dir=ftp, filename=dir[,ncol(dir)], size=dir[ ,5],

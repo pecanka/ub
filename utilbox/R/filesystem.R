@@ -16,10 +16,57 @@ dir_name = function(files) {
   sapply(files, function(x) paste(head(x,-1), collapse='/'))
 }
 
+#' @export
 base_name = function(files) {
   files = gsub('\\\\','/',files)
   files = strsplit(files, '/')
   sapply(files, tail, 1)
+}
+
+#' @title
+#' Convert to and from 8dot3 paths
+#'
+#' @description
+#'
+#' `path_to_8dot3()` converts and existing path to the 8dot3 format.
+#' It basically does the same thing as the built-in `utils::shortPathName()`
+#' (slower but directly via shell).
+#'
+#' `path_from_8dot3()` does the opossite conversion. Keep in mind though
+#' that `path_from_8dot3()` is not an exact inverse operation and the
+#' results can differ from the starting path in a number of ways
+#' (e.g., type of directory separator, trailing slash, capitalization).
+#'
+#' @examples
+#' path = 'c:/program files/'
+#' path_short = print(path_to_8dot3(path))
+#' path_orig = path_from_8dot3(path_short)
+#'
+#' @name path_8dot3
+#' @export
+path_to_8dot3 = function(path, mustWork=TRUE) {
+
+  if(!is_win()) {
+    warning('`',this_fun_name(),'()` works only on Windows.')
+    return(invisible(FALSE))
+  }
+
+  if(!missing(path) && !is.null(path)) {
+    curwd = getwd()
+    on.exit(setwd(curwd))
+    setwd(path)
+  }
+   
+  shell('for %f in ("%cd%") do @echo %~sf', intern=TRUE, mustWork=mustWork)
+ 
+}
+
+#' @rdname path_8dot3
+#' @export
+path_from_8dot3 = function(path, winslash='/', mustWork=NA) {
+
+  base::normalizePath(path, winslash, mustWork)
+ 
 }
 
 #' @title
@@ -397,13 +444,13 @@ file_rename_via_drive = function(from, to, drive='T', unmap=TRUE, nretry=2, time
 
 #' @rdname file_rename
 #' @export
-file_remove = function(file, nretry=10) {
-  invisible(sapply(file, file_remove_one, nretry=nretry))
-}
+file_remove = function(file, nretry=10, time_to_sleep_prior=0) {
 
-file_remove_one = function(file, nretry=10, time_to_sleep_prior=0) {
+  if(length(file)>1)
+    return(invisible(sapply(file, file_remove, nretry, time_to_sleep_prior)))
 
-  if(!file.exists(file)) return(TRUE)
+  if(!file.exists(file)) 
+    return(TRUE)
 
   Sys.sleep(time_to_sleep_prior)
   
@@ -535,9 +582,7 @@ file_size = function(files) {
 #' @export
 file_can_open_check = function(filename) {
 
-  #do_nothing = function(x) invokeRestart("muffleWarning")
-  #zz = withCallingHandlers(try(close(file(filename, open="ab")), silent=TRUE), warning=do_nothing)
-  attempt_call(close(file(filename, open="ab")))
+  (close(file(filename, open="ab")) == 0) %ERR% FALSE
   
 }
 
@@ -560,13 +605,17 @@ check_file_locked = function(file) {
   if(is_win()) {
   
     x = try(system("wmic process get commandline", intern=TRUE, show.output.on.console=FALSE))
-    if(is_error(x)) return(-1)
+    
+    if(is_error(x)) 
+      return(-1)
     
     as.numeric(any(grepl(str_patternize(file), x)))
     
   } else {
+    warning('`',this_fun_name(),'()` works only on Windows.')
     NA
   }
+  
 }
 
 #' @title
@@ -693,191 +742,41 @@ file_backup = function(file, path, path_backup, pid=FALSE, announce=TRUE, fun_ms
   
 }
 
-#' @title
-#' Work with drives on Windows
+#' Compare the contents of two files
 #'
-#' @description
+#' Compares two files for equality of content.
 #'
-#' `map_drive()` maps a path to the specified drive.
-#'
-#' `unmap_drive()` unmaps the specified drive.
-#'
-#' `convert_to_network_path()` converts a path from the regular
-#' regular format (e.g., 'c:\\Windows') to the network path format 
-#' (e.g., '\\\\localhost\\c$\\Windows'), which can be used to map
-#' any path to a drive.
-#'
-#' `list_all_drives()` returns a list of all existing drives
-#' together with their mapped location in the network path format.
-#'
-#' `list_all_network_drives()` lists drives that are mappings
-#' of network-storage devices (which can include local paths
-#' mapped as drives by relying on the network format of paths
-#' (e.g., '\\\\localhost\\c$\\Windows').
-#'
-#' All of these functions work on Windows only and rely on the 
-#' Windows system utilities such as `net` and/or `wmic` (which
-#' has been deprecated in Windows 10, version 21H1, see here
-#' https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmic)
-#'
-#' @family file system function provided by utilbox
-#' @name map_drives
 #' @export
-map_drive = function(drive='t', path='.', persistent=FALSE, delete_existing=FALSE, 
-  force_delete=FALSE, change_wdir=FALSE, normalize=FALSE, silent=FALSE) {
+file_compare = function(file1, file2, ...) {
+
+  browser()
+  if(file_size(file1) != file_size(file2))
+    return(FALSE)
+    
+  x1 = file_read_bytes(file1)
+  x2 = file_read_bytes(file2)
   
-  if(!is_win()) {
-    warning('`',this_fun_name(),'()` works only on Windows.')
-    return(invisible(FALSE))
-  }
-   
-  call_delete = paste0('net use ',drive,': /Delete /',ifelse(force_delete, 'y', 'n'))
- 
-  if(dir.exists(paste0(drive,':/'))) {
-    if(delete_existing) {
-      if(!silent) message("Unmapping existing connection to drive '",drive,"' ...")
-      answer = shell(call_delete, intern=TRUE)
-      if(!silent) message("Message by shell: ",answer)
-    } else {
-      warning("Drive '",drive,"' already in use. To unmap first use `delete_existing=TRUE`.")
-      return(FALSE)
-    }
-  }
- 
-  if(path=='.') path = getwd()
- 
-  path_full = convert_to_network_path(path, normalize=normalize)
-
-  if(!silent) message("Mapping drive '",drive,"' to path '",path_full,"' ...")
-  call_map = paste0('net use ',drive,': ',path_full,' /persistent:', ifelse(persistent, 'yes', 'no'))
-  answer = shell(call_map, intern=TRUE)
-  if(!silent) message("Message by shell: ", answer)
- 
-  result = dir.exists(paste0(drive,':/'))
- 
-  if(result)
-    if(!silent) message('Mapping successful.')
- 
-  if(change_wdir) {
-    setwd(paste0(drive,':/'))
-    if(!silent) message("Working directory changed to '",getwd(),"'.")
-  }
- 
-  invisible(result)
- 
-}
-
-#' @rdname map_drives
-#' @export
-unmap_drive = function(drive, force=FALSE, silent=FALSE) {
-
-  if(!is_win()) {
-    warning('`',this_fun_name(),'()` works only on Windows.')
-    return(invisible(FALSE))
-  }
-
-  if(dir.exists(paste0(drive,':/'))) {
- 
-    if(!silent) message("Unmapping existing connection to drive '",drive,"' ...")
-    call_delete = paste0('net use ',drive,': /Delete /',ifelse(force, 'y', 'n'))
-    answer = shell(call_delete, intern=TRUE, wait=FALSE)
-    if(!silent) message("Message by shell: ",answer)
-   
-  } else {
-    if(!silent) message("Drive '",drive,"' not mapped.")
-  }
- 
-  result = !dir.exists(paste0(drive,':/'))
- 
-  invisible(result)
-
-}
-
-#' @rdname map_drives
-#' @export
-list_all_drives = function(path) {
-
-  if(!is_win()) {
-    warning('`',this_fun_name(),'()` works only on Windows.')
-    return(invisible(FALSE))
-  }
-
-  answer = shell('wmic logicaldisk get caption,providername,drivetype', intern=TRUE)
-  drives = gsub("\\s+", ",", gsub("^\\s+|\\s+$", "", answer))
-  drives = strsplit(drives, ',')
-  drives = Filter(length, drives)
-  drives = lapply(drives, `[`, 1:3)
+  identical(x1, x2)
   
-  if(!identical(drives[[1]], c('Caption','DriveType','ProviderName')))
-    warning("Unexpected format returned by the shell call to 'wmic'.")
-   
-  drives = as.data.frame(do.call(rbind, drives[-1]))
-  drives = setNames(drives, c('Drive','Type','NetworkPath'))
-  
-  w = drives$Type=='3' & is.na(drives$NetworkPath)
-  drives$NetworkPath[w] = paste0('\\\\localhost\\',substr(drives$Drive[w],1,1),'$')
- 
-  drives
- 
-}
-
-#' @rdname map_drives
-#' @export
-list_all_network_drives = function(path) {
-
-  if(!is_win()) {
-    warning('`',this_fun_name(),'()` works only on Windows.')
-    return(invisible(FALSE))
-  }
-  
-  drives = list_all_drives()
-  
-  drives[drives$Type != 3,]
+  #tools::Rdiff(file1, file2)
   
 }
 
-#' @rdname map_drives
+#' Read file byte-by-byte
+#'
+#' Read a file as a binary file. Returns a vector (of type signed integer by default) 
+#' with each element corresponding to a single byte in the file (when `size=1`). 
+#' This is used by `file_compare()` for file comparison.
+#'
 #' @export
-list_all_network_drives2 = function(path) {
+file_read_bytes = function(file, what = integer(), n, size = 1, endian = .Platform$endian, signed = TRUE) {
 
-  if(!is_win()) {
-    warning('`',this_fun_name(),'()` works only on Windows.')
-    return(invisible(FALSE))
-  }
-
-  answer = shell('wmic path win32_mappedlogicaldisk get deviceid, providername', intern=TRUE)
- 
-  drives = gsub("\\s+", ",", gsub("^\\s+|\\s+$", "", answer))
-  drives = strsplit(drives, ',')
-  drives = Filter(length, drives)
+  if(missing(n))
+    n = base::file.info(file)$size
+    
+  con = base::file(file, "rb")
   
-  if(!identical(drives[[1]], c('DeviceID','ProviderName')))
-    warning("Unexpected format returned by the shell call to 'wmic'.")
-
-  drives = as.data.frame(do.call(rbind, drives[-1]))
-  drives = setNames(drives, c('Drive','NetworkPath'))
- 
-  drives
-
+  base::readBin(con, what = what, size = size, n = n, signed = signed, endian = endian)
+  
 }
 
-#' @rdname map_drives
-#' @export
-convert_to_network_path = function(path, normalize=FALSE) {
-
-  if(normalize) path = normalizePath(path)
- 
-  drives = list_all_drives()
- 
-  for(i in seq_along(drives$Drive)) {
-    if(grepl(paste0('^',drives$Drive[i]), path, ignore.case=TRUE)) {
-      path = paste0(drives$NetworkPath[i], substring(path, 3))
-      break
-    }
-  }
- 
-  if(normalize) path = normalizePath(path)
- 
-  path
- 
-}

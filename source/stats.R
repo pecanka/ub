@@ -113,13 +113,12 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
     Sigma = matrix(rho, nrow=n, ncol=n)
     
     if(type=="band") {
-      llibrary(Matrix)
-      Sigma = band(Sigma, -abs(bandsize), abs(bandsize))
+      Sigma = Matrix::band(Sigma, -abs(bandsize), abs(bandsize))
     }
     
     Sigma = 0.5*(Sigma+t(Sigma))
     diag(Sigma) = 1.
-    if(nb>1) Sigma = drep(Sigma, nb)
+    if(nb>1) Sigma = rep_diag(Sigma, nb)
     
   }
 
@@ -132,11 +131,15 @@ def_Sigma = function(rho, N, nb=1, random=FALSE, type=c("block", "band"), bandsi
 #'
 #' @description
 #'
-#' Calculates the coefficient of determination (the so-called "R squared")
-#' for linear regression. With `adjusted=TRUE` the adjusted R squared is
-#' calculated (adjusted for `k` parameters). Supply the observed values
-#' of the response in `y` and the fitted values in `yh`, where the latter
+#' `r_squared()` calculates the coefficient of determination (the so-called 
+#' "R squared" for linear regression). With `adjusted=TRUE` the adjusted R 
+#' squared is calculated (adjusted for `k` parameters). Supply the observed 
+#' values of the response in `y` and the fitted values in `yh`, where the latter
 #' can also be a model obtained via `stats::lm` or `stats::glm`.
+#'
+#' `rmse()` calculates the square-root of the mean sum of squared errors from
+#' the supplied observed (`y`) and fitted (`yh`) values, or more generally
+#' the square-root of the mean sum of differences between the two vectors.
 #'
 #' @examples
 #' x = rnorm(100)
@@ -168,6 +171,11 @@ r_squared = function(y, yh, na.rm=TRUE, adjusted=FALSE, k=NULL) {
   
   1.0 - c_adj * sum((y - yh)^2, na.rm=na.rm) / sum((y - mean(y, na.rm=na.rm))^2, na.rm=na.rm)
   
+}
+
+#' @export
+rmse = function(y, yh, na.rm=TRUE, scale=1) {
+  sqrt(mean(((y - yh)/scale)^2, na.rm=na.rm))
 }
 
 #' @title

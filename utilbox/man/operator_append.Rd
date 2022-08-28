@@ -25,8 +25,8 @@ appends the right-hand argument to the left-hand side, while
 \verb{\\\%appendR\\\%} appends in the reverse order.
 }
 \examples{
-list(a=1, b=2) \%append\% list(c=3)    # adds an element to the list on the LHS
-c(1,2) \%append\% list(c=3)            # turns the LHS into a list, then appends
+list(a=1, b=2) \%append\% list(c=3)    # adds an element to the list on the lhs
+c(1,2) \%append\% list(c=3)            # turns the lhs into a list, then appends
 
 }
 \seealso{

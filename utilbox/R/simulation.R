@@ -152,13 +152,17 @@ simulate_pval = function(M, Sigma, N, n=1, n0=N, mu0=0, n1=0, mu1=0, alpha=0.05,
   
     label = "bySigma"
     
-    if(length(Sigma)==1) Sigma = diag2(rep(1, N), Sigma)
+    if(length(Sigma)==1) {
+      Sigma = diag_matrix(rep(1, N), Sigma)
+    }
     
-    if(n0+n1!=nrow(Sigma)) 
+    if(n0+n1 != nrow(Sigma)) 
       stop("There's a conflict between n0, n1 and Sigma.")    
-    if(length(mu0)!=1 && length(mu0)!=n0) 
+      
+    if(length(mu0) != 1 && length(mu0) != n0) 
       stop("Supply consistent mu0 and n0.")
-    if(length(mu1)!=1 && length(mu1)!=n1) 
+      
+    if(length(mu1) != 1 && length(mu1) != n1) 
       stop("Supply consistent mu1 and n1.")
 
     mu = sqrt(n) * c(rep(mu1, n1/length(mu1)), rep(mu0, n0/length(mu0)))

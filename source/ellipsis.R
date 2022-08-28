@@ -35,7 +35,7 @@
 #' @export
 dots_to_nlist = function(keep_symbolic=FALSE, flatten=FALSE, assign_names=TRUE, names, envir=parent.frame()) {
 
-  args = eval(bquote(match.call(expand.dots=FALSE)$`...`), envir=envir)
+  args = eval(quote(match.call(expand.dots=FALSE)$`...`), envir=envir)
   
   if(keep_symbolic) 
     return(args)

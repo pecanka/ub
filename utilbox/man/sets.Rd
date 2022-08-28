@@ -5,6 +5,7 @@
 \alias{mintersect}
 \alias{setdiffsym}
 \alias{is_subset}
+\alias{is_superset}
 \title{Sets}
 \usage{
 mintersect(...)
@@ -12,6 +13,8 @@ mintersect(...)
 setdiffsym(x, y, labels = c("x", "y"), report_counts = TRUE)
 
 is_subset(x, y)
+
+is_superset(x, y)
 }
 \description{
 \code{mintersect()} finds the intersection of multiple sets.
@@ -20,7 +23,9 @@ is_subset(x, y)
 supplied sets, which is all of the elements that are outside the
 intersection of the supplied sets.
 
-\code{is_subset()} checks whether \code{x} is a subset of \code{y}.
+\code{is_subset()} checks whether \code{x} is a subset of \code{y} and
+\code{is_superset()} checks whether \code{x} is a superset of \code{y}, or equivalently
+the \code{y} is a subset of \code{x}.
 }
 \examples{
 setdiffsym(1:5,3:7)

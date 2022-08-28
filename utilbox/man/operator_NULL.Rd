@@ -35,7 +35,7 @@ allows input of various types (vectors, lists, closures, etc.).
 
 \verb{\\\%ERR\\\%} works analogously except that it checks for class
 \code{try-error}. If its first argument is of class \code{try-error} it returns
-its second argument (\code{y}). Otherwise it returns the first (\code{x}).
+its second argument (\code{y}). Otherwise it returns the first argument (\code{x}).
 
 \verb{\\\%NEXISTS\\\%} works analogously except that it avoids an error due to
 the non-existence of the first argument by returning the second argument

@@ -9,9 +9,9 @@
 \usage{
 ... \%_\% sep
 
-LHS \%pastefront\% RHS
+lhs \%pastefront\% rhs
 
-LHS \%pasteend\% RHS
+lhs \%pasteend\% rhs
 }
 \description{
 Concatenation operators, which are aliases for \code{base::paste}.
@@ -21,12 +21,12 @@ Concatenation operators, which are aliases for \code{base::paste}.
 below).
 
 \code{\%pastefront\%} is a conditional concatenatation operator,
-which appends the string in \code{LHS} onto \code{RHS} from the left but
-only if \code{RHS} does not already start with the string in \code{LHS}.
+which appends the string in \code{lhs} onto \code{rhs} from the left but
+only if \code{rhs} does not already start with the string in \code{lhs}.
 
-\code{\%pasteend\%} appends the string in \code{LHS} onto \code{RHS} from
-the right (i.e., onto the end) but only if \code{RHS} does not already
-end with the string inside the \code{LHS}.
+\code{\%pasteend\%} appends the string in \code{lhs} onto \code{rhs} from
+the right (i.e., onto the end) but only if \code{rhs} does not already
+end with the string inside the \code{lhs}.
 }
 \examples{
 a = 'multi'; b = 'tasking'

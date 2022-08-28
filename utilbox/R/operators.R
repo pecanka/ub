@@ -9,6 +9,9 @@
 #' contained among the elements of the second argument, and `FALSE` 
 #' otherwise.
 #'
+#' \code{\%has\%} is equivalent to \code{\%in\%} except with the roles
+#' of the two sides switched.
+#'
 #' @examples
 #' 1 %notin% 1:3
 #' 0 %notin% 1:3
@@ -28,6 +31,12 @@
 #' @rdname not_in
 #' @export
 `%nin%` = `%notin%`
+
+#' @rdname not_in
+#' @export
+`%has%` = function(table, x) {
+  match(x, table, nomatch = 0L) > 0L
+}
 
 #' @title
 #' Any-in-set operator
@@ -57,12 +66,12 @@
 #' below).
 #'
 #' \code{\%pastefront\%} is a conditional concatenatation operator, 
-#' which appends the string in `LHS` onto `RHS` from the left but 
-#' only if `RHS` does not already start with the string in `LHS`. 
+#' which appends the string in `lhs` onto `rhs` from the left but 
+#' only if `rhs` does not already start with the string in `lhs`. 
 #'
-#' \code{\%pasteend\%} appends the string in `LHS` onto `RHS` from
-#' the right (i.e., onto the end) but only if `RHS` does not already
-#' end with the string inside the `LHS`.
+#' \code{\%pasteend\%} appends the string in `lhs` onto `rhs` from
+#' the right (i.e., onto the end) but only if `rhs` does not already
+#' end with the string inside the `lhs`.
 #'
 #' @examples
 #' a = 'multi'; b = 'tasking'
@@ -82,14 +91,14 @@
   
 #' @rdname concatenate
 #' @export
-`%pastefront%` = function(LHS, RHS) {
-  ifelse(base::startsWith(RHS, LHS), RHS, paste0(LHS, RHS))
+`%pastefront%` = function(lhs, rhs) {
+  ifelse(base::startsWith(rhs, lhs), rhs, paste0(lhs, rhs))
 }
 
 #' @rdname concatenate
 #' @export
-`%pasteend%` = function(LHS, RHS) {
-  ifelse(base::endsWith(RHS, LHS), RHS, paste0(RHS, LHS))
+`%pasteend%` = function(lhs, rhs) {
+  ifelse(base::endsWith(rhs, lhs), rhs, paste0(rhs, lhs))
 }
 
 #' @title
@@ -98,15 +107,15 @@
 #' @description
 #'
 #' `\%m\%` is an operator version of `base::grepl`. It uses the left-hand 
-#' side argument (`LHS`) as the pattern and the right-hand side argument
-#' (`RHS`) as the string that is compared with the pattern using a vectorized
+#' side argument (`lhs`) as the pattern and the right-hand side argument
+#' (`rhs`) as the string that is compared with the pattern using a vectorized
 #' version of `base::grepl`. The vectorization means that the operator can 
 #' take non-scalar arguments (on either side). It is required that the two 
 #' arguments have the same length or that at least one of them has length 1. 
 #' The return value has length of the longer argument.
 #'
 #' \code{\%like\%} does the same except with the roles of the two 
-#' arguments are reversed, i.e., `LHS` is the string and `RHS` is the 
+#' arguments are reversed, i.e., `lhs` is the string and `rhs` is the 
 #' pattern (analogous to the keyword 'LIKE' in SQL).
 #'
 #' `\%nm%` and `\%notlike%` are the negations of the two operators. 
@@ -114,9 +123,9 @@
 #' versions of the four operators above.
 #'
 #' `\%likeany\%` is an \"any pattern\" version of `\%like\%`. It checks
-#' whether the elements of `LHS` match any of the elements in `RHS`, which
+#' whether the elements of `lhs` match any of the elements in `rhs`, which
 #' are the patterns. The two arguments can have any length. The return value 
-#' has the same length as `LHS`.
+#' has the same length as `lhs`.
 #'
 #' `\%likeanyi%` is a case-insensitive version of `\%likeany%`.
 #'
@@ -159,116 +168,116 @@
 
 #' @rdname operator_match 
 #' @export
-`%nm%` = function(LHS, RHS) {
-  !greplm(LHS, RHS)
+`%nm%` = function(lhs, rhs) {
+  !greplm(lhs, rhs)
 }
 
 #' @rdname operator_match
 #' @export
-`%mi%` = function(LHS, x, ...) {
-  greplm(LHS, x, ignore.case=TRUE, ...)
+`%mi%` = function(lhs, x, ...) {
+  greplm(lhs, x, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%nmi%` = function(LHS, x, ...) {
-  !greplm(LHS, x, ignore.case=TRUE, ...)
+`%nmi%` = function(lhs, x, ...) {
+  !greplm(lhs, x, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%like%` = function(x, RHS, ...) {
-  greplm(RHS, x, ...)
+`%like%` = function(x, rhs, ...) {
+  greplm(rhs, x, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%notlike%` = function(x, RHS, ...) {
-  !greplm(RHS, x, ...)
+`%notlike%` = function(x, rhs, ...) {
+  !greplm(rhs, x, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%likei%` = function(x, RHS, ...) {
-  greplm(RHS, x, ignore.case=TRUE, ...)
+`%likei%` = function(x, rhs, ...) {
+  greplm(rhs, x, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%notlikei%` = function(x, RHS, ...) {
-  !greplm(RHS, x, ignore.case=TRUE, ...)
+`%notlikei%` = function(x, rhs, ...) {
+  !greplm(rhs, x, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%likef%` = function(x, RHS, ...) {
-  greplm(RHS, x, fixed=TRUE, ...)
+`%likef%` = function(x, rhs, ...) {
+  greplm(rhs, x, fixed=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%notlikef%` = function(x, RHS, ...) {
-  !greplm(RHS, x, fixed=TRUE, ...)
+`%notlikef%` = function(x, rhs, ...) {
+  !greplm(rhs, x, fixed=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%likefi%` = function(x, RHS, ...) {
-  greplm(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
+`%likefi%` = function(x, rhs, ...) {
+  greplm(rhs, x, fixed=TRUE, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match 
 #' @export
-`%notlikefi%` = function(x, RHS, ...) {
-  !greplm(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
+`%notlikefi%` = function(x, rhs, ...) {
+  !greplm(rhs, x, fixed=TRUE, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%likeany%` = function(x, RHS, ...) {
-  sapply(x, function(y) any(grepl(RHS, y, ...)))
+`%likeany%` = function(x, rhs, ...) {
+  sapply(x, function(y) any(grepl(rhs, y, ...)))
 }
 
 #' @rdname operator_match
 #' @export
-`%notlikeany%` = function(x, RHS, ...) {
-  !`%likeany%`(x, RHS, ...)
+`%notlikeany%` = function(x, rhs, ...) {
+  !`%likeany%`(x, rhs, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%likeanyi%` = function(x, RHS, ...) {
-  sapply(x, function(y) any(grepl(RHS, y, ignore.case=TRUE, ...)))
+`%likeanyi%` = function(x, rhs, ...) {
+  sapply(x, function(y) any(grepl(rhs, y, ignore.case=TRUE, ...)))
 }
 
 #' @rdname operator_match
 #' @export
-`%notlikeanyi%` = function(x, RHS, ...) {
-  !`%likeany%`(RHS, x, ignore.case=TRUE, ...)
+`%notlikeanyi%` = function(x, rhs, ...) {
+  !`%likeany%`(rhs, x, ignore.case=TRUE, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%likeanyf%` = function(x, RHS, ...) {
-  sapply(x, function(y) any(grepl(RHS, y, fixed=TRUE, ...)))
+`%likeanyf%` = function(x, rhs, ...) {
+  sapply(x, function(y) any(grepl(rhs, y, fixed=TRUE, ...)))
 }
 
 #' @rdname operator_match
 #' @export
-`%notlikeanyf%` = function(x, RHS, ...) {
-  !`%likeany%`(RHS, x, fixed=TRUE, ...)
+`%notlikeanyf%` = function(x, rhs, ...) {
+  !`%likeany%`(rhs, x, fixed=TRUE, ...)
 }
 
 #' @rdname operator_match
 #' @export
-`%likeanyfi%` = function(x, RHS, ...) {
-  sapply(x, function(y) any(grepl(RHS, y, fixed=TRUE, ignore.case=TRUE, ...)))
+`%likeanyfi%` = function(x, rhs, ...) {
+  sapply(x, function(y) any(grepl(rhs, y, fixed=TRUE, ignore.case=TRUE, ...)))
 }
 
 #' @rdname operator_match
 #' @export
-`%notlikeanyfi%` = function(x, RHS, ...) {
-  !`%likeany%`(RHS, x, fixed=TRUE, ignore.case=TRUE, ...)
+`%notlikeanyfi%` = function(x, rhs, ...) {
+  !`%likeany%`(rhs, x, fixed=TRUE, ignore.case=TRUE, ...)
 }
 
 #' @title
@@ -288,7 +297,7 @@
 #'
 #' `\%ERR\%` works analogously except that it checks for class 
 #' `try-error`. If its first argument is of class `try-error` it returns 
-#' its second argument (`y`). Otherwise it returns the first (`x`).
+#' its second argument (`y`). Otherwise it returns the first argument (`x`).
 #'
 #' `\%NEXISTS\%` works analogously except that it avoids an error due to
 #' the non-existence of the first argument by returning the second argument
@@ -385,8 +394,8 @@
 #' @returns A list.
 #'
 #' @examples
-#' list(a=1, b=2) %append% list(c=3)    # adds an element to the list on the LHS
-#' c(1,2) %append% list(c=3)            # turns the LHS into a list, then appends
+#' list(a=1, b=2) %append% list(c=3)    # adds an element to the list on the lhs
+#' c(1,2) %append% list(c=3)            # turns the lhs into a list, then appends
 #'
 #' @name operator_append
 #' @family operators provided by utilbox
@@ -458,20 +467,20 @@
 #' @description
 #'
 #' `%try%` attempts to execute a block of code on the right-hand
-#' side (RHS) using `base::tryCatch`. The left-hand side (LHS)
+#' side (rhs) using `base::tryCatch`. The left-hand side (lhs)
 #' is ignored.
 #'
-#' `%otherwise%` looks for an error result on the LHS and if one
-#' is found, it executes the RHS code.
+#' `%otherwise%` looks for an error result on the lhs and if one
+#' is found, it executes the rhs code.
 #'
-#' `%finally%` executes the RHS code and returns the outcome whenever
-#' the LHS was an error, otherwise it returns the LHS.
+#' `%finally%` executes the rhs code and returns the outcome whenever
+#' the lhs was an error, otherwise it returns the lhs.
 #'
 #' After the execution of %otherwise% or %finally% the latest error 
 #' is found in `.e` in the parent frame.
 #'
-#' `%recover%` attempts to execute the LHS and on failure it executes 
-#' the RHS. It is similar to `%ERR%`, which works a little differently.
+#' `%recover%` attempts to execute the lhs and on failure it executes 
+#' the rhs. It is similar to `%ERR%`, which works a little differently.
 #'
 #' @examples
 #' . %try% print(fsdafsdaf) %otherwise% message('the printing did not work')

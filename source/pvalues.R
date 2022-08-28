@@ -196,14 +196,15 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
     # Use Jakub's less general implementation (fast)
     } else {
       
-      # If weights are too close, randomize them
+      # If weights are too close, fuzzy them up a bit
       mindif = 0 #.005*diff(range(lam))
       mdif = apply(mat_lam, 1, min_dif)
+      
       #print(summary(mdif))
       if(any(mdif <= mindif)) {
         if(trace>0) msgf("Randomizing weights ...")
         if(same_lam) {
-          rlam = randomize(lam, mindif=mindif)
+          rlam = perturb(lam, mindif=mindif)
           mat_lam = matrix(lam, nrow=np, ncol=nres, byrow=TRUE)      
         } else {
           for(i in 1:np) {
@@ -213,11 +214,11 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
               print("--------------------------")
               print(min_dif(mat_lam[i,]))
             }
-            mat_lam[i,] = randomize(mat_lam[i,], mindif=mindif)
+            mat_lam[i,] = perturb(mat_lam[i,], mindif=mindif)
             if(Debug) 
               print(min_dif(mat_lam[i,]))
           }
-          #mat_lam = apply(mat_lam, 1, randomize, mindif=mindif)
+          #mat_lam = apply(mat_lam, 1, perturb, mindif=mindif)
         }
       }
 
@@ -304,5 +305,54 @@ do_pval_comb = function(P, lam=1, method="jelle", eps_p=1e-3, fac_lam=1e-2,
 
   return(PP)
 
+}
+
+#' Fuzzy up a numeric object
+#'
+#' `perturb()` adds a small perturbation to those elements that very close
+#' together (as defined by `mindif`). By default, it only perturbs elements
+#' that are exactly equal (i.e., `mindif=0`). When `preserve_sum=TRUE`, the 
+#' perturbation is done in a way that preserves the sum of `x`.
+#'
+#' @examples
+#' perturb(rep(1:10, e=3))
+#'
+#' @export
+perturb = function(x, mindif = 0, preserve_sum = TRUE, maxrep = 100) {
+
+  stopifnot(!missing(x)) 
+
+  nx = length(x)
+  
+  if(nx==1) 
+    return(x)
+
+  mdif = min_dif(x)
+  irep = 0
+  
+  while(mdif <= mindif && irep < maxrep) {
+    irep = irep + 1
+  
+    for(i in 1:nx) {
+      d = abs(x[i]-x)
+      if(any(d[-i] <= mindif)) {
+        w = which(d <= mindif)
+        r = runif(length(w),0.95,1.05)
+        if(preserve_sum) {
+          r = r / sum(r) * sum(abs(x[w]))
+          x[w] = r * sign(x[w])
+        } else {
+          r = r / sum(r) * length(w)
+          x[w] = x[w] * r
+        }
+      }
+    }
+    
+    mdif = min_dif(x)
+  
+  }
+  
+  return(x)
+  
 }
 

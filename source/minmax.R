@@ -38,6 +38,9 @@ min_dif = function(x) {
 #'
 #' `max0()` is a wrapper for `base::max` which does not produce warnings.
 #'
+#' `min_with_na()` is a minimum that is robust against NAs and empty vectors.
+#' It returns `NA_real_` for both.
+#'
 #' @examples
 #' which_max(1:5)
 #' which_max(1:5, last=FALSE)
@@ -99,3 +102,12 @@ max0 = function(..., na.rm=FALSE, val0=-Inf) {
   if(length(x)==0) val0 else base::max(..., na.rm=na.rm)
 }
 
+#' @rdname which_max
+#' @export
+min_with_na = function(..., na.rm=TRUE) {
+  if(all(is.na(unlist(list(...))))) {
+    NA_real_ 
+  } else {
+    min(..., na.rm=na.rm)
+  }
+}

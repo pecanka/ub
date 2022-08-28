@@ -14,6 +14,7 @@ list_package_objects(
   all.names = TRUE,
   exclude = FALSE,
   what = c("all", "exported"),
+  dependencies = FALSE,
   mode = NULL,
   warn = TRUE,
   quietly = FALSE
@@ -24,6 +25,7 @@ list_package_exported(
   pattern,
   all.names = TRUE,
   exclude = FALSE,
+  dependencies = FALSE,
   mode = NULL,
   warn = TRUE,
   quietly = FALSE
@@ -34,6 +36,7 @@ list_package_all(
   pattern,
   all.names = TRUE,
   exclude = FALSE,
+  dependencies = FALSE,
   mode = NULL,
   warn = TRUE,
   quietly = FALSE
@@ -46,10 +49,10 @@ as_object_table(objs, pckg, pattern, exclude = FALSE, mode)
 \description{
 List all/exported objects in a package.
 
-\code{list_package_exported()} lists all exported objects by a package.
-
 \code{list_package_all()} lists all objects defined in a package
 (including non-exported objects).
+
+\code{list_package_exported()} lists all exported objects by a package.
 
 \code{as_object_table()} puts the objects and their main characteristics into
 a single table (class \code{data.frame}).

@@ -20,7 +20,7 @@ file_rename_via_drive(
   time_to_sleep_prior = 0.01
 )
 
-file_remove(file, nretry = 10)
+file_remove(file, nretry = 10, time_to_sleep_prior = 0)
 
 file_rename_timestamp(filename, attrib = "mtime", nretry = 10)
 

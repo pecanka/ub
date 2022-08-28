@@ -4,7 +4,7 @@
 \alias{download_file}
 \title{Download file}
 \usage{
-download_file(url, destfile = separate_paths(url)$files, ...)
+download_file(url, destfile = separate_path(url)$files, ...)
 }
 \description{
 A wrapper for \code{download.file()} that handles missing files without

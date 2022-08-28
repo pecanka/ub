@@ -3,15 +3,18 @@
 \name{environments}
 \alias{environments}
 \alias{orig_env}
-\alias{all_parent_envs}
+\alias{parent_envs}
+\alias{parent_frames}
 \title{Original and parent environments}
 \usage{
 orig_env(obj, na = "")
 
-all_parent_envs(x = parent.frame())
+parent_envs(x = parent.frame())
+
+parent_frames(n, stop_at_global = FALSE, envir = parent.frame())
 }
 \description{
-\code{orig_env()} get the "original" environment (which is more precisely
+\code{orig_env()} gets the "original" environment (which is more precisely
 referred to as the \emph{enclosing environment}) of a function (or another
 object). As described in the help page of \code{base::parent.env()} (see
 \code{?parent.env}), an object's parent environment is the environment where
@@ -30,14 +33,19 @@ calling \code{print(utilbox::head)}. The function \code{orig_env()} captures tha
 information and returns it as a character string. For objects with no such
 information printed it returns the value in the argument \code{na}.
 
-\code{all_parent_envs()} returns the cascade of all parent environments
-of \code{x}. If no input is specified during a call to \code{all_parent_envs()},
+\code{parent_envs()} returns the cascade of all parent environments
+of \code{x}. If no input is specified during a call to \code{parent_envs()},
 the default is to take the function's calling environment.
+
+\code{parent_frames()} returns the cascade of parent frames to the frame that
+invoked it (unless \code{envir} specifies a different base frame). It returns
+a list with the frames and the invoking calls, with the names of the list
+frames derived from those calls.
 }
 \examples{
 orig_env(mean)
 
-all_parent_envs()
-all_parent_envs(mean)
+parent_envs()
+parent_envs(mean)
 
 }

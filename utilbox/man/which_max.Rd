@@ -6,6 +6,7 @@
 \alias{is_min}
 \alias{is_max}
 \alias{max0}
+\alias{min_with_na}
 \title{Identifying of minimums and maximums}
 \usage{
 which_max(
@@ -34,6 +35,8 @@ is_min(x, na.rm = TRUE, eps = .Machine$double.eps)
 is_max(x, na.rm = TRUE, eps = .Machine$double.eps)
 
 max0(..., na.rm = FALSE, val0 = -Inf)
+
+min_with_na(..., na.rm = TRUE)
 }
 \description{
 \code{which_max()} is a more versatile versions of \code{base:which.max}
@@ -56,6 +59,9 @@ maximum in a vector (equality up to the tolerance specified via \code{eps}).
 minimum in a vector (equality up to the tolerance specified via \code{eps}).
 
 \code{max0()} is a wrapper for \code{base::max} which does not produce warnings.
+
+\code{min_with_na()} is a minimum that is robust against NAs and empty vectors.
+It returns \code{NA_real_} for both.
 }
 \examples{
 which_max(1:5)

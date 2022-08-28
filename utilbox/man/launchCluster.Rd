@@ -8,6 +8,7 @@
 launchCluster(
   n_cores = parallel::detectCores() - 1,
   max_n_cores = parallel::detectCores() - 1,
+  launch = TRUE,
   progress_bar = TRUE,
   pb_max,
   pb_print_every_n = 1,
@@ -16,22 +17,27 @@ launchCluster(
   pb_show = TRUE,
   pb_hint = TRUE,
   announce = TRUE,
-  con = stdout()
+  pb_con = stdout(),
+  envir = parent.frame()
 )
 
-endCluster()
+endCluster(envir = parent.frame(), warn = TRUE)
 }
 \description{
-\code{launchCluster()} starts a parallel cluster. It also creates several objects
-in the parent functions calling frame, namely \code{.cl.} (the actual cluster),
-\code{.stop.cluster.} (a function for stopping of the cluster), \code{.pb.} (progress bar)
-and \code{.stop.pb.} (a function for stopping the progress bar). A call to \code{launchCluster()}
-also executes \code{on.exit()} in the the parent functions calling frame,
-which registers the cluster stopping function (i.e., \code{.stop.cluster.()}) to be
-called when the parent function exits.
+\code{launchCluster()} starts a parallel cluster (unless \code{launch=FALSE}). While doing so,
+it also creates several objects in the parent functions calling frame, namely \code{..cl..}
+(the actual cluster), and \code{..cl_stop..} (a function for stopping of the cluster),
+and \code{..pb..} (progress bar), \code{.pb.update()} (a function for updating the progress bar)
+and \code{..pb_stop..()} (a function for stopping the progress bar).
+A call to \code{launchCluster()} also executes \code{on.exit()} in the the parent functions
+calling frame, which registers the cluster stopping function (i.e., \code{..cl_stop..()})
+to be called when the parent function exits. Use \code{launch=FALSE} with \code{progress_bar=TRUE}
+to only initialize the progress bar without starting a new cluster (e.g., when an
+existing cluster is to be used instead of a new one).
 }
 \details{
-\code{endCluster()} stops the parallel cluster and finishes the progress bar.
+\code{endCluster()} stops the parallel cluster and finishes the progress bar (by executing
+\code{..cl_stop..()} and \code{..pb_stop..()} in its parent frame.
 }
 \examples{
 n = 100
@@ -41,7 +47,10 @@ v = foreach(i=1:n, .combine=rbind, .options.snow = opts_snow) \%dopar\% {
   mean(1:1000000)
 }
 
-.stop.pb.()
-.stop.cluster.()
+# stop the cluster and progress_bar
+endCluster()
+# or alternatively call the two functions directly:
+# ..pb_stop..()
+# ..cl_stop..()
 
 }

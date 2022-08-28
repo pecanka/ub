@@ -26,55 +26,55 @@
 \usage{
 pattern \%m\% x
 
-LHS \%nm\% RHS
+lhs \%nm\% rhs
 
-LHS \%mi\% x
+lhs \%mi\% x
 
-LHS \%nmi\% x
+lhs \%nmi\% x
 
-x \%like\% RHS
+x \%like\% rhs
 
-x \%notlike\% RHS
+x \%notlike\% rhs
 
-x \%likei\% RHS
+x \%likei\% rhs
 
-x \%notlikei\% RHS
+x \%notlikei\% rhs
 
-x \%likef\% RHS
+x \%likef\% rhs
 
-x \%notlikef\% RHS
+x \%notlikef\% rhs
 
-x \%likefi\% RHS
+x \%likefi\% rhs
 
-x \%notlikefi\% RHS
+x \%notlikefi\% rhs
 
-x \%likeany\% RHS
+x \%likeany\% rhs
 
-x \%notlikeany\% RHS
+x \%notlikeany\% rhs
 
-x \%likeanyi\% RHS
+x \%likeanyi\% rhs
 
-x \%notlikeanyi\% RHS
+x \%notlikeanyi\% rhs
 
-x \%likeanyf\% RHS
+x \%likeanyf\% rhs
 
-x \%notlikeanyf\% RHS
+x \%notlikeanyf\% rhs
 
-x \%likeanyfi\% RHS
+x \%likeanyfi\% rhs
 
-x \%notlikeanyfi\% RHS
+x \%notlikeanyfi\% rhs
 }
 \description{
 \verb{\\\%m\\\%} is an operator version of \code{base::grepl}. It uses the left-hand
-side argument (\code{LHS}) as the pattern and the right-hand side argument
-(\code{RHS}) as the string that is compared with the pattern using a vectorized
+side argument (\code{lhs}) as the pattern and the right-hand side argument
+(\code{rhs}) as the string that is compared with the pattern using a vectorized
 version of \code{base::grepl}. The vectorization means that the operator can
 take non-scalar arguments (on either side). It is required that the two
 arguments have the same length or that at least one of them has length 1.
 The return value has length of the longer argument.
 
 \code{\%like\%} does the same except with the roles of the two
-arguments are reversed, i.e., \code{LHS} is the string and \code{RHS} is the
+arguments are reversed, i.e., \code{lhs} is the string and \code{rhs} is the
 pattern (analogous to the keyword 'LIKE' in SQL).
 
 \verb{\\\%nm\%} and \verb{\\\%notlike\%} are the negations of the two operators.
@@ -82,9 +82,9 @@ pattern (analogous to the keyword 'LIKE' in SQL).
 versions of the four operators above.
 
 \verb{\\\%likeany\\\%} is an \"any pattern\" version of \verb{\\\%like\\\%}. It checks
-whether the elements of \code{LHS} match any of the elements in \code{RHS}, which
+whether the elements of \code{lhs} match any of the elements in \code{rhs}, which
 are the patterns. The two arguments can have any length. The return value
-has the same length as \code{LHS}.
+has the same length as \code{lhs}.
 
 \verb{\\\%likeanyi\%} is a case-insensitive version of \verb{\\\%likeany\%}.
 }

@@ -135,7 +135,7 @@ convert_unit = function(x, unit, append_unit=TRUE, ndigits=3, sep=" ") {
 #'
 #' @export
 lsos = function(..., envir=parent.frame(), n=10, ndigits=2, size_fun=NULL) {
-  list_object_sizes(..., envir=envir, order_by="Size in bytes", decreasing=TRUE, 
+  list_object_sizes(..., envir=envir, order_by="bytesize", decreasing=TRUE, 
                     head=TRUE, n=n, ndigits=ndigits, size_fun=size_fun)
 }
 
@@ -144,13 +144,13 @@ lsos = function(..., envir=parent.frame(), n=10, ndigits=2, size_fun=NULL) {
 object_size = function(name, envir=parent.frame(), size_fun=object.size) {
 
   if(!is.character(name))
-    error("The argument `name` of `object_size` must be of class character.")
+    stop("The argument `name` of `object_size` must be of class character.")
     
   if(missing(size_fun) || is.null(size_fun))
     size_fun = object.size
 
   if(!is.function(size_fun))
-    error("The value supplied to `object_size` via `size_fun` must be a function.")
+    stop("The value supplied to `object_size` via `size_fun` must be a function.")
     
   mem = try(size_fun(get(name, envir=envir)), silent=package_is_installed('pryr'))
   
@@ -159,7 +159,7 @@ object_size = function(name, envir=parent.frame(), size_fun=object.size) {
   }
   
   if(is_error(mem))
-    error("A memory query on the object `",name,"` failed.")
+    stop("A memory query on the object `",name,"` failed.")
 
   as.numeric(mem) 
    
@@ -175,7 +175,7 @@ object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=p
   dots = match.call(expand.dots = FALSE)$`...`
   
   if (length(dots) && !all(sapply(dots, function(x) is.symbol(x) || is.character(x)))) 
-    error("'...' must contain names or character strings.")
+    stop("'...' must contain names or character strings.")
     
   obj_names = unname(unlist(c(list, sapply(dots, as.character))))
   
@@ -214,36 +214,37 @@ object_sizes = function(..., list=character(), unit="B", with_unit=TRUE, envir=p
 list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, decreasing=FALSE, 
   head=FALSE, n=5, all.names=TRUE, ndigits=2, size_fun=NULL) {
   
-  napply = function(names, fn) sapply(names, function(x) fn(try(get(x, envir=envir))))
+  obj_nams = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
   
-  names = ls(pos=pos, pattern=pattern, envir=envir, all.names=all.names)
-  
-  if(length(names)==0) {
+  if(length(obj_nams)==0) {
     msgf("No (matching) objects found in ",print2var(envir),".")
     return(invisible(NULL))
   }
   
-  obj_class = napply(names, function(y) as.character(class(y))[1])
-  obj_mode = napply(names, mode)
+  GetObj = function(nam) {
+    if(nam == '...') {
+      eval(quote(list(...)), envir=envir)
+    } else {
+      get0(nam, envir=envir, ifnotfound=NULL)
+    }
+  }  
+  
+  obj_class = sapply(obj_nams, function(nam) as.character(class(GetObj(nam)))[1])
+  
+  obj_mode = sapply(obj_nams, function(nam) mode(GetObj(nam)))
   obj_type = ifelse(is.na(obj_class), obj_mode, obj_class)
   
-  #obj_size = napply(names, function(y) object.size(get(y, envir=envir)))
-  #obj_size_byte = napply(names, function(y) object_size(y, size_fun=size_fun))
-  #obj_size_byte = sapply(names, function(y) object_size(y, size_fun=size_fun))
-  obj_size = object_sizes(list=names, with_unit=TRUE, ndigits=ndigits, size_fun=size_fun)
+  fun_size = if(namespace_exists('pryr')) pryr::object_size else utils::object.size
+  obj_size = sapply(obj_nams, function(nam) try(fun_size(GetObj(nam)), silent=TRUE) %ERR% NA_real_)
+  obj_size_pretty = convert_unit(obj_size, get_unit(obj_size), ndigits=ndigits)
   
-  #obj_dim = t(napply(names, function(y) as.numeric(dim(get(y, envir=envir)))[1:2]))
-  #obj_dim = t(napply(names, function(y) as.numeric(dim(y))[1:2]))
-  #vec = is.na(obj_dim)[, 1] & (obj_type != "function")
-  #obj_dim[vec, 1] = napply(names, length)[vec]
-
-  obj_len = napply(names, length)
-  obj_dim = napply(names, function(y) paste(dim(y), collapse=' x '))
+  obj_len = sapply(obj_nams, function(nam) length(GetObj(nam)))
+  obj_dim = sapply(obj_nams, function(nam) paste(dim(GetObj(nam)), collapse=' x '))
   
-  name_envir = if(length(obj_class)==0) NULL else print2var(envir)
+  obj_env_name = if(length(obj_class)==0) NULL else print2var(envir)
 
-  out = data.frame(obj_type, obj_size, obj_len, obj_dim, name_envir)
-  names(out) = c("Type", "Size in bytes", "Size", "Length", "Dimensions", "Location")
+  out = data.frame(name = obj_nams, size = obj_size_pretty, bytesize = obj_size, type = obj_type, 
+                   length = obj_len, dimension = obj_dim, env_name = obj_env_name)
   
   if(!missing(order_by))
     out = out[order(out[[order_by]], decreasing=decreasing),]
@@ -252,160 +253,39 @@ list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, dec
     out = head(out, n)
   }
   
+  rownames(out) = NULL
+  
   return(out)
 
 }
 
-#' @title
-#' List and load objects from a file
+#' List and get objects in parent frames
 #'
-#' @description
+#' `ls_parents()` returns a list of all objects in the sequence of parent 
+#' frames.
 #'
-#' `load_objects()` is a more verbose version of `base::load()`. 
-#' `load_objects()` can announce which objects have been loaded, the 
-#' user can also specify which objects are expected and an error is 
-#' thrown if any of these expected objects are not found inside the file.
-#'
-#' `loadAs()` allows to loads objects from a file and assigns their 
-#' contents into variables listed in `as` inside the environment in 
-#' `envir` (the parent frame of the call to `loadAs()` by default).
-#'
-#' `list_all_objects()` lists all objects inside given files or 
-#' inside files that match pattern in `pattern` relative to the path in 
-#' `dir`.
-#'
-#' `find_object_in_files()` searches for an object with name in `object_name` 
-#' inside files in `files` relative to the path supplied in `dir`. If a 
-#' pattern is given (via `pattern`) instead of a list of file names, 
-#' then all files that match the pattern are searched through looking 
-#' for the object in `object_name`.
+#' `get_in_parents()` retrieves an object by the specified name from all 
+#' parent frams where it is found.
 #'
 #' @export
-load_objects = function(file, announce=FALSE, list_new=FALSE, expected_objects=NULL, 
-                        quit_on_miss=FALSE, envir=parent.frame()) {
-                        
-  # Check for non-scaler file name
-  if(length(file)!=1) 
-    error("Supply a single file name.")
-  
-  # Announce loading and file name
-  if(announce) 
-    msgf("All objects from file '",file,"' will be loaded ...")
-  
-  # Check for missing file
-  if(!file.exists(file)) 
-    error("File '",file,"' does not exist.")
-  
-  # Environment "local" means this function
-  if(class(envir)=="character" && envir=="local") 
-    envir = environment()
+ls_parents = function(..., stop_at_global=FALSE, envir=parent.frame()) {
 
-  ## Remove the objects that are in the file from environment 'envir'
-  .rme(expected_objects, envir=envir)
-  
-  # Load the file
-  if(announce) cat0("Loading file (size ",file_size(file),") ... ")
-  loaded = load(file, envir=envir)
-  if(announce) cat0("done.\n")
-  
-  # List new objects loaded from the file
-  if(list_new) {
-    msgf("Getting sizes of loaded objects ...")
-    sizes = object_sizes(list=loaded, with_unit=TRUE, envir=envir)
-    msgf("Loaded objects: ",paste(loaded," (",sizes,")",sep="",collapse=", "))
-  } else 
-    sizes = rep(NA, length(loaded))
-  
-  # Check for missing objects
-  if(!is.null(expected_objects)) {
-    miss = setdiff(expected_objects, loaded)
-    if(length(miss)>0) {
-      msg = paste0("The following expected objects were not loaded: '",paste(miss,collapse="' '"),"'")
-      if(quit_on_miss) error(msg) else warn(msg)
-    } else {
-      msgf("All expected objects were successfully loaded.")
-    }
-  }
-
-  return(invisible(cbind("Object"=loaded, "Size"=sizes)))
-
-} # load_objects
-
-#' @rdname load_objects
-#' @export
-loadAs = function(file, as, what, envir=parent.frame()) {
-  
-  loaded = load(file, envir=environment())
-  
-  if(missing(as)) as = loaded
-  if(missing(what)) what = loaded
-  
-  stopifnot(length(what)==length(as))
-  
-  if(any(what %notin% loaded))
-    error("Object(s) '",what[which(what %notin% loaded)],"' were not found in file '",file,"'.")
-  
-  for(i in 1:length(what)) assign(as[i], get(what[i]), envir=envir)
-  for(x in setdiff(loaded, what)) assign(x, get(x), envir=envir)
-  
-  invisible(cbind(what=what, as=c(as,setdiff(loaded, what))))
+  parents = parent_frames(stop_at_global = stop_at_global, envir=envir)
+  lapply(parents$frames, function(e) ls(envir=e, ...))
   
 }
 
-#' @rdname load_objects 
+#' @rdname ls_parents
 #' @export
-get_all_objects = function(files=NULL, dir=".", pattern="^.*[.]RData$") {
+get_in_parents = function(x, envir=parent.frame()) {
 
-  setwd(dir)
-  if(missing(files)) files = list.files(pattern=pattern)
-  cat("Obtaining names of all objects ...\n"); .fc()
-  loaded = list()
+  objs = ls_parents(x, all.names=TRUE, envir=envir)
+  is_in = unlist(lapply(objs, `%in%`, x=x))
+  parents = parent_frames(envir=envir)
+  lapply(parents$frames[is_in], function(e) get(x=x, envir=e))
   
-  ## Load all files
-  for(file in files)
-    loaded[[file]] = load_objects(file, list_new=TRUE, announce=TRUE, envir="local")
-  
-  cat("\nThe files contain the following objects (per file):\n\n")  
-  print(loaded)
-  
-  return(invisible(NULL))
+}
 
-} 
 
-#' @rdname load_objects
-#' @export
-find_object_in_files = function(object_name, files=NULL, dir=".", pattern="^.*[.]RData$", 
-  stop_on_found=TRUE, announce=TRUE) {
-                       
-  odir = getwd()
-  on.exit(setwd(odir))
-  
-  stopifnot(!missing(object_name) && length(object_name)) 
-  
-  if(missing(files) || !length(files)) 
-    files = list.files(dir, pattern=pattern)
 
-  setwd(dir)
-  cat("Searching for object '",object_name,"' ...\n", sep=""); .fc()
-  identified_files = NULL
-  for(file in files) {
-    loaded = load_objects(file, list_new=TRUE, announce=announce, envir="local")
-    if(object_name %in% loaded[,1]) {
-      identified_files = c(identified_files, file)
-      if(stop_on_found) break
-    }
-  }
-  
-  if(announce) {
-    if(!length(identified_files)) {
-      msgf("Unfortunately the object '",object_name,"' could not be find in any of the files.")
-    } else if(stop_on_found) {
-      msgf("Object '",object_name,"' found in file '",identified_files,"'. Search stopped.")  
-    } else {
-      msgf("Object '",object_name,"' found in ",length(identified_files)," files.")  
-    }
-  }
-  
-  return(identified_files)
-} 
 

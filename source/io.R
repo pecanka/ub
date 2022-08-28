@@ -56,6 +56,6 @@ saveRDSlazy = function(object, file="", backup=TRUE, check_for_sameness=TRUE, an
 #' @export
 readDT = function(file) {
   x = readRDS(file)
-  setDT(x)
+  data.table::setDT(x)
   x
 }

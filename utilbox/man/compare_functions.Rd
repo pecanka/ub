@@ -4,7 +4,13 @@
 \alias{compare_functions}
 \title{Compare functions}
 \usage{
-compare_functions(fun1, fun2, by_name = FALSE, envir1, envir2)
+compare_functions(
+  fun1,
+  fun2,
+  by_name = FALSE,
+  envir1 = parent.frame(),
+  envir2 = parent.frame()
+)
 }
 \description{
 Compares two functions by looking at their arguments (via

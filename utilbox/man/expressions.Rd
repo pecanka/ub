@@ -8,6 +8,7 @@
 \alias{fun2terms}
 \alias{fun2terms_drop_assignments}
 \alias{fun2funcalls}
+\alias{fun2assigncalls}
 \alias{fun2funcalls2}
 \title{Split expressions into terms}
 \usage{
@@ -22,6 +23,8 @@ fun2terms(fun)
 fun2terms_drop_assignments(fun)
 
 fun2funcalls(fun)
+
+fun2assigncalls(fun)
 
 fun2funcalls2(fun)
 }

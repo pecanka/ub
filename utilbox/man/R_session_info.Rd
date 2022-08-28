@@ -40,9 +40,9 @@ Other system-related functions provided by utilbox:
 \code{\link{R_gui_adjust}()},
 \code{\link{environment_variables}},
 \code{\link{is_win}()},
-\code{\link{pause}},
 \code{\link{stopping_control}},
 \code{\link{system_path}},
-\code{\link{timest}()}
+\code{\link{timest}()},
+\code{\link{wait}()}
 }
 \concept{system-related functions provided by utilbox}

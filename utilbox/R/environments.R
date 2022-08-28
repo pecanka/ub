@@ -3,7 +3,7 @@
 #'
 #' @description
 
-#' `orig_env()` get the "original" environment (which is more precisely 
+#' `orig_env()` gets the "original" environment (which is more precisely 
 #' referred to as the *enclosing environment*) of a function (or another 
 #' object). As described in the help page of `base::parent.env()` (see 
 #' `?parent.env`), an object's parent environment is the environment where 
@@ -22,15 +22,20 @@
 #' information and returns it as a character string. For objects with no such 
 #' information printed it returns the value in the argument `na`.
 #'
-#' `all_parent_envs()` returns the cascade of all parent environments
-#' of `x`. If no input is specified during a call to `all_parent_envs()`,
+#' `parent_envs()` returns the cascade of all parent environments
+#' of `x`. If no input is specified during a call to `parent_envs()`,
 #' the default is to take the function's calling environment.
+#'
+#' `parent_frames()` returns the cascade of parent frames to the frame that
+#' invoked it (unless `envir` specifies a different base frame). It returns
+#' a list with the frames and the invoking calls, with the names of the list
+#' frames derived from those calls.
 #'
 #' @examples
 #' orig_env(mean)
 #'
-#' all_parent_envs()
-#' all_parent_envs(mean)
+#' parent_envs()
+#' parent_envs(mean)
 #'
 #' @name environments
 #' @export
@@ -41,7 +46,7 @@ orig_env = function(obj, na='') {
 
 #' @rdname environments
 #' @export
-all_parent_envs = function(x=parent.frame()) {
+parent_envs = function(x = parent.frame()) {
   
   if(!is.environment(x)) 
     x = environment(x)
@@ -51,7 +56,51 @@ all_parent_envs = function(x=parent.frame()) {
   if(is_error(pe)) 
     return(NULL)
   
-  c(pe, all_parent_envs(pe))
+  c(pe, parent_envs(pe))
+  
+}
+
+#' @rdname environments
+#' @export
+parent_frames = function(n, stop_at_global=FALSE, envir=parent.frame()) {
+
+  frames = sys.frames()
+  calls = sys.status()$sys.calls[-1]
+  
+  if(!missing(n)) {
+    frames = head(frames, n)
+    calls = head(calls, n)
+  }
+  
+  w_envir = which(sapply(frames, identical, envir))
+  
+  if(length(w_envir)==0)
+    stop('Supplied environment is not among the frames returned by `sys.frames()`.')
+    
+  keep = seq(1,tail(w_envir,1),1)
+  frames = frames[keep]
+  calls = calls[keep]
+  
+  if(!stop_at_global) {
+    w_global = which(sapply(frames, identical, .GlobalEnv))
+    if(length(w_global)>0) {
+      keep = seq(tail(w_global,1), length(frames), 1)
+      frames = frames[keep]
+      calls = calls[keep]
+    }
+  }
+  
+  envs = unlist(lapply(frames, utils::capture.output))
+
+  nams = lapply(calls, utils::capture.output)
+  nams = lapply(nams, gsub, pattern="^\\s+|\\s+$", replacement="")
+  nams = lapply(nams, paste, collapse=' ')
+  nams = paste0(envs,': ',unlist(nams))
+  nams = substr(nams, 1, 250)
+  
+  names(frames) = nams
+  
+  list(frames=frames, calls=calls)
   
 }
 
@@ -111,7 +160,7 @@ transfer_objects = function(from, to, what, check_existence=FALSE, delete=TRUE) 
   }
 
   if(length(what)>1) {
-    sapply(what, function(w) transfer_object(from, to, w, check_existence, delete))
+    return(sapply(what, function(w) transfer_objects(from, to, w, check_existence, delete)))
   }
 
   stopifnot(is.environment(from), is.environment(to), length(what)==1)
@@ -135,20 +184,20 @@ transfer_objects = function(from, to, what, check_existence=FALSE, delete=TRUE) 
 #'
 #' @description
 #'
-#' `get2()` extracts an object from the given environment (`envir`). 
-#' Checks if it exists first and if the object does not exist it returns 
-#' the value in `ifnotfound`. If `envir` is missing, it simply looks 
-#' for the object names 'what' on the search path. Similar to `base::get0()`
-#' except that it does not have any value set for `ifnotfound` by default.
+#' `get2()` is nothing but a wrapper around `base::get0()`, which extracts 
+#' an object from the given environment (`envir`) unless the object does not
+#' exist at which point the value in `ifnotfound` is returned. It differs from
+#' `base::get0()` by the order of arguments and in that it does not have any 
+#' value set for `ifnotfound` by default.
 #'
 #' `get2m()` extracts multiple objects and returns them in a list.
 #'
 #' @examples
-#' get2('fklasdfjskadfjlsd', envir=.GlobalEnv, NA)
+#' get2('fklasdfjskadfjlsd', envir = .GlobalEnv, ifnotfound = NA)
 #'
 #' @export
-get2 = function(what, envir=parent.frame(), ifnotfound, mode='any', inherits=TRUE) {
-  get0(what, mode=mode, envir=envir, inherits=inherits) %|||% ifnotfound
+get2 = function(what, envir = parent.frame(), ifnotfound, mode = 'any', inherits = TRUE) {
+  base::get0(what, mode = mode, envir = envir, inherits = inherits, ifnotfound = ifnotfound)
 }
 
 #' @rdname get2
@@ -179,10 +228,13 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
     stop("The length of `what` must be 1 when `what_as_list=FALSE`.")
     
   if(what_as_list) {
+  
     if(!is.list(what))
       stop("The value in `what` must be a list when `what_as_list=TRUE`.")
-    if(length(what)!=length(where))
+      
+    if(length(what) != length(where))
       stop("The lengths of `where` and `what` must match when `what_as_list=TRUE`.")
+      
   } else {
     what = list(what)
   }
@@ -193,7 +245,6 @@ assign2 = function(where, what, envir=.GlobalEnv, ns, what_as_list=FALSE, in_nam
   for(i in seq_along(where)) {
     args = list(x=where[i], value=what[[min(length(what),i)]])
     if(in_namespace) {
-      #fun = 'fixInNamespace'
       fun = 'assignInNamespace'
       do.call(fun, append(args, list(ns=ns)))
       #()

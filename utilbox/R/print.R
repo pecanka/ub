@@ -8,8 +8,18 @@
 #' [`utils::capture.output`].
 #'
 #' @export
-print2var = function(fun, file=NULL) {
-  utils::capture.output(print(fun))
+print2var = function(x, file=NULL, width = NULL) {
+  
+  if(!is.null(width)) {
+    orig_width = getOption('width')
+    orig_deparse = getOption('deparse.cutoff')
+    on.exit({ options(width=orig_width); options(deparse.cutoff=orig_deparse) })
+    options(width=width)
+    options(deparse.cutoff=width)
+  }
+  
+  utils::capture.output(print(x))
+  
 }
   
 #' @title

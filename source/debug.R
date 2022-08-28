@@ -123,30 +123,6 @@ toggle_dump_on_error = function(dumpto='last.dump', to_file=FALSE, include_Globa
 #' @export
 .doe = toggle_dump_on_error
 
-#' Ask for confirmation
-#'
-#' `ask_to_confirm()` and `ask_to_confirm_with_timeout()` ask the user for 
-#' confirmation with the given message. For the latter, a lack of input within
-#' `timeout` seconds is considered non-confirmation, and so are the answers
-#' listed in `no`.
-#'
-#' @export
-ask_to_confirm = function (msg="Press ENTER to continue or ESC to quit ...", ...) {
-
-  if(!interactive()) return(invisible(TRUE))
-   
-  msgf(msg, ...)
-  scan("", what = "character", nmax=1, quiet=TRUE)
- 
-}
-
-#' @rdname ask_to_confirm
-#' @export
-ask_to_confirm_with_timeout = function(msg='', timeout=10, no=NULL) {
-  answer = R.utils::withTimeout(ask_to_confirm(msg), timeout=timeout, onTimeout = 'silent')
-  !is.null(answer) && !isTRUE(answer %in% no)
-}
-
 #' Browser with timeout
 #'
 #' This is a wrapper around `base::browser()` that asks the user for confirmation 

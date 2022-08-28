@@ -18,20 +18,20 @@ lhs \%recover\% ...
 }
 \description{
 \verb{\%try\%} attempts to execute a block of code on the right-hand
-side (RHS) using \code{base::tryCatch}. The left-hand side (LHS)
+side (rhs) using \code{base::tryCatch}. The left-hand side (lhs)
 is ignored.
 
-\verb{\%otherwise\%} looks for an error result on the LHS and if one
-is found, it executes the RHS code.
+\verb{\%otherwise\%} looks for an error result on the lhs and if one
+is found, it executes the rhs code.
 
-\verb{\%finally\%} executes the RHS code and returns the outcome whenever
-the LHS was an error, otherwise it returns the LHS.
+\verb{\%finally\%} executes the rhs code and returns the outcome whenever
+the lhs was an error, otherwise it returns the lhs.
 
 After the execution of \%otherwise\% or \%finally\% the latest error
 is found in \code{.e} in the parent frame.
 
-\verb{\%recover\%} attempts to execute the LHS and on failure it executes
-the RHS. It is similar to \verb{\%ERR\%}, which works a little differently.
+\verb{\%recover\%} attempts to execute the lhs and on failure it executes
+the rhs. It is similar to \verb{\%ERR\%}, which works a little differently.
 }
 \examples{
 . \%try\% print(fsdafsdaf) \%otherwise\% message('the printing did not work')

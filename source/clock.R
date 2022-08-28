@@ -135,7 +135,7 @@ read_clock = function(announce=TRUE, envir=utilbox_environment()) {
   v_last = '._last_check_time_variable'
 
   d2 = clock(FALSE)
-  d1 = get2(v_last, envir, get2(v_start, envir, NA))
+  d1 = get0(v_last, envir=envir, ifnotfound=get0(v_start, envir=envir, ifnotfound=NA))
 
   # Calculate current runtime
   d12 = difftime(d2, d1, unit="secs")
@@ -156,7 +156,7 @@ stop_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what=
   # Read the current clock and recall start
   read_clock(announce)
   d2 = clock(FALSE)
-  d1 = get2("._start_time_variable", envir, NA)
+  d1 = get0("._start_time_variable", envir, ifnotfound=NA)
 
   # Announce start and calculate runtime
   d12 = difftime(d2, d1, unit="secs")
@@ -236,7 +236,7 @@ stop_all_timers = function(envir = utilbox_environment()) {
 }
 
 get_timers = function(var_name = '.timers', envir = utilbox_environment()) {
-  get2(var_name, envir=envir, ifnotfound=list())
+  get0(var_name, envir=envir, ifnotfound=list())
 }
 
 save_timers = function(timers, var_name = '.timers', envir = utilbox_environment()) {

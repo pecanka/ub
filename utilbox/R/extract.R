@@ -543,7 +543,7 @@ filter_by_call = function(...) {
 #' @export
 filter_out = function(x, pattern, fixed=FALSE, ignore.case=FALSE) {
   if(is_empty(x)) return(x)
-  keep = sapply(x, `%nm_any%`, pattern=pattern, fixed=fixed, ignore.case=ignore.case)
+  keep = sapply(x, function(y) any(grep(pattern, x, fixed=fixed, ignore.case=ignore.case)))
   if(is_dimtwo(x)) x[keep,] else x[keep]
 }
   

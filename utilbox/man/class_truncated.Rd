@@ -5,6 +5,7 @@
 \alias{is_truncated}
 \alias{[.truncated}
 \alias{[[.truncated}
+\alias{as.truncated}
 \alias{as.truncated.default}
 \alias{print.truncated}
 \title{Methods for class truncated}
@@ -15,7 +16,9 @@ is_truncated(x)
 
 \method{[[}{truncated}(x, i)
 
-as.truncated.default(x)
+as.truncated(x)
+
+\method{as.truncated}{default}(x)
 
 \method{print}{truncated}(x)
 }

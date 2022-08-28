@@ -13,35 +13,14 @@
 #'
 #' @family coding-related functions provided by utilbox
 #' @export
-compare_functions = function(fun1, fun2, by_name=FALSE, envir1, envir2) {
+compare_functions = function(fun1, fun2, by_name = FALSE, envir1 = parent.frame(), envir2 = parent.frame()) {
   
   if(by_name && is.character(fun1)) {
-    fun1 = get2(fun1, envir, mode=mode)
+    fun1 = get(fun1, envir = envir1, mode = 'function')
   }
   if(by_name && is.character(fun2)) {
-    fun2 = get2(fun2, envir, mode=mode)
+    fun2 = get(fun2, envir = envir2, mode = 'function')
   }
-  
-  #if(by_name) {
-  
-    #if(is.character(fun1)) {
-    #  fun1 = if(missing(envir1)) {
-    #    get(fun1, mode='function') 
-    #  } else {
-    #    get(fun1, envir=envir1, mode='function')
-    #  }
-    #}
-    
-    #if(is.character(fun2)) {
-    #  fun2 = if(missing(envir2)) {
-    #    get(fun2, mode='function') 
-    #  } else {
-    #    get(fun2, envir=envir2, mode='function')
-    #  }
-    #}
-    
-  #}
-  
   stopifnot(is.function(fun1), is.function(fun2))
   
   identical(args(fun1), args(fun2)) && identical(body(fun1), body(fun2))

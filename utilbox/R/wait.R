@@ -14,6 +14,11 @@
 #' response was in the affirmative (as specified via `affirmative`). 
 #' Only the first nmax characters of the response are compared with
 #'
+#' `ask_to_confirm()` and `ask_to_confirm_with_timeout()` ask the user for 
+#' confirmation with the given message. For the latter, a lack of input within
+#' `timeout` seconds is considered non-confirmation, and so are the answers
+#' listed in `no`.
+#'
 #' @examples
 #' sleep(3)
 #'
@@ -21,8 +26,33 @@
 #'
 #' wait("It's nice weather outside.")
 #'
-#' @name pause
 #' @family system-related functions provided by utilbox
+#' @export
+wait = function(..., timeout=Inf) {
+
+  if(!is_empty(list(...))) {
+    msgf(...)
+  }
+  
+  if(interactive()) {
+
+    msg_timeout = if(is.finite(timeout)) paste0("Waiting for ",timeout," seconds. ") else NULL
+    msg = paste0(msg_timeout,"Press ENTER to continue, ESC to quit, or type 'b' and hit ENTER to enter the browser ...")
+
+    input = R.utils::withTimeout(ask_to_confirm(msg), timeout=timeout, onTimeout = 'silent')
+    
+    if(nzchar(input) && any(sapply(c('b','"b"',"'b'"), identical, tolower(input)))) 
+      do.call('browser', list(), envir=parent.frame())
+
+  } else {
+  
+    msgf("`wait()` requires an interactive session.")
+    
+  }
+  
+}
+
+#' @rdname wait
 #' @export
 sleep = function(time, announce=TRUE) {
   
@@ -40,26 +70,27 @@ sleep = function(time, announce=TRUE) {
   
 }
 
-#' @rdname pause
+#' @rdname wait
 #' @export
-wait = function(...) {
+ask_to_confirm = function (msg="Press ENTER to continue or ESC to quit ...", ...) {
 
-  if(!is_empty(list(...))) {
-    msgf(...)
-  }
-  
-  if(interactive()) {
-    msgf("Press ENTER to continue, ESC to quit, or type 'b' and hit ENTER to enter the browser ...")
-    input = scan("", what = "character", nmax = 1, quiet = TRUE)
-    if(identical(tolower(input), 'b'))
-      do.call('browser', list(), envir=parent.frame())
-  } else {
-    msgf("Waiting for user confirmation in `wait()` requires an interactive session.")
-  }
-  
+  if(!interactive()) 
+    return(invisible(TRUE))
+   
+  msgf(msg, ...)
+  readLines(n = 1)
+ 
 }
 
-#' @rdname pause
+#' @rdname wait
+#' @export
+ask_to_confirm_with_timeout = function(msg='', timeout=10, no=NULL) {
+  answer = R.utils::withTimeout(ask_to_confirm(msg), timeout=timeout, onTimeout = 'silent')
+  !is.null(answer) && !isTRUE(answer %in% no)
+}
+
+
+#' @rdname wait
 #' @export
 ask = function(question, answers=c('Y','N'), affirmative='Y', nmax=1, case_sensitive=FALSE) {
 
@@ -67,11 +98,12 @@ ask = function(question, answers=c('Y','N'), affirmative='Y', nmax=1, case_sensi
   
   if(interactive()) {
     msgf(paste(answers, collapse="/"),":")
-    input = scan("", what = "character", nmax=nmax, quiet=TRUE)
+    input = readLines(n = 1)
   }
   
-  f = if(!case_sensitive) tolower else I
+  f = if(!case_sensitive) tolower else identity
   g = hijack(substr, start=1, stop=nmax)
+  
   agree = g(f(affirmative)) == g(f(input))
   
   invisible(structure(agree, answer=input))

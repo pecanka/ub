@@ -1,9 +1,9 @@
-#while("package:utilbox"%in%search()) detach("package:utilbox"); source("d:/Dropbox/Projects/R/utilbox/build-install_utilbox.R"); require(utilbox)
+#while('package:utilbox'%in%search()) detach('package:utilbox'); source('d:/Dropbox/Projects/R/utilbox/build-install_utilbox.R'); require(utilbox)
 
 ####################################################################################
 
 ## Set the 'utilbox' package name, its directory and the location of source files ##
-package = list(name="utilbox", dir="utilbox", filedir="source")
+package = list(name='utilbox', dir='utilbox', filedir='source')
 
 do_update_documentation = TRUE
 do_quick_install = FALSE
@@ -18,16 +18,16 @@ show_msg = function(...) {
 
 ## Function that returns the path to the script file from which it is called
 find_script_dir = function() {
-  if("ofile" %in% names(sys.frame(1))) {
+  if('ofile' %in% names(sys.frame(1))) {
     dirname(sys.frame(1)$ofile)
   } else {
-    "."
+    '.'
   }
 }
 
 ## Load required packages. First check if the packages are installed 
 ## and if not, install them (on Windows, make sure Rtools is installed)
-avail_pckg = installed.packages()[,"Package"]
+avail_pckg = installed.packages()[,'Package']
 for(p in c('devtools','roxygen2')) {
   if(! p %in% avail_pckg) {
     show_msg("Installing '",p,"' ..."); install.packages(p)
@@ -35,11 +35,20 @@ for(p in c('devtools','roxygen2')) {
   library(p, character.only=TRUE)
 }
 
-version_increase = function(version) {
+version_increase = function(version, check_current_version_exists=TRUE) {
+  
+  file_build_latest = list.files('build', pattern=version)
+  if(check_current_version_exists && length(file_build_latest)==0) {
+    return(version)
+  }
+  
   version_next = as.numeric(unlist(strsplit(version, '[.]')))
   w = switch(which_version_increase, 'major'=1, 'minor1'=2, 'minor2'=3, 'minor3'=4)
   version_next[w] = version_next[w] + 1
-  if(w<4) version_next[(w+1):4] = 0
+  
+  if(w<4) 
+    version_next[(w+1):4] = 0
+    
   paste(version_next, collapse='.')
 }
 
@@ -87,6 +96,7 @@ DESC = readLines(file_DESC)
 is_version = grep('Version: ',DESC)
 version_prev = sub('.*[ ]','',DESC[is_version])
 version_next = version_increase(version_prev)
+
 DESC[is_version] = sub('[ ].*',paste0(' ',version_next),DESC[is_version])
 show_msg('... from version ',version_prev,' to ',version_next)
 writeLines(DESC, file_DESC)

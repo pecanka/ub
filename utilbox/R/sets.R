@@ -9,7 +9,9 @@
 #' supplied sets, which is all of the elements that are outside the 
 #' intersection of the supplied sets.
 #'
-#' `is_subset()` checks whether `x` is a subset of `y`. 
+#' `is_subset()` checks whether `x` is a subset of `y` and 
+#' `is_superset()` checks whether `x` is a superset of `y`, or equivalently
+#' the `y` is a subset of `x`.
 #'
 #' @examples
 #' setdiffsym(1:5,3:7)
@@ -50,21 +52,47 @@ is_subset = function(x, y) {
   all(x %in% y)
 }
 
+#' @rdname sets
+#' @export
+is_superset = function(x, y) {
+  all(y %in% x)
+}
+
 #' Generate all subsets
 #'
+#' `all_subsets()` returns a list of subsets of the given set (supplied via `set`) 
+#' (of maximum size `max_size`) together with presence indicator for each 
+#' value in `set`.
 #'
+#' `all_subsets_fast()` is a faster version that uses the package 'combinat',
+#' which does not produce the presence indicators.
 #'
 #' @export
-all_subsets = function(set, use_varnames_in_status=TRUE, stringsAsFactors=FALSE) {
+all_subsets = function(set, max_size=Inf, use_varnames_in_status=TRUE, stringsAsFactors=FALSE) {
+
+  set = unique(set)
 
   n = length(set)
 
   status = expand.grid(rep(list(c(FALSE, TRUE)), n), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=stringsAsFactors)
 
-  if(use_varnames_in_status) names(status) = set
+  if(use_varnames_in_status) {
+    names(status) = set
+  }
+
+  if(max_size < n) {
+    status = status[apply(status, 1, sum) <= max_size,]
+  }
 
   subsets = apply(status, 1, function(x) names(x)[x])
 
   list(set=set, subsets=subsets, status=status)
   
 }
+
+#' @export
+all_subsets_fast = function(set) {
+  check_namespace('conbinat')
+  unlist(lapply(seq_along(set), combinat::combn, x=set, simplify=FALSE), recursive=FALSE)
+}
+
