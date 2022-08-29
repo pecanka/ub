@@ -1,15 +1,12 @@
-ConnectRiskServer = function(database='_adhoc_04', driver='SQL Server Native Client 11.0', 
-    server, only_get_call=FALSE) {
+ConnectServer = function(database, server, driver='SQL Server Native Client 11.0', only_get_call=FALSE) {
  
   cstring = paste0("driver={",driver,"}; server=",server,"; database=",database,"; trusted_connection=yes")
  
-  con = if(only_get_call) {
+  if(only_get_call) {
     paste0('RODBC::odbcDriverConnect(',cstring,')')
   } else {
     RODBC::odbcDriverConnect(cstring)
   }
- 
-  return(con)
  
 }
 
@@ -36,7 +33,7 @@ GetOpenRODBCConnections = function(newest=TRUE, names=FALSE, envir=parent.frame(
  
 }
 
-CloseRiskServer = function(con) {
+DisconnectServer = function(con) {
 
   if(missing(con) || is.null(con)) {
     RODBC::odbcCloseAll()
@@ -47,9 +44,9 @@ CloseRiskServer = function(con) {
 }
 
 QueryRS = function(query, con, as.is = FALSE, ...) {
-  Query(con, query, as.is = as.is, ...)
+  RODBC::sqlQuery(con, query, as.is = as.is, ...)
 }
 
 QueryRSAsIs = function(query, con, as.is = TRUE, ...) {
-  Query(con, query, as.is = as.is, ...)
+  RODBC::sqlQuery(con, query, as.is = as.is, ...)
 } 

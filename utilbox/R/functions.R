@@ -593,8 +593,8 @@ function_find_dependencies = function(fun, dep_envir, envir=parent.frame(), get_
   funs = unique(fun_calls$calls)
   funs = unlist(lapply(lapply(funs, str2lang), as.character))
   
-  if(get_status) {
-  
+  if(get_status && length(funs)>0) {
+    
     assign_calls = fun2assigncalls(fun)
     lhs = list2DF(assign_calls)[,c('order','lhs')]
     fcs = list2DF(fun_calls)[,c('order','calls')]
@@ -640,8 +640,8 @@ function_find_dependencies = function(fun, dep_envir, envir=parent.frame(), get_
     in_dep_nsps = unlist(lapply(lapply(namsps, identical, dep_envir), any))
     in_dep = in_dep_pckg | in_dep_nsps
     
-    funs = data.frame(function_name = fun_name, dependency=funs, currently_missing=miss, 
-                      locations=locs, found_in_envir=in_dep)
+    funs = data.frame(function_name = fun_name, dependency = funs, currently_missing = miss, 
+                      locations = locs, found_in_envir = in_dep)
     rownames(funs) = NULL
 
   }

@@ -381,7 +381,7 @@ list_package_objects = function(pckg, pattern, all.names = TRUE, exclude = FALSE
   
   if(dependencies) {
     env = asNamespace(pckg)
-    funs = res$object_name[res$primary_class == 'function']
+    funs = res$object_name[res$typeof == 'closure']
     deps = function_find_dependencies(funs, dep_envir=env, envir=env, announce=TRUE)
     res = merge(res, deps, by.x='object_name', by.y='function_name')
   }
@@ -426,7 +426,7 @@ list_package_duplicates = function(pckgs, quietly = FALSE, sep = '|') {
   
   x = do.call(base::rbind, list_package_exported(pckgs, warn=FALSE, quietly=quietly))
   rownames(x) = NULL
-  z = x['function' %in% z$all_classes,c('package','object_name')]
+  z = x['closure' %in% z$typeof, c('package','object_name')]
   cnts = tapply(z$package, z$object_name, length)
   pckg_nams = tapply(z$package, z$object_name, paste, collapse=sep)
   
@@ -459,8 +459,10 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
     env_pckg = orig_env(pckg)
   }
   
-  class1 = apply_pckg(objs, pckg, function(x) head(class(x)),1)
-  classes = apply_pckg(objs, pckg, function(x) paste(class(x), collapse=','))
+  class_p = apply_pckg(objs, pckg, function(x) head(class(x),1))
+  class_a = apply_pckg(objs, pckg, function(x) paste(class(x), collapse=','))
+  type_of = apply_pckg(objs, pckg, typeof)
+  storage_mode = apply_pckg(objs, pckg, storage.mode)
   environ = apply_pckg(objs, pckg, function(x) orig_env(x))
   #environ = ifelse(environ==env_pckg, '', environ)
 
@@ -468,8 +470,10 @@ as_object_table = function(objs, pckg, pattern, exclude=FALSE, mode) {
   tbl = list(location = if(is.environment(pckg)) print2var(pckg) else pckg,
              object_name = objs %|||% NA_character_, 
              exported = ifelse(is_exported, 'YES', 'no') %|||% NA_character_, 
-             primary_class = class1 %|||% NA_character_, 
-             all_classes = classes, 
+             primary_class = class_p %|||% NA_character_, 
+             all_classes = class_a, 
+             type = type_of, 
+             storage_mode = storage_mode, 
              environment = environ)
   
   # make sure the list is not completely empty and convert it to a data frame
