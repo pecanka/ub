@@ -130,9 +130,13 @@ toggle_dump_on_error = function(dumpto='last.dump', to_file=FALSE, include_Globa
 #' seconds, otherwise no browser is launched and the execution continues as normal.
 #'
 #' @export
-browser_with_timeout = function(text = "", condition = NULL, expr = TRUE, skipCalls = 0L, timeout=10) {
+browser_with_timeout = function(text = "", ..., condition = NULL, expr = TRUE, skipCalls = 0L, timeout = 10, sep=' ') {
 
-  if(interactive()) {
+  message("*** BROWSER ***")
+  
+  get_call_info(TRUE, level = 2, warn = FALSE)
+ 
+  if(interactive() && is.finite(timeout)) {
 
     msg = paste0(
       "*** BROWSER WITH TIMEOUT ***\n",
@@ -141,18 +145,22 @@ browser_with_timeout = function(text = "", condition = NULL, expr = TRUE, skipCa
       "Input 'c' and press ENTER to continue immediately.\n",
       "Pressing ESC will terminate the execution."
     )
-    confirmed = ask_to_confirm_with_timeout(msg, timeout, no=c('c','C'))
+    
+    confirmed = ask_to_confirm_with_timeout(msg, timeout, no = c('c','C'))
    
     if(confirmed) {
-      message("Request confirmed by user. Launching `browser()` ...")
+      message("REQUEST CONFIRMED BY USER. LAUNCHING `base::browser()` ...")
     } else {
-      message("Request not confirmed by user. Continuing execution as normal ...")
+      message("REQUEST NOT CONFIRMED BY USER. CONTINUING EXECUTION AS NORMAL ...")
       return(invisible(NULL))
     }
    
   }
+ 
+  text = do.call(paste, list(text, ..., sep = sep))
 
-  do.call(.Primitive("browser"), list(text=text, condition=condition, expr=exp, skipCalls=skipCalls + 2L), envir=parent.frame())
+  do.call(.Primitive("browser"), list(text = text, condition = condition, expr = exp,
+                                      skipCalls = skipCalls + 2L), envir = parent.frame())
  
 }
 

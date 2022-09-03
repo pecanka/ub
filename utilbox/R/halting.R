@@ -9,7 +9,7 @@
 #' silently, use `stop_quietly(NULL)`.
 #'
 #' @export
-stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
+stop2 = function(msg='Execution stopped.', show_sequence=TRUE) {
 
   msg_call = if(show_sequence) {
     get_call_info()$message 
@@ -21,10 +21,7 @@ stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
     msgf(paste(c(msg, msg_call), collapse=if(missing(msg)) ' ' else '\n'))
   }
   
-  # Disable printing of error messages
   opt = options(show.error.messages = FALSE)
-  
-  # But make sure it gets restored to the previous value upon exit
   on.exit(options(opt))
   
   stop()
@@ -33,7 +30,7 @@ stop2 <- function(msg='Execution stopped.', show_sequence=TRUE) {
 
 #' @name stop2
 #' @export
-stop_quietly <- stop2
+stop_quietly = stop2
 
 #' @title
 #' Print an error message and stop the execution
@@ -87,32 +84,32 @@ halt = function(msg="") {
 #' Serves as inspiration for the function `get_call_info()`.
 #'
 #' @export
-caller_info <- function (fmtstring = NULL, level = 1) {
+caller_info = function (fmtstring = NULL, level = 1) {
     
-  x <- .traceback(x = level + 1)
+  x = .traceback(x = level + 1)
 
-  i <- 1
+  i = 1
   repeat { # loop for subexpressions case; find the first one with source reference
-      srcref <- getSrcref(x[[i]])
+      srcref = getSrcref(x[[i]])
       if (is.null(srcref)) {
           if (i < length(x)) {
-              i <- i + 1
+              i = i + 1
               next;
           } else {
               warning("caller_info(): not found\n")
               return (NULL)
           }
       }
-      srcloc <- list(fun = getSrcref(x[[i+1]]), file = getSrcFilename(x[[i]]), line = getSrcLocation(x[[i]]))
+      srcloc = list(fun = getSrcref(x[[i+1]]), file = getSrcFilename(x[[i]]), line = getSrcLocation(x[[i]]))
       break;
   }
 
   if (is.null(fmtstring))
       return (srcloc)
 
-  fmtstring <- sub("%f", paste0(srcloc$fun, collapse = ""), fmtstring)
-  fmtstring <- sub("%s", srcloc$file, fmtstring)
-  fmtstring <- sub("%l", srcloc$line, fmtstring)
+  fmtstring = sub("%f", paste0(srcloc$fun, collapse = ""), fmtstring)
+  fmtstring = sub("%s", srcloc$file, fmtstring)
+  fmtstring = sub("%l", srcloc$line, fmtstring)
   fmtstring
   
 }
@@ -122,7 +119,62 @@ caller_info <- function (fmtstring = NULL, level = 1) {
 #' `get_call_info()` returns a list with information about the calling sequence.
 #' Optionally, a message with the information is directly printed.
 #'
-#' `call_info()` prints and returns the information about the calling sequence
+#' @returns A list with the following elements:
+#' `fun` ... calling function
+#' `dir` ... path to the script file
+#' `file` ... name of the script file
+#' `line` ... line in the script where called
+#' `message` ... message with the sequence
+#'
+#' @family halting utilities provided by utilbox
+#' @export
+get_call_info = function(print_msg = FALSE, level = 1, warn = TRUE) {
+   
+  orig_deparse = getOption('deparse.cutoff')
+  options(deparse.cutoff = 10000)
+  on.exit(options(deparse.cutoff = orig_deparse))
+
+  K = .traceback(x = level + 1)
+
+  if(length(K) == 0) {
+    if(warn) {
+      warning(this_fun_name(), "(): No suitable reference found with level ", level,
+              " (i.e. ", level + 1, " above the call to ", this_fun_name(), ").")
+    }
+    return(NULL)
+  }
+
+  refs = lapply(K, getSrcref)
+  w = unlist(lapply(refs, Negate(is.null)))
+  K = rev(K[w])
+  dirs = lapply(K, getSrcDirectory)
+  fils = lapply(K, getSrcFilename)
+  lins = lapply(K, getSrcLocation)
+  cals = lapply(K, function(x) paste(as.character(getSrcref(x)), collapse='\n'))
+  evok = lapply(K, paste, collapse='\n')
+  difr = lapply(seq_along(cals), function(i) !identical(str2lang(cals[[i]]), str2lang(evok[[i]])) %ERR% TRUE)
+  difr = which(unlist(difr))
+  locs = lapply(seq_along(K), function(i) paste0(file.path(dirs[[i]], fils[[i]]), ":", lins[[i]]))
+  Cals = lapply(seq_along(K), function(i) paste0(i,'. -> @', locs[[i]],':\n  \\-> ', paste(cals[[i]], collapse='\n')))
+  Cals[difr] = lapply(difr, function(i) paste0(Cals[[i]], '\n   \\-> ', paste(evok[[i]], collapse='\n')))
+  msg = paste0('Invocation sequence: \n', paste(unlist(Cals), collapse = '\n'))
+ 
+  srcloc = list(calls = cals, wdir = getwd(), srcdir = dirs, srcfile = fils, srcline = lins,
+                srcloc = locs, message = msg)
+               
+  if(print_msg) {
+    msgf(msg)
+  }
+ 
+  return(invisible(srcloc))
+   
+}
+#' Get the details about where a call came from
+#'
+#' `get_call_info_old()` returns a list with information about the calling sequence.
+#' Optionally, a message with the information is directly printed.
+#'
+#' `call_info_old()` prints and returns the information about the calling sequence
 #' (obtained using `get_call_info()`.
 #'
 #' @returns A list with the following elements:
@@ -132,9 +184,7 @@ caller_info <- function (fmtstring = NULL, level = 1) {
 #' `line` ... line in the script where called
 #' `msg` ... message with the sequence
 #'
-#' @family halting utilities provided by utilbox
-#' @export
-call_info <- function(print_msg=TRUE, level = 1) {
+call_info_old = function(print_msg=TRUE, level = 1) {
 
   info = get_call_info(FALSE, level)
   
@@ -144,11 +194,9 @@ call_info <- function(print_msg=TRUE, level = 1) {
  
 }
 
-#' @rdname call_info
-#' @export
-get_call_info <- function(print_msg=FALSE, level = 1) {
+get_call_info_old = function(print_msg=FALSE, level = 1) {
 
-  K <- .traceback(x = level + 1)
+  K = .traceback(x = level + 1)
   
   refs = sapply(K, getSrcref)
   w = which(!sapply(refs, is.null))

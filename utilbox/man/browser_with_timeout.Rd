@@ -6,10 +6,12 @@
 \usage{
 browser_with_timeout(
   text = "",
+  ...,
   condition = NULL,
   expr = TRUE,
   skipCalls = 0L,
-  timeout = 10
+  timeout = 10,
+  sep = " "
 )
 }
 \description{

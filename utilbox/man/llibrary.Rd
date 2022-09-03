@@ -4,7 +4,6 @@
 \alias{llibrary}
 \alias{llib}
 \alias{unload_library}
-\alias{unload_attached_library}
 \alias{unload_all_libraries}
 \alias{reload_unloaded_libraries}
 \alias{package_is_installed}
@@ -32,9 +31,9 @@ llib(
   suppress_startup_msgs = FALSE
 )
 
-unload_library(pckgs = NULL, character.only = FALSE, warn = TRUE)
+unload_library(pckgs, announce = TRUE)
 
-unload_attached_library(pckgs)
+unload_library(pckgs, announce = TRUE)
 
 unload_all_libraries()
 

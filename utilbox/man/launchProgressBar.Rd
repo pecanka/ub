@@ -6,9 +6,10 @@
 \usage{
 launchProgressBar(
   pb_max,
+  pb_min = 0,
+  pb_initial = pb_min,
   pb_print_every_n = 1,
   pb_show = TRUE,
-  pb_initial = 0,
   pb_width = min(options()$width, 100),
   pb_con = stdout(),
   envir = parent.frame()

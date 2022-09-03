@@ -5,8 +5,8 @@
 #' updating function as `..pb_update..()` in `envir`.
 #'
 #' @export
-launchProgressBar = function(pb_max, pb_print_every_n = 1, pb_show = TRUE, pb_initial=0, 
-    pb_width = min(options()$width, 100), pb_con=stdout(), envir=parent.frame()) 
+launchProgressBar = function(pb_max, pb_min = 0, pb_initial = pb_min, pb_print_every_n = 1, pb_show = TRUE, 
+    pb_width = min(options()$width, 100), pb_con = stdout(), envir = parent.frame()) 
 {
 
   if(pb_print_every_n < 1.0)
@@ -32,4 +32,47 @@ launchProgressBar = function(pb_max, pb_print_every_n = 1, pb_show = TRUE, pb_in
 
   invisible(list(pb = pb, pb_update = pb_update, pb_stop = pb_stop))
   
+}
+
+#' Read input with a countdown
+#'
+#' `ask_enter_with_countdown()` asks for ENTER key for `n` seconds while
+#' showing a coundown from `n` down to `1` after which point it exits
+#' returning either the user input as character or `NULL` (on no input).
+#'
+#' @examples
+#' x = ask_enter_with_countdown(3)
+#'
+#' @export
+ask_enter_with_countdown = function(n = 10, msg = 'Press ENTER or continuing in {i} seconds ...') {
+
+  n = max(1, n)
+  timeout = round(n / 4, 1)
+  j = 0
+  i = n
+  repeat {
+  
+    if(!is.null(msg)) {
+      message(gsub('[{]i[}]', i, msg)); flush.console()
+    }
+
+    res = R.utils::withTimeout(readLines(n = 1), timeout = timeout, onTimeout = 'silent'); print('b')
+    
+    i = i - timeout
+    j = j + timeout
+    
+    if(is.character(res) || i <= 0) {
+      break
+    }
+    
+  }
+  
+  if(is.null(res)) {
+    message('Countdown reached zero. Continuing ...')
+  } else {
+    message('ENTER pressed.')
+  }
+  
+  invisible(res)
+
 }

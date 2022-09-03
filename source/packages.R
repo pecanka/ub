@@ -215,11 +215,31 @@ unload_library = function(pckgs=NULL, character.only=FALSE, warn=TRUE) {
 
 #' @rdname llibrary
 #' @export
-unload_attached_library = function(pckgs) {
+unload_library = function(pckgs, announce = TRUE) {
 
-  if(length(pckgs)>0) {
-    detach(pckgs, character.only=TRUE, unload=TRUE)
+  if(length(pckgs) == 1) {
+  
+    if(announce) {
+      message("Unloading package '",pckgs,"' ...")
+    }
+    
+    if(!grepl('^package[:]', pckgs)) {
+      pckgs = paste0('package:',pckgs)
+    }
+      
+    res = try(detach(pckgs, character.only = TRUE, unload = TRUE), silent = TRUE)
+    
+    res = ! 'try-error' %in% class(res)
+    
+    if(announce) {
+      message("Result: ",ifelse(res, 'success', 'FAILURE'))
+    }
+    
+  } else {
+    res = sapply(pckgs, unload_library, announce = announce)
   }
+  
+  invisible(res)
 
 }
 
@@ -227,12 +247,12 @@ unload_attached_library = function(pckgs) {
 #' @export
 unload_all_libraries = function() {
 
-  list_pckg_loaded = list_attached_packages(only_name=FALSE)
-  list_pckg_base = list_loaded_packages(other=FALSE)
+  list_pckg_loaded = list_attached_packages(only_name = FALSE)
+  list_pckg_base = list_loaded_packages(other = FALSE)
   
   list_pckg_loaded = setdiff(list_pckg_loaded, paste0('package:',list_pckg_base))
   
-  unloaded = unload_attached_library(list_pckg_loaded)
+  unloaded = unload_library(list_pckg_loaded)
   
   assign('.utilbox_unloaded_libraries', unloaded, envir=.GlobalEnv)
 
