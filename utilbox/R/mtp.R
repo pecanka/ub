@@ -464,7 +464,6 @@ mtp_errors = function(p, method="cbonferroni", n1=0, alpha=0.05, lam, lamSFG=0.5
 
 } # mtp_errors
   
-#' @title
 #' @name mtp_errors
 #' @export
 mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5, 
@@ -485,7 +484,6 @@ mtp_errors_fast = function(p, method="cbonferroni", n1=0, alpha=0.05, lamSFG=0.5
 
 }
   
-#' @title
 #' @name mtp_errors
 #' @export
 mtp_errors_slow = function(p, methods, n1=0, k, alpha=0.05, lamSFG=0.5, lam, scale_up=TRUE, trace=1, what=c("fwer","fdr","power")) {

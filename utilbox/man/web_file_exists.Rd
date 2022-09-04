@@ -7,8 +7,5 @@
 web_file_exists(url, ...)
 }
 \description{
-Check the existence of a file on the web
-}
-\examples{
-
+\code{web_file_exists()} checks the existence of a web file.
 }

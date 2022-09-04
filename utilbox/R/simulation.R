@@ -29,7 +29,6 @@ rposdefmat = function(n, ev=runif(n,1,10), all.positive=FALSE) {
   
 }
 
-#' @title
 #' @name simulate_matrix
 #' @export
 rvariance = function(n, sigma2=rep(1,n), ev=runif(n,1,200)) {

@@ -15,10 +15,10 @@ A list with the following elements:
 \code{msg} ... message with the sequence
 }
 \description{
-\code{get_call_info_old()} returns a list with information about the calling sequence.
+\code{caller_info_old()} returns a list with information about the calling sequence.
 Optionally, a message with the information is directly printed.
 }
 \details{
 \code{call_info_old()} prints and returns the information about the calling sequence
-(obtained using \code{get_call_info()}.
+(obtained using \code{caller_info()}.
 }

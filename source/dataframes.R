@@ -69,7 +69,6 @@ rev_cols = function(x) {
 #' of, when `w` given) its columns are identical in terms of content, 
 #' not necessarily in terms of equality of column names.
 #'
-#' @title
 #' @param x A two-dimensional object to be checked. @description
 #'
 #' @param w (Optional) A vector giving a subset of columns to be 

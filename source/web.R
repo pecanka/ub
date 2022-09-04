@@ -73,10 +73,9 @@ read_url_via_download = function(url, read_fun, ..., retain_file=FALSE, destfile
 #' @title
 #' Check the existence of a file on the web
 #'
+#' @description
+#' `web_file_exists()` checks the existence of a web file.
 #'
-#'
-#' @examples
-#' 
 #' @export
 web_file_exists = function(url, ...) {
   ## code not created yet ##

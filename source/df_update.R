@@ -32,31 +32,31 @@ rows_modify_recurse = function(d, ..., fun) {
 #' @rdname rows_modify_recurse
 #' @export
 rows_patch_recurse = function(d, ...) {
-  rows_modify_recurse(d, ..., fun=dplyr::rows_patch)
+  rows_modify_recurse(d, ..., fun = dplyr::rows_patch)
 }
 
 #' @rdname rows_modify_recurse
 #' @export
 rows_upsert_recurse = function(d, ...) {
-  rows_modify_recurse(d, ..., fun=dplyr::rows_upsert)
+  rows_modify_recurse(d, ..., fun = dplyr::rows_upsert)
 }
 
 #' @rdname rows_modify_recurse
 #' @export
 rows_insert_recurse = function(d, ...) {
-  rows_modify_recurse(d, ..., fun=dplyr::rows_insert)
+  rows_modify_recurse(d, ..., fun = dplyr::rows_insert)
 }
 
 #' @rdname rows_modify_recurse
 #' @export
 rows_delete_recurse = function(d, ...) {
-  rows_modify_recurse(d, ..., fun=dplyr::rows_delete)
+  rows_modify_recurse(d, ..., fun = dplyr::rows_delete)
 }
 
 #' @rdname rows_modify_recurse
 #' @export
 rows_update_recurse = function(d, ...) {
-  rows_modify_recurse(d, ..., fun=dplyr::rows_update)
+  rows_modify_recurse(d, ..., fun = dplyr::rows_update)
 }
 
 

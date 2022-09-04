@@ -1,0 +1,18 @@
+Package: testub
+Title: Short Description
+Version: 0.0.0.10
+Authors@R: 
+   person(given = "Doe",
+          family = "John",
+          role = c("aut", "cre"),
+          email = "email@address.com",
+          comment = "")
+Description: <add package description>
+License: GPL-3
+Encoding: UTF-8
+URL: 
+BugReports: 
+Depends: 
+  R (>= 4.1.1)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1

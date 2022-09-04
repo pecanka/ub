@@ -36,8 +36,8 @@ coalesce2 <- function(...) {
 #' recode2(letters, a, 'b'='BBB', .default='<none>')
 #'
 #' @export
-recode2 = function(.x, conv, .default=NULL, .missing=NULL, .fun=dplyr::recode) {
-  args = append(list(.x=.x, .default=.default, .missing=.missing), as.list(conv))
+recode2 = function(.x, conv, .default = NULL, .missing = NULL, .fun = dplyr::recode) {
+  args = append(list(.x = .x, .default = .default, .missing = .missing), as.list(conv))
   do.call(.fun, args)
 }
 

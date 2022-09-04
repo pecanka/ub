@@ -204,7 +204,8 @@ fun2funcalls2 = function(fun) {
   
 }
 
-#' @title Empty symbols
+#' @title 
+#' Empty symbols
 #'
 #' @description
 #' Some operations in R can result in a special object: the empty symbol.
@@ -234,6 +235,7 @@ is_empty_symbol = function(x) {
 #' @title
 #' Guess whether an expression is an assignment
 #'
+#' @description
 #' Checks whether an expression has an assignement form, namely
 #' that it is a call to the `<-` or other such functions.
 #'

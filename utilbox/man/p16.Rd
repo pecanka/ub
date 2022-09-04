@@ -3,18 +3,13 @@
 \name{p16}
 \alias{p16}
 \alias{pt16}
-\title{Plot and scatterplot
-
-\code{p16} and \code{pt16} are synonyms for \code{graphics::plot} and \code{graphics::points}
-with different defaults for size (\code{cex}), character (\code{pch}) and color (\code{col}).}
+\title{Plot and scatterplot}
 \usage{
 p16(..., col = "royalblue3", cex = 0.6, pch = 16)
 
 pt16(..., col = "royalblue3", cex = 0.6, pch = 16)
 }
 \description{
-Plot and scatterplot
-
 \code{p16} and \code{pt16} are synonyms for \code{graphics::plot} and \code{graphics::points}
 with different defaults for size (\code{cex}), character (\code{pch}) and color (\code{col}).
 }

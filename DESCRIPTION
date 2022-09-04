@@ -1,6 +1,6 @@
 Package: utilbox
 Title: Utility Box
-Version: 0.1.0.43
+Version: 0.1.0.53
 Authors@R: 
     person(given = "Jakub",
            family = "Pecanka",
@@ -8,9 +8,8 @@ Authors@R:
            email = "utilbox@pecanka.net",
            comment = c(ORCID = "0000-0002-6857-6001"))
 Description: A set of various small and large utilities.
-License: GPL-3
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 URL: https://github.com/pecanka/utilbox
 BugReports: mailto:utilbox@pecanka.net
 Depends: 

@@ -58,12 +58,14 @@ List all/exported objects in a package.
 a single table (class \code{data.frame}).
 }
 \examples{
+\dontrun{
 list_package_exported('utilbox')
 list_package_all('utilbox')
+}
 
 # lsf.str("package:dplyr")   # see also
 # ls("package:dplyr")        # see also (works when the package is loaded)
-help(package = dplyr)
+# help(package = dplyr)
 # see https://stackoverflow.com/questions/30392542/is-there-a-command-in-r-to-view-all-the-functions-present-in-a-package
 
 }

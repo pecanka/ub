@@ -15,6 +15,7 @@ build_package(
   update_doc = TRUE,
   build = TRUE,
   install_mode = c("no", "yes", "quick"),
+  file_desc = "DESCRIPTION",
   increase_version = c("minor3", "minor2", "minor1", "major", "none"),
   add_path_to_global = TRUE,
   attach = TRUE,
@@ -26,6 +27,7 @@ build_utilbox(
   pckg_dir = "utilbox",
   pckg_dir_source = "source",
   path = ".",
+  file_desc = "DESCRIPTION",
   create = TRUE,
   update_doc = TRUE,
   build = TRUE,
@@ -39,15 +41,12 @@ build_utilbox(
 install_utilbox(
   pckg_name = "utilbox",
   pckg_dir = "utilbox",
-  pckg_dir_source = "source",
   path = ".",
-  create = FALSE,
-  update_doc = FALSE,
-  build = FALSE,
   install_mode = "yes",
   attach = FALSE,
   add_path_to_global = FALSE,
-  install_prerequisities = TRUE
+  install_prerequisities = TRUE,
+  pckg_dir_source
 )
 }
 \description{

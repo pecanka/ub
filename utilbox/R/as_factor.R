@@ -23,8 +23,10 @@
 #' un_factor(to_factor(c('Germany','Italy','Czechia')), 'numeric')
 #'
 #' # sorting (both achieve the same, to_factor is more succinct)
+#' \dontrun{
 #' dplyr::arrange(mtcars, to_factor(carb, 3:2))
 #' dplyr::arrange(mtcars, factor(carb, union(3:2, sort(carb))))
+#' }
 #'
 #' @family sequence-related functions provided by utilbox
 #' @export

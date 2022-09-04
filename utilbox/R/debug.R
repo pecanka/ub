@@ -134,7 +134,7 @@ browser_with_timeout = function(text = "", ..., condition = NULL, expr = TRUE, s
 
   message("*** BROWSER ***")
   
-  get_call_info(TRUE, level = 2, warn = FALSE)
+  caller_info(TRUE, level = 2, warn = FALSE)
  
   if(interactive() && is.finite(timeout)) {
 

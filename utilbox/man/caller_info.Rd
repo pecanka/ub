@@ -4,14 +4,28 @@
 \alias{caller_info}
 \title{Print caller information}
 \usage{
-caller_info(fmtstring = NULL, level = 1)
+caller_info(print_msg = FALSE, level = 1, warn = TRUE)
+
+caller_info(print_msg = FALSE, level = 1, warn = TRUE)
+}
+\value{
+A list with the following elements:
+\code{fun} ... calling function
+\code{dir} ... path to the script file
+\code{file} ... name of the script file
+\code{line} ... line in the script where called
+\code{message} ... message with the sequence
 }
 \description{
 \code{caller_info()} is a function that prints the caller information,
 i.e. the sequence of calling fuctions and the invocation locations.
+
+\code{caller_info()} returns a list with information about the calling sequence.
+Optionally, a message with the information is directly printed.
 }
 \details{
 Taken from: https://stackoverflow.com/q/59537482/684229
 
-Serves as inspiration for the function \code{get_call_info()}.
+Serves as inspiration for the function \code{caller_info()}.
 }
+\concept{halting utilities provided by utilbox}

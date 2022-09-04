@@ -11,14 +11,10 @@
 #' @export
 stop2 = function(msg='Execution stopped.', show_sequence=TRUE) {
 
-  msg_call = if(show_sequence) {
-    get_call_info()$message 
-  } else {
-    get_call_info()$fun
-  }
+  msg_call = caller_info()[if(show_sequence) 'message' else 'fun']
   
   if(!is.null(msg)) {
-    msgf(paste(c(msg, msg_call), collapse=if(missing(msg)) ' ' else '\n'))
+    msgf(paste(c(msg, msg_call), collapse = if(missing(msg)) ' ' else '\n'))
   }
   
   opt = options(show.error.messages = FALSE)
@@ -81,9 +77,8 @@ halt = function(msg="") {
 #'
 #' Taken from: https://stackoverflow.com/q/59537482/684229
 #'
-#' Serves as inspiration for the function `get_call_info()`.
+#' Serves as inspiration for the function `caller_info()`.
 #'
-#' @export
 caller_info = function (fmtstring = NULL, level = 1) {
     
   x = .traceback(x = level + 1)
@@ -116,7 +111,7 @@ caller_info = function (fmtstring = NULL, level = 1) {
 
 #' Get the details about where a call came from
 #'
-#' `get_call_info()` returns a list with information about the calling sequence.
+#' `caller_info()` returns a list with information about the calling sequence.
 #' Optionally, a message with the information is directly printed.
 #'
 #' @returns A list with the following elements:
@@ -128,7 +123,7 @@ caller_info = function (fmtstring = NULL, level = 1) {
 #'
 #' @family halting utilities provided by utilbox
 #' @export
-get_call_info = function(print_msg = FALSE, level = 1, warn = TRUE) {
+caller_info = function(print_msg = FALSE, level = 1, warn = TRUE) {
    
   orig_deparse = getOption('deparse.cutoff')
   options(deparse.cutoff = 10000)
@@ -159,23 +154,23 @@ get_call_info = function(print_msg = FALSE, level = 1, warn = TRUE) {
   Cals[difr] = lapply(difr, function(i) paste0(Cals[[i]], '\n   \\-> ', paste(evok[[i]], collapse='\n')))
   msg = paste0('Invocation sequence: \n', paste(unlist(Cals), collapse = '\n'))
  
-  srcloc = list(calls = cals, wdir = getwd(), srcdir = dirs, srcfile = fils, srcline = lins,
-                srcloc = locs, message = msg)
+  info = list(calls = cals, wdir = getwd(), srcdir = dirs, srcfile = fils, srcline = lins,
+              srcloc = locs, message = msg)
                
   if(print_msg) {
     msgf(msg)
   }
  
-  return(invisible(srcloc))
+  return(info)
    
 }
 #' Get the details about where a call came from
 #'
-#' `get_call_info_old()` returns a list with information about the calling sequence.
+#' `caller_info_old()` returns a list with information about the calling sequence.
 #' Optionally, a message with the information is directly printed.
 #'
 #' `call_info_old()` prints and returns the information about the calling sequence
-#' (obtained using `get_call_info()`.
+#' (obtained using `caller_info()`.
 #'
 #' @returns A list with the following elements:
 #' `fun` ... calling function
@@ -186,7 +181,7 @@ get_call_info = function(print_msg = FALSE, level = 1, warn = TRUE) {
 #'
 call_info_old = function(print_msg=TRUE, level = 1) {
 
-  info = get_call_info(FALSE, level)
+  info = caller_info(FALSE, level)
   
   if(print_msg) msgf(info$message2)
  
@@ -194,7 +189,7 @@ call_info_old = function(print_msg=TRUE, level = 1) {
  
 }
 
-get_call_info_old = function(print_msg=FALSE, level = 1) {
+caller_info_old = function(print_msg=FALSE, level = 1) {
 
   K = .traceback(x = level + 1)
   
