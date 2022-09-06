@@ -95,7 +95,7 @@ function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore
 #' Toggle dumping on frames on error
 #'
 #' @description
-#' `.roe()` (or it alias `toggle_dump_on_error()`) toggle between dumping of
+#' `.doe()` (or it alias `toggle_dump_on_error()`) toggle between dumping of
 #' frames when an error is encoutered. This is done by setting `options()$error`
 #' to a version of `utils::dump.frames()`. Optionally, the dumping is done to
 #' to file (when `to_file=TRUE`) and/or includes the global environment

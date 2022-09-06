@@ -14,7 +14,7 @@ toggle_dump_on_error(
 .doe(dumpto = "last.dump", to_file = FALSE, include_GlobalEnv = FALSE)
 }
 \description{
-\code{.roe()} (or it alias \code{toggle_dump_on_error()}) toggle between dumping of
+\code{.doe()} (or it alias \code{toggle_dump_on_error()}) toggle between dumping of
 frames when an error is encoutered. This is done by setting \code{options()$error}
 to a version of \code{utils::dump.frames()}. Optionally, the dumping is done to
 to file (when \code{to_file=TRUE}) and/or includes the global environment

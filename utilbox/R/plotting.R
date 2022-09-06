@@ -346,7 +346,6 @@ get_legend <- function(p, direction=NULL, nrow_color=NULL) {
 }
 
 #' @title
-#'
 #' Plot and scatterplot
 #'
 #' @description

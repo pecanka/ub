@@ -27,7 +27,7 @@ parent_fun_name = function(n=2L) {
 
 #' Finding functions by substrings
 #'
-#' `str_find_in_funtion()` searches the function body of the specified 
+#' `str_find_in_function()` searches the function body of the specified 
 #' function (via `fun`) for the given `string`. If the string is found,
 #' it returns the corresponding line(s) (as obtained by printing the 
 #' result of a call to `base::body()`), otherwise `NULL` is returned. 
@@ -55,10 +55,10 @@ str_find_in_function = function(string, fun, envir=parent.frame()) {
 #' @export 
 str_find_in_package = function(string, pckg, what='all') {
 
-  funs = list_package_objects(pckg, mode='function', what=what, quiet=TRUE)$object_name
+  funs = list_package_objects(pckg, mode = 'function', what = what, quiet = TRUE)$object_name
   names(funs) = funs
   
-  locs = lapply(funs, str_find_in_funtion, string=string, envir=asNamespace(pckg))
+  locs = lapply(funs, str_find_in_function, string = string, envir = asNamespace(pckg))
   
   list_clean(locs)
   

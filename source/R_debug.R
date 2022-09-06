@@ -32,12 +32,16 @@
 
 #' @rdname stopping_control
 #' @export
-.roe = function(turn_on, announce=TRUE) {
+.roe = function(turn_on, announce = TRUE, tb_max_lines = 1000) {
   
-  if(missing(turn_on)) turn_on = is.null(options()$error)
-  options(error=if(turn_on) recover else NULL)
+  if(missing(turn_on)) 
+    turn_on = is.null(options()$error)
+    
+  options(traceback.max.lines = tb_max_lines)
   
-  status = ifelse(turn_on,"ENABLED","DISABLED")
+  options(error = if(turn_on) recover else NULL)
+  
+  status = ifelse(turn_on, "ENABLED", "DISABLED")
   
   if(announce) note("Recovery on error has been ",status,".")
   

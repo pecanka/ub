@@ -19,26 +19,27 @@ force_as_real(x, ignore_sign = TRUE, dec = ".", dec_fixed = TRUE, na_val)
 unnumber(x, drop_dec = FALSE, drop_sign = FALSE)
 }
 \description{
-\code{as_numeric()} converts to type \code{numeric} without any warnings about non-numeric
-elements. Non-numeric elements are turned into \code{NA}. Basically, a
-less verbose version of \code{base::as.numeric}.
+\code{as_numeric()} converts to type \code{numeric} without any warnings about
+non-numeric elements. Non-numeric elements are turned into \code{NA}.
+Basically, a less verbose version of \code{base::as.numeric}.
 
-\code{make_numeric()} changes the type of \code{x} to \code{numeric} whenever all elements can be
-converted (using \code{base::as.numeric}. Otherwise, calls the
-function supplied in \code{fun_error}. This allows a direct control of what
-happens on the conversion via supplying the error function.
+\code{make_numeric()} changes the type of \code{x} to \code{numeric} whenever all
+elements can be converted (using \code{base::as.numeric}. Otherwise,
+calls the function supplied in \code{fun_error}. This allows a direct control
+of what happens on the conversion via supplying the error function.
 Basically, a more flexible (but by default a more stringent) version
 of \code{base::as.numeric()}.
 
-\code{force_as_integer()} and \code{force_as_real()} convert to type \code{integer} and
-\code{double}, respectively, by stripping all non-number substrings in each
-element of \code{x}. This is a very radically forced conversion, which can be useful
-when strange artefacts polluted the data, but caution is advised. If the argument
-\code{na_val} is supplied, \code{NA} values in the result of the conversion are replaced
-with the value in \code{na_val}.
+\code{force_as_integer()} and \code{force_as_real()} convert to type \code{integer}
+and \code{double}, respectively, by stripping all non-number substrings in
+each element of \code{x}. This is a very radically forced conversion, which
+can be useful when strange artefacts polluted the data, but caution is
+advised. If the argument \code{na_val} is supplied, \code{NA} values in the result
+of the conversion are replaced with the value in \code{na_val}.
 
-\code{force_unnumber()} removes all number characters from \code{x}. (It does not remove
-the character parts of a number in the scientific notation.)
+\code{force_unnumber()} removes all number non-numeric characters from \code{x}.
+But it does not remove the non-numeric character parts of a number in
+a scientific notation.
 }
 \examples{
 # convert to numeric type

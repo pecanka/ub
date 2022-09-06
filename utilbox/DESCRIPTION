@@ -1,6 +1,6 @@
 Package: utilbox
 Title: Utility Box
-Version: 0.1.0.53
+Version: 0.1.0.60
 Authors@R: 
     person(given = "Jakub",
            family = "Pecanka",
@@ -15,6 +15,6 @@ BugReports: mailto:utilbox@pecanka.net
 Depends: 
     R (>= 3.5.0) 
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
-#Suggests:
-#Imports:
+RoxygenNote: 7.1.2
+Suggests: 
+Imports: 

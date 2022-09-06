@@ -5,7 +5,7 @@
 #' the package version in the DESCRIPTION file is automatically increased (controlled by
 #' `increase_version`), the documentation is updated (when `update_doc = TRUE`) using the
 #' roxygen2 package (via `devtools::document()`), the installation file is build (when
-#' `build = TRUE`) and the package is installed (regularly when `install_mode = 'yes'`,
+#' `build = TRUE`) and the package is installed (regularly when `install_mode = 'full'`,
 #' or quickly when `install_mode = 'quick'`). Optionally, the package installation path
 #' is added to .GlobalEnv and to the .Rprofile file.
 #'
@@ -16,8 +16,8 @@
 #'
 #' @export
 build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'source', path = '.', 
-    create = TRUE, update_doc = TRUE, build = TRUE, install_mode = c('no','yes','quick'), 
-    file_desc = 'DESCRIPTION', increase_version = c('minor3','minor2','minor1','major','none'), 
+    create = TRUE, update_doc = TRUE, build = TRUE, install_mode = c('quick', 'full', 'no'), 
+    file_desc = 'DESCRIPTION', increase_version = c('minor3', 'minor2', 'minor1', 'major', 'none'), 
     add_path_to_global = TRUE, attach = TRUE, install_prerequisities = TRUE) {
 
   msg = function(...) {
@@ -151,7 +151,11 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
     }
   }
 
-  suppressMessages(trace('cat', exit = quote(on.exit(flush.console())), print = FALSE, where = asNamespace('base')))
+  suppressMessages({
+    trace('cat', exit = quote(if(identical(file, stdout())) flush.console()), 
+          print = FALSE, where = asNamespace('base')) 
+    })
+
   on.exit(suppressMessages(untrace('cat', asNamespace('base'))))
   
   if(create) {
@@ -225,7 +229,7 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
       version_prev = sub('.*[ ]','',DESC[is_version])
       version_next = version_increase(version_prev)
 
-      DESC[is_version] = sub('[ ].*',paste0(' ',version_next),DESC[is_version])
+      DESC[is_version] = sub('[ ].*',paste0(' ',version_next), DESC[is_version])
       msg('... from version ', version_prev, ' to ', version_next, ' ...')
       writeLines(DESC, file_desc)
       
@@ -261,8 +265,9 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
 
     msg("Updating the 'latest' package file ...")
     files = file.info(list.files('build', full.names=TRUE))
-    file_latest = rownames(files)[which.max(files$mtime)]
-    file.copy(file_latest, sub(version_next, 'latest', file_latest, fixed=TRUE), overwrite=TRUE)
+    file_newest = rownames(files)[which.max(files$mtime)]
+    file_latest = sub('[_].*[.]tar', '_latest.tar', file_newest)
+    file.copy(file_newest, file_latest, overwrite = TRUE)
     
   } else {
   
@@ -270,7 +275,7 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
     
   }
 
-  msg("Installation mode: ", switch(install_mode, 'no' = 'NOT INSTALLED', 'yes' = 'REGULAR', 'quick' = 'QUICK'))
+  msg("Installation mode: ", switch(install_mode, 'no' = 'NOT INSTALLED', 'full' = 'FULL', 'quick' = 'QUICK'))
   
   if(install_mode == 'no') {
   
@@ -278,8 +283,8 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
     
   } else {
 
-    msg("Installing the package...")
-    devtools::install(package$name, quick = install_mode == 'quick')
+    msg("Installing the package ...")
+    devtools::install(package$dir, quick = install_mode == 'quick')
 
     if(install_mode == 'quick') {
       file.copy(file.path(dir_base, 'NAMESPACE'), '.', overwrite=TRUE)
@@ -324,7 +329,7 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
 #' @rdname build_package
 #' @export
 build_utilbox = function(pckg_name = 'utilbox', pckg_dir = 'utilbox', pckg_dir_source = 'source', path = '.', 
-    file_desc = 'DESCRIPTION', create = TRUE, update_doc = TRUE, build = TRUE, install_mode = 'yes', attach = TRUE,
+    file_desc = 'DESCRIPTION', create = TRUE, update_doc = TRUE, build = TRUE, install_mode = 'full', attach = TRUE,
     add_path_to_global = TRUE, increase_version = 'minor3', install_prerequisities = TRUE) {
     
   build_package(pckg_name = pckg_name, pckg_dir = pckg_dir, pckg_dir_source = pckg_dir_source, path = path, 
@@ -336,8 +341,8 @@ build_utilbox = function(pckg_name = 'utilbox', pckg_dir = 'utilbox', pckg_dir_s
 
 #' @rdname build_package
 #' @export
-install_utilbox = function(pckg_name = 'utilbox', pckg_dir = 'utilbox', path = '.', install_mode = 'yes', 
-    attach = FALSE, add_path_to_global = FALSE, install_prerequisities = TRUE, pckg_dir_source) {
+install_utilbox = function(pckg_name = 'utilbox', pckg_dir = 'utilbox', path = '.', install_mode = 'full', 
+    attach = FALSE, add_path_to_global = FALSE, install_prerequisities = TRUE, pckg_dir_source = 'source') {
     
   build_package(pckg_name = pckg_name, pckg_dir = pckg_dir, path = path, create = FALSE, update_doc = FALSE, 
                 build = FALSE, install_mode = install_mode, add_path_to_global = add_path_to_global, attach = attach, 

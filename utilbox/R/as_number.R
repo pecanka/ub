@@ -3,26 +3,27 @@
 #'
 #' @description
 #'
-#' `as_numeric()` converts to type `numeric` without any warnings about non-numeric 
-#' elements. Non-numeric elements are turned into `NA`. Basically, a 
-#' less verbose version of \code{base::as.numeric}.
+#' `as_numeric()` converts to type `numeric` without any warnings about 
+#' non-numeric elements. Non-numeric elements are turned into `NA`. 
+#' Basically, a less verbose version of \code{base::as.numeric}.
 #'
-#' `make_numeric()` changes the type of `x` to `numeric` whenever all elements can be 
-#' converted (using \code{base::as.numeric}. Otherwise, calls the 
-#' function supplied in `fun_error`. This allows a direct control of what 
-#' happens on the conversion via supplying the error function. 
+#' `make_numeric()` changes the type of `x` to `numeric` whenever all 
+#' elements can be converted (using \code{base::as.numeric}. Otherwise, 
+#' calls the function supplied in `fun_error`. This allows a direct control 
+#' of what happens on the conversion via supplying the error function. 
 #' Basically, a more flexible (but by default a more stringent) version 
 #' of \code{base::as.numeric()}.
 #'
-#' `force_as_integer()` and `force_as_real()` convert to type `integer` and 
-#' `double`, respectively, by stripping all non-number substrings in each 
-#' element of `x`. This is a very radically forced conversion, which can be useful 
-#' when strange artefacts polluted the data, but caution is advised. If the argument
-#' `na_val` is supplied, `NA` values in the result of the conversion are replaced
-#' with the value in `na_val`.
+#' `force_as_integer()` and `force_as_real()` convert to type `integer` 
+#' and `double`, respectively, by stripping all non-number substrings in 
+#' each element of `x`. This is a very radically forced conversion, which 
+#' can be useful when strange artefacts polluted the data, but caution is 
+#' advised. If the argument `na_val` is supplied, `NA` values in the result 
+#' of the conversion are replaced with the value in `na_val`.
 #'
-#' `force_unnumber()` removes all number characters from `x`. (It does not remove
-#' the character parts of a number in the scientific notation.)
+#' `force_unnumber()` removes all number non-numeric characters from `x`. 
+#' But it does not remove the non-numeric character parts of a number in 
+#' a scientific notation.
 #'
 #' @examples
 #' # convert to numeric type

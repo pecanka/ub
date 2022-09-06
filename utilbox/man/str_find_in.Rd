@@ -11,7 +11,7 @@ str_find_in_function(string, fun, envir = parent.frame())
 str_find_in_package(string, pckg, what = "all")
 }
 \description{
-\code{str_find_in_funtion()} searches the function body of the specified
+\code{str_find_in_function()} searches the function body of the specified
 function (via \code{fun}) for the given \code{string}. If the string is found,
 it returns the corresponding line(s) (as obtained by printing the
 result of a call to \code{base::body()}), otherwise \code{NULL} is returned.

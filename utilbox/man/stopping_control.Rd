@@ -9,7 +9,7 @@
 \usage{
 .sow(turn_on, announce = TRUE)
 
-.roe(turn_on, announce = TRUE)
+.roe(turn_on, announce = TRUE, tb_max_lines = 1000)
 
 .q(save = "no")
 }

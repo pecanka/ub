@@ -216,13 +216,11 @@ as.truncated = function(x) {
 }
 
 #' @rdname class_truncated
-#' @export
 as.truncated.default = function(x) {
   add_class(drop_class(x, 'huge'), 'truncated')
 }
 
 #' @rdname class_truncated
-#' @export
 print.truncated = function(x) {
 
   y = drop_class(x, 'truncated')
@@ -245,7 +243,7 @@ print.truncated = function(x) {
 #' [`base::print`].
 #'
 #' @name class_abbrevstr
-#' @export
+
 print.abbrevstr = function(x) {
 
   y = x
@@ -261,7 +259,6 @@ truncate_huge = function(...) {
 }
 
 #' @rdname class_huge
-#' @export
 truncate_huge.default = function(x, n) {
   
   y = head(x, n)
