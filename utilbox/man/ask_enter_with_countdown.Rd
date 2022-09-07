@@ -6,7 +6,7 @@
 \usage{
 ask_enter_with_countdown(
   n = 10,
-  msg = "Press ENTER or continuing in {i} seconds ..."
+  msg = "Press <ENTER> or continuing in {i} seconds ..."
 )
 }
 \description{

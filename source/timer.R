@@ -97,12 +97,14 @@ format_time = function(tim, drop_hour=TRUE, drop_minute=TRUE, prec=3) {
 #' @export
 clock = function(announce=TRUE, lead="", digs=3) {
   
-  odigs = options()$digits.secs
-  options(digits.secs=digs)
-  d1 = paste0(Sys.time())
-  options(digits.secs=odigs)
+  odigs = options(digits.secs = digs)
+  on.exit(options(digits.secs = odigs))
   
-  if(announce) msgf(lead, d1)
+  d1 = paste0(Sys.time())
+
+  if(announce) {
+    msgf(lead, d1)
+  }
   
   d1
   
@@ -189,10 +191,6 @@ start_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_envir
     
   d1 = clock(FALSE)
   
-  if(announce) {
-    message(format(paste(c(lead, what, "started at ", paste0(d1), out), collapse = ' ')))
-  }
-  
   timers = get_timers(envir=envir)
   
   if(is.null(timer_name)) {
@@ -202,6 +200,10 @@ start_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_envir
   timers = append(timers, setNames(list('start_time'=d1), timer_name))
   save_timers(timers, envir=envir)
   
+  if(announce) {
+    msgf(format(paste(c(lead, what, paste0("'",timer_name,"'"), "started at", paste0(d1), out), collapse = ' ')))
+  }
+  
   invisible(c(starttime = d1))
 }
 
@@ -210,9 +212,9 @@ start_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_envir
 stop_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_environment(), lead = NULL, 
     what = "timer", out = NULL, format = identity) {
     
-  td = read_timer(timer_name=timer_name, announce=announce, envir=envir)
+  td = read_timer(timer_name = timer_name, announce = FALSE, envir = envir)
   
-  timers = get_timers(envir=envir)
+  timers = get_timers(envir = envir)
   
   if(is.null(timer_name)) {
     timer_name = timer_name_n(length(timers))
@@ -222,9 +224,9 @@ stop_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_enviro
   save_timers(timers, envir=envir)
   
   if(announce) {
-    message(format(paste(c(lead, what, "started at", td$start_time, out), collapse = ' ')))
-    message(format(paste(c(lead, what, "finished at", td$stop_time, out), collapse = ' ')))
-    message(format(paste(c(lead, what, "runtime of", format_time(as.numeric(td$time_diff)), out), collapse = ' ')))
+    #msgf(format(paste(c(lead, what, "started at", td$start_time, out), collapse = ' ')))
+    msgf(format(paste(c(lead, what, paste0("'",timer_name,"'"), "finished at", td$stop_time, out), collapse = ' ')))
+    msgf(format(paste(c(lead, what, "runtime of", format_time(as.numeric(td$time_diff)), out), collapse = ' ')))
   }
   
   invisible(c(runtime = td$time_diff))
@@ -233,16 +235,29 @@ stop_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_enviro
 #' @rdname timners
 #' @export
 read_timer = function(timer_name = NULL, announce = TRUE, start = FALSE, envir = utilbox_environment()) {
+
   d2 = clock(FALSE)
+  
   timers = get_timers(envir=envir)
-  if(is.null(timer_name)) timer_name = timer_name_n(length(timers))
+  
+  if(is.null(timer_name)) {
+    timer_name = timer_name_n(length(timers))
+  }
+  
   d1 = timers[[timer_name]] %|||% NA_real_
+  
   d12 = difftime(d2, d1, unit = "secs")
-  if(start) start_timer()
-  if (announce) {
+  
+  if(start) {
+    start_timer()
+  }
+  
+  if(announce) {
     print(d12)
   }
+  
   invisible(list(start_time=d1, stop_time=d2, time_diff = d12))
+  
 }
 
 #' @rdname timners

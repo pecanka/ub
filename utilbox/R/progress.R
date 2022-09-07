@@ -44,7 +44,7 @@ launchProgressBar = function(pb_max, pb_min = 0, pb_initial = pb_min, pb_print_e
 #' x = ask_enter_with_countdown(3)
 #'
 #' @export
-ask_enter_with_countdown = function(n = 10, msg = 'Press ENTER or continuing in {i} seconds ...') {
+ask_enter_with_countdown = function(n = 10, msg = 'Press <ENTER> or continuing in {i} seconds ...') {
 
   n = max(1, n)
   timeout = round(n / 4, 1)
@@ -70,7 +70,7 @@ ask_enter_with_countdown = function(n = 10, msg = 'Press ENTER or continuing in 
   if(is.null(res)) {
     message('Countdown reached zero. Continuing ...')
   } else {
-    message('ENTER pressed.')
+    message('<ENTER> pressed.')
   }
   
   invisible(res)

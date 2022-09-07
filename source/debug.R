@@ -64,11 +64,11 @@ function_kidnap = function(fun_name, envir=parent.frame(), msg_argument, restore
            "message('Because the function had been kidnapped, it behaves differently.');",
            "repeat {",
            "  message('You have the following options:');",
-    paste0("  message('  - input \\'i\\' and press ENTER to ignore the `",fun_name,
+    paste0("  message('  - input \\'i\\' and press <ENTER> to ignore the `",fun_name,
            "          ()` call and continue as if it was never called');"),
-    paste0("  message('  - input \\'b\\' and press ENTER to enter the browser inside the `",
+    paste0("  message('  - input \\'b\\' and press <ENTER> to enter the browser inside the `",
                       fun_name,"()` call');"),
-    paste0("  message('  - press ENTER to continue the execution of the `",fun_name,
+    paste0("  message('  - press <ENTER> to continue the execution of the `",fun_name,
            "          ()` call as normal');"),
            "  input = scan('', what='character', nmax=1, quiet=TRUE);",
            "  input = if(length(input)==0) '' else tolower(substr(input, 1, 1));",
@@ -140,10 +140,10 @@ browser_with_timeout = function(text = "", ..., condition = NULL, expr = TRUE, s
 
     msg = paste0(
       "*** BROWSER WITH TIMEOUT ***\n",
-      "Press ENTER in the next ",timeout," seconds to call `base::browser()`.\n",
+      "Press <ENTER> in the next ",timeout," seconds to call `base::browser()`.\n",
       "Otherwise the execution will continue as normal.\n",
-      "Input 'c' and press ENTER to continue immediately.\n",
-      "Pressing ESC will terminate the execution."
+      "Input 'c' and press <ENTER> to continue immediately.\n",
+      "<ESC> will terminate the execution."
     )
     
     confirmed = ask_to_confirm_with_timeout(msg, timeout, no = c('c','C'))

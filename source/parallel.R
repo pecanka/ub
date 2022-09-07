@@ -13,6 +13,29 @@
 #'
 #' `endCluster()` stops the parallel cluster and finishes the progress bar (by executing
 #' `..cl_stop..()` and `..pb_stop..()` in its parent frame.
+#'
+#' Info: parallel is the 'official' parallelization backend for R (basically).
+#' doParallel is a package meant for use with foreach. Foreach lets you use a particular 
+#' type of for-loop, called 'foreach', that looks like:
+#'     foreach(i=listOfThings) %do% {thing with i}.
+#' `foreach` allows this to be parallelized, using %dopar%:
+#'     foreach(i=listOfThings) %dopar% {thing with i}.
+#' 
+#' *How* you parallelize with `%dopar%` depends on which backend you use. 
+#' doParallel is one such backend - it tells foreach to use parallel. There are others, 
+#' like doFuture (another parallel backend, using promises), doMPI (another parallel backend, 
+#' using message passing interface; meant for high performance clusters), doRedis (another 
+#' backend, using a Redis server/daemon to spin up workers), doSnow (another backend, using 
+#' the SNOW package for creating parallel processes).
+#' 
+#' TLDR: parallel is the core parallelization package, now shipped with R as part of its core 
+#' libraries. doParallel is a package addon to foreach that tells foreach to use a cluster 
+#' defined by the parallel package.
+#'
+#' Using parallel requires making the cluster (makeCluster) and to export the object list 
+#' (clusterExport) and packages (clusterEvalQ). 
+#'
+#' From https://www.reddit.com/r/rstats/comments/bkwr36/what_is_the_difference_between_the_doparallel_and/
 #
 #' @examples
 #' n = 100

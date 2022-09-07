@@ -32,6 +32,8 @@ differently). Useful for instance when working with file names.
 \code{str_escape()} escapes special characters in a string. By default,
 it escapes only the new line symbol (e.g. replaces \verb{\\\\n} with a
 \verb{\\\\\\\\n}).
+
+Escape special characters.
 }
 \examples{
 regexpr('notes.txt', 'notes_txt')>0                # TRUE

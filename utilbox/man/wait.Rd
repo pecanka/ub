@@ -12,7 +12,7 @@ wait(..., timeout = Inf)
 
 sleep(time, announce = TRUE)
 
-ask_to_confirm(msg = "Press ENTER to continue or ESC to quit ...", ...)
+ask_to_confirm(msg = "Press <ENTER> to continue or <ESC> to quit ...", ...)
 
 ask_to_confirm_with_timeout(msg = "", timeout = 10, no = NULL)
 
@@ -25,8 +25,8 @@ ask(
 )
 }
 \description{
-\code{wait()} pauses the execution until either the ENTER key (for
-continue) or ESC (for quit) are pressed.
+\code{wait()} pauses the execution until either the <ENTER> key (for
+continue) or <ESC> (for quit) are pressed.
 
 \code{sleep()} pauses execution for \code{time} seconds with (optional)
 announcement.

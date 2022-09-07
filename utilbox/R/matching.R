@@ -228,6 +228,10 @@ unpatternize = str_unpatternize
 
 #' @title
 #' Escape special characters
+#'
+#' @description
+#' Escape special characters.
+#'
 #' @rdname patternize
 #' @export
 str_escape = function(x, specials=NULL, specials0 = c('\\n'='\\\\n')) {

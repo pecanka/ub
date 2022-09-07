@@ -3,8 +3,8 @@
 #'
 #' @description
 #'
-#' `wait()` pauses the execution until either the ENTER key (for 
-#' continue) or ESC (for quit) are pressed.
+#' `wait()` pauses the execution until either the <ENTER> key (for 
+#' continue) or <ESC> (for quit) are pressed.
 #'
 #' `sleep()` pauses execution for `time` seconds with (optional) 
 #' announcement.
@@ -37,7 +37,7 @@ wait = function(..., timeout=Inf) {
   if(interactive()) {
 
     msg_timeout = if(is.finite(timeout)) paste0("Waiting for ",timeout," seconds. ") else NULL
-    msg = paste0(msg_timeout,"Press ENTER to continue, ESC to quit, or type 'b' and hit ENTER to enter the browser ...")
+    msg = paste0(msg_timeout,"Press <ENTER> to continue, <ESC> to quit, or type 'b' <ENTER> to run browser() ...")
 
     input = R.utils::withTimeout(ask_to_confirm(msg), timeout=timeout, onTimeout = 'silent')
     
@@ -72,7 +72,7 @@ sleep = function(time, announce=TRUE) {
 
 #' @rdname wait
 #' @export
-ask_to_confirm = function (msg="Press ENTER to continue or ESC to quit ...", ...) {
+ask_to_confirm = function (msg="Press <ENTER> to continue or <ESC> to quit ...", ...) {
 
   if(!interactive()) 
     return(invisible(TRUE))
