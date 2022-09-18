@@ -23,7 +23,8 @@
 #' 
 #' @export
 crypt_files = function(files = NULL, pattern = NULL, path = '.', out_path = '.', appendix = '', 
-    key_file = "id_rsa.pub", delete_existing = FALSE, path_create = FALSE, action = c('encrypt','decrypt')) {
+    key_file = "id_rsa.pub", delete_existing = FALSE, path_create = FALSE, exclude_key_file = TRUE,
+    action = c('encrypt','decrypt')) {
    
   check_namespace('encryptr')
   action = match.arg(action)
@@ -48,6 +49,11 @@ crypt_files = function(files = NULL, pattern = NULL, path = '.', out_path = '.',
  
   if(!is.null(pattern)) {
     files2 = list.files(path, pattern = pattern)
+    dirs = list.dirs(path, full.names = FALSE)
+    files2 = setdiff(files2, dirs)
+    if(exclude_key_file) {
+      files2 = setdiff(files2, key_file)
+    }
     files = c(files, files2)
   }
 

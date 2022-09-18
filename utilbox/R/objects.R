@@ -23,8 +23,8 @@
 #' @name remova_objects
 #' @family object listing, object loading and removing functions provided by utilbox
 #' @export
-.rma = function(all.names=FALSE, keep=".utilbox", envir=.GlobalEnv) {
-  base::rm(list=setdiff(ls(envir=envir, all.names=all.names), keep), envir=envir)
+.rma = function(all.names = FALSE, keep = ".utilbox", envir = .GlobalEnv) {
+  base::rm(list=setdiff(ls(envir = envir, all.names = all.names), keep), envir = envir)
 }
 
 #' @rdname remova_objects
@@ -268,21 +268,21 @@ list_object_sizes = function(pos=1, pattern, envir=parent.frame(), order_by, dec
 #' parent frams where it is found.
 #'
 #' @export
-ls_parents = function(..., stop_at_global=FALSE, envir=parent.frame()) {
+ls_parents = function(..., stop_at_global = FALSE, envir = parent.frame()) {
 
-  parents = parent_frames(stop_at_global = stop_at_global, envir=envir)
+  parents = parent_frames(stop_at_global = stop_at_global, envir = envir)
   lapply(parents$frames, function(e) ls(envir=e, ...))
   
 }
 
 #' @rdname ls_parents
 #' @export
-get_in_parents = function(x, envir=parent.frame()) {
+get_in_parents = function(x, envir = parent.frame()) {
 
-  objs = ls_parents(x, all.names=TRUE, envir=envir)
-  is_in = unlist(lapply(objs, `%in%`, x=x))
-  parents = parent_frames(envir=envir)
-  lapply(parents$frames[is_in], function(e) get(x=x, envir=e))
+  objs = ls_parents(x, all.names = TRUE, envir = envir)
+  is_in = unlist(lapply(objs, `%in%`, x = x))
+  parents = parent_frames(envir = envir)
+  lapply(parents$frames[is_in], function(e) get(x = x, envir = e))
   
 }
 

@@ -52,53 +52,60 @@
 #' # ..cl_stop..()
 #'
 #' @export  
-launchCluster = function(n_cores = parallel::detectCores()-1, max_n_cores=parallel::detectCores()-1, 
-    launch = TRUE, progress_bar = TRUE, pb_max, pb_print_every_n = 1, pb_width=min(options()$width, 100), 
-    pb_initial=0, pb_show=TRUE, pb_hint=TRUE, announce=TRUE, pb_con=stdout(), envir=parent.frame()) {
-  
+launchCluster = function(n_cores = parallel::detectCores() - 1, max_n_cores = parallel::detectCores() - 1,
+    launch = TRUE, progress_bar = TRUE, pb_max, pb_print_every_n = 1, pb_width = min(options()$width, 100),
+    pb_initial = 0, pb_show = TRUE, pb_hint = TRUE, announce = TRUE, pb_con = stdout(), attach_on_exit = TRUE,
+    envir = parent.frame()) {
+ 
   if(launch) {
-  
+ 
     n_cores = min(n_cores, max_n_cores)
 
     if(announce) {
       message('Registering parallel cluster with ',n_cores,' cores ... ', appendLF=FALSE)
       flush.console()
     }
-    
-    #stop_cluster = function() try(parallel::stopCluster(..cl..), silent=TRUE)
-    stop_cluster = function() try(parallel::stopCluster(..cl..))
+   
+    stop_cluster = function() {
+      try(parallel::stopCluster(..cl..))
+    }
+   
     cl = parallel::makeCluster(n_cores)
-    
+   
     environment(stop_cluster) = environment(cl) = envir
-    
+   
     assign('..cl..', cl, envir=envir)
     assign('..cl_stop..', stop_cluster, envir=envir)
-    do.call('on.exit', list(quote(..cl_stop..())), envir = envir)
-    
+   
+    if(attach_on_exit) {
+      do.call('on.exit', list(quote(..cl_stop..())), envir = envir)
+    }
+   
     doSNOW::registerDoSNOW(..cl..)
-    
-    if(announce) message('done.')
-    
+   
+    if(announce) {
+      message('done.')
+    }
+   
   }
 
   if(progress_bar) {
-  
+ 
     if(missing(pb_max)) {
-      if(pb_hint) 
+      if(pb_hint)
         message('To also initialize a progress bar supply `pb_max` to `launchCluster()`.')
       return(invisible(list()))
     }
 
-    progress = launchProgressBar(pb_max, pb_print_every_n=pb_print_every_n, pb_show=pb_show, 
-                                 pb_width=pb_width, pb_initial=pb_initial, pb_con=pb_con, 
-                                 envir=envir)
+    progress = launchProgressBar(pb_max, pb_print_every_n=pb_print_every_n, pb_show=pb_show, pb_width=pb_width,
+                                 pb_initial=pb_initial, pb_con=pb_con, envir=envir)
 
-    opts = list(progress = progress)
-    
+    opts = progress
+   
   } else {
     opts = list()
   }
-  
+ 
   return(invisible(opts))
 
 }

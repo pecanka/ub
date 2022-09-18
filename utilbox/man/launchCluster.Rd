@@ -18,6 +18,7 @@ launchCluster(
   pb_hint = TRUE,
   announce = TRUE,
   pb_con = stdout(),
+  attach_on_exit = TRUE,
   envir = parent.frame()
 )
 

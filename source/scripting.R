@@ -7,19 +7,30 @@
 #' it is called (via `source`).
 #'
 #' @export
-script_dir = function(n=0) {
+script_dir = function(n = 0, all_frames = FALSE) {
+
   wglobal = which(sapply(sys.frames(), identical, .GlobalEnv))
-  frames = head(sys.frames(), max(0, wglobal-1))
-  files1 = lapply(frames, getElement, 'ofile')
-  files2 = lapply(frames, getElement, 'file')
+  
+  if(length(wglobal) == 0 || all_frames) {
+    frames = sys.frames()
+  } else {
+    frames = head(sys.frames(), max(0, wglobal - 1))
+  }
+  
+  is_source = is_source_frame(frames)
+  
+  files1 = lapply(frames[is_source], getElement, "ofile")
+  files2 = lapply(frames[is_source], getElement, "file")
   files = append(files1, files2)
   files = Filter(is.character, files)
   files = Filter(file.exists, files)
-  if(length(files)==0) {
-    '.'
+  
+  if(length(files) == 0) {
+    "."
   } else {
-    dirname(files[[pmax(1,length(files)-n)]])
+    dirname(files[[pmax(1, length(files) - n)]])
   }
+  
 }
 
 script_dir_old2 = function(n=0) {
@@ -34,6 +45,22 @@ script_dir_old2 = function(n=0) {
 
 script_dir_old = function() {
   ifelse("ofile" %in% names(sys.frame(1)), dirname(sys.frame(1)$ofile), '.')
+}
+
+is_source_frame = function(frames = sys.frames()) {
+
+  objs = lapply(frames, function(f) ls(envir = f, all.names = TRUE))
+  
+  args_source = names(as.list(args(base::source)))
+  args_source = args_source[nzchar(args_source)]
+  args_sys_source = names(as.list(args(base::sys.source)))
+  args_sys_source = args_sys_source[nzchar(args_sys_source)]
+  
+  all_found_source = sapply(objs, function(o) length(setdiff(args_source, o)) == 0)
+  all_found_sys_source = sapply(objs, function(o) length(setdiff(args_sys_source, o)) == 0)
+
+  all_found_source | all_found_sys_source
+  
 }
 
 #' @title

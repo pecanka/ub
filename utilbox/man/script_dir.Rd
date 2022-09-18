@@ -4,7 +4,7 @@
 \alias{script_dir}
 \title{Directory of the current script}
 \usage{
-script_dir(n = 0)
+script_dir(n = 0, all_frames = FALSE)
 }
 \description{
 \code{script_dir} returns the directory of the script file from which

@@ -18,6 +18,7 @@ crypt_files(
   key_file = "id_rsa.pub",
   delete_existing = FALSE,
   path_create = FALSE,
+  exclude_key_file = TRUE,
   action = c("encrypt", "decrypt")
 )
 

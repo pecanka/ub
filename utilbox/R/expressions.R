@@ -382,16 +382,18 @@ sub_lang = function(...) {
 
 #' This is a slightly modified version of the function `lobstr:::ast_tree()`.
 #' It is used by the function `fun2funcalls()`, which required the modifications.
-my_ast_tree = function (x, layout = box_chars()) {
+my_ast_tree = function (x, layout = lobstr:::box_chars()) {
     
     if (rlang::is_quosure(x)) {
-        x <- rlang::quo_squash(x)
+      x = rlang::quo_squash(x)
     }
 
     if (rlang::is_syntactic_literal(x)) {
-        return(lobstr:::ast_leaf_constant(x))
+      return(lobstr:::ast_leaf_constant(x))
     } else if (rlang::is_symbol(x)) {
-        return(lobstr:::ast_leaf_symbol(x))
+      return(lobstr:::ast_leaf_symbol(x))
+    } else if('srcref' %in% class(x)) {
+      return()
     }
 
     xt = print2var(x, width=10000)
@@ -399,19 +401,19 @@ my_ast_tree = function (x, layout = box_chars()) {
       x = str2lang(formatR::tidy_source(text = xt, arrow = TRUE, output = FALSE)[[1]])
     }
 
-    subtrees <- lapply(x, my_ast_tree, layout = layout)
-    subtrees <- lobstr:::name_subtree(subtrees)
+    subtrees = lapply(x, my_ast_tree, layout = layout)
+    subtrees = lobstr:::name_subtree(subtrees)
     
-    n <- length(x)
+    n = length(x)
     
     if (n == 0) {
-        character()
+      character()
     } else if (n == 1) {
-        lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), "  ")
+      lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), "  ")
     } else {
-        c(lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), paste0(layout$v, " ")), 
-          unlist(lapply(subtrees[-c(1, n)], lobstr:::str_indent, paste0(layout$j, layout$h), paste0(layout$v, " "))), 
-          lobstr:::str_indent(subtrees[[n]], paste0(layout$l, layout$h), "  "))
+      c(lobstr:::str_indent(subtrees[[1]], paste0(layout$n, layout$h), paste0(layout$v, " ")), 
+        unlist(lapply(subtrees[-c(1, n)], lobstr:::str_indent, paste0(layout$j, layout$h), paste0(layout$v, " "))), 
+        lobstr:::str_indent(subtrees[[n]], paste0(layout$l, layout$h), "  "))
     }
 }
 

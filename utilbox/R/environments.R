@@ -62,7 +62,7 @@ parent_envs = function(x = parent.frame()) {
 
 #' @rdname environments
 #' @export
-parent_frames = function(n, stop_at_global=FALSE, envir=parent.frame()) {
+parent_frames = function(n, stop_at_global = FALSE, envir = parent.frame()) {
 
   frames = sys.frames()
   calls = sys.status()$sys.calls[-1]
@@ -81,26 +81,29 @@ parent_frames = function(n, stop_at_global=FALSE, envir=parent.frame()) {
   frames = frames[keep]
   calls = calls[keep]
   
-  if(!stop_at_global) {
+  if(stop_at_global) {
+    
     w_global = which(sapply(frames, identical, .GlobalEnv))
+    
     if(length(w_global)>0) {
       keep = seq(tail(w_global,1), length(frames), 1)
       frames = frames[keep]
       calls = calls[keep]
     }
+    
   }
   
   envs = unlist(lapply(frames, utils::capture.output))
 
   nams = lapply(calls, utils::capture.output)
-  nams = lapply(nams, gsub, pattern="^\\s+|\\s+$", replacement="")
-  nams = lapply(nams, paste, collapse=' ')
+  nams = lapply(nams, gsub, pattern = "^\\s+|\\s+$", replacement = "")
+  nams = lapply(nams, paste, collapse = ' ')
   nams = paste0(envs,': ',unlist(nams))
   nams = substr(nams, 1, 250)
   
   names(frames) = nams
   
-  list(frames=frames, calls=calls)
+  list(frames = frames, calls = calls)
   
 }
 

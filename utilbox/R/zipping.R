@@ -567,9 +567,9 @@ check_zip_ios = function(ios, file) {
     'Status code ', ios, ': There was a problem during zipping', 
     if(!missing(file)) paste0('(file: ', file, ')'),'.',
     if(ios==127) {
-      paste0('The zip archiver appears to be missing.', if(is_win()) ' (Hint: Install Rtools)')
+      paste0(' The zip archiver appears to be missing.', if(is_win()) ' (Hint: Install Rtools)')
     } else if(ios==12) {
-      paste0('The zip archiver reported an error "name not matched". This could occurs for ',
+      paste0(' The zip archiver reported an error "name not matched". This could occurs for ',
              'instance when file names are too long. Attempting to continue regardless ...')
     }
   )

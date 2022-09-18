@@ -5,7 +5,7 @@
 \title{This is a slightly modified version of the function \code{lobstr:::ast_tree()}.
 It is used by the function \code{fun2funcalls()}, which required the modifications.}
 \usage{
-my_ast_tree(x, layout = box_chars())
+my_ast_tree(x, layout = lobstr:::box_chars())
 }
 \description{
 This is a slightly modified version of the function \code{lobstr:::ast_tree()}.

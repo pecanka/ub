@@ -7,7 +7,7 @@
 \alias{stop_clock}
 \title{Clock control functions}
 \usage{
-clock(announce = TRUE, lead = "", digs = 3)
+clock(digs = 3)
 
 start_clock(
   announce = TRUE,

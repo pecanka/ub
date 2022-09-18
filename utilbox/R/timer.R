@@ -95,26 +95,18 @@ format_time = function(tim, drop_hour=TRUE, drop_minute=TRUE, prec=3) {
 #' stop_clock()
 #'
 #' @export
-clock = function(announce=TRUE, lead="", digs=3) {
-  
+clock = function(digs = 3) {
   odigs = options(digits.secs = digs)
   on.exit(options(digits.secs = odigs))
-  
-  d1 = paste0(Sys.time())
-
-  if(announce) {
-    msgf(lead, d1)
-  }
-  
-  d1
-  
+  unname(paste0(Sys.time()))
 }
+
 
 #' @rdname clock
 #' @export
 start_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what="", out="") {
   
-  d1 = clock(FALSE)
+  d1 = clock()
   
   if(announce) {
     msgf(lead, toupperfirst(paste0(what, "started at ")), paste0(d1), out, ".")
@@ -136,8 +128,8 @@ read_clock = function(announce=TRUE, envir=utilbox_environment()) {
   v_start = '._start_time_variable'
   v_last = '._last_check_time_variable'
 
-  d2 = clock(FALSE)
-  d1 = get0(v_last, envir=envir, ifnotfound=get0(v_start, envir=envir, ifnotfound=NA))
+  d2 = clock()
+  d1 = get0(v_last, envir = envir, ifnotfound = get0(v_start, envir = envir, ifnotfound = NA))
 
   # Calculate current runtime
   d12 = difftime(d2, d1, unit="secs")
@@ -157,7 +149,7 @@ stop_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what=
   
   # Read the current clock and recall start
   read_clock(announce)
-  d2 = clock(FALSE)
+  d2 = clock()
   d1 = get0("._start_time_variable", envir, ifnotfound=NA)
 
   # Announce start and calculate runtime
@@ -189,7 +181,7 @@ stop_clock = function(announce=TRUE, envir=utilbox_environment(), lead="", what=
 start_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_environment(), lead = NULL, 
     what = "timer", out = NULL, format = identity) {
     
-  d1 = clock(FALSE)
+  d1 = clock()
   
   timers = get_timers(envir=envir)
   
@@ -236,7 +228,7 @@ stop_timer = function(timer_name = NULL, announce = TRUE, envir = utilbox_enviro
 #' @export
 read_timer = function(timer_name = NULL, announce = TRUE, start = FALSE, envir = utilbox_environment()) {
 
-  d2 = clock(FALSE)
+  d2 = clock()
   
   timers = get_timers(envir=envir)
   
@@ -269,7 +261,7 @@ stop_all_timers = function(envir = utilbox_environment()) {
 }
 
 get_timers = function(var_name = '.timers', envir = utilbox_environment()) {
-  get0(var_name, envir=envir, ifnotfound=list())
+  get0(var_name, envir = envir, ifnotfound = list())
 }
 
 save_timers = function(timers, var_name = '.timers', envir = utilbox_environment()) {
