@@ -32,7 +32,7 @@ build_utilbox(
   update_doc = TRUE,
   build = TRUE,
   install_mode = "full",
-  attach = TRUE,
+  attach = FALSE,
   add_path_to_global = TRUE,
   increase_version = "minor3",
   install_prerequisities = TRUE

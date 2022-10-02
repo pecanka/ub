@@ -305,13 +305,13 @@
 #'
 #' @name operator_NULL
 #' @examples
-#' 1 %|||% 2                                  # returns 2
-#' NULL %|||% 2                               # returns 2
-#' NULL %||||% 2                              # returns 2
-#' numeric(0) %||||% 2                        # returns 2
-#' round('a') %ERR% 0                         # returns 0
-#' try(round('a'), silent=TRUE) %ERRCLS% 0    # returns 0
-#' .name.of.a.nonexisting.object %NEXISTS% 0  # returns 0
+#' 1 %|||% 2                                   # returns 2
+#' NULL %|||% 2                                # returns 2
+#' NULL %||||% 2                               # returns 2
+#' numeric(0) %||||% 2                         # returns 2
+#' round('a') %ERR% 0                          # returns 0
+#' try(round('a'), silent=TRUE) %ERRCLS% 0     # returns 0
+#' .name.of.a.nonexisting.object. %NEXISTS% 0  # returns 0
 #'
 #' @family operators provided by utilbox
 #' @export
@@ -339,13 +339,17 @@
 
 #' @rdname operator_NULL
 #' @export
-`%ERRCLS%` = function (x, y) {
+`%ERRCLS%` = function(x, y) {
   if(is_error(x)) y else x
 }
 
 #' @rdname operator_NULL
 #' @export
-`%ERR%` = function (x, y) {
+`%ERR%` = function(x, y) {
+  tryCatch(x, error = function(e) y)
+}
+
+`%ERR_OLD%` = function (x, y) {
   if(is_error(suppressWarnings(try(eval(x), silent=TRUE)))) y else x
 }
 

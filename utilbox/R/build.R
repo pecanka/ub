@@ -329,13 +329,15 @@ build_package = function(pckg_name, pckg_dir = pckg_name, pckg_dir_source = 'sou
 #' @rdname build_package
 #' @export
 build_utilbox = function(pckg_name = 'utilbox', pckg_dir = 'utilbox', pckg_dir_source = 'source', path = '.', 
-    file_desc = 'DESCRIPTION', create = TRUE, update_doc = TRUE, build = TRUE, install_mode = 'full', attach = TRUE,
-    add_path_to_global = TRUE, increase_version = 'minor3', install_prerequisities = TRUE) {
+    file_desc = 'DESCRIPTION', create = TRUE, update_doc = TRUE, build = TRUE, install_mode = 'full',
+    attach = FALSE, add_path_to_global = TRUE, increase_version = 'minor3', install_prerequisities = TRUE) {
     
   build_package(pckg_name = pckg_name, pckg_dir = pckg_dir, pckg_dir_source = pckg_dir_source, path = path, 
                 create = create, update_doc = update_doc, build = build, install_mode = install_mode, 
                 add_path_to_global = add_path_to_global, file_desc = file_desc, attach = attach,
                 increase_version = increase_version, install_prerequisities = install_prerequisities)
+                
+  message('Note: Loading utilbox might fail. Restart R prior to loading to avoid this.')
 
 }
 
