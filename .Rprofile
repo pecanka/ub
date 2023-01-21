@@ -1,5 +1,5 @@
 .First = function() {
-  pckgs = c('utilbox','magrittr','dplyr')
+  pckgs = c('ub','magrittr','dplyr')
   
   for(pckg in pckgs) {
     cat('Loading ',pckg,'  ...\n')
