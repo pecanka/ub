@@ -110,5 +110,5 @@ all_subsets_native <- function(set) {
   }
 
   apply(do.call(cbind, bin), 1L, function(x) { set[x] } )
- 
+
 }

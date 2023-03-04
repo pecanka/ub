@@ -25,8 +25,8 @@ ask(
 )
 }
 \description{
-\code{wait()} pauses the execution until either the <ENTER> key (for
-continue) or <ESC> (for quit) are pressed.
+\code{wait()} pauses the execution until either the \if{html}{\out{<ENTER>}} key (for
+continue) or \if{html}{\out{<ESC>}} (for quit) are pressed.
 
 \code{sleep()} pauses execution for \code{time} seconds with (optional)
 announcement.

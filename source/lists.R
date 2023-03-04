@@ -264,7 +264,7 @@ modifyList2 = list_update
 #' @family list utilities provided by ub
 #' @export
 nlist = function(...) {
- 
+
   m = match.call()
   dots = match.call(expand.dots = FALSE)$`...`
   out = list(...)
@@ -275,21 +275,21 @@ nlist = function(...) {
   } else {
     nzchar(names(out))
   }
- 
+
   if(all(has_name)) {
     return(out)
   }
- 
+
   nms = as.character(m)[-1L]
- 
+
   if(no_names) {
     names(out) = nms
   } else {
     names(out)[!has_name] = nms[!has_name]
   }
- 
+
   return(out)
- 
+
 }
 
 #' @rdname nlist
