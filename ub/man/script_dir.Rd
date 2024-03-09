@@ -7,6 +7,8 @@
 script_dir(n = 0, all_frames = FALSE)
 }
 \description{
-\code{script_dir} returns the directory of the script file from which
+\code{script_dir()} returns the directory of the script file from which
 it is called (via \code{source}).
+
+For a more reliable version across GUIs, use \code{this.path::this.dir()}.
 }

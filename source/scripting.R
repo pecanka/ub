@@ -3,8 +3,10 @@
 #'
 #' @description
 #'
-#' `script_dir` returns the directory of the script file from which 
+#' `script_dir()` returns the directory of the script file from which 
 #' it is called (via `source`).
+#'
+#' For a more reliable version across GUIs, use `this.path::this.dir()`.
 #'
 #' @export
 script_dir = function(n = 0, all_frames = FALSE) {

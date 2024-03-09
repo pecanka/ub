@@ -14,8 +14,7 @@ nlist2(...)
 becomes \code{nlist(a,b)} and \code{list(a = a, b = 2)} becomes \code{nlist(a, b =  2)}, etc.
 
 \code{nlist2()} is a shorter original code which relies on existing
-code (\code{dots_to_nlist}). It should result in the exact same behavior
-as \code{nlist()}.
+code (\code{dots_to_nlist}). Its behavior should match \code{nlist()}.
 
 Credit: The code for \code{nlist()} was lifted from the package \code{loo}
 to avoid having to install that package just for this one function.

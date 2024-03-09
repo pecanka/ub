@@ -1,6 +1,6 @@
 Package: ub
 Title: Utility Box
-Version: 0.1.0.66
+Version: 0.1.0.69
 Authors@R: 
     person(given = "Jakub",
            family = "Pecanka",

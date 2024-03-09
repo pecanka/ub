@@ -3,7 +3,8 @@
 #'
 #' @description
 #'
-#' `mintersect()` finds the intersection of multiple sets.
+#' `mintersect()` finds the intersection of multiple sets. Alternatively,
+#' call `Reduce(intersect, 
 #'
 #' `setdiffsym()` determines the \"symmetric difference\" of the 
 #' supplied sets, which is all of the elements that are outside the 
@@ -27,6 +28,10 @@ mintersect = function(...) {
     set = intersect(set, sets[[i]])
   }
   set
+}
+
+mintersect = function(...) {
+  Reduce(intersect, list(...))
 }
 
 #' @rdname sets
@@ -74,7 +79,6 @@ is_superset = function(x, y) {
 all_subsets = function(set, max_size=Inf, use_varnames_in_status=TRUE, stringsAsFactors=FALSE) {
 
   set = unique(set)
-
   n = length(set)
 
   status = expand.grid(rep(list(c(FALSE, TRUE)), n), KEEP.OUT.ATTRS=FALSE, stringsAsFactors=stringsAsFactors)

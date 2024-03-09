@@ -108,14 +108,14 @@ list_mirror = function(x, value, depth=1) {
 #'
 #' @family list utilities provided by ub
 #' @export
-merge_recurse = function(dfs, ...) {
+merge_recurse = function(dfs, all = TRUE, sort = FALSE, ...) {
 
   if(length(dfs) == 1) {
     dfs
   } else if(length(dfs) == 2) {
-    merge(dfs[[1]], dfs[[2]], all = TRUE, sort = FALSE, ...)
+    merge(dfs[[1]], dfs[[2]], all = all, sort = sort, ...)
   } else {
-    merge(dfs[[1]], Recall(dfs[-1], ...), all = TRUE, sort = FALSE, ...)
+    merge(dfs[[1]], Recall(dfs[-1], ...), all = all, sort = sort, ...)
   }
 
 }
@@ -244,8 +244,7 @@ modifyList2 = list_update
 #' 2)`, etc.
 #'
 #' `nlist2()` is a shorter original code which relies on existing 
-#' code (`dots_to_nlist`). It should result in the exact same behavior 
-#' as `nlist()`.
+#' code (`dots_to_nlist`). Its behavior should match `nlist()`.
 #'
 #' Credit: The code for `nlist()` was lifted from the package `loo` 
 #' to avoid having to install that package just for this one function. 

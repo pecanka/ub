@@ -6,24 +6,30 @@
 #' An upgraded version of `rep`. Allows for different number of 
 #' occurrences for each value supplied in the first argument.
 #'
+#' ALternatively, just use a vertor argument to `t` in `rep()`.
+#'
 #' @examples
 #' rep2(c('a','b'), e=3:4)
 #'
 #' @family sequence-related functions provided by ub
 #' @export
 rep2 = function(x, each, ...) {
-  
-  if(missing(each)) {
-    rep(...)
-  } else if(length(each)==0) {
-    numeric(0)
-  } else if(length(each)>1 && length(each)==length(x)) {
-    unlist(sapply(seq_along(each), function(i) rep(x[i], t=each[i])))
-  } else {
-    rep(..., each=each)
-  }  
-
+  rep(x, t = each, ...)
 }
+
+#rep2a = function(x, each, ...) {
+#  
+#  if(missing(each)) {
+#    rep(...)
+#  } else if(length(each)==0) {
+#    numeric(0)
+#  } else if(length(each)>1 && length(each)==length(x)) {
+#    unlist(sapply(seq_along(each), function(i) rep(x[i], t=each[i])))
+#  } else {
+#    rep(..., each=each)
+#  }
+#
+#}
 
 #rep2b = function(...) {
 #  

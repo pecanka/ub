@@ -4,17 +4,20 @@
 \alias{closest_day}
 \title{Find the closest day among dates}
 \usage{
-closest_day(dates, day, position = FALSE)
+closest_day(dates, day, position = FALSE, ...)
 }
 \description{
-Takes a vector of dates in \code{dates} and a single date in \code{day},
-which are assumed to be in the 'YYYY-MM-DD' format, and find the
-closest value in \code{dates} to the value in \code{day}. If \code{position} is
+Takes a (character) vector of dates in \code{dates} and a single date in
+\code{day}, which are assumed to be in the 'YYYY-MM-DD' format, and finds
+the closest value in \code{dates} to the value in \code{day}. If \code{position} is
 \code{TRUE}, the index of the closest date is returned, otherwise the
-closest date itself is returned (default).
+closest date itself is returned (default). With multiple matches
+only the first one is returned. For control over other date formats
+use the ellipsis \code{...} passed on to \code{as.Date()}.
 }
 \examples{
-closest_day(c('2010-01-01', '2010-03-15', '2012-06-20'), '2011-01-08')
+# returns 2010-03-15
+closest_day(c('2010-01-01', '2010-03-15', '2012-06-20'), '2011-01-08') 
 
 }
 \seealso{

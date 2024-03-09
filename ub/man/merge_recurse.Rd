@@ -4,7 +4,7 @@
 \alias{merge_recurse}
 \title{Recursive merge}
 \usage{
-merge_recurse(dfs, ...)
+merge_recurse(dfs, all = TRUE, sort = FALSE, ...)
 }
 \description{
 This does a recursive merge of lists. The code is taken from the

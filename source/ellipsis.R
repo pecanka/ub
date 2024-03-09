@@ -55,15 +55,10 @@ dots_to_nlist = function(keep_symbolic=FALSE, flatten=FALSE, assign_names=TRUE, 
 #' @rdname call_to_list
 #' @export
 args_to_nlist = function(envir=parent.frame()) {
-
   nams = ls(all.names=TRUE, envir=envir)
-  
   present = sapply(nams, function(n) eval(bquote(!missing(.(n))), envir=envir))
-  
   nams = nams[present]
-  
   `names<-`(lapply(nams, get, envir=envir), nams)
-  
 }
 
 #' @rdname call_to_list

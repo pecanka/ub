@@ -1,0 +1,1 @@
+Rscript --vanilla build-install-ub.R

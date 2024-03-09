@@ -1,0 +1,1 @@
+sapply(list.files("source", full.names = TRUE), source)

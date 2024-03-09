@@ -17,7 +17,8 @@ is_subset(x, y)
 is_superset(x, y)
 }
 \description{
-\code{mintersect()} finds the intersection of multiple sets.
+\code{mintersect()} finds the intersection of multiple sets. Alternatively,
+call `Reduce(intersect,
 
 \code{setdiffsym()} determines the \"symmetric difference\" of the
 supplied sets, which is all of the elements that are outside the

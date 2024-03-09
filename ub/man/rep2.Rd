@@ -9,6 +9,8 @@ rep2(x, each, ...)
 \description{
 An upgraded version of \code{rep}. Allows for different number of
 occurrences for each value supplied in the first argument.
+
+ALternatively, just use a vertor argument to \code{t} in \code{rep()}.
 }
 \examples{
 rep2(c('a','b'), e=3:4)

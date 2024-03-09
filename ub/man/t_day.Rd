@@ -4,7 +4,7 @@
 \alias{t_day}
 \title{Get today's date}
 \usage{
-t_day(format = "\%Y-\%m-\%d", set_return_class = base::as.character)
+t_day(format = "\%Y-\%m-\%d", fun = base::as.character)
 }
 \arguments{
 \item{format}{Format of the output.}
